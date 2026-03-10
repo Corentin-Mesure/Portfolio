@@ -7,30 +7,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gold: #d4a84b;
-    --gold-light: #f0c96a;
-    --gold-dim: #9a7535;
-    --purple: #8b5fd4;
-    --purple-dark: #5a2fa0;
+    --gold: #f0c84a;
+    --gold-light: #fce07a;
+    --gold-dim: #c89820;
+    --purple: #b090f0;
+    --purple-dark: #8060d0;
     --cyan: #5de8f2;
-    --cyan-dim: #2a9aa8;
-    --bg: #0e0b18;
-    --bg2: #16112a;
-    --bg3: #1e1640;
-    --text: #d8cce8;
-    --text-dim: #8a7aaa;
+    --cyan-dim: #2ab8d0;
+    --bg: #2e2860;
+    --bg2: #382e70;
+    --bg3: #443880;
+    --text: #ffffff;
+    --text-dim: #d8ccff;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
   body {
-    background:
-      radial-gradient(ellipse 80% 50% at 10% 0%, rgba(90,47,160,0.35) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(42,154,168,0.2) 0%, transparent 55%),
-      radial-gradient(ellipse 70% 60% at 50% 100%, rgba(93,232,242,0.08) 0%, transparent 60%),
-      #0e0b18;
-    background-attachment: fixed;
+    background: #2e2860;
     color: var(--text);
     font-family: 'Crimson Text', serif;
     font-size: 18px;
@@ -43,43 +38,21 @@
   }
 
   .cursor {
-    position: fixed;
-    width: 12px; height: 12px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    top: 0; left: 0;
-    transform: translate(-100vw, -100vw); /* hors écran par défaut */
-    box-shadow: 0 0 12px var(--gold), 0 0 30px var(--gold-dim);
-    will-change: transform;
+    position: fixed; width: 12px; height: 12px; background: var(--gold);
+    border-radius: 50%; pointer-events: none; z-index: 9999; top: 0; left: 0;
+    transform: translate(-100vw, -100vw);
+    box-shadow: 0 0 12px var(--gold), 0 0 30px var(--gold-dim); will-change: transform;
   }
   .cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid var(--gold-dim);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    top: 0; left: 0;
-    transform: translate(-100vw, -100vw);
-    will-change: transform;
-  }
-
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    opacity: 0.12;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4t5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dme1+/EDWC");
-    pointer-events: none;
-    z-index: 1000;
+    position: fixed; width: 36px; height: 36px; border: 1px solid var(--gold-dim);
+    border-radius: 50%; pointer-events: none; z-index: 9998; top: 0; left: 0;
+    transform: translate(-100vw, -100vw); will-change: transform;
   }
 
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-    padding: 24px 60px;
-    display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(to bottom, rgba(10,6,8,0.95), transparent);
+    padding: 24px 60px; display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(46,40,96,0.97), transparent);
   }
   .nav-logo { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; }
   .nav-links { display: flex; gap: 40px; list-style: none; }
@@ -95,59 +68,40 @@
     height: 100vh; display: flex; align-items: center; justify-content: center;
     position: relative; overflow: hidden;
   }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 70% 60% at 15% 50%, rgba(90,47,160,0.45) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 50% at 85% 25%, rgba(212,168,75,0.18) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 55% at 50% 85%, rgba(93,232,242,0.18) 0%, transparent 65%),
-      radial-gradient(ellipse 60% 40% at 70% 60%, rgba(139,95,212,0.2) 0%, transparent 55%);
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(240,200,74,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,200,74,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
   }
-  #heroCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-  .hero-line-left { position: absolute; left: 60px; top: 50%; transform: translateY(-50%); width: 1px; height: 200px; background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent); }
-  .hero-line-right { position: absolute; right: 60px; top: 50%; transform: translateY(-50%); width: 1px; height: 200px; background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent); }
-
-  .hero-content { text-align: center; z-index: 1; animation: heroReveal 1.5s ease forwards; isolation: isolate; }
+  .hero-content { text-align: center; z-index: 1; animation: heroReveal 1.2s ease forwards; }
   @keyframes heroReveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
   .hero-eyebrow {
     font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 8px; color: var(--gold-dim);
     text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 16px;
   }
   .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--gold-dim); }
-
   .hero-name {
     font-family: 'Cinzel', serif; font-size: clamp(48px,8vw,96px); font-weight: 900; line-height: 1;
     color: transparent;
     background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-dim) 70%, var(--gold) 100%);
     -webkit-background-clip: text; background-clip: text;
     text-transform: uppercase; letter-spacing: 4px; margin-bottom: 8px;
-    filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
   }
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-name { animation: name-breathe 4s ease-in-out 2.5s infinite alternate; }
-  }
-  @keyframes name-breathe {
-    from { filter: drop-shadow(0 0 20px rgba(201,168,76,0.2)); }
-    to   { filter: drop-shadow(0 0 50px rgba(201,168,76,0.5)); }
-  }
-
   .hero-subtitle {
     font-family: 'Cinzel', serif; font-size: clamp(14px,2vw,20px); letter-spacing: 6px; color: var(--cyan);
-    text-transform: uppercase; margin-bottom: 32px; opacity: 0.8;
+    text-transform: uppercase; margin-bottom: 48px; opacity: 0.9;
   }
-  .hero-desc { font-size: 18px; color: var(--text-dim); font-style: italic; max-width: 400px; margin: 0 auto 48px; line-height: 1.7; }
-
   .hero-cta {
     display: inline-block; padding: 14px 48px; border: 1px solid var(--gold-dim);
     font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
     color: var(--gold); text-decoration: none; position: relative; overflow: hidden;
-    transition: color 0.3s; isolation: isolate;
+    transition: color 0.3s; isolation: isolate; margin: 0 8px;
   }
   .hero-cta::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: translateX(-101%); transition: transform 0.4s ease; z-index: -1; }
   .hero-cta:hover { color: var(--bg); }
   .hero-cta:hover::before { transform: translateX(0); }
-
   .scroll-indicator {
     position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -161,7 +115,6 @@
   .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold-dim), transparent); }
 
   section { padding: 120px 60px; max-width: 1200px; margin: 0 auto; }
-
   .section-header { display: flex; align-items: center; gap: 24px; margin-bottom: 80px; }
   .section-number { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold-dim); letter-spacing: 3px; }
   .section-title { font-family: 'Cinzel', serif; font-size: clamp(28px,4vw,48px); font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
@@ -171,13 +124,11 @@
   #about { display: flex; flex-direction: column; align-items: center; padding: 120px 60px; max-width: 1200px; margin: 0 auto; }
   .about-section-header { display: flex; align-items: center; gap: 24px; margin-bottom: 60px; width: 100%; max-width: 500px; }
   .about-visual { position: relative; perspective: 1400px; width: 100%; max-width: 380px; }
-
   .card-backdrop {
-    position: fixed; inset: 0; background: rgba(8,5,20,0.92);
+    position: fixed; inset: 0; background: rgba(20,16,50,0.92);
     z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
   }
   .card-backdrop.active { opacity: 1; pointer-events: all; }
-
   .flip-card {
     width: 100%; aspect-ratio: 3/4; position: relative;
     transform-style: preserve-3d; cursor: none;
@@ -188,155 +139,83 @@
     position: absolute; inset: 0;
     backface-visibility: hidden; -webkit-backface-visibility: hidden;
     border: 1px solid var(--gold-dim); overflow: hidden;
-    display: flex; align-items: center; justify-content: center; flex-direction: column;
-    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center; flex-direction: column; border-radius: 2px;
   }
-  .flip-front { background: linear-gradient(135deg, #1e1640, #2a1f52, #1a1535); }
+  .flip-front { background: linear-gradient(135deg, #3a3070, #4e3e90, #2e2660); }
   .flip-back {
-    background: linear-gradient(135deg, #14103a, #241850, #1a103a);
-    transform: rotateY(180deg);
-    padding: 48px 44px; text-align: center; gap: 14px; overflow-y: auto;
+    background: linear-gradient(135deg, #342c68, #403478, #302858);
+    transform: rotateY(180deg); padding: 48px 44px; text-align: center; gap: 14px; overflow-y: auto;
   }
-
-  /* ══ EXPANDED BACK CARD — tall portrait card ══ */
-  .flip-card.is-clone .flip-back {
-    padding: 60px 52px 48px;
-    gap: 20px;
-    justify-content: flex-start;
-    overflow-y: auto;
-  }
-
+  .flip-card.is-clone .flip-back { padding: 60px 52px 48px; gap: 20px; justify-content: flex-start; overflow-y: auto; }
   .flip-hint {
     position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
     font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
     color: var(--gold-dim); text-transform: uppercase; white-space: nowrap; z-index: 2;
     animation: hint-pulse 2s ease-in-out infinite;
   }
-  @keyframes hint-pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.9; } }
-
+  @keyframes hint-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
   .about-frame-corner { position: absolute; width: 16px; height: 16px; border-color: var(--gold); border-style: solid; z-index: 1; pointer-events: none; }
   .about-frame-corner.tl { top: 4px; left: 4px; border-width: 2px 0 0 2px; }
   .about-frame-corner.tr { top: 4px; right: 4px; border-width: 2px 2px 0 0; }
   .about-frame-corner.bl { bottom: 4px; left: 4px; border-width: 0 0 2px 2px; }
   .about-frame-corner.br { bottom: 4px; right: 4px; border-width: 0 2px 2px 0; }
-
-  .about-initials { font-family: 'Cinzel', serif; font-size: 80px; font-weight: 900; color: transparent; -webkit-text-stroke: 1px var(--gold-dim); opacity: 0.3; letter-spacing: 8px; }
-  .about-glow { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(139,95,212,0.5), transparent); border-radius: 50%; bottom: 20%; right: 10%; animation: glow 3s ease-in-out infinite alternate; pointer-events: none; }
-  @keyframes glow { from { opacity: 0.4; transform: scale(1); } to { opacity: 0.8; transform: scale(1.2); } }
-
+  .about-initials { font-family: 'Cinzel', serif; font-size: 80px; font-weight: 900; color: transparent; -webkit-text-stroke: 1px var(--gold-dim); opacity: 0.4; letter-spacing: 8px; }
+  .about-glow { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(176,144,240,0.4), transparent); border-radius: 50%; bottom: 20%; right: 10%; pointer-events: none; }
   .back-tag { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px; color: var(--cyan); text-transform: uppercase; }
-  .back-subtitle { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 4px; color: var(--cyan); text-transform: uppercase; opacity: 0.7; }
+  .back-subtitle { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 4px; color: var(--cyan); text-transform: uppercase; opacity: 0.8; }
   .back-divider { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); }
   .back-text { font-size: 16px; color: var(--text); line-height: 1.85; text-align: left; }
-  .back-text-extra {
-    font-size: 15px; color: var(--text-dim); line-height: 1.85; text-align: left;
-    opacity: 0; transform: translateY(10px);
-    transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
-  }
+  .back-text-extra { font-size: 15px; color: var(--text-dim); line-height: 1.85; text-align: left; opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s; }
   .flip-card.expanded .back-text-extra { opacity: 1; transform: translateY(0); }
-
-  /* Larger text when card is expanded as clone */
-  .flip-card.is-clone .back-tag   { font-size: 13px; letter-spacing: 6px; }
+  .flip-card.is-clone .back-tag { font-size: 13px; letter-spacing: 6px; }
   .flip-card.is-clone .back-subtitle { font-size: 26px; letter-spacing: 5px; margin-bottom: 4px; }
-  .flip-card.is-clone .back-text  { font-size: 18px; line-height: 1.95; }
+  .flip-card.is-clone .back-text { font-size: 18px; line-height: 1.95; }
   .flip-card.is-clone .back-text-extra { font-size: 17px; line-height: 1.95; }
-
-  /* Two-column layout for the bottom section in expanded state */
-  .back-bottom-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 100%;
-  }
-
-  .back-stats {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-    width: 100%; padding-top: 14px; border-top: 1px solid rgba(201,168,76,0.15);
-  }
-  .back-stat-item { text-align: center; padding: 10px 8px; background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.08); }
+  .back-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; padding-top: 14px; border-top: 1px solid rgba(240,200,74,0.2); }
+  .back-stat-item { text-align: center; padding: 10px 8px; background: rgba(240,200,74,0.07); border: 1px solid rgba(240,200,74,0.15); }
   .back-stat-number { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold); font-weight: 900; display: block; }
   .back-stat-label { font-size: 9px; color: var(--text-dim); letter-spacing: 2px; font-family: 'Cinzel', serif; text-transform: uppercase; }
-
   .flip-card.is-clone .back-stat-number { font-size: 32px; }
-  .flip-card.is-clone .back-stat-label  { font-size: 11px; letter-spacing: 3px; }
-  .flip-card.is-clone .back-stat-item   { padding: 18px 12px; }
-
-  .back-skills-row {
-    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;
-    padding-top: 14px; border-top: 1px solid rgba(93,232,242,0.1);
-  }
-  .back-skill-tag { font-size: 11px; padding: 5px 14px; border: 1px solid rgba(93,232,242,0.2); color: var(--cyan-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .flip-card.is-clone .back-stat-label { font-size: 11px; letter-spacing: 3px; }
+  .flip-card.is-clone .back-stat-item { padding: 18px 12px; }
+  .back-skills-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; padding-top: 14px; border-top: 1px solid rgba(93,232,242,0.15); }
+  .back-skill-tag { font-size: 11px; padding: 5px 14px; border: 1px solid rgba(93,232,242,0.3); color: var(--cyan-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
   .flip-card.is-clone .back-skill-tag { font-size: 14px; padding: 9px 22px; letter-spacing: 2px; }
-
-  .back-close {
-    position: absolute; top: 16px; right: 16px; background: none; border: 1px solid rgba(201,168,76,0.3);
-    color: var(--gold-dim); width: 36px; height: 36px; font-size: 14px; cursor: none;
-    display: none; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10;
-  }
+  .back-close { position: absolute; top: 16px; right: 16px; background: none; border: 1px solid rgba(240,200,74,0.35); color: var(--gold-dim); width: 36px; height: 36px; font-size: 14px; cursor: none; display: none; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10; }
   .flip-card.expanded .back-close { display: flex; }
   .back-close:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); }
 
   /* SKILLS */
-  #skills { position: relative; overflow: hidden; }
-  #skills::before {
-    content: ''; position: absolute; inset: 0;
-    background-image: repeating-linear-gradient(60deg, rgba(139,95,212,0.04) 0px, rgba(139,95,212,0.04) 1px, transparent 1px, transparent 30px);
-    pointer-events: none;
-  }
+  #skills { position: relative; }
+  #skills::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(60deg, rgba(176,144,240,0.07) 0px, rgba(176,144,240,0.07) 1px, transparent 1px, transparent 30px); pointer-events: none; }
   .skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-  .skills-bloc-label {
-    grid-column: 1 / -1;
-    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px;
-    color: var(--gold-dim); text-transform: uppercase;
-    padding: 28px 0 10px; border-bottom: 1px solid rgba(201,168,76,0.12);
-    margin-bottom: 2px;
-  }
-  .skill-card {
-    background: rgba(22,17,42,0.85); padding: 40px 32px; position: relative; overflow: hidden;
-    transition: background 0.4s ease, transform 0.4s ease;
-    border: 1px solid rgba(139,95,212,0.18);
-  }
-  .skill-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(to right, transparent, var(--cyan), transparent);
-    transform: scaleX(0); transition: transform 0.4s;
-  }
-  .skill-card:hover { background: rgba(32,24,62,0.95); transform: translateY(-4px); }
+  .skill-card { background: rgba(56,46,112,0.9); padding: 40px 32px; position: relative; overflow: hidden; transition: background 0.4s ease, transform 0.4s ease; border: 1px solid rgba(176,144,240,0.25); }
+  .skill-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--cyan), transparent); transform: scaleX(0); transition: transform 0.4s; }
+  .skill-card:hover { background: rgba(68,56,128,0.98); transform: translateY(-4px); }
   .skill-card:hover::before { transform: scaleX(1); }
   .skill-icon { font-size: 28px; margin-bottom: 16px; display: block; }
   .skill-name { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold); letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase; }
   .skill-items { display: flex; flex-wrap: wrap; gap: 8px; }
-  .skill-tag {
-    font-size: 12px; padding: 4px 12px; border: 1px solid rgba(93,232,242,0.2); color: var(--text-dim);
-    font-family: 'Cinzel', serif; letter-spacing: 1px;
-    opacity: 0; transform: translateX(-8px);
-    transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s, color 0.3s;
-  }
+  .skill-tag { font-size: 12px; padding: 4px 12px; border: 1px solid rgba(93,232,242,0.25); color: var(--text-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; opacity: 0; transform: translateX(-8px); transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s, color 0.3s; }
   .skill-card.visible .skill-tag { opacity: 1; transform: translateX(0); }
-  .skill-card:hover .skill-tag { border-color: rgba(93,232,242,0.5); color: var(--text); }
+  .skill-card:hover .skill-tag { border-color: rgba(93,232,242,0.6); color: var(--text); }
 
   /* PROJECTS */
   .projects-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 32px; }
-  .project-card {
-    background: rgba(20,15,40,0.9); border: 1px solid rgba(139,95,212,0.2); position: relative; overflow: hidden;
-    transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
-  }
-  .project-card:hover {
-    border-color: rgba(93,232,242,0.5); transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(93,232,242,0.12);
-  }
+  .project-card { background: rgba(46,40,90,0.95); border: 1px solid rgba(176,144,240,0.25); position: relative; overflow: hidden; transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; }
+  .project-card:hover { border-color: rgba(93,232,242,0.55); transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(93,232,242,0.12); }
   .project-visual { height: 200px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .project-visual-1 { background: linear-gradient(135deg,#1a1040,#3a2080,#1a1040); }
-  .project-visual-2 { background: linear-gradient(135deg,#0a1825,#1a5060,#0a1825); }
-  .project-glyph { font-size: 64px; opacity: 0.35; transition: opacity 0.4s, transform 0.4s; }
-  .project-card:hover .project-glyph { opacity: 0.7; transform: scale(1.1); }
-  .project-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(20,15,40,0.95)); }
+  .project-visual-1 { background: linear-gradient(135deg,#3a1a70,#6030c0,#3a1a70); }
+  .project-visual-2 { background: linear-gradient(135deg,#102840,#1a6888,#102840); }
+  .project-glyph { font-size: 64px; opacity: 0.45; transition: opacity 0.4s, transform 0.4s; }
+  .project-card:hover .project-glyph { opacity: 0.75; transform: scale(1.1); }
+  .project-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(46,40,90,0.95)); }
   .project-body { padding: 28px; }
   .project-type { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
   .project-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); margin-bottom: 12px; letter-spacing: 1px; }
   .project-desc { font-size: 15px; color: var(--text-dim); line-height: 1.7; margin-bottom: 20px; }
   .project-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .project-tag { font-size: 11px; padding: 3px 10px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15); color: var(--gold-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .project-tag { font-size: 11px; padding: 3px 10px; background: rgba(240,200,74,0.07); border: 1px solid rgba(240,200,74,0.2); color: var(--gold-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
 
   /* CONTACT */
   #contact-section { text-align: center; padding: 120px 60px; max-width: 800px; margin: 0 auto; }
@@ -344,25 +223,19 @@
   .contact-title { font-family: 'Cinzel', serif; font-size: clamp(32px,5vw,56px); color: var(--gold); margin-bottom: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
   .contact-text { color: var(--text-dim); font-size: 18px; line-height: 1.8; font-style: italic; margin-bottom: 48px; }
   .contact-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
-  .contact-link {
-    display: flex; align-items: center; gap: 12px; padding: 16px 36px; border: 1px solid var(--gold-dim);
-    color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 11px;
-    letter-spacing: 3px; text-transform: uppercase; position: relative; overflow: hidden;
-    transition: color 0.3s; isolation: isolate;
-  }
+  .contact-link { display: flex; align-items: center; gap: 12px; padding: 16px 36px; border: 1px solid var(--gold-dim); color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; position: relative; overflow: hidden; transition: color 0.3s; isolation: isolate; }
   .contact-link::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: translateY(101%); transition: transform 0.4s ease; z-index: -1; }
   .contact-link:hover { color: var(--bg); }
   .contact-link:hover::before { transform: translateY(0); }
 
-  footer { text-align: center; padding: 40px; border-top: 1px solid rgba(201,168,76,0.08); }
+  footer { text-align: center; padding: 40px; border-top: 1px solid rgba(240,200,74,0.1); }
   footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
 
-  .arcane-divider { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 0; opacity: 0.3; }
+  .arcane-divider { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 0; opacity: 0.4; }
   .arcane-divider::before, .arcane-divider::after { content: ''; flex: 1; height: 1px; }
   .arcane-divider::before { background: linear-gradient(to right, transparent, var(--gold)); }
   .arcane-divider::after  { background: linear-gradient(to left,  transparent, var(--gold)); }
-  .divider-gem { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); animation: gem-spin 8s linear infinite; }
-  @keyframes gem-spin { to { transform: rotate(405deg); } }
+  .divider-gem { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); }
 
   .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -371,212 +244,99 @@
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 
-  .scroll-progress {
-    position: fixed; top: 0; left: 0; height: 2px; width: 0%;
-    background: linear-gradient(to right, var(--gold-dim), var(--gold), var(--gold-light));
-    z-index: 9999; box-shadow: 0 0 8px var(--gold); will-change: width;
-  }
+  .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: linear-gradient(to right, var(--gold-dim), var(--gold), var(--gold-light)); z-index: 9999; box-shadow: 0 0 8px var(--gold); will-change: width; }
 
   /* TIMELINE */
   #timeline { max-width: 800px; margin: 0 auto; padding: 80px 60px; }
   .timeline-track { position: relative; padding-left: 48px; }
-  .timeline-track::before {
-    content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--gold-dim) 15%, var(--gold-dim) 85%, transparent);
-  }
+  .timeline-track::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--gold-dim) 15%, var(--gold-dim) 85%, transparent); }
   .timeline-item { position: relative; padding-bottom: 56px; opacity: 0; transform: translateX(-20px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .timeline-item.visible { opacity: 1; transform: translateX(0); }
   .timeline-item:last-child { padding-bottom: 0; }
   .timeline-gem { position: absolute; left: -41px; top: 4px; width: 14px; height: 14px; background: var(--bg); border: 2px solid var(--gold-dim); transform: rotate(45deg); transition: border-color 0.3s, box-shadow 0.3s; }
-  .timeline-item.visible .timeline-gem { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,168,76,0.4); }
-  .timeline-item.current .timeline-gem { background: var(--gold); box-shadow: 0 0 20px rgba(201,168,76,0.6); }
-  .timeline-year  { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 8px; }
+  .timeline-item.visible .timeline-gem { border-color: var(--gold); box-shadow: 0 0 12px rgba(240,200,74,0.5); }
+  .timeline-item.current .timeline-gem { background: var(--gold); box-shadow: 0 0 20px rgba(240,200,74,0.7); }
+  .timeline-year { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 8px; }
   .timeline-title { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
-  .timeline-sub   { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 2px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
-  .timeline-desc  { font-size: 15px; color: var(--text-dim); line-height: 1.8; max-width: 500px; }
-  .timeline-badge { display: inline-block; margin-top: 12px; padding: 4px 12px; border: 1px solid rgba(201,168,76,0.2); font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; color: var(--gold-dim); text-transform: uppercase; }
-  .timeline-badge.active { border-color: rgba(79,209,217,0.4); color: var(--cyan); box-shadow: 0 0 12px rgba(79,209,217,0.1); }
+  .timeline-sub { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 2px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
+  .timeline-desc { font-size: 15px; color: var(--text-dim); line-height: 1.8; max-width: 500px; }
+  .timeline-badge { display: inline-block; margin-top: 12px; padding: 4px 12px; border: 1px solid rgba(240,200,74,0.25); font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; color: var(--gold-dim); text-transform: uppercase; }
+  .timeline-badge.active { border-color: rgba(93,232,242,0.45); color: var(--cyan); box-shadow: 0 0 12px rgba(93,232,242,0.12); }
 
-  /* HERO LETTERS */
-  .hero-name .letter {
-    display: inline-block; opacity: 0; color: transparent;
-    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-dim) 70%, var(--gold) 100%);
-    -webkit-background-clip: text; background-clip: text;
-    animation: hextech-reveal 0.5s ease forwards;
-  }
-  @keyframes hextech-reveal {
-    0%   { opacity: 0; filter: blur(8px) brightness(2.5); transform: scale(1.3); }
-    40%  { opacity: 1; filter: blur(1px) brightness(2);   transform: scale(1.05); }
-    100% { opacity: 1; filter: blur(0)   brightness(1);   transform: scale(1); }
-  }
-
-  .typewriter { border-right: 2px solid var(--gold); animation: blink-cursor 0.8s step-end infinite; white-space: nowrap; overflow: hidden; }
-  @keyframes blink-cursor { 0%,100% { border-color: var(--gold); } 50% { border-color: transparent; } }
-
-  .project-btn {
-    display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 10px 24px;
-    border: 1px solid var(--gold-dim); background: transparent; color: var(--gold);
-    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    cursor: none; position: relative; overflow: hidden; transition: color 0.3s; isolation: isolate;
-  }
+  .project-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 10px 24px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: none; position: relative; overflow: hidden; transition: color 0.3s; isolation: isolate; }
   .project-btn::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: translateX(-101%); transition: transform 0.35s ease; z-index: 0; }
   .project-btn:hover { color: var(--bg); }
   .project-btn:hover::before { transform: translateX(0); }
   .project-btn span { position: relative; z-index: 1; }
 
   /* MODALS */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(8,5,20,0.94);
-    z-index: 2000; display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(16,12,40,0.94); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
   .modal-overlay.active { opacity: 1; pointer-events: all; }
-  .modal {
-    background: linear-gradient(160deg,#1a1540,#120f30); border: 1px solid rgba(139,95,212,0.35);
-    width: min(96vw, 960px); max-height: 95vh; overflow-y: auto; position: relative;
-    transform: translateY(30px) scale(0.97); transition: transform 0.4s ease; will-change: transform;
-  }
+  .modal { background: linear-gradient(160deg,#342c68,#201840); border: 1px solid rgba(176,144,240,0.4); width: min(96vw, 960px); max-height: 95vh; overflow-y: auto; position: relative; transform: translateY(30px) scale(0.97); transition: transform 0.4s ease; will-change: transform; }
   .modal-overlay.active .modal { transform: translateY(0) scale(1); }
   .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); z-index: 1; }
   .modal-corner { position: absolute; width: 14px; height: 14px; border-color: var(--gold); border-style: solid; z-index: 10; pointer-events: none; }
-  .modal-corner.tl { top: 0; left: 0;   border-width: 2px 0 0 2px; }
-  .modal-corner.tr { top: 0; right: 0;  border-width: 2px 2px 0 0; }
-  .modal-corner.bl { bottom: 0; left: 0;  border-width: 0 0 2px 2px; }
+  .modal-corner.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .modal-corner.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .modal-corner.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
   .modal-corner.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-  .modal-corners-wrapper {
-    position: sticky; bottom: 0; left: 0; right: 0;
-    height: 0; pointer-events: none;
-  }
+  .modal-corners-wrapper { position: sticky; bottom: 0; left: 0; right: 0; height: 0; pointer-events: none; }
   .modal-corners-wrapper .modal-corner.bl { bottom: 0; left: 0; }
   .modal-corners-wrapper .modal-corner.br { bottom: 0; right: 0; }
-  .modal-header { padding: 52px 64px 36px; border-bottom: 1px solid rgba(201,168,76,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+  .modal-header { padding: 52px 64px 36px; border-bottom: 1px solid rgba(240,200,74,0.12); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
   .modal-header > div:first-child { flex: 1; width: 100%; }
-  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid rgba(201,168,76,0.3); color: var(--gold-dim); width: 40px; height: 40px; font-size: 18px; cursor: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid rgba(240,200,74,0.35); color: var(--gold-dim); width: 40px; height: 40px; font-size: 18px; cursor: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
   .modal-close:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); }
   .modal-body { padding: 52px 64px; text-align: center; }
   .modal-emoji { font-size: 72px; display: block; margin-bottom: 32px; }
   .modal-desc { font-size: 20px; color: var(--text); line-height: 1.95; margin-bottom: 40px; max-width: 720px; margin-left: auto; margin-right: auto; }
   .modal-features { margin-bottom: 40px; text-align: left; max-width: 720px; margin-left: auto; margin-right: auto; }
   .modal-features-title { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 20px; text-align: center; }
-  .modal-feature { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(201,168,76,0.05); font-size: 18px; color: var(--text-dim); }
+  .modal-feature { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(240,200,74,0.07); font-size: 18px; color: var(--text-dim); }
   .modal-feature::before { content: '◆'; color: var(--gold-dim); font-size: 9px; margin-top: 6px; flex-shrink: 0; }
   .modal-tags { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-  .modal-tag { font-size: 13px; padding: 8px 22px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); color: var(--gold-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
-  .modal-type  { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
+  .modal-tag { font-size: 13px; padding: 8px 22px; background: rgba(240,200,74,0.07); border: 1px solid rgba(240,200,74,0.25); color: var(--gold-dim); font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .modal-type { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
   .modal-title { font-family: 'Cinzel', serif; font-size: 44px; color: var(--gold); font-weight: 600; letter-spacing: 3px; }
-
-  /* ── FONCTIONNALITÉS CLIQUABLES ── */
-  .modal-feature-btn {
-    display: flex; align-items: flex-start; gap: 14px;
-    padding: 14px 16px; width: 100%;
-    border: 1px solid rgba(201,168,76,0.08);
-    background: rgba(201,168,76,0.02);
-    cursor: none; position: relative; overflow: hidden;
-    transition: background 0.3s, border-color 0.3s, transform 0.2s;
-    text-align: left; margin-bottom: 6px;
-  }
+  .modal-feature-btn { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; width: 100%; border: 1px solid rgba(240,200,74,0.1); background: rgba(240,200,74,0.03); cursor: none; position: relative; overflow: hidden; transition: background 0.3s, border-color 0.3s, transform 0.2s; text-align: left; margin-bottom: 6px; }
   .modal-feature-btn::before { content: '◆'; color: var(--gold-dim); font-size: 9px; margin-top: 6px; flex-shrink: 0; transition: color 0.3s; }
-  .modal-feature-btn:hover { background: rgba(201,168,76,0.07); border-color: rgba(201,168,76,0.3); transform: translateX(4px); }
+  .modal-feature-btn:hover { background: rgba(240,200,74,0.09); border-color: rgba(240,200,74,0.35); transform: translateX(4px); }
   .modal-feature-btn:hover::before { color: var(--gold); }
   .modal-feature-btn:hover .feat-arrow { opacity: 1; transform: translateX(0); }
   .feat-title { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 1px; display: block; margin-bottom: 4px; }
   .feat-preview { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
-  .feat-arrow {
-    position: absolute; right: 16px; top: 50%; transform: translateX(6px) translateY(-50%);
-    color: var(--gold); font-size: 14px; opacity: 0;
-    transition: opacity 0.25s, transform 0.25s;
-  }
+  .feat-arrow { position: absolute; right: 16px; top: 50%; transform: translateX(6px) translateY(-50%); color: var(--gold); font-size: 14px; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
 
-  /* ── SOUS-MODALS DE DÉTAIL ── */
-  .submodal-overlay {
-    position: fixed; inset: 0; background: rgba(4,2,12,0.96);
-    z-index: 3000; display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
-  }
+  .submodal-overlay { position: fixed; inset: 0; background: rgba(10,8,28,0.96); z-index: 3000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
   .submodal-overlay.active { opacity: 1; pointer-events: all; }
-  .submodal {
-    background: linear-gradient(150deg,#1c1445,#110d2e,#1a1040);
-    border: 1px solid rgba(93,232,242,0.25);
-    width: min(94vw, 780px); max-height: 90vh; overflow-y: auto;
-    position: relative;
-    transform: translateY(20px) scale(0.98); transition: transform 0.35s ease;
-  }
+  .submodal { background: linear-gradient(150deg,#302868,#1e1850,#281c5c); border: 1px solid rgba(93,232,242,0.28); width: min(94vw, 780px); max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(20px) scale(0.98); transition: transform 0.35s ease; }
   .submodal-overlay.active .submodal { transform: translateY(0) scale(1); }
   .submodal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--cyan), transparent); }
-  .submodal-header { padding: 36px 48px 24px; border-bottom: 1px solid rgba(93,232,242,0.1); position: relative; text-align: center; }
-  .submodal-icon  { font-size: 48px; display: block; margin-bottom: 16px; }
-  .submodal-type  { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px; color: var(--cyan); text-transform: uppercase; margin-bottom: 8px; }
+  .submodal-header { padding: 36px 48px 24px; border-bottom: 1px solid rgba(93,232,242,0.12); position: relative; text-align: center; }
+  .submodal-icon { font-size: 48px; display: block; margin-bottom: 16px; }
+  .submodal-type { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px; color: var(--cyan); text-transform: uppercase; margin-bottom: 8px; }
   .submodal-title { font-family: 'Cinzel', serif; font-size: 26px; color: var(--gold); font-weight: 600; letter-spacing: 2px; }
-  .submodal-close { position: absolute; top: 16px; right: 16px; background: none; border: 1px solid rgba(93,232,242,0.25); color: var(--cyan-dim); width: 36px; height: 36px; font-size: 16px; cursor: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .submodal-close { position: absolute; top: 16px; right: 16px; background: none; border: 1px solid rgba(93,232,242,0.28); color: var(--cyan-dim); width: 36px; height: 36px; font-size: 16px; cursor: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
   .submodal-close:hover { background: var(--cyan); color: var(--bg); }
-  .submodal-body  { padding: 36px 48px 48px; }
-  .submodal-desc  { font-size: 17px; color: var(--text); line-height: 1.95; margin-bottom: 28px; }
+  .submodal-body { padding: 36px 48px 48px; }
+  .submodal-desc { font-size: 17px; color: var(--text); line-height: 1.95; margin-bottom: 28px; }
   .submodal-steps { display: flex; flex-direction: column; gap: 16px; }
-  .submodal-step  { display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid rgba(201,168,76,0.08); background: rgba(201,168,76,0.03); }
+  .submodal-step { display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid rgba(240,200,74,0.1); background: rgba(240,200,74,0.04); }
   .step-num { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold-dim); letter-spacing: 2px; min-width: 28px; padding-top: 2px; }
   .step-text { font-size: 16px; color: var(--text-dim); line-height: 1.8; }
   .step-text strong { color: var(--text); font-style: normal; }
 
-  /* ── ACCORDÉON TECH INFO ── */
-  .tech-accordion {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: var(--cyan); cursor: none;
-    font-weight: 600;
-    background: rgba(93,232,242,0.06);
-    border: 1px solid rgba(93,232,242,0.25);
-    padding: 3px 12px 3px 10px;
-    border-radius: 2px;
-    font-size: 0.95em;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 1px;
-    transition: background 0.25s, border-color 0.25s, color 0.25s;
-    vertical-align: middle;
-    position: relative;
-  }
-  .tech-accordion:hover {
-    background: rgba(93,232,242,0.12);
-    border-color: rgba(93,232,242,0.5);
-    color: #a0f5fb;
-  }
-  .tech-accordion.open {
-    background: rgba(93,232,242,0.1);
-    border-color: var(--cyan);
-    color: #fff;
-  }
-  .tech-accordion .acc-arrow {
-    font-size: 11px;
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    display: inline-block;
-    opacity: 0.7;
-  }
+  .tech-accordion { display: inline-flex; align-items: center; gap: 8px; color: var(--cyan); cursor: none; font-weight: 600; background: rgba(93,232,242,0.08); border: 1px solid rgba(93,232,242,0.28); padding: 3px 12px 3px 10px; border-radius: 2px; font-size: 0.95em; font-family: 'Cinzel', serif; letter-spacing: 1px; transition: background 0.25s, border-color 0.25s, color 0.25s; vertical-align: middle; position: relative; }
+  .tech-accordion:hover { background: rgba(93,232,242,0.15); border-color: rgba(93,232,242,0.55); color: #a0f5fb; }
+  .tech-accordion.open { background: rgba(93,232,242,0.12); border-color: var(--cyan); color: #fff; }
+  .tech-accordion .acc-arrow { font-size: 11px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); display: inline-block; opacity: 0.7; }
   .tech-accordion.open .acc-arrow { transform: rotate(90deg); opacity: 1; }
-
-  .tech-accordion-body {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease;
-    opacity: 0;
-    margin-top: 0;
-  }
-  .tech-accordion-body.open {
-    max-height: 400px; opacity: 1;
-    margin-top: 14px;
-  }
-  .tech-accordion-inner {
-    background: rgba(93,232,242,0.04);
-    border: 1px solid rgba(93,232,242,0.15);
-    border-left: 3px solid rgba(93,232,242,0.4);
-    padding: 16px 20px;
-    display: flex; flex-direction: column; gap: 10px;
-  }
+  .tech-accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease; opacity: 0; margin-top: 0; }
+  .tech-accordion-body.open { max-height: 400px; opacity: 1; margin-top: 14px; }
+  .tech-accordion-inner { background: rgba(93,232,242,0.05); border: 1px solid rgba(93,232,242,0.18); border-left: 3px solid rgba(93,232,242,0.45); padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
   .tech-accordion-body ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; }
-  .tech-accordion-body li {
-    font-size: 15px; color: var(--text); line-height: 1.75;
-    position: relative; padding-left: 18px;
-  }
-  .tech-accordion-body li::before {
-    content: '›'; position: absolute; left: 0;
-    font-size: 14px; color: var(--cyan); top: 0; font-weight: 900;
-  }
+  .tech-accordion-body li { font-size: 15px; color: var(--text); line-height: 1.75; position: relative; padding-left: 18px; }
+  .tech-accordion-body li::before { content: '›'; position: absolute; left: 0; font-size: 14px; color: var(--cyan); top: 0; font-weight: 900; }
   .tech-accordion-body li strong { color: var(--cyan-dim); }
 </style>
 </head>
@@ -598,10 +358,7 @@
 </nav>
 
 <section id="hero">
-  <div class="hero-bg"></div>
-  <canvas id="heroCanvas"></canvas>
-  <div class="hero-line-left"></div>
-  <div class="hero-line-right"></div>
+  <div class="hero-grid"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">BTS SIO SLAM</div>
     <h1 class="hero-name">Corentin<br>Mesure</h1>
@@ -618,7 +375,6 @@
 </section>
 
 <div class="arcane-divider"><div class="divider-gem"></div></div>
-
 <div class="card-backdrop" id="cardBackdrop" onclick="closeCard()"></div>
 
 <div id="about">
@@ -644,13 +400,10 @@
         <div class="back-subtitle">Corentin Mesure</div>
         <div class="back-divider"></div>
         <p class="back-text">Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouvé à faire un BTS informatique alors qu'à la base j'étais en Bac Pro MELEC.</p>
-        <p class="back-text-extra">J'ai fait mon Bac Pro Métiers de l'Électricité et de ses Environnements Connectés, et au bout de deux ans j'ai réalisé que ça ne me correspondait plus, que j'avais plus vraiment d'intérêt pour ça. Donc j'ai décidé de me réorienter vers l'informatique, j'ai intégré un BTS SIO option SLAM et franchement dès le début j'ai retrouvé l'envie. Aujourd'hui je développe des applications mobiles et web, j'ai même publié une appli sur le Play Store durant mon stage, et c'est vraiment ce dans quoi je me vois évoluer.</p>
+        <p class="back-text-extra">J'ai fait mon Bac Pro Métiers de l'Électricité et de ses Environnements Connectés, et au bout de deux ans j'ai réalisé que ça ne me correspondait plus. Donc j'ai décidé de me réorienter vers l'informatique, j'ai intégré un BTS SIO option SLAM et franchement dès le début j'ai retrouvé l'envie. Aujourd'hui je développe des applications mobiles et web, j'ai même publié une appli sur le Play Store durant mon stage.</p>
         <div class="back-skills-row">
-          <span class="back-skill-tag">Flutter</span>
-          <span class="back-skill-tag">PHP</span>
-          <span class="back-skill-tag">MySQL</span>
-          <span class="back-skill-tag">Firebase</span>
-          <span class="back-skill-tag">Git</span>
+          <span class="back-skill-tag">Flutter</span><span class="back-skill-tag">PHP</span>
+          <span class="back-skill-tag">MySQL</span><span class="back-skill-tag">Firebase</span><span class="back-skill-tag">Git</span>
         </div>
         <div class="back-stats">
           <div class="back-stat-item"><span class="back-stat-number">BTS</span><span class="back-stat-label">SIO SLAM</span></div>
@@ -671,30 +424,9 @@
     <div class="section-line"></div>
   </div>
   <div class="timeline-track">
-    <div class="timeline-item current">
-      <div class="timeline-gem"></div>
-      <div class="timeline-year">2024 — 2025</div>
-      <div class="timeline-title">BTS SIO — 2ème année</div>
-      <div class="timeline-sub">Option SLAM</div>
-      <p class="timeline-desc">Approfondissement des compétences, réalisation de projets concrets dont Animal'and publié sur le Play Store.</p>
-      <span class="timeline-badge active">✦ En cours</span>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-gem"></div>
-      <div class="timeline-year">2023 — 2024</div>
-      <div class="timeline-title">BTS SIO — 1ère année</div>
-      <div class="timeline-sub">Option SLAM</div>
-      <p class="timeline-desc">Apprentissage des fondamentaux du développement web et mobile. Premiers projets Flutter, PHP et MySQL.</p>
-      <span class="timeline-badge">Validé</span>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-gem"></div>
-      <div class="timeline-year">2020 — 2023</div>
-      <div class="timeline-title">Lycée</div>
-      <div class="timeline-sub">Bac Pro MELEC</div>
-      <p class="timeline-desc">Obtention du Bac Pro Métiers de l'Électricité et de ses Environnements Connectés.</p>
-      <span class="timeline-badge">Diplômé</span>
-    </div>
+    <div class="timeline-item current"><div class="timeline-gem"></div><div class="timeline-year">2024 — 2025</div><div class="timeline-title">BTS SIO — 2ème année</div><div class="timeline-sub">Option SLAM</div><p class="timeline-desc">Approfondissement des compétences, réalisation de projets concrets dont Animal'and publié sur le Play Store.</p><span class="timeline-badge active">✦ En cours</span></div>
+    <div class="timeline-item"><div class="timeline-gem"></div><div class="timeline-year">2023 — 2024</div><div class="timeline-title">BTS SIO — 1ère année</div><div class="timeline-sub">Option SLAM</div><p class="timeline-desc">Apprentissage des fondamentaux du développement web et mobile. Premiers projets Flutter, PHP et MySQL.</p><span class="timeline-badge">Validé</span></div>
+    <div class="timeline-item"><div class="timeline-gem"></div><div class="timeline-year">2020 — 2023</div><div class="timeline-title">Lycée</div><div class="timeline-sub">Bac Pro MELEC</div><p class="timeline-desc">Obtention du Bac Pro Métiers de l'Électricité et de ses Environnements Connectés.</p><span class="timeline-badge">Diplômé</span></div>
   </div>
 </div>
 
@@ -707,78 +439,12 @@
     <div class="section-line"></div>
   </div>
   <div class="skills-grid">
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">⚡</span>
-      <div class="skill-name">Développement</div>
-      <div class="skill-items">
-        <span class="skill-tag">HTML / CSS</span>
-        <span class="skill-tag">PHP</span>
-        <span class="skill-tag">Flutter / Dart</span>
-        <span class="skill-tag">API REST</span>
-      </div>
-    </div>
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">🗄️</span>
-      <div class="skill-name">Données</div>
-      <div class="skill-items">
-        <span class="skill-tag">MySQL</span>
-        <span class="skill-tag">PostgreSQL</span>
-        <span class="skill-tag">Firebase</span>
-        <span class="skill-tag">Modélisation BDD</span>
-        <span class="skill-tag">SQL avancé</span>
-      </div>
-    </div>
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">🛠️</span>
-      <div class="skill-name">Outils & Méthodes</div>
-      <div class="skill-items">
-        <span class="skill-tag">Git / GitHub</span>
-        <span class="skill-tag">VS Code</span>
-        <span class="skill-tag">Android Studio</span>
-        <span class="skill-tag">Méthode Agile</span>
-        <span class="skill-tag">Tests & Recette</span>
-      </div>
-    </div>
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">🖥️</span>
-      <div class="skill-name">Bloc 1 — Support</div>
-      <div class="skill-items">
-        <span class="skill-tag">Gestion patrimoine</span>
-        <span class="skill-tag">Support & incidents</span>
-        <span class="skill-tag">Déploiement service</span>
-        <span class="skill-tag">Mode projet</span>
-        <span class="skill-tag">Veille techno</span>
-      </div>
-    </div>
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">💻</span>
-      <div class="skill-name">Bloc 2 — SLAM</div>
-      <div class="skill-items">
-        <span class="skill-tag">Conception applicative</span>
-        <span class="skill-tag">Maintenance corrective</span>
-        <span class="skill-tag">Maintenance évolutive</span>
-        <span class="skill-tag">Architecture logicielle</span>
-        <span class="skill-tag">UML / Modélisation</span>
-      </div>
-    </div>
-
-    <div class="skill-card reveal">
-      <span class="skill-icon">🔒</span>
-      <div class="skill-name">Bloc 3 — Cybersécurité</div>
-      <div class="skill-items">
-        <span class="skill-tag">RGPD / CNIL</span>
-        <span class="skill-tag">Gestion des accès</span>
-        <span class="skill-tag">Sécurité applicative</span>
-        <span class="skill-tag">Analyse logs</span>
-        <span class="skill-tag">Prévention attaques</span>
-      </div>
-    </div>
-
+    <div class="skill-card reveal"><span class="skill-icon">⚡</span><div class="skill-name">Développement</div><div class="skill-items"><span class="skill-tag">HTML / CSS</span><span class="skill-tag">PHP</span><span class="skill-tag">Flutter / Dart</span><span class="skill-tag">API REST</span></div></div>
+    <div class="skill-card reveal"><span class="skill-icon">🗄️</span><div class="skill-name">Données</div><div class="skill-items"><span class="skill-tag">MySQL</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Firebase</span><span class="skill-tag">Modélisation BDD</span><span class="skill-tag">SQL avancé</span></div></div>
+    <div class="skill-card reveal"><span class="skill-icon">🛠️</span><div class="skill-name">Outils & Méthodes</div><div class="skill-items"><span class="skill-tag">Git / GitHub</span><span class="skill-tag">VS Code</span><span class="skill-tag">Android Studio</span><span class="skill-tag">Méthode Agile</span><span class="skill-tag">Tests & Recette</span></div></div>
+    <div class="skill-card reveal"><span class="skill-icon">🖥️</span><div class="skill-name">Bloc 1 — Support</div><div class="skill-items"><span class="skill-tag">Gestion patrimoine</span><span class="skill-tag">Support & incidents</span><span class="skill-tag">Déploiement service</span><span class="skill-tag">Mode projet</span><span class="skill-tag">Veille techno</span></div></div>
+    <div class="skill-card reveal"><span class="skill-icon">💻</span><div class="skill-name">Bloc 2 — SLAM</div><div class="skill-items"><span class="skill-tag">Conception applicative</span><span class="skill-tag">Maintenance corrective</span><span class="skill-tag">Maintenance évolutive</span><span class="skill-tag">Architecture logicielle</span><span class="skill-tag">UML / Modélisation</span></div></div>
+    <div class="skill-card reveal"><span class="skill-icon">🔒</span><div class="skill-name">Bloc 3 — Cybersécurité</div><div class="skill-items"><span class="skill-tag">RGPD / CNIL</span><span class="skill-tag">Gestion des accès</span><span class="skill-tag">Sécurité applicative</span><span class="skill-tag">Analyse logs</span><span class="skill-tag">Prévention attaques</span></div></div>
   </div>
 </section>
 
@@ -793,310 +459,59 @@
   <div class="projects-grid">
     <div class="project-card reveal">
       <div class="project-visual project-visual-1"><span class="project-glyph">🐾</span><div class="project-overlay"></div></div>
-      <div class="project-body">
-        <div class="project-type">Application Mobile — Chat Temps Réel</div>
-        <h3 class="project-title">Animal'and Chat</h3>
-        <p class="project-desc">Application de messagerie instantanée Flutter avec chat en temps réel, notifications push et panel administrateur.</p>
-        <div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Dart</span><span class="project-tag">Firebase</span><span class="project-tag">PostgreSQL</span><span class="project-tag">OVH</span></div>
-        <button class="project-btn" onclick="openModal('animaland')"><span>✦ Ouvrir</span></button>
-      </div>
+      <div class="project-body"><div class="project-type">Application Mobile — Chat Temps Réel</div><h3 class="project-title">Animal'and Chat</h3><p class="project-desc">Application de messagerie instantanée Flutter avec chat en temps réel, notifications push et panel administrateur.</p><div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Dart</span><span class="project-tag">Firebase</span><span class="project-tag">PostgreSQL</span><span class="project-tag">OVH</span></div><button class="project-btn" onclick="openModal('animaland')"><span>✦ Ouvrir</span></button></div>
     </div>
     <div class="project-card reveal">
       <div class="project-visual project-visual-2"><span class="project-glyph">🦺</span><div class="project-overlay"></div></div>
-      <div class="project-body">
-        <div class="project-type">Application Mobile</div>
-        <h3 class="project-title">Animal'vest</h3>
-        <p class="project-desc">Application compagnon d'Animal'and dédiée à la gestion des équipements et accessoires pour animaux.</p>
-        <div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Dart</span><span class="project-tag">Firebase</span></div>
-        <button class="project-btn" onclick="openModal('animalvest')"><span>✦ Ouvrir</span></button>
-      </div>
+      <div class="project-body"><div class="project-type">Application Mobile</div><h3 class="project-title">Animal'vest</h3><p class="project-desc">Application compagnon d'Animal'and dédiée à la gestion des équipements et accessoires pour animaux.</p><div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Dart</span><span class="project-tag">Firebase</span></div><button class="project-btn" onclick="openModal('animalvest')"><span>✦ Ouvrir</span></button></div>
     </div>
     <div class="project-card reveal">
-      <div class="project-visual" style="background:linear-gradient(135deg,#0d1530,#1a2f60,#0d1530);height:200px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;"><span class="project-glyph">⚔️</span><div class="project-overlay"></div></div>
-      <div class="project-body">
-        <div class="project-type">Projet Web</div>
-        <h3 class="project-title">League of Legends</h3>
-        <p class="project-desc">Projet web autour de l'univers de League of Legends avec affichage de données et design immersif.</p>
-        <div class="project-tags"><span class="project-tag">HTML</span><span class="project-tag">CSS</span><span class="project-tag">PHP</span><span class="project-tag">MySQL</span></div>
-        <button class="project-btn" onclick="openModal('lol')"><span>✦ Ouvrir</span></button>
-      </div>
+      <div class="project-visual" style="background:linear-gradient(135deg,#1a1a50,#2a2880,#1a1a50);height:200px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;"><span class="project-glyph">⚔️</span><div class="project-overlay"></div></div>
+      <div class="project-body"><div class="project-type">Projet Web</div><h3 class="project-title">League of Legends</h3><p class="project-desc">Projet web autour de l'univers de League of Legends avec affichage de données et design immersif.</p><div class="project-tags"><span class="project-tag">HTML</span><span class="project-tag">CSS</span><span class="project-tag">PHP</span><span class="project-tag">MySQL</span></div><button class="project-btn" onclick="openModal('lol')"><span>✦ Ouvrir</span></button></div>
     </div>
   </div>
 </section>
 
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-animaland" onclick="closeModal(event,'animaland')">
-  <div class="modal">
-    <div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
-    <div class="modal-header">
-      <div>
-        <div class="modal-type">Application Mobile — Chat Temps Réel</div>
-        <div class="modal-title">Animal'and Chat</div>
+  <div class="modal"><div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
+    <div class="modal-header"><div><div class="modal-type">Application Mobile — Chat Temps Réel</div><div class="modal-title">Animal'and Chat</div></div><button class="modal-close" onclick="closeModalBtn('animaland')">✕</button></div>
+    <div class="modal-body"><span class="modal-emoji">💬</span>
+      <p class="modal-desc">Animal'and Chat est une application mobile de messagerie instantanée développée avec Flutter. Le backend est déployé sur un serveur OVH via <strong>Termius SSH</strong>, la base de données est PostgreSQL, et les notifications sont gérées par Firebase Messaging.</p>
+      <div class="modal-features"><div class="modal-features-title">✦ Cliquer sur une fonctionnalité pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-inscription')"><div style="flex:1"><span class="feat-title">🔑 Inscription & Accès</span><span class="feat-preview">Validation manuelle des comptes par un administrateur avant accès.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-chat')"><div style="flex:1"><span class="feat-title">💬 Chat en temps réel</span><span class="feat-preview">Messages instantanés dans les salons grâce à Socket.io, avec horodatage.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-notif')"><div style="flex:1"><span class="feat-title">🔔 Notifications push</span><span class="feat-preview">Firebase Messaging envoie des alertes même quand l'app est fermée.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-salons')"><div style="flex:1"><span class="feat-title">🐾 Conversations & Groupes</span><span class="feat-preview">Les utilisateurs créent des conversations, seuls les admins peuvent créer des groupes.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-sondages')"><div style="flex:1"><span class="feat-title">📊 Sondages</span><span class="feat-preview">Création de sondages dans les salons, résultats mis à jour en temps réel.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title">🎨 Personnalisation</span><span class="feat-preview">Fond d'écran personnalisable par l'utilisateur selon ses préférences.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title">🛡️ Panel administrateur</span><span class="feat-preview">Gestion complète des comptes : rôles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">›</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title">🗄️ Backend & Base de données</span><span class="feat-preview">PostgreSQL sur OVH, déployé via Termius SSH.</span></div><span class="feat-arrow">›</span></button>
       </div>
-      <button class="modal-close" onclick="closeModalBtn('animaland')">✕</button>
-    </div>
-    <div class="modal-body">
-      <span class="modal-emoji">💬</span>
-      <p class="modal-desc">Animal'and Chat est une application mobile de messagerie instantanée développée avec Flutter. Elle permet à une communauté de propriétaires d'animaux de communiquer en temps réel. Le backend est déployé sur un serveur OVH via <strong>Termius SSH</strong>, la base de données est PostgreSQL, et les notifications sont gérées par Firebase Messaging.</p>
-
-      <div class="modal-features">
-        <div class="modal-features-title">✦ Cliquer sur une fonctionnalité pour en savoir plus</div>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-inscription')">
-          <div style="flex:1"><span class="feat-title">🔑 Inscription & Accès</span><span class="feat-preview">Validation manuelle des comptes par un administrateur avant accès.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-chat')">
-          <div style="flex:1"><span class="feat-title">💬 Chat en temps réel</span><span class="feat-preview">Messages instantanés dans les salons grâce à Firebase, avec horodatage.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-notif')">
-          <div style="flex:1"><span class="feat-title">🔔 Notifications push</span><span class="feat-preview">Firebase Messaging envoie des alertes même quand l'app est fermée.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-salons')">
-          <div style="flex:1"><span class="feat-title">🐾 Conversations & Groupes</span><span class="feat-preview">Les utilisateurs créent des conversations, seuls les admins peuvent créer des groupes.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-sondages')">
-          <div style="flex:1"><span class="feat-title">📊 Sondages</span><span class="feat-preview">Création de sondages dans les salons, résultats mis à jour en temps réel.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-perso')">
-          <div style="flex:1"><span class="feat-title">🎨 Personnalisation</span><span class="feat-preview">Fond d'écran personnalisable par l'utilisateur selon ses préférences.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-admin')">
-          <div style="flex:1"><span class="feat-title">🛡️ Panel administrateur</span><span class="feat-preview">Gestion complète des comptes : rôles, bans, suppressions, inscriptions.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-
-        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')">
-          <div style="flex:1"><span class="feat-title">🗄️ Backend & Base de données</span><span class="feat-preview">PostgreSQL sur OVH, déployé via Termius SSH.</span></div>
-          <span class="feat-arrow">›</span>
-        </button>
-      </div>
-
-      <div class="modal-tags">
-        <span class="modal-tag">Flutter</span>
-        <span class="modal-tag">Dart</span>
-        <span class="modal-tag">Socket.io</span>
-        <span class="modal-tag">Firebase Messaging</span>
-        <span class="modal-tag">PostgreSQL</span>
-        <span class="modal-tag">OVH</span>
-        <span class="modal-tag">Termius SSH</span>
-      </div>
+      <div class="modal-tags"><span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Socket.io</span><span class="modal-tag">Firebase Messaging</span><span class="modal-tag">PostgreSQL</span><span class="modal-tag">OVH</span><span class="modal-tag">Termius SSH</span></div>
     </div>
   </div>
 </div>
 
-<!-- ══ SOUS-MODALS FONCTIONNALITÉS ══ -->
+<div class="submodal-overlay" id="feat-inscription" onclick="closeSubModal(event,'feat-inscription')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🔑</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Inscription & Accès</div><button class="submodal-close" onclick="closeSubModalBtn('feat-inscription')">✕</button></div><div class="submodal-body"><p class="submodal-desc">L'accès à l'application n'est pas ouvert à tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">La demande est enregistrée en base PostgreSQL avec le statut <strong>« en attente »</strong>. L'accès est bloqué jusqu'à validation.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un administrateur reçoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois accepté, l'utilisateur peut se connecter et <strong>créer des conversations</strong> avec d'autres membres.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">La création de <strong>groupes</strong> est réservée aux administrateurs uniquement.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-inscription" onclick="closeSubModal(event,'feat-inscription')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🔑</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Inscription & Accès</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-inscription')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'accès à l'application n'est pas ouvert à tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter. Une fois validé, ses droits dépendent de son rôle.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">La demande est enregistrée en base PostgreSQL avec le statut <strong>« en attente »</strong>. L'accès est bloqué jusqu'à validation.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un administrateur reçoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois accepté, l'utilisateur peut se connecter et <strong>créer des conversations</strong> avec d'autres membres de l'application.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">La création de <strong>groupes</strong> est quant à elle réservée aux administrateurs uniquement — un utilisateur standard ne peut pas créer de groupe.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-chat" onclick="closeSubModal(event,'feat-chat')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">💬</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Chat en temps réel</div><button class="submodal-close" onclick="closeSubModalBtn('feat-chat')">✕</button></div><div class="submodal-body"><p class="submodal-desc">Le cœur de l'application repose sur une messagerie instantanée via <button class="tech-accordion" onclick="toggleAcc('acc-socketio')"><span>Socket.io</span><span class="acc-arrow">›</span></button>. Les messages sont persistés en PostgreSQL et distribués en temps réel.<div class="tech-accordion-body" id="acc-socketio"><div class="tech-accordion-inner"><ul><li>Socket.io établit une <strong>connexion permanente</strong> entre le serveur et l'application (WebSocket).</li><li>Contrairement au HTTP classique, Socket.io permet au serveur de <strong>pousser instantanément</strong> les données dès qu'un événement se produit.</li><li>Dès qu'un message est envoyé, le serveur notifie immédiatement tous les clients connectés — <strong>sans rechargement, sans délai</strong>.</li></ul></div></div></p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur sélectionne une conversation et rédige son message.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">À l'envoi, le message est <strong>enregistré en base PostgreSQL</strong> pour garantir la persistance.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Si le destinataire est connecté</strong>, il reçoit le message <strong>instantanément via Socket.io</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Si le destinataire est absent</strong>, une <strong>notification push Firebase Messaging</strong> est déclenchée.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Chaque message affiche l'auteur, le contenu et <strong>l'horodatage précis</strong> de l'envoi.</span></div><div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Indicateur de frappe :</strong> lorsqu'un utilisateur écrit, un message <em style="color:var(--cyan)">"X est en train d'écrire…"</em> s'affiche en temps réel.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-chat" onclick="closeSubModal(event,'feat-chat')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">💬</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Chat en temps réel</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-chat')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Le cœur de l'application repose sur une messagerie instantanée via <button class="tech-accordion" onclick="toggleAcc('acc-socketio')"><span>Socket.io</span><span class="acc-arrow">›</span></button>. Les messages sont persistés en PostgreSQL et distribués en temps réel aux utilisateurs connectés, avec une notification push pour ceux qui sont absents.
-        <div class="tech-accordion-body" id="acc-socketio">
-          <div class="tech-accordion-inner">
-            <ul>
-              <li>Socket.io établit une <strong>connexion permanente</strong> entre le serveur et l'application (WebSocket).</li>
-              <li>Contrairement au HTTP classique où le client doit <strong>demander</strong> les données, Socket.io permet au serveur de les <strong>pousser instantanément</strong> dès qu'un événement se produit.</li>
-              <li>Ici, dès qu'un message est envoyé, le serveur notifie immédiatement tous les clients connectés à la conversation — <strong>sans rechargement, sans délai</strong>.</li>
-            </ul>
-          </div>
-        </div>
-      </p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur sélectionne une conversation ou un groupe et rédige son message dans la zone de saisie.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">À l'envoi, le message est <strong>enregistré en base PostgreSQL</strong> pour garantir la persistance et l'historique.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Si le destinataire est connecté</strong> à l'application, il reçoit le message <strong>instantanément via Socket.io</strong>, sans aucun rechargement ni action de sa part.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Si le destinataire n'est pas sur l'application</strong>, une <strong>notification push Firebase Messaging</strong> est déclenchée automatiquement pour l'alerter du nouveau message.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Chaque message affiche l'auteur, le contenu et <strong>l'horodatage précis</strong> de l'envoi.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Indicateur de frappe :</strong> lorsqu'un utilisateur est en train d'écrire, un message <em style="color:var(--cyan)">"X est en train d'écrire…"</em> s'affiche en temps réel pour tous les membres de la conversation, que ce soit dans la conversation elle-même ou sur la page liste des conversations. Cet indicateur disparaît automatiquement dès que l'utilisateur arrête d'écrire ou envoie son message — géré via un événement Socket.io dédié.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-notif" onclick="closeSubModal(event,'feat-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🔔</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('feat-notif')">✕</button></div><div class="submodal-body"><p class="submodal-desc">Grâce à Firebase Cloud Messaging (FCM), les utilisateurs sont alertés des nouveaux messages même lorsqu'ils n'ont pas l'application ouverte.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors de la connexion, l'application récupère le <strong>token FCM</strong> de l'appareil et l'enregistre en base.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand un message est envoyé, le backend <strong>déclenche une notification FCM</strong> vers les membres du salon.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">La notification apparaît même si l'application est <strong>fermée ou en arrière-plan</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un tap sur la notification <strong>ouvre directement le salon</strong> concerné.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-notif" onclick="closeSubModal(event,'feat-notif')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🔔</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Notifications push</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-notif')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Grâce à Firebase Cloud Messaging (FCM), les utilisateurs sont alertés des nouveaux messages même lorsqu'ils n'ont pas l'application ouverte.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors de la connexion, l'application récupère le <strong>token FCM</strong> de l'appareil et l'enregistre en base de données.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand un message est envoyé dans un salon, le backend <strong>déclenche une notification FCM</strong> vers les membres du salon.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">La notification apparaît sur l'appareil même si l'application est <strong>fermée ou en arrière-plan</strong>, avec le nom de l'expéditeur et un aperçu du message.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un tap sur la notification <strong>ouvre directement le salon</strong> concerné dans l'application.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-salons" onclick="closeSubModal(event,'feat-salons')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🐾</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Conversations & Groupes</div><button class="submodal-close" onclick="closeSubModalBtn('feat-salons')">✕</button></div><div class="submodal-body"><p class="submodal-desc">L'application distingue deux types d'espaces : les <strong style="color:var(--gold)">conversations</strong> créées librement, et les <strong style="color:var(--cyan)">groupes</strong> réservés aux administrateurs.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Conversations (utilisateurs) :</strong> chaque utilisateur peut créer une conversation en choisissant un ou plusieurs contacts.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Groupes (admins uniquement) :</strong> seuls les administrateurs peuvent créer des groupes visibles par tous.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'<strong>historique complet</strong> est chargé à l'ouverture et les nouveaux messages arrivent en temps réel via Socket.io.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un indicateur de <strong>présence en ligne</strong> permet de savoir quels membres sont connectés.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimés de la base PostgreSQL.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-salons" onclick="closeSubModal(event,'feat-salons')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🐾</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Conversations & Groupes</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-salons')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'application distingue deux types d'espaces de discussion : les <strong style="color:var(--gold)">conversations</strong> créées librement par les utilisateurs, et les <strong style="color:var(--cyan)">groupes</strong> réservés aux administrateurs. Chaque espace dispose d'un historique de messages chargé en temps réel.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Conversations (utilisateurs) :</strong> dès que son compte est validé, chaque utilisateur peut créer une conversation en choisissant un ou plusieurs contacts. La conversation est enregistrée en base PostgreSQL et accessible immédiatement.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Groupes (admins uniquement) :</strong> seuls les administrateurs ont le droit de créer des groupes. Un groupe peut rassembler un grand nombre de membres autour d'une thématique et est visible par tous les utilisateurs de l'application.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans les deux cas, l'<strong>historique complet des messages</strong> est chargé à l'ouverture et les nouveaux messages arrivent en temps réel via Socket.io sans rechargement.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un indicateur de <strong>présence en ligne</strong> permet de savoir quels membres sont connectés dans la conversation ou le groupe.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Suppression automatique :</strong> les messages datant de plus de <strong>6 mois</strong> sont automatiquement supprimés de la base PostgreSQL, afin de ne pas surcharger le serveur et de garder les conversations pertinentes.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-sondages" onclick="closeSubModal(event,'feat-sondages')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">📊</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Sondages</div><button class="submodal-close" onclick="closeSubModalBtn('feat-sondages')">✕</button></div><div class="submodal-body"><p class="submodal-desc">Les utilisateurs peuvent animer leur salon en créant des sondages interactifs. Les votes et résultats sont visibles en temps réel.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">N'importe quel membre peut créer un sondage en définissant une <strong>question et plusieurs options</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le sondage est enregistré en PostgreSQL et diffusé via <strong>Socket.io</strong> à tous les membres.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque membre vote une seule fois. <strong>Un seul vote par utilisateur</strong> est autorisé.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les <strong>résultats se mettent à jour en direct</strong> avec le pourcentage de votes pour chaque option.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-sondages" onclick="closeSubModal(event,'feat-sondages')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">📊</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Sondages</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-sondages')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Les utilisateurs peuvent animer leur salon en créant des sondages interactifs. Les votes et résultats sont visibles en temps réel par tous les membres.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">N'importe quel membre peut créer un sondage dans un salon en définissant une <strong>question et plusieurs options de réponse</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le sondage est <strong>enregistré en base PostgreSQL</strong> et diffusé instantanément à tous les membres via <strong>Socket.io</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque membre vote pour l'option de son choix. <strong>Un seul vote par utilisateur</strong> est autorisé.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les <strong>résultats se mettent à jour en direct</strong> avec le pourcentage de votes pour chaque option, visible par tous.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-perso" onclick="closeSubModal(event,'feat-perso')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🎨</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Personnalisation</div><button class="submodal-close" onclick="closeSubModalBtn('feat-perso')">✕</button></div><div class="submodal-body"><p class="submodal-desc">Chaque utilisateur peut personnaliser son expérience visuelle en choisissant un fond d'écran selon ses goûts.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Dans les paramètres, l'utilisateur accède à une <strong>liste de fonds d'écran prédéfinis</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Il peut également choisir une <strong>image personnalisée depuis sa galerie locale</strong>.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le fond d'écran est stocké <strong>uniquement en local sur l'appareil</strong> — jamais envoyé au serveur.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'interface <strong>s'adapte immédiatement</strong> avec le fond d'écran choisi.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-perso" onclick="closeSubModal(event,'feat-perso')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🎨</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Personnalisation</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-perso')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Chaque utilisateur peut personnaliser son expérience visuelle dans l'application en choisissant un fond d'écran selon ses goûts.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Dans les paramètres, l'utilisateur accède à une <strong>liste de fonds d'écran prédéfinis</strong> proposés par l'application. Il sélectionne celui de son choix en un tap.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Il peut également choisir une <strong>image personnalisée depuis sa galerie locale</strong> pour l'utiliser comme fond d'écran à la place des options prédéfinies.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le fond d'écran personnalisé est stocké <strong>uniquement en local sur l'appareil</strong> — il n'est jamais envoyé au serveur ni en base de données. Seul l'utilisateur lui-même peut le voir de son côté.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'interface de l'application <strong>s'adapte immédiatement</strong> avec le fond d'écran choisi, visible sur toutes les conversations et groupes.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-admin" onclick="closeSubModal(event,'feat-admin')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🛡️</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('feat-admin')">✕</button></div><div class="submodal-body"><p class="submodal-desc">Un espace dédié aux administrateurs permet de gérer entièrement la communauté depuis l'application.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Validation des inscriptions :</strong> l'admin accepte ou refuse en un tap.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Modification des rôles :</strong> l'admin peut promouvoir un utilisateur en modérateur ou administrateur.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Bannissement :</strong> l'admin peut bannir un compte. L'utilisateur banni ne peut plus se connecter.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Suppression de compte :</strong> l'admin peut supprimer définitivement un compte et toutes ses données.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-admin" onclick="closeSubModal(event,'feat-admin')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🛡️</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Panel administrateur</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-admin')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Un espace dédié aux administrateurs permet de gérer entièrement la communauté depuis l'application, avec des droits élargis sur les comptes utilisateurs.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Validation des inscriptions :</strong> les nouvelles demandes d'accès apparaissent dans le panel. L'admin accepte ou refuse chaque demande en un tap.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Modification des rôles :</strong> l'admin peut promouvoir un utilisateur en modérateur ou administrateur, ou rétrograder un rôle existant.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Bannissement :</strong> en cas de comportement inapproprié, l'admin peut bannir un compte. L'utilisateur banni ne peut plus se connecter.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Suppression de compte :</strong> l'admin peut supprimer définitivement un compte et toutes ses données associées de la base PostgreSQL.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">🗄️</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Backend & Base de données</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">✕</button></div><div class="submodal-body"><p class="submodal-desc">L'ensemble des données est stocké dans une base PostgreSQL hébergée sur un serveur OVH, déployé via Termius SSH.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>PostgreSQL</strong> a été choisi pour sa robustesse et sa gestion avancée des données relationnelles.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le serveur est <strong>hébergé sur OVH</strong>, offrant une disponibilité fiable sans dépendance à un service tiers.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Termius SSH</strong> a été utilisé pour déployer le backend et configurer PostgreSQL directement depuis un terminal sécurisé.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Firebase</strong> est utilisé uniquement pour les <strong>notifications push via FCM</strong>. Toute la couche temps réel est gérée par <strong>Socket.io</strong>.</span></div></div></div></div></div>
 
-<div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')">
-  <div class="submodal">
-    <div class="submodal-header">
-      <span class="submodal-icon">🗄️</span>
-      <div class="submodal-type">Fonctionnalité</div>
-      <div class="submodal-title">Backend & Base de données</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">✕</button>
-    </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'ensemble des données de l'application (utilisateurs, messages, salons, sondages) est stocké dans une base de données PostgreSQL hébergée sur un serveur dédié OVH, déployé et administré via Termius SSH.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>PostgreSQL</strong> a été choisi pour sa robustesse et sa gestion avancée des données relationnelles : utilisateurs, rôles, salons, messages et sondages sont tous liés par des clés étrangères.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le serveur backend est <strong>hébergé sur OVH</strong>, offrant une disponibilité fiable et un contrôle total sur les données sans dépendance à un service tiers.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Termius SSH</strong> a été utilisé pour se connecter au serveur OVH, déployer le backend, configurer PostgreSQL et effectuer les mises à jour directement depuis le terminal sécurisé.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Firebase</strong> est utilisé uniquement pour l'envoi des <strong>notifications push via FCM</strong> (Firebase Cloud Messaging) lorsqu'un utilisateur n'est pas connecté à l'application. Toute la couche temps réel (messages, sondages, indicateur de frappe) est gérée par <strong>Socket.io</strong>.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="modal-animalvest" onclick="closeModal(event,'animalvest')"><div class="modal"><div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div><div class="modal-header"><div><div class="modal-type">Application Mobile</div><div class="modal-title">Animal'vest</div></div><button class="modal-close" onclick="closeModalBtn('animalvest')">✕</button></div><div class="modal-body"><span class="modal-emoji">🦺</span><p class="modal-desc">Animal'vest est l'application compagnon d'Animal'and, centrée sur la gestion des équipements, accessoires et fournitures liés aux animaux de compagnie.</p><div class="modal-features"><div class="modal-features-title">Fonctionnalités</div><div class="modal-feature">Inventaire des équipements par animal</div><div class="modal-feature">Alertes de renouvellement et d'entretien</div><div class="modal-feature">Synchronisation avec Animal'and via Firebase</div><div class="modal-feature">Interface intuitive et épurée</div></div><div class="modal-tags"><span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span></div></div></div></div>
 
-<div class="modal-overlay" id="modal-animalvest" onclick="closeModal(event,'animalvest')">
-  <div class="modal">
-    <div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
-    <div class="modal-header"><div><div class="modal-type">Application Mobile</div><div class="modal-title">Animal'vest</div></div><button class="modal-close" onclick="closeModalBtn('animalvest')">✕</button></div>
-    <div class="modal-body">
-      <span class="modal-emoji">🦺</span>
-      <p class="modal-desc">Animal'vest est l'application compagnon d'Animal'and, centrée sur la gestion des équipements, accessoires et fournitures liés aux animaux de compagnie.</p>
-      <div class="modal-features"><div class="modal-features-title">Fonctionnalités</div><div class="modal-feature">Inventaire des équipements par animal</div><div class="modal-feature">Alertes de renouvellement et d'entretien</div><div class="modal-feature">Synchronisation avec Animal'and via Firebase</div><div class="modal-feature">Interface intuitive et épurée</div></div>
-      <div class="modal-tags"><span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span></div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-lol" onclick="closeModal(event,'lol')">
-  <div class="modal">
-    <div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
-    <div class="modal-header"><div><div class="modal-type">Projet Web</div><div class="modal-title">League of Legends</div></div><button class="modal-close" onclick="closeModalBtn('lol')">✕</button></div>
-    <div class="modal-body">
-      <span class="modal-emoji">⚔️</span>
-      <p class="modal-desc">Projet web immersif inspiré de l'univers de League of Legends. Affichage de données de jeu, design thématique et intégration d'une base de données pour gérer les champions et statistiques.</p>
-      <div class="modal-features"><div class="modal-features-title">Fonctionnalités</div><div class="modal-feature">Affichage et recherche de champions</div><div class="modal-feature">Base de données MySQL des personnages</div><div class="modal-feature">Design thématique inspiré du jeu</div><div class="modal-feature">Interface web responsive en PHP/HTML/CSS</div></div>
-      <div class="modal-tags"><span class="modal-tag">HTML</span><span class="modal-tag">CSS</span><span class="modal-tag">PHP</span><span class="modal-tag">MySQL</span></div>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="modal-lol" onclick="closeModal(event,'lol')"><div class="modal"><div class="modal-corner tl"></div><div class="modal-corner tr"></div><div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div><div class="modal-header"><div><div class="modal-type">Projet Web</div><div class="modal-title">League of Legends</div></div><button class="modal-close" onclick="closeModalBtn('lol')">✕</button></div><div class="modal-body"><span class="modal-emoji">⚔️</span><p class="modal-desc">Projet web immersif inspiré de l'univers de League of Legends. Affichage de données de jeu, design thématique et intégration d'une base de données pour gérer les champions et statistiques.</p><div class="modal-features"><div class="modal-features-title">Fonctionnalités</div><div class="modal-feature">Affichage et recherche de champions</div><div class="modal-feature">Base de données MySQL des personnages</div><div class="modal-feature">Design thématique inspiré du jeu</div><div class="modal-feature">Interface web responsive en PHP/HTML/CSS</div></div><div class="modal-tags"><span class="modal-tag">HTML</span><span class="modal-tag">CSS</span><span class="modal-tag">PHP</span><span class="modal-tag">MySQL</span></div></div></div></div>
 
 <div class="arcane-divider"><div class="divider-gem"></div></div>
 
@@ -1105,431 +520,29 @@
   <h2 class="contact-title reveal">Me contacter</h2>
   <p class="contact-text reveal">"Chaque grand voyage commence par un premier message."<br>Discutons de ton prochain projet.</p>
   <div class="contact-links reveal">
-    <a href="/cdn-cgi/l/email-protection#7d1e120f18130914135310180e080f183d18051c100d1118531e1210" class="contact-link">✉ Email</a>
+    <a href="mailto:corentin.mesure@example.com" class="contact-link">✉ Email</a>
     <a href="https://github.com/" target="_blank" class="contact-link">⌥ GitHub</a>
     <a href="https://linkedin.com/" target="_blank" class="contact-link">◈ LinkedIn</a>
     <a href="cv-corentin-mesure.pdf" download class="contact-link">⬇ CV PDF</a>
   </div>
 </div>
 
-<footer>
-  <p>© 2026 Corentin Mesure — BTS SIO SLAM &nbsp;</p>
-</footer>
+<footer><p>© 2026 Corentin Mesure — BTS SIO SLAM</p></footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 'use strict';
-
-// ══════════════════════════════════════════
-// CURSEUR STATIQUE — position directe, zéro lag
-// ══════════════════════════════════════════
-(function initCursor() {
-  const dot  = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  if (!dot || !ring) return;
-
-  // On ne met AUCUNE transition sur la position — seulement scale sur le point
-  dot.style.transition  = 'transform 0.1s cubic-bezier(0.34,1.56,0.64,1)';
-  ring.style.transition = 'transform 0.18s ease';
-
-  let px = -100, py = -100; // départ hors écran
-
-  document.addEventListener('mousemove', e => {
-    px = e.clientX;
-    py = e.clientY;
-    // Position appliquée immédiatement, pas dans un rAF pour zéro latence
-    dot.style.transform  = `translate(${px}px, ${py}px) translate(-50%,-50%) scale(var(--cs,1))`;
-    ring.style.transform = `translate(${px}px, ${py}px) translate(-50%,-50%)`;
-  }, { passive: true });
-
-  // Scale au survol des éléments interactifs
-  document.addEventListener('mouseover', e => {
-    const t = e.target.closest('a,button,[onclick]');
-    dot.style.setProperty('--cs', t ? '2.2' : '1');
-  }, { passive: true });
-})();
-
-
-// ══════════════════════════════════════════
-// SCROLL PROGRESS + NAV ACTIVE
-// ══════════════════════════════════════════
-(function initScroll() {
-  const sp      = document.getElementById('scrollProgress');
-  const navLinks = [...document.querySelectorAll('.nav-links a')];
-  const sections = [...document.querySelectorAll('section,#about,#timeline,#skills,#projects,#contact-section')];
-  let ticking = false;
-
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const scrolled = window.scrollY;
-      const total    = document.body.scrollHeight - window.innerHeight;
-      if (sp) sp.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
-
-      let active = '';
-      for (const s of sections) {
-        if (scrolled >= s.offsetTop - 220) active = s.id;
-      }
-      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active));
-      ticking = false;
-    });
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-})();
-
-
-// ══════════════════════════════════════════
-// HERO NAME — animation lettre par lettre
-// ══════════════════════════════════════════
-(function initHeroName() {
-  const hn = document.querySelector('.hero-name');
-  if (!hn) return;
-  let gi = 0;
-  hn.innerHTML = hn.innerHTML.split('<br>').map(line =>
-    [...line].map(ch =>
-      `<span class="letter" style="animation-delay:${(0.08 * gi++ + 0.2).toFixed(2)}s">${ch === ' ' ? '&nbsp;' : ch}</span>`
-    ).join('')
-  ).join('<br>');
-})();
-
-
-// ══════════════════════════════════════════
-// TYPEWRITER
-// ══════════════════════════════════════════
-(function initTypewriter() {
-  const sub = document.querySelector('.hero-subtitle');
-  if (!sub) return;
-  const txt = sub.textContent;
-  sub.textContent = '';
-  sub.classList.add('typewriter');
-  let i = 0;
-  const start = setTimeout(() => {
-    const t = setInterval(() => {
-      sub.textContent += txt[i++];
-      if (i >= txt.length) {
-        clearInterval(t);
-        setTimeout(() => sub.classList.remove('typewriter'), 1000);
-      }
-    }, 60);
-  }, 1200);
-})();
-
-
-// ══════════════════════════════════════════
-// HERO CANVAS — particules 3D
-// ══════════════════════════════════════════
-(function initCanvas() {
-  const hc = document.getElementById('heroCanvas');
-  if (!hc) return;
-  const ctx = hc.getContext('2d', { alpha: true });
-  let hW = 0, hH = 0;
-  const mouse = { x: 0, y: 0 };
-  let paused = false;
-
-  function resize() {
-    hW = hc.offsetWidth;
-    hH = hc.offsetHeight;
-    hc.width  = hW;
-    hc.height = hH;
-  }
-  resize();
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 200);
-  }, { passive: true });
-
-  const heroEl = document.getElementById('hero');
-  if (heroEl) {
-    heroEl.addEventListener('mousemove', e => {
-      const r = hc.getBoundingClientRect();
-      mouse.x = (e.clientX - r.left) / hW - 0.5;
-      mouse.y = (e.clientY - r.top)  / hH - 0.5;
-    }, { passive: true });
-  }
-
-  const COLORS = ['#4fd1d9', '#c9a84c', '#6b3fa0'];
-  const pts = Array.from({ length: 50 }, () => ({
-    x:  (Math.random() - .5) * 2,
-    y:  (Math.random() - .5) * 2,
-    z:  Math.random() * 2 - 1,
-    vx: (Math.random() - .5) * 0.0003,
-    vy: (Math.random() - .5) * 0.0003,
-    vz: (Math.random() - .5) * 0.001,
-    r:  COLORS[Math.floor(Math.random() * COLORS.length)],
-    s:  0.5 + Math.random() * 1.5
-  }));
-
-  const MD2 = 0.35 * 0.35;
-  const MC  = 3;
-
-  function project(p) {
-    const d = (p.z + 1.5) * 0.5 + 0.3;
-    return {
-      sx: ((p.x + mouse.x * .15) / d * .8 + .5) * hW,
-      sy: ((p.y + mouse.y * .15) / d * .8 + .5) * hH,
-      sc: 1 / d
-    };
-  }
-
-  document.addEventListener('visibilitychange', () => { paused = document.hidden; });
-  if (heroEl) {
-    new IntersectionObserver(([e]) => { paused = !e.isIntersecting; }, { threshold: 0 }).observe(heroEl);
-  }
-
-  function draw() {
-    requestAnimationFrame(draw);
-    if (paused) return;
-    ctx.clearRect(0, 0, hW, hH);
-
-    pts.sort((a, b) => a.z - b.z);
-    const pj = pts.map(p => {
-      p.x += p.vx; p.y += p.vy; p.z += p.vz;
-      if (p.x >  1.2) p.x = -1.2; else if (p.x < -1.2) p.x = 1.2;
-      if (p.y >  1.2) p.y = -1.2; else if (p.y < -1.2) p.y = 1.2;
-      if (p.z > 1 || p.z < -1) p.vz *= -1;
-      return project(p);
-    });
-
-    // Points
-    for (let i = 0; i < pts.length; i++) {
-      const q = pj[i];
-      if (q.sx < 0 || q.sx > hW || q.sy < 0 || q.sy > hH) continue;
-      const alpha = Math.max(0, Math.min(0.8, q.sc * 0.6));
-      ctx.beginPath();
-      ctx.arc(q.sx, q.sy, pts[i].s * q.sc * 2, 0, Math.PI * 2);
-      ctx.fillStyle = pts[i].r + Math.floor(alpha * 255).toString(16).padStart(2, '0');
-      ctx.fill();
-    }
-
-    // Lignes de connexion
-    const cn = new Uint8Array(pts.length);
-    for (let i = 0; i < pts.length; i++) {
-      if (cn[i] >= MC) continue;
-      for (let j = i + 1; j < pts.length; j++) {
-        if (cn[j] >= MC) continue;
-        const d2 = (pts[i].x-pts[j].x)**2 + (pts[i].y-pts[j].y)**2 + (pts[i].z-pts[j].z)**2;
-        if (d2 > MD2) continue;
-        const a = ((1 - d2 / MD2) * 0.1).toFixed(3);
-        ctx.beginPath();
-        ctx.moveTo(pj[i].sx, pj[i].sy);
-        ctx.lineTo(pj[j].sx, pj[j].sy);
-        ctx.strokeStyle = `rgba(201,168,76,${a})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-        cn[i]++; cn[j]++;
-      }
-    }
-  }
-  draw();
-})();
-
-
-// ══════════════════════════════════════════
-// INTERSECTION OBSERVERS (timeline / skills / reveal)
-// ══════════════════════════════════════════
-(function initObservers() {
-  // Timeline
-  const tlObs = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
-      if (!e.isIntersecting) return;
-      setTimeout(() => e.target.classList.add('visible'), i * 150);
-      tlObs.unobserve(e.target);
-    });
-  }, { threshold: 0.2 });
-  document.querySelectorAll('.timeline-item').forEach(el => tlObs.observe(el));
-
-  // Skills
-  const skObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.querySelectorAll('.skill-tag').forEach((t, i) => { t.style.transitionDelay = (i * .08) + 's'; });
-      e.target.classList.add('visible');
-      skObs.unobserve(e.target);
-    });
-  }, { threshold: 0.3 });
-  document.querySelectorAll('.skill-card').forEach(c => skObs.observe(c));
-
-  // Reveal générique
-  const rvObs = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
-      if (!e.isIntersecting) return;
-      setTimeout(() => e.target.classList.add('visible'), i * 80);
-      rvObs.unobserve(e.target);
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => rvObs.observe(el));
-})();
-
-
-// ══════════════════════════════════════════
-// FLIP CARD — robuste, sans race conditions
-// ══════════════════════════════════════════
-(function initFlipCard() {
-  let state  = 'closed'; // 'closed' | 'flipping' | 'open' | 'closing'
-  let clone  = null;
-  let origRect = null;
-  let expandTimer = null;
-
-  function clearTimers() {
-    clearTimeout(expandTimer);
-  }
-
-  window.handleFlip = function() {
-    if (state !== 'closed') return;
-    state = 'flipping';
-
-    const card = document.getElementById('flipCard');
-    if (!card) { state = 'closed'; return; }
-
-    origRect = card.getBoundingClientRect();
-
-    card.style.transition = 'transform 0.85s cubic-bezier(0.4,0.2,0.2,1)';
-    card.style.transform  = 'rotateY(180deg)';
-
-    setTimeout(() => {
-      if (state !== 'flipping') return; // annulé entre temps
-      card.style.visibility = 'hidden';
-
-      // Créer le clone
-      clone = card.cloneNode(true);
-      clone.id = 'flipCardClone';
-      clone.classList.add('is-clone');
-      clone.removeAttribute('onclick');
-      clone.style.cssText = [
-        'position:fixed',
-        `left:${origRect.left}px`,
-        `top:${origRect.top}px`,
-        `width:${origRect.width}px`,
-        `height:${origRect.height}px`,
-        'margin:0',
-        'z-index:1000',
-        'transform:rotateY(180deg)',
-        'transition:none',
-        'visibility:visible',
-        'transform-style:preserve-3d',
-        'aspect-ratio:unset',
-        'will-change:left,top,width,height'
-      ].join(';');
-
-      document.body.appendChild(clone);
-
-      const backdrop = document.getElementById('cardBackdrop');
-      if (backdrop) backdrop.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      const cb = clone.querySelector('.back-close');
-      if (cb) { cb.style.display = 'flex'; cb.onclick = e => { e.stopPropagation(); window.closeCard(); }; }
-
-      // Force reflow
-      void clone.offsetHeight;
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const maxH   = Math.min(vh * 0.995, 1060);
-      const maxW   = Math.min(vw * 0.96,  900);
-      const tH     = maxH;
-      const tW     = Math.min(maxW, tH * (5 / 6));
-      const tLeft  = (vw - tW) / 2;
-      const tTop   = (vh - tH) / 2;
-
-      clone.style.transition = 'left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
-      clone.style.left   = tLeft + 'px';
-      clone.style.top    = tTop  + 'px';
-      clone.style.width  = tW    + 'px';
-      clone.style.height = tH    + 'px';
-
-      state = 'open';
-      expandTimer = setTimeout(() => { if (clone) clone.classList.add('expanded'); }, 1050);
-
-    }, 900);
-  };
-
-  window.closeCard = function() {
-    if (state !== 'open' || !clone) return;
-    state = 'closing';
-    clearTimers();
-
-    clone.classList.remove('expanded');
-    const backdrop = document.getElementById('cardBackdrop');
-    if (backdrop) backdrop.classList.remove('active');
-
-    const card = document.getElementById('flipCard');
-
-    clone.style.transition = 'left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';
-    clone.style.left   = origRect.left   + 'px';
-    clone.style.top    = origRect.top    + 'px';
-    clone.style.width  = origRect.width  + 'px';
-    clone.style.height = origRect.height + 'px';
-
-    setTimeout(() => {
-      if (!clone) return;
-      clone.style.transition = 'transform .65s cubic-bezier(0.4,0.2,0.2,1)';
-      clone.style.transform  = 'rotateY(0deg)';
-
-      setTimeout(() => {
-        if (clone) { clone.remove(); clone = null; }
-        document.body.style.overflow = '';
-        if (card) {
-          card.style.transition  = 'none';
-          card.style.transform   = 'rotateY(0deg)';
-          card.style.visibility  = 'visible';
-          requestAnimationFrame(() => {
-            if (card) { card.style.transition = ''; card.style.transform = ''; }
-            state = 'closed';
-          });
-        } else {
-          state = 'closed';
-        }
-      }, 660);
-    }, 620);
-  };
-})();
-
-
-// ══ MODALS ══
-function openModal(id) {
-  const m = document.getElementById('modal-' + id);
-  if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; }
-}
-function closeModalBtn(id) {
-  const m = document.getElementById('modal-' + id);
-  if (m) { m.classList.remove('active'); document.body.style.overflow = ''; }
-}
-function closeModal(e, id) {
-  if (e.target === e.currentTarget) closeModalBtn(id);
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
-  document.querySelectorAll('.submodal-overlay.active').forEach(m => m.classList.remove('active'));
-  if (typeof closeCard === 'function') closeCard();
-});
-
-// ══ SOUS-MODALS ══
-function openSubModal(id) {
-  const m = document.getElementById(id);
-  if (m) m.classList.add('active');
-}
-function closeSubModalBtn(id) {
-  const m = document.getElementById(id);
-  if (m) m.classList.remove('active');
-}
-function closeSubModal(e, id) {
-  if (e.target === e.currentTarget) closeSubModalBtn(id);
-}
-
-// ══ ACCORDÉON TECH ══
-function toggleAcc(id) {
-  const body = document.getElementById(id);
-  const btn  = body && body.previousElementSibling;
-  if (!body) return;
-  const isOpen = body.classList.toggle('open');
-  if (btn && btn.classList.contains('tech-accordion')) btn.classList.toggle('open', isOpen);
-}
+(function(){const dot=document.getElementById('cursor'),ring=document.getElementById('cursorRing');if(!dot||!ring)return;dot.style.transition='transform 0.1s cubic-bezier(0.34,1.56,0.64,1)';ring.style.transition='transform 0.18s ease';document.addEventListener('mousemove',e=>{const x=e.clientX,y=e.clientY;dot.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) scale(var(--cs,1))`;ring.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;},{passive:true});document.addEventListener('mouseover',e=>{dot.style.setProperty('--cs',e.target.closest('a,button,[onclick]')?'2.2':'1');},{passive:true});})();
+(function(){const sp=document.getElementById('scrollProgress');const navLinks=[...document.querySelectorAll('.nav-links a')];const sections=[...document.querySelectorAll('section,#about,#timeline,#skills,#projects,#contact-section')];let ticking=false;window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const scrolled=window.scrollY;const total=document.body.scrollHeight-window.innerHeight;if(sp)sp.style.width=(total>0?(scrolled/total)*100:0)+'%';let active='';for(const s of sections){if(scrolled>=s.offsetTop-220)active=s.id;}navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+active));ticking=false;});},{passive:true});})();
+(function(){const tlObs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(!e.isIntersecting)return;setTimeout(()=>e.target.classList.add('visible'),i*150);tlObs.unobserve(e.target);});},{threshold:0.2});document.querySelectorAll('.timeline-item').forEach(el=>tlObs.observe(el));const skObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.querySelectorAll('.skill-tag').forEach((t,i)=>{t.style.transitionDelay=(i*.08)+'s';});e.target.classList.add('visible');skObs.unobserve(e.target);});},{threshold:0.3});document.querySelectorAll('.skill-card').forEach(c=>skObs.observe(c));const rvObs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(!e.isIntersecting)return;setTimeout(()=>e.target.classList.add('visible'),i*80);rvObs.unobserve(e.target);});},{threshold:0.1});document.querySelectorAll('.reveal').forEach(el=>rvObs.observe(el));})();
+(function(){let state='closed',clone=null,origRect=null,expandTimer=null;window.handleFlip=function(){if(state!=='closed')return;state='flipping';const card=document.getElementById('flipCard');if(!card){state='closed';return;}origRect=card.getBoundingClientRect();card.style.transition='transform 0.85s cubic-bezier(0.4,0.2,0.2,1)';card.style.transform='rotateY(180deg)';setTimeout(()=>{if(state!=='flipping')return;card.style.visibility='hidden';clone=card.cloneNode(true);clone.id='flipCardClone';clone.classList.add('is-clone');clone.removeAttribute('onclick');clone.style.cssText=['position:fixed',`left:${origRect.left}px`,`top:${origRect.top}px`,`width:${origRect.width}px`,`height:${origRect.height}px`,'margin:0','z-index:1000','transform:rotateY(180deg)','transition:none','visibility:visible','transform-style:preserve-3d','aspect-ratio:unset','will-change:left,top,width,height'].join(';');document.body.appendChild(clone);const backdrop=document.getElementById('cardBackdrop');if(backdrop)backdrop.classList.add('active');document.body.style.overflow='hidden';const cb=clone.querySelector('.back-close');if(cb){cb.style.display='flex';cb.onclick=e=>{e.stopPropagation();window.closeCard();};}void clone.offsetHeight;const vw=window.innerWidth,vh=window.innerHeight;const maxH=Math.min(vh*0.995,1060),maxW=Math.min(vw*0.96,900);const tH=maxH,tW=Math.min(maxW,tH*(5/6));const tLeft=(vw-tW)/2,tTop=(vh-tH)/2;clone.style.transition='left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';clone.style.left=tLeft+'px';clone.style.top=tTop+'px';clone.style.width=tW+'px';clone.style.height=tH+'px';state='open';expandTimer=setTimeout(()=>{if(clone)clone.classList.add('expanded');},1050);},900);};window.closeCard=function(){if(state!=='open'||!clone)return;state='closing';clearTimeout(expandTimer);clone.classList.remove('expanded');const backdrop=document.getElementById('cardBackdrop');if(backdrop)backdrop.classList.remove('active');const card=document.getElementById('flipCard');clone.style.transition='left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';clone.style.left=origRect.left+'px';clone.style.top=origRect.top+'px';clone.style.width=origRect.width+'px';clone.style.height=origRect.height+'px';setTimeout(()=>{if(!clone)return;clone.style.transition='transform .65s cubic-bezier(0.4,0.2,0.2,1)';clone.style.transform='rotateY(0deg)';setTimeout(()=>{if(clone){clone.remove();clone=null;}document.body.style.overflow='';if(card){card.style.transition='none';card.style.transform='rotateY(0deg)';card.style.visibility='visible';requestAnimationFrame(()=>{if(card){card.style.transition='';card.style.transform='';}state='closed';});}else{state='closed';}},660);},620);};})();
+function openModal(id){const m=document.getElementById('modal-'+id);if(m){m.classList.add('active');document.body.style.overflow='hidden';}}
+function closeModalBtn(id){const m=document.getElementById('modal-'+id);if(m){m.classList.remove('active');document.body.style.overflow='';}}
+function closeModal(e,id){if(e.target===e.currentTarget)closeModalBtn(id);}
+function openSubModal(id){const m=document.getElementById(id);if(m)m.classList.add('active');}
+function closeSubModalBtn(id){const m=document.getElementById(id);if(m)m.classList.remove('active');}
+function closeSubModal(e,id){if(e.target===e.currentTarget)closeSubModalBtn(id);}
+function toggleAcc(id){const body=document.getElementById(id);const btn=body&&body.previousElementSibling;if(!body)return;const isOpen=body.classList.toggle('open');if(btn&&btn.classList.contains('tech-accordion'))btn.classList.toggle('open',isOpen);}
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));document.querySelectorAll('.submodal-overlay.active').forEach(m=>m.classList.remove('active'));if(typeof closeCard==='function')closeCard();});
 </script>
 </body>
 </html>
