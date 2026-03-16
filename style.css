@@ -240,12 +240,12 @@ nav {
   flex-direction: column;
   align-items: center;
   gap:        8px;
-  animation:  scrollPulse 4s ease-in-out infinite;
+  animation:  scrollPulse 7s ease-in-out infinite;
 }
 
 @keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
-  50%       { opacity: 0.8; transform: translateX(-50%) translateY(6px); }
+  0%, 100% { opacity: 0.2; transform: translateX(-50%) translateY(0); }
+  50%       { opacity: 0.55; transform: translateX(-50%) translateY(4px); }
 }
 
 .scroll-indicator span {
@@ -772,6 +772,10 @@ section {
   text-align:     center;
   opacity:        0.75;
   white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+  max-width:      48px;
+  display:        block;
 }
 
 .skill-name {
@@ -1377,7 +1381,23 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
 
   /* ABOUT */
   .about-section-header { margin-bottom: 32px !important; }
-  .flip-card { width: min(300px, 85vw) !important; }
+  .flip-card {
+    width: 92vw !important;
+    height: 88svh !important;
+    aspect-ratio: unset !important;
+    max-width: none !important;
+  }
+  .about-visual {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .flip-back {
+    padding: 32px 24px !important;
+    overflow-y: auto !important;
+  }
+  .flip-front {
+    padding: 20px !important;
+  }
   .about-initials { font-size: 52px !important; }
   .back-text, .back-text-extra { font-size: 12px !important; line-height: 1.6 !important; }
   .back-skill-tag { font-size: 9px !important; padding: 4px 10px !important; }
@@ -1403,7 +1423,14 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   .skill-icon-row { gap: 10px 14px !important; margin-bottom: 12px !important; }
   .skill-icon-item { width: 44px !important; }
   .skill-icon-item img { width: 26px !important; height: 26px !important; }
-  .skill-icon-item span { font-size: 8px !important; }
+  .skill-icon-item span {
+    font-size: 7px !important;
+    max-width: 40px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+  }
   .skill-name { font-size: 11px !important; letter-spacing: 1.5px !important; margin-bottom: 10px !important; text-align: center !important; }
   .skill-items { justify-content: center !important; gap: 5px !important; }
   .skill-tag { font-size: 9px !important; padding: 3px 9px !important; }
@@ -1434,16 +1461,19 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   .contact-links {
     flex-wrap: wrap !important;
     gap: 8px !important;
-    max-width: 340px !important;
+    max-width: 320px !important;
     margin: 0 auto !important;
+    justify-content: center !important;
   }
   .contact-link {
     font-size: 10px !important;
-    padding: 10px 14px !important;
-    letter-spacing: 2px !important;
-    flex: 1 1 calc(50% - 8px) !important;
+    padding: 10px 0 !important;
+    letter-spacing: 1.5px !important;
+    flex: 0 0 calc(50% - 4px) !important;
+    width: calc(50% - 4px) !important;
     justify-content: center !important;
     text-align: center !important;
+    box-sizing: border-box !important;
   }
 
   /* MODALS */
