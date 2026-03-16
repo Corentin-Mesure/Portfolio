@@ -240,7 +240,7 @@ nav {
   flex-direction: column;
   align-items: center;
   gap:        8px;
-  animation:  scrollPulse 7s ease-in-out infinite;
+  opacity: 0.35;
 }
 
 @keyframes scrollPulse {
@@ -1381,19 +1381,35 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
 
   /* ABOUT */
   .about-section-header { margin-bottom: 32px !important; }
-  .flip-card {
-    width: 92vw !important;
-    height: 88svh !important;
-    aspect-ratio: unset !important;
-    max-width: none !important;
+  #about {
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: auto !important;
+  }
+  .about-section-header {
+    justify-content: center !important;
+    margin-bottom: 24px !important;
   }
   .about-visual {
     max-width: 100% !important;
     width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .flip-card {
+    width: 88vw !important;
+    height: 82svh !important;
+    aspect-ratio: unset !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
   }
   .flip-back {
-    padding: 32px 24px !important;
+    padding: 28px 20px !important;
     overflow-y: auto !important;
+    justify-content: flex-start !important;
   }
   .flip-front {
     padding: 20px !important;
@@ -1420,9 +1436,8 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     gap: 2px !important;
   }
   .skill-card { padding: 20px 16px !important; }
-  .skill-icon-row { gap: 10px 14px !important; margin-bottom: 12px !important; }
-  .skill-icon-item { width: 44px !important; }
-  .skill-icon-item img { width: 26px !important; height: 26px !important; }
+  /* Masquer toutes les icônes img sur mobile pour éviter le crash */
+  .skill-icon-row { display: none !important; }
   .skill-icon-item span {
     font-size: 7px !important;
     max-width: 40px !important;
