@@ -529,7 +529,6 @@
   </div>
 </div>
 
-<!-- NOUVEAU : Galerie multi-photos -->
 <div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
@@ -545,7 +544,6 @@
   </div>
 </div>
 
-<!-- NOUVEAU : Categories & Unites -->
 <div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
@@ -577,7 +575,6 @@
   </div>
 </div>
 
-<!-- NOUVEAU : Virement bancaire -->
 <div class="submodal-overlay" id="vest-virement" onclick="closeSubModal(event,'vest-virement')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4B3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Paiement par virement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-virement')">&#x2715;</button></div>
@@ -610,7 +607,6 @@
   </div>
 </div>
 
-<!-- NOUVEAU : Numero de colis -->
 <div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
@@ -656,7 +652,6 @@
   </div>
 </div>
 
-<!-- NOUVEAU : Securite & Mot de passe -->
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div>
@@ -754,12 +749,9 @@
 
 <script src="Script.js"></script>
 
-
-
-
 <script>
 /* ═══════════════════════════════════════════
-   OPTIMISATIONS PERFORMANCE v2
+   OPTIMISATIONS PERFORMANCE v3
    ═══════════════════════════════════════════ */
 (function() {
 
@@ -772,19 +764,25 @@
     if (hg) hg.style.display = 'none';
   }
 
-  /* ── 3. Lazy load images (hors hero) ──────── */
+  /* ── 3. Lazy load images ──────────────────── */
   var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+  function loadImg(img) {
+    if (img.dataset.src) {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    }
+  }
 
   if ('IntersectionObserver' in window) {
     var imgObs = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         if (e.isIntersecting) {
-          var img = e.target;
-          if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; }
-          imgObs.unobserve(img);
+          loadImg(e.target);
+          imgObs.unobserve(e.target);
         }
       });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '300px' });
 
     document.querySelectorAll('img').forEach(function(img) {
       if (img.closest('#hero')) return;
@@ -800,14 +798,41 @@
     document.querySelectorAll('img[data-src]').forEach(function(img) {
       imgObs.observe(img);
     });
+
+    /* ── FIX : forcer le chargement des icônes déjà visibles au load ── */
+    requestAnimationFrame(function() {
+      document.querySelectorAll('img[data-src]').forEach(function(img) {
+        var r = img.getBoundingClientRect();
+        if (r.top < window.innerHeight + 400) {
+          loadImg(img);
+          imgObs.unobserve(img);
+        }
+      });
+    });
+
+    /* Reload au retour de l'onglet (après crash / mise en veille) */
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        document.querySelectorAll('img[data-src]').forEach(function(img) {
+          var r = img.getBoundingClientRect();
+          if (r.top < window.innerHeight + 400) {
+            loadImg(img);
+            imgObs.unobserve(img);
+          }
+        });
+      }
+    });
+
+  } else {
+    /* Fallback sans IntersectionObserver */
+    document.querySelectorAll('img[data-src]').forEach(function(img) { loadImg(img); });
   }
 
   /* ── 4. Charger lazy dans modal/submodal à l'ouverture ── */
   function loadLazy(el) {
     if (!el) return;
     el.querySelectorAll('img[data-src]').forEach(function(img) {
-      img.src = img.dataset.src;
-      delete img.dataset.src;
+      loadImg(img);
     });
   }
 
@@ -826,9 +851,7 @@
   /* ── 5. Images dans openImageModal : charger avec taille limitée ── */
   var _oim = window.openImageModal;
   window.openImageModal = function(src, label, maxW) {
-    /* Sur mobile on limite à 800px max pour éviter le crash */
     if (isMobile && typeof src === 'string') {
-      /* Charger l'image dans un objet Image d'abord pour contrôler */
       var testImg = new Image();
       testImg.onload = function() {
         if (typeof _oim === 'function') _oim(src, label, maxW);
