@@ -1386,10 +1386,8 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     padding-bottom: 36px !important;
     align-items: center !important;
     justify-content: center !important;
-    min-height: auto !important;
   }
   .about-section-header {
-    justify-content: center !important;
     margin-bottom: 24px !important;
   }
   .about-visual {
@@ -1400,19 +1398,20 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     align-items: center !important;
   }
   .flip-card {
-    width: 88vw !important;
-    height: 82svh !important;
-    aspect-ratio: unset !important;
-    max-width: 400px !important;
+    width: 75vw !important;
+    aspect-ratio: 3/4 !important;
+    max-width: 280px !important;
+    height: auto !important;
     margin: 0 auto !important;
   }
   .flip-back {
-    padding: 28px 20px !important;
+    padding: 20px 16px !important;
     overflow-y: auto !important;
     justify-content: flex-start !important;
+    gap: 10px !important;
   }
   .flip-front {
-    padding: 20px !important;
+    padding: 16px !important;
   }
   .about-initials { font-size: 52px !important; }
   .back-text, .back-text-extra { font-size: 12px !important; line-height: 1.6 !important; }
@@ -1435,9 +1434,31 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     flex-direction: column !important;
     gap: 2px !important;
   }
-  .skill-card { padding: 20px 16px !important; }
-  /* Masquer toutes les icônes img sur mobile pour éviter le crash */
-  .skill-icon-row { display: none !important; }
+  .skill-card { padding: 16px !important; }
+  .skill-icon-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 12px !important;
+    justify-content: center !important;
+    margin-bottom: 10px !important;
+  }
+  .skill-icon-item {
+    width: 40px !important;
+    flex: 0 0 40px !important;
+  }
+  .skill-icon-item img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .skill-icon-item span {
+    font-size: 7px !important;
+    max-width: 40px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    text-align: center !important;
+  }
   .skill-icon-item span {
     font-size: 7px !important;
     max-width: 40px !important;
