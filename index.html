@@ -752,5 +752,120 @@
 
 <script src="Script.js"></script>
 
+<script>
+/* ═══════════════════════════════════════════════════
+   OPTIMISATIONS PERFORMANCE — LAZY LOAD & ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+(function() {
+
+  /* ── 1. Détection mobile / low-end ─────────────────── */
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const isLowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 2;
+
+  /* ── 2. Hero grid : désactivé sur mobile ────────────── */
+  if (isMobile) {
+    const heroGrid = document.querySelector('.hero-grid');
+    if (heroGrid) heroGrid.style.display = 'none';
+  }
+
+  /* ── 3. Lazy loading images avec IntersectionObserver ── */
+  if ('IntersectionObserver' in window) {
+    const imgObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          imgObserver.unobserve(img);
+        }
+      });
+    }, { rootMargin: '150px' });
+
+    document.querySelectorAll('img').forEach(function(img) {
+      const inHero = img.closest('#hero');
+      if (!inHero && img.src && !img.src.startsWith('data:')) {
+        img.dataset.src = img.src;
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        img.decoding = 'async';
+        imgObserver.observe(img);
+      }
+    });
+  }
+
+  /* ── 4. Charger les images lazy dans les modals à l'ouverture ── */
+  function loadLazyInElement(el) {
+    if (!el) return;
+    el.querySelectorAll('img[data-src]').forEach(function(img) {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+  }
+
+  const _origOpenModal = window.openModal;
+  window.openModal = function(id) {
+    loadLazyInElement(document.getElementById('modal-' + id));
+    if (typeof _origOpenModal === 'function') _origOpenModal(id);
+  };
+
+  const _origOpenSubModal = window.openSubModal;
+  window.openSubModal = function(id) {
+    loadLazyInElement(document.getElementById(id));
+    if (typeof _origOpenSubModal === 'function') _origOpenSubModal(id);
+  };
+
+  /* ── 5. Libérer mémoire à la fermeture du video modal ── */
+  const _origCloseVideo = window.closeVideoModal;
+  window.closeVideoModal = function() {
+    if (typeof _origCloseVideo === 'function') _origCloseVideo();
+    setTimeout(function() {
+      const inner = document.getElementById('videoModalPov');
+      if (inner) inner.innerHTML = '';
+    }, 400);
+  };
+
+  /* ── 6. Throttle scroll (passive + rAF) ─────────────── */
+  const scrollEl = document.getElementById('scrollProgress');
+  if (scrollEl) {
+    let ticking = false;
+    const origScroll = window.onscroll;
+    window.onscroll = null;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          if (typeof origScroll === 'function') origScroll();
+          const st = window.scrollY;
+          const dh = document.documentElement.scrollHeight - window.innerHeight;
+          scrollEl.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  /* ── 7. Réduire animations sur mobile/low-end ─────── */
+  if (isMobile || isLowEnd) {
+    const style = document.createElement('style');
+    style.textContent = [
+      '.hero-grid{display:none!important}',
+      '.about-glow{animation:none!important}',
+      '.divider-gem{animation:none!important}',
+      '.scroll-line{animation:none!important}',
+      '.timeline-gem::after{animation:none!important}',
+      '*{animation-duration:.2s!important;transition-duration:.2s!important}',
+      '.flip-card{transition:transform .3s!important}'
+    ].join('');
+    document.head.appendChild(style);
+  }
+
+  /* ── 8. Passive listeners tactiles ─────────────────── */
+  document.addEventListener('touchstart', function(){}, { passive: true });
+  document.addEventListener('touchmove', function(){}, { passive: true });
+
+})();
+</script>
+
 </body>
 </html>
