@@ -1205,6 +1205,9 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   align-items: center; justify-content: center;
   padding: 80px 20px 20px;
   box-sizing: border-box;
+  /* FIX CRASH ZOOM : bloquer le pinch-zoom natif sur le modal */
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .video-modal-overlay.open { display: flex; }
@@ -1217,6 +1220,22 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   border: 1px solid rgba(200, 160, 60, 0.5);
   overflow: hidden; box-shadow: 0 0 60px rgba(200, 160, 60, 0.2);
   animation: videoModalIn 0.25s ease;
+  /* FIX CRASH ZOOM : bloquer le pinch-zoom sur le contenu du modal */
+  touch-action: pan-y;
+}
+
+/* FIX CRASH ZOOM : contraindre la taille max des images/GIF dans le modal */
+.video-modal-inner img,
+.video-modal-inner canvas {
+  display: block;
+  width: 100% !important;
+  max-height: 65vh !important;
+  object-fit: contain !important;
+  border-radius: 18px;
+  min-height: 100px;
+  /* Bloquer le zoom natif sur l'image elle-même */
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 .video-modal-bar { display: flex; justify-content: center; width: 100%; }
@@ -1459,14 +1478,6 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     display: block !important;
     text-align: center !important;
   }
-  .skill-icon-item span {
-    font-size: 7px !important;
-    max-width: 40px !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    display: block !important;
-  }
   .skill-name { font-size: 11px !important; letter-spacing: 1.5px !important; margin-bottom: 10px !important; text-align: center !important; }
   .skill-items { justify-content: center !important; gap: 5px !important; }
   .skill-tag { font-size: 9px !important; padding: 3px 9px !important; }
@@ -1539,9 +1550,20 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   .step-play-hint { font-size: 10px !important; }
   .tech-accordion { font-size: 0.85em !important; }
 
-  /* VIDEO MODAL */
-  .video-modal-overlay { padding: 60px 12px 16px !important; }
+  /* VIDEO MODAL — FIX CRASH ZOOM sur mobile */
+  .video-modal-overlay {
+    padding: 60px 12px 16px !important;
+    touch-action: pan-y !important;
+  }
   .video-modal-wrap { max-width: 100% !important; }
+  .video-modal-inner {
+    touch-action: pan-y !important;
+  }
+  .video-modal-inner img,
+  .video-modal-inner canvas {
+    max-height: 55vh !important;
+    touch-action: pan-y !important;
+  }
 
   /* FOOTER */
   footer { padding: 24px 16px !important; }
