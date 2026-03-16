@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Corentin Mesure — Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
@@ -754,97 +754,108 @@
 
 <script src="Script.js"></script>
 
+
+
+
 <script>
-/* ═══════════════════════════════════════════════════
-   OPTIMISATIONS PERFORMANCE — LAZY LOAD & ANIMATIONS
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   OPTIMISATIONS PERFORMANCE v2
+   ═══════════════════════════════════════════ */
 (function() {
 
-  /* ── 1. Détection mobile / low-end ─────────────────── */
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  const isLowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 2;
+  /* ── 1. Détection mobile ────────────────── */
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-  /* ── 2. Hero grid : désactivé sur mobile ────────────── */
+  /* ── 2. Hero grid off sur mobile ─────────── */
   if (isMobile) {
-    const heroGrid = document.querySelector('.hero-grid');
-    if (heroGrid) heroGrid.style.display = 'none';
+    var hg = document.querySelector('.hero-grid');
+    if (hg) hg.style.display = 'none';
   }
 
-  /* ── 3. Lazy loading images avec IntersectionObserver ── */
+  /* ── 3. Lazy load images (hors hero) ──────── */
+  var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
   if ('IntersectionObserver' in window) {
-    const imgObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          if (img.dataset.src) {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-          }
-          imgObserver.unobserve(img);
+    var imgObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var img = e.target;
+          if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; }
+          imgObs.unobserve(img);
         }
       });
-    }, { rootMargin: '150px' });
-
-    /* Lazy load simpleicons aussi */
-    document.querySelectorAll('img[data-src]').forEach(function(img) {
-      imgObserver.observe(img);
-    });
+    }, { rootMargin: '200px' });
 
     document.querySelectorAll('img').forEach(function(img) {
-      const inHero = img.closest('#hero');
-      if (!inHero && img.src && !img.src.startsWith('data:')) {
-        img.dataset.src = img.src;
-        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        img.decoding = 'async';
-        imgObserver.observe(img);
-      }
+      if (img.closest('#hero')) return;
+      if (!img.src || img.src === BLANK || img.src.startsWith('data:')) return;
+      img.dataset.src = img.src;
+      img.src = BLANK;
+      img.decoding = 'async';
+      imgObs.observe(img);
     });
   }
 
-  /* ── 4. Charger les images lazy dans les modals à l'ouverture ── */
-  function loadLazyInElement(el) {
+  /* ── 4. Charger lazy dans modal/submodal à l'ouverture ── */
+  function loadLazy(el) {
     if (!el) return;
     el.querySelectorAll('img[data-src]').forEach(function(img) {
       img.src = img.dataset.src;
-      img.removeAttribute('data-src');
+      delete img.dataset.src;
     });
   }
 
-  const _origOpenModal = window.openModal;
+  var _om = window.openModal;
   window.openModal = function(id) {
-    loadLazyInElement(document.getElementById('modal-' + id));
-    if (typeof _origOpenModal === 'function') _origOpenModal(id);
+    loadLazy(document.getElementById('modal-' + id));
+    if (typeof _om === 'function') _om(id);
   };
 
-  const _origOpenSubModal = window.openSubModal;
+  var _osm = window.openSubModal;
   window.openSubModal = function(id) {
-    loadLazyInElement(document.getElementById(id));
-    if (typeof _origOpenSubModal === 'function') _origOpenSubModal(id);
+    loadLazy(document.getElementById(id));
+    if (typeof _osm === 'function') _osm(id);
   };
 
-  /* ── 5. Libérer mémoire à la fermeture du video modal ── */
-  const _origCloseVideo = window.closeVideoModal;
+  /* ── 5. Images dans openImageModal : charger avec taille limitée ── */
+  var _oim = window.openImageModal;
+  window.openImageModal = function(src, label, maxW) {
+    /* Sur mobile on limite à 800px max pour éviter le crash */
+    if (isMobile && typeof src === 'string') {
+      /* Charger l'image dans un objet Image d'abord pour contrôler */
+      var testImg = new Image();
+      testImg.onload = function() {
+        if (typeof _oim === 'function') _oim(src, label, maxW);
+      };
+      testImg.onerror = function() {
+        console.warn('Image introuvable:', src);
+      };
+      testImg.src = src;
+      return;
+    }
+    if (typeof _oim === 'function') _oim(src, label, maxW);
+  };
+
+  /* ── 6. Vider le video modal à la fermeture ── */
+  var _cv = window.closeVideoModal;
   window.closeVideoModal = function() {
-    if (typeof _origCloseVideo === 'function') _origCloseVideo();
+    if (typeof _cv === 'function') _cv();
     setTimeout(function() {
-      const inner = document.getElementById('videoModalPov');
-      if (inner) inner.innerHTML = '';
-    }, 400);
+      var el = document.getElementById('videoModalPov');
+      if (el) el.innerHTML = '';
+    }, 500);
   };
 
-  /* ── 6. Throttle scroll (passive + rAF) ─────────────── */
-  const scrollEl = document.getElementById('scrollProgress');
-  if (scrollEl) {
-    let ticking = false;
-    const origScroll = window.onscroll;
-    window.onscroll = null;
+  /* ── 7. Scroll progress throttlé (rAF + passive) ── */
+  var scrollBar = document.getElementById('scrollProgress');
+  if (scrollBar) {
+    var ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
         requestAnimationFrame(function() {
-          if (typeof origScroll === 'function') origScroll();
-          const st = window.scrollY;
-          const dh = document.documentElement.scrollHeight - window.innerHeight;
-          scrollEl.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+          var st = window.scrollY;
+          var dh = document.documentElement.scrollHeight - window.innerHeight;
+          scrollBar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
           ticking = false;
         });
         ticking = true;
@@ -852,24 +863,21 @@
     }, { passive: true });
   }
 
-  /* ── 7. Réduire animations sur mobile/low-end ─────── */
-  if (isMobile || isLowEnd) {
-    const style = document.createElement('style');
-    style.textContent = [
-      '.hero-grid{display:none!important}',
-      '.about-glow{animation:none!important}',
-      '.divider-gem{animation:none!important}',
-      '.scroll-line{animation:none!important}',
-      '.timeline-gem::after{animation:none!important}',
-      '*{animation-duration:.2s!important;transition-duration:.2s!important}',
-      '.flip-card{transition:transform .3s!important}'
-    ].join('');
-    document.head.appendChild(style);
-  }
-
-  /* ── 8. Passive listeners tactiles ─────────────────── */
+  /* ── 8. Passive touch listeners ─────────── */
   document.addEventListener('touchstart', function(){}, { passive: true });
   document.addEventListener('touchmove', function(){}, { passive: true });
+
+  /* ── 9. Réduire animations sur mobile ──── */
+  if (isMobile) {
+    var s = document.createElement('style');
+    s.textContent =
+      '.about-glow{display:none!important}' +
+      '.hero-grid{display:none!important}' +
+      '@keyframes scrollPulse{0%,100%{opacity:.15;transform:translateX(-50%) translateY(0)}50%{opacity:.4;transform:translateX(-50%) translateY(3px)}}' +
+      '.scroll-indicator{animation:scrollPulse 8s ease-in-out infinite!important}' +
+      '.project-visual img{animation:logoEntrance 8s ease-in-out infinite!important}';
+    document.head.appendChild(s);
+  }
 
 })();
 </script>
