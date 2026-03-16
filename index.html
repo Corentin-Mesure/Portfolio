@@ -792,6 +792,12 @@
       img.dataset.src = img.src;
       img.src = BLANK;
       img.decoding = 'async';
+      img.loading = 'lazy';
+      imgObs.observe(img);
+    });
+
+    /* Lazy load explicite pour les data-src déjà présents (simpleicons) */
+    document.querySelectorAll('img[data-src]').forEach(function(img) {
       imgObs.observe(img);
     });
   }
