@@ -170,7 +170,6 @@ function _patchDelays(origBuffer, speed) {
 }
 
 /* Crée un blob URL à partir du buffer patché.
-   IMPORTANT : on ne révoque JAMAIS un blob pendant que l'img l'utilise.
    On garde une liste et on révoque tout à la fermeture du modal. */
 var _blobUrls = [];
 function _makeBlobUrl(origBuffer, speed) {
@@ -181,7 +180,6 @@ function _makeBlobUrl(origBuffer, speed) {
   return url;
 }
 function _revokeBlobs() {
-  /* On attend 1s avant de révoquer pour laisser le temps au navigateur */
   var toRevoke = _blobUrls.slice();
   _blobUrls = [];
   setTimeout(function() {
@@ -192,7 +190,7 @@ function _revokeBlobs() {
 /* ════════════════════════════════════════════════════════
    ÉTAT DU MODAL GIF
 ════════════════════════════════════════════════════════ */
-var _modalOpen   = false;   /* true = modal GIF actuellement ouvert */
+var _modalOpen   = false;
 var _currentSrc  = '';
 var _currentSpd  = 1;
 
@@ -265,23 +263,49 @@ function _setSpd(spd, src) {
   _reloadImg(src, spd);
 }
 
-/* Recharge l'image avec le nouveau blob — sans flash noir */
+/* ════════════════════════════════════════════════════════
+   RELOAD GIF — double-buffer pour zéro flash noir
+════════════════════════════════════════════════════════ */
 function _reloadImg(src, spd) {
   var buf = _gifCache[src];
   if (!buf) return;
 
   var newUrl = _makeBlobUrl(buf, spd);
+  var inner  = document.querySelector('.video-modal-inner');
+  if (!inner) return;
 
-  /* Preload : on attend que le blob soit prêt avant de l'afficher */
-  var preload = new Image();
-  preload.onload = function() {
-    /* Modal toujours ouvert ? */
-    if (!_modalOpen || _currentSrc !== src) return;
-    var img = document.querySelector('.video-modal-inner #videoModalMedia');
-    if (img) img.src = newUrl;
+  var oldImg = inner.querySelector('#videoModalMedia');
+
+  /* Crée la nouvelle image hors-écran (invisible, ne déplace pas le layout) */
+  var newImg = document.createElement('img');
+  newImg.id  = 'videoModalMedia-next';
+  newImg.style.cssText = oldImg
+    ? oldImg.style.cssText + ';position:absolute;opacity:0;pointer-events:none;'
+    : 'display:block;width:100%;border-radius:18px;position:absolute;opacity:0;pointer-events:none;';
+
+  newImg.onload = function () {
+    /* Vérifier que le modal est toujours ouvert sur le même GIF */
+    if (!_modalOpen || _currentSrc !== src) {
+      newImg.remove();
+      return;
+    }
+    /* Swap : rendre visible et retirer l'ancien */
+    newImg.id = 'videoModalMedia';
+    newImg.style.position = '';
+    newImg.style.opacity  = '1';
+    newImg.style.pointerEvents = '';
+    if (oldImg && oldImg.parentNode) oldImg.remove();
   };
-  preload.onerror = function() { /* blob défaillant, on garde l'actuel */ };
-  preload.src = newUrl;
+
+  newImg.onerror = function () { newImg.remove(); };
+  newImg.src = newUrl;
+
+  /* Injecter dans le DOM — invisible tant que non chargé */
+  if (oldImg && oldImg.parentNode) {
+    inner.insertBefore(newImg, oldImg);
+  } else {
+    inner.insertBefore(newImg, inner.firstChild);
+  }
 }
 
 function _hlPreset(spd) {
@@ -339,11 +363,8 @@ function _safeSrc(src) {
   return src.split('').map(function(c){ return c.charCodeAt(0)>127?encodeURIComponent(c):c; }).join('');
 }
 
-/* Résout le chemin GIF en absolu par rapport au HTML */
 function _resolveGifSrc(src) {
-  /* Si déjà absolu ou data: on ne touche pas */
   if (src.match(/^(https?:|data:|blob:)/)) return src;
-  /* Crée un lien temporaire pour résoudre le chemin absolu */
   var a = document.createElement('a');
   a.href = src;
   return a.href;
@@ -357,9 +378,8 @@ function openVideoModal(src, pov, size) {
   var inner   = document.querySelector('.video-modal-inner');
   var wrap    = document.querySelector('.video-modal-wrap');
 
-  /* Nettoyer l'ancien contenu */
   _gifReset();
-  inner.querySelectorAll('#videoModalMedia,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
+  inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
   if (wrap) { wrap.style.cssText = ''; if (size) wrap.style.maxWidth = size+'px'; }
 
   badge.innerHTML  = pov;
@@ -373,14 +393,11 @@ function openVideoModal(src, pov, size) {
     _modalOpen  = true;
     _buildPanel(src);
 
-    /* Résolution absolue pour le fetch (évite les problèmes de chemin relatif) */
     var absSrc = _resolveGifSrc(safeSrc);
 
-    /* Si déjà en cache → afficher immédiatement */
     if (_gifCache[src]) {
       _showGif(inner, src, _gifCache[src]);
     } else {
-      /* Loader */
       var loader = document.createElement('div'); loader.id = 'gifLoader';
       loader.style.cssText = 'color:rgba(200,160,60,0.6);font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;text-align:center;padding:48px 0;width:100%;';
       loader.textContent = 'Chargement\u2026';
@@ -390,7 +407,6 @@ function openVideoModal(src, pov, size) {
         .then(function(r) { if(!r.ok) throw new Error('HTTP '+r.status); return r.arrayBuffer(); })
         .then(function(buf) {
           var l=inner.querySelector('#gifLoader'); if(l) l.remove();
-          /* Vérifier que le modal est toujours ouvert sur le même GIF */
           if (!_modalOpen || _currentSrc !== src) return;
           _gifCache[src] = buf;
           _showGif(inner, src, buf);
@@ -398,7 +414,6 @@ function openVideoModal(src, pov, size) {
         .catch(function() {
           var l=inner.querySelector('#gifLoader'); if(l) l.remove();
           if (!_modalOpen || _currentSrc !== src) return;
-          /* Fallback img native */
           var imgF=document.createElement('img'); imgF.id='videoModalMedia';
           imgF.style.cssText='display:block;width:100%;border-radius:18px;';
           imgF.onerror=function(){ errPath.textContent=safeSrc; errDiv.style.display='block'; };
@@ -408,7 +423,6 @@ function openVideoModal(src, pov, size) {
     }
 
   } else {
-    /* Vidéo MP4/WEBM */
     var bar=document.querySelector('.video-modal-bar');
     if(bar){bar.innerHTML='';bar.style.visibility='hidden';}
     var video=document.createElement('video'); video.id='videoModalMedia';
@@ -430,7 +444,6 @@ function _showGif(inner, src, buf) {
   var img = document.createElement('img'); img.id='videoModalMedia';
   img.style.cssText = 'display:block;width:100%;border-radius:18px;';
   img.onerror = function() {
-    /* Blob défaillant → img native directe */
     img.onerror = null;
     img.src = _safeSrc(src);
   };
@@ -443,7 +456,7 @@ function closeVideoModal() {
   _revokeBlobs();
   var inner=document.querySelector('.video-modal-inner');
   if(inner){
-    inner.querySelectorAll('#videoModalMedia,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
+    inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
     inner.style.cssText='';
   }
   var wrap=document.querySelector('.video-modal-wrap'); if(wrap) wrap.style.cssText='';
@@ -484,7 +497,7 @@ function togglePersoProjects() {
       var now=Date.now();if(ts.length>0&&now-ts[0]>5000){ts=[];if(key===seq[0])ts.push(now);return;}
       ts.push(now);
       if(ts.length===seq.length){ts=[];var on=document.documentElement.classList.toggle('custom-cursor');toast(on?'&#x2694;&#xFE0F; CURSEUR LOL ACTIVE &#x2694;&#xFE0F;':'&#x2694;&#xFE0F; CURSEUR LOL DESACTIVE &#x2694;&#xFE0F;',3500);}
-    } else {ts=(key===seq[0])?[Date.now()]:[];}
+    } else {ts=(key===seq[0])?[Date.now()]:[]; }
   });
 })();
 
@@ -538,7 +551,6 @@ document.addEventListener('keydown',function(e){
   var _om=window.openModal;     window.openModal    =function(id){loadLazy(document.getElementById('modal-'+id));if(typeof _om==='function')_om(id);};
   var _osm=window.openSubModal; window.openSubModal =function(id){loadLazy(document.getElementById(id));if(typeof _osm==='function')_osm(id);};
 
-  /* Scroll progress */
   var sb=document.getElementById('scrollProgress');
   if(sb){var tk=false;window.addEventListener('scroll',function(){if(!tk){requestAnimationFrame(function(){var st=window.scrollY,dh=document.documentElement.scrollHeight-window.innerHeight;sb.style.width=(dh>0?(st/dh)*100:0)+'%';tk=false;});tk=true;}},{passive:true});}
 
@@ -557,7 +569,7 @@ document.addEventListener('keydown',function(e){
     'videos/accept_inscription.gif',
     'videos/creation_conversation_membre.gif',
     'videos/creation_de_groupe.gif',
-    'videos/test_message_tempsréel.gif',
+    'videos/test_message_temps\u00e9el.gif',
     'videos/test_notif.gif',
     'videos/test_message_accueil.gif',
     'videos/test_group_et_conversation.gif',
@@ -570,7 +582,6 @@ document.addEventListener('keydown',function(e){
     if (idx >= GIF_SRCS.length) return;
     var src = GIF_SRCS[idx];
     if (_gifCache[src]) { prefetchNext(idx+1); return; }
-    /* Résolution absolue */
     var a = document.createElement('a'); a.href = src;
     fetch(a.href)
       .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject(); })
