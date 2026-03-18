@@ -224,7 +224,7 @@ function toggleAcc(id) {
 
 
 /* ════════════════════════════════════════════════════════
-   IMAGE MODAL
+   IMAGE MODAL (screenshots statiques)
 ════════════════════════════════════════════════════════ */
 function openImageModal(srcs, pov, size) {
   var overlay = document.getElementById('videoModal');
@@ -234,9 +234,8 @@ function openImageModal(srcs, pov, size) {
   var bar     = document.querySelector('.video-modal-bar');
   var wrap    = document.querySelector('.video-modal-wrap');
 
-  _stopGif();
-  var olds = inner.querySelectorAll('#videoModalMedia, canvas, .static-screen-img');
-  olds.forEach(function (el) { el.remove(); });
+  _gifCleanup();
+  inner.querySelectorAll('#videoModalMedia, .static-screen-img').forEach(function (el) { el.remove(); });
 
   if (bar) { bar.innerHTML = ''; bar.style.visibility = 'hidden'; }
   badge.innerHTML      = '';
@@ -263,8 +262,8 @@ function openImageModal(srcs, pov, size) {
 
     var img = document.createElement('img');
     img.style.cssText = useWidth
-      ? 'display:block;width:100%;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.9);image-rendering:crisp-edges;'
-      : 'display:block;height:75vh;width:auto;max-width:46vw;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.9);image-rendering:crisp-edges;';
+      ? 'display:block;width:100%;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.9);'
+      : 'display:block;height:75vh;width:auto;max-width:46vw;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.9);';
     img.onerror = function () { img.style.display = 'none'; };
     img.src = src;
 
@@ -278,50 +277,81 @@ function openImageModal(srcs, pov, size) {
 
 
 /* ════════════════════════════════════════════════════════
-   SYSTEME DE VITESSE PAR GIF — PERSISTANT (localStorage)
-
-   Cle    : "gifSpeed:<nom_fichier>"
-   Valeur : n'importe quel nombre > 0  (ex: 1.10, 0.8, 3.5)
-   −/+    : pas de 0.05
-   Champ  : saisie libre → Entree ou bouton applicer
-   Presets: 0.25 / 0.5 / 0.75 / 1 / 1.25 / 1.5 / 2 / 3
+   SYSTEME DE VITESSE PAR GIF — localStorage
+   Clé : "gifSpeed:<nom_fichier>"
+   Valeur : nombre > 0 (ex: 1.10, 0.75, 2...)
 ════════════════════════════════════════════════════════ */
-
 var _GIF_PRESETS     = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3];
 var _GIF_SPEED_KEY   = 'gifSpeed:';
 var _GIF_DEFAULT_SPD = 1;
-
-var _gifTimer        = null;
-var _gifActive       = false;
-var _gifSessionId    = 0;
 var _currentGifSrc   = '';
 var _currentGifSpeed = 1;
+var _gifBlobUrl      = null;
+var _gifRawBuffer    = null; /* ArrayBuffer original du GIF en cours */
 
 function _gifBasename(src) {
   return src ? src.split('/').pop().split('?')[0] : '';
 }
 function _getGifSpeed(src) {
-  var saved = parseFloat(localStorage.getItem(_GIF_SPEED_KEY + _gifBasename(src)));
-  return (!isNaN(saved) && saved > 0) ? saved : _GIF_DEFAULT_SPD;
+  var v = parseFloat(localStorage.getItem(_GIF_SPEED_KEY + _gifBasename(src)));
+  return (!isNaN(v) && v > 0) ? v : _GIF_DEFAULT_SPD;
 }
 function _saveGifSpeed(src, spd) {
   localStorage.setItem(_GIF_SPEED_KEY + _gifBasename(src), spd);
 }
-function _stopGif() {
-  _gifActive = false;
-  if (_gifTimer) { clearTimeout(_gifTimer); _gifTimer = null; }
+function _gifCleanup() {
+  if (_gifBlobUrl) { URL.revokeObjectURL(_gifBlobUrl); _gifBlobUrl = null; }
+  _gifRawBuffer = null;
+}
+
+/* ── Réécriture des délais GCE dans le binaire GIF ──
+   Chaque bloc GCE = 21 F9 04 [flags] [lo] [hi] [transp] 00
+   délai = uint16 LE en centisecondes               */
+function _patchGifDelays(buffer, speed) {
+  var src  = new Uint8Array(buffer);
+  var dst  = new Uint8Array(buffer.byteLength);
+  dst.set(src);
+  for (var i = 0; i < dst.length - 7; i++) {
+    if (dst[i] === 0x21 && dst[i+1] === 0xF9 && dst[i+2] === 0x04) {
+      var d = dst[i+4] | (dst[i+5] << 8);
+      if (d < 2) d = 10;
+      var nd = Math.max(2, Math.round(d / speed));
+      dst[i+4] = nd & 0xFF;
+      dst[i+5] = (nd >> 8) & 0xFF;
+      i += 7;
+    }
+  }
+  return dst.buffer;
+}
+
+function _makeBlobAndShow(buffer, speed) {
+  _gifCleanup();
+  _gifRawBuffer = buffer;
+  var patched = _patchGifDelays(buffer, speed);
+  var blob    = new Blob([patched], { type: 'image/gif' });
+  _gifBlobUrl = URL.createObjectURL(blob);
+  return _gifBlobUrl;
+}
+
+/* Recharge l'<img> avec la nouvelle vitesse sans retélécharger */
+function _reapplySpeed() {
+  if (!_gifRawBuffer) return;
+  var url = _makeBlobAndShow(_gifRawBuffer, _currentGifSpeed);
+  var img = document.querySelector('.video-modal-inner #videoModalMedia');
+  if (img) img.src = url;
 }
 
 
-/* ── Panneau de vitesse ── */
+/* ════════════════════════════════════════════════════════
+   PANNEAU DE VITESSE
+════════════════════════════════════════════════════════ */
 function _buildSpeedPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
   if (!bar) return;
 
   _currentGifSpeed = _getGifSpeed(src);
-
-  var shortName = _gifBasename(src).replace(/\.gif$/i, '').replace(/_/g, ' ');
-  if (shortName.length > 26) shortName = shortName.slice(0, 24) + '\u2026';
+  var shortName = _gifBasename(src).replace(/\.gif$/i,'').replace(/_/g,' ');
+  if (shortName.length > 26) shortName = shortName.slice(0,24) + '\u2026';
 
   bar.style.visibility = '';
   bar.innerHTML = '';
@@ -331,18 +361,17 @@ function _buildSpeedPanel(src) {
   panel.innerHTML =
     '<div id="gifSpeedFileName">' + shortName + '</div>' +
     '<div id="gifSpeedControls">' +
-      '<button id="gifSpeedDown" title="\u22120.05">\u2212</button>' +
+      '<button id="gifSpeedDown" title="-0.05">\u2212</button>' +
       '<div id="gifSpeedInputWrap">' +
         '<span id="gifSpeedPrefix">x</span>' +
         '<input id="gifSpeedInput" type="number" min="0.05" max="20" step="0.05" value="' + _currentGifSpeed + '">' +
       '</div>' +
       '<button id="gifSpeedUp" title="+0.05">+</button>' +
-      '<button id="gifSpeedApply" title="Appliquer (Entr\u00e9e)">\u23CE</button>' +
+      '<button id="gifSpeedApply" title="Appliquer (Entree)">\u23CE</button>' +
     '</div>' +
     '<div id="gifSpeedPresets">' +
-      _GIF_PRESETS.map(function (s) {
-        return '<button class="spd-preset' + (Math.abs(s - _currentGifSpeed) < 0.001 ? ' active' : '') +
-          '" data-spd="' + s + '">x' + s + '</button>';
+      _GIF_PRESETS.map(function(s){
+        return '<button class="spd-preset'+(Math.abs(s-_currentGifSpeed)<0.001?' active':'')+'" data-spd="'+s+'">x'+s+'</button>';
       }).join('') +
     '</div>';
 
@@ -351,25 +380,17 @@ function _buildSpeedPanel(src) {
 
   var input = document.getElementById('gifSpeedInput');
 
-  document.getElementById('gifSpeedDown').addEventListener('click', function () {
-    _applySpeed(Math.max(0.05, Math.round((_currentGifSpeed - 0.05) * 100) / 100), src);
+  document.getElementById('gifSpeedDown').addEventListener('click', function(){
+    _applySpeed(Math.max(0.05, Math.round((_currentGifSpeed-0.05)*100)/100), src);
   });
-  document.getElementById('gifSpeedUp').addEventListener('click', function () {
-    _applySpeed(Math.min(20, Math.round((_currentGifSpeed + 0.05) * 100) / 100), src);
+  document.getElementById('gifSpeedUp').addEventListener('click', function(){
+    _applySpeed(Math.min(20, Math.round((_currentGifSpeed+0.05)*100)/100), src);
   });
-  document.getElementById('gifSpeedApply').addEventListener('click', function () {
-    _commitInput(src);
-  });
-  input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); _commitInput(src); }
-  });
-  input.addEventListener('input', function () {
-    _syncPresetHighlight(parseFloat(input.value));
-  });
-  panel.querySelectorAll('.spd-preset').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      _applySpeed(parseFloat(btn.dataset.spd), src);
-    });
+  document.getElementById('gifSpeedApply').addEventListener('click', function(){ _commitInput(src); });
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter'){e.preventDefault();_commitInput(src);} });
+  input.addEventListener('input', function(){ _syncPresets(parseFloat(input.value)); });
+  panel.querySelectorAll('.spd-preset').forEach(function(btn){
+    btn.addEventListener('click', function(){ _applySpeed(parseFloat(btn.dataset.spd), src); });
   });
 }
 
@@ -377,9 +398,8 @@ function _commitInput(src) {
   var input = document.getElementById('gifSpeedInput');
   if (!input) return;
   var v = parseFloat(input.value);
-  if (isNaN(v) || v <= 0) { input.value = _currentGifSpeed; return; }
-  v = Math.round(v * 100) / 100;
-  v = Math.max(0.05, Math.min(20, v));
+  if (isNaN(v)||v<=0) { input.value=_currentGifSpeed; return; }
+  v = Math.max(0.05, Math.min(20, Math.round(v*100)/100));
   _applySpeed(v, src);
 }
 
@@ -388,15 +408,14 @@ function _applySpeed(spd, src) {
   _saveGifSpeed(src, spd);
   var input = document.getElementById('gifSpeedInput');
   if (input) input.value = spd;
-  _syncPresetHighlight(spd);
+  _syncPresets(spd);
   _showSpeedToast(spd);
-  /* Recharge l'img avec les nouveaux délais immédiatement */
-  _reloadGifWithNewSpeed();
+  _reapplySpeed();
 }
 
-function _syncPresetHighlight(spd) {
-  document.querySelectorAll('.spd-preset').forEach(function (b) {
-    b.classList.toggle('active', Math.abs(parseFloat(b.dataset.spd) - spd) < 0.001);
+function _syncPresets(spd) {
+  document.querySelectorAll('.spd-preset').forEach(function(b){
+    b.classList.toggle('active', Math.abs(parseFloat(b.dataset.spd)-spd)<0.001);
   });
 }
 
@@ -405,20 +424,20 @@ function _showSpeedToast(spd) {
   if (old) old.remove();
   var t = document.createElement('div');
   t.id = 'gifSpeedToast';
-  t.textContent = 'x' + spd + ' \u2014 enregistr\u00e9';
-  t.style.cssText = 'position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(10px);' +
-    'background:rgba(200,160,60,0.16);border:1px solid rgba(200,160,60,0.55);' +
-    'color:#f0c84a;font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;' +
-    'padding:8px 22px;border-radius:20px;z-index:9999999;pointer-events:none;' +
+  t.textContent = 'x'+spd+' \u2014 enregistr\u00e9';
+  t.style.cssText='position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(10px);'+
+    'background:rgba(200,160,60,0.16);border:1px solid rgba(200,160,60,0.55);'+
+    'color:#f0c84a;font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;'+
+    'padding:8px 22px;border-radius:20px;z-index:9999999;pointer-events:none;'+
     'opacity:0;transition:opacity .22s,transform .22s;white-space:nowrap;';
   document.body.appendChild(t);
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
-  });
-  setTimeout(function () {
-    t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(10px)';
-    setTimeout(function () { if (t.parentNode) t.remove(); }, 280);
-  }, 1600);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+  });});
+  setTimeout(function(){
+    t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)';
+    setTimeout(function(){ if(t.parentNode) t.remove(); },280);
+  },1600);
 }
 
 function _injectSpeedCSS() {
@@ -426,156 +445,44 @@ function _injectSpeedCSS() {
   var s = document.createElement('style');
   s.id = 'gifSpeedCSS';
   s.textContent =
-    '#gifSpeedPanel{display:flex;flex-direction:column;align-items:center;gap:9px;' +
-      'padding:11px 14px 10px;background:rgba(0,0,0,0.62);backdrop-filter:blur(12px);' +
-      'border-radius:15px;border:1px solid rgba(200,160,60,0.28);width:100%;box-sizing:border-box;}' +
-    '#gifSpeedFileName{font-family:Cinzel,serif;font-size:9.5px;letter-spacing:1.8px;' +
-      'color:rgba(200,160,60,0.65);text-transform:uppercase;text-align:center;}' +
-    '#gifSpeedControls{display:flex;align-items:center;gap:8px;}' +
-    '#gifSpeedControls button{background:rgba(255,255,255,0.07);border:1px solid rgba(200,160,60,0.3);' +
-      'color:#fff;border-radius:8px;width:30px;height:30px;font-size:17px;line-height:1;cursor:pointer;' +
-      'transition:background .15s,transform .1s,border-color .15s;' +
-      'display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
-    '#gifSpeedControls button:hover{background:rgba(200,160,60,0.22);border-color:rgba(200,160,60,0.7);transform:scale(1.1);}' +
-    '#gifSpeedApply{font-size:14px!important;color:#c8a03c!important;border-color:rgba(200,160,60,0.5)!important;}' +
-    '#gifSpeedInputWrap{display:flex;align-items:center;background:rgba(255,255,255,0.06);' +
-      'border:1.5px solid rgba(200,160,60,0.45);border-radius:9px;padding:0 8px;gap:2px;transition:border-color .2s;}' +
-    '#gifSpeedInputWrap:focus-within{border-color:rgba(200,160,60,0.9);background:rgba(200,160,60,0.08);}' +
-    '#gifSpeedPrefix{font-family:Cinzel,serif;font-size:15px;font-weight:700;color:#c8a03c;' +
-      'line-height:1;pointer-events:none;user-select:none;}' +
-    '#gifSpeedInput{background:transparent;border:none;outline:none;font-family:Cinzel,serif;' +
-      'font-size:17px;font-weight:700;color:#f0c84a;width:58px;text-align:center;padding:4px 2px;' +
-      '-moz-appearance:textfield;}' +
-    '#gifSpeedInput::-webkit-inner-spin-button,#gifSpeedInput::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}' +
-    '#gifSpeedPresets{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;}' +
-    '#gifSpeedPresets .spd-preset{font-family:Cinzel,serif;font-size:10.5px;padding:3px 9px;border-radius:6px;' +
-      'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.48);' +
-      'cursor:pointer;transition:all .15s;letter-spacing:.4px;}' +
-    '#gifSpeedPresets .spd-preset:hover{background:rgba(200,160,60,0.12);color:#c8a03c;border-color:rgba(200,160,60,0.45);}' +
+    '#gifSpeedPanel{display:flex;flex-direction:column;align-items:center;gap:9px;'+
+      'padding:11px 14px 10px;background:rgba(0,0,0,0.62);backdrop-filter:blur(12px);'+
+      'border-radius:15px;border:1px solid rgba(200,160,60,0.28);width:100%;box-sizing:border-box;}'+
+    '#gifSpeedFileName{font-family:Cinzel,serif;font-size:9.5px;letter-spacing:1.8px;'+
+      'color:rgba(200,160,60,0.65);text-transform:uppercase;text-align:center;}'+
+    '#gifSpeedControls{display:flex;align-items:center;gap:8px;}'+
+    '#gifSpeedControls button{background:rgba(255,255,255,0.07);border:1px solid rgba(200,160,60,0.3);'+
+      'color:#fff;border-radius:8px;width:30px;height:30px;font-size:17px;cursor:pointer;'+
+      'transition:background .15s,transform .1s,border-color .15s;'+
+      'display:flex;align-items:center;justify-content:center;flex-shrink:0;}'+
+    '#gifSpeedControls button:hover{background:rgba(200,160,60,0.22);border-color:rgba(200,160,60,0.7);transform:scale(1.1);}'+
+    '#gifSpeedApply{font-size:14px!important;color:#c8a03c!important;border-color:rgba(200,160,60,0.5)!important;}'+
+    '#gifSpeedInputWrap{display:flex;align-items:center;background:rgba(255,255,255,0.06);'+
+      'border:1.5px solid rgba(200,160,60,0.45);border-radius:9px;padding:0 8px;gap:2px;transition:border-color .2s;}'+
+    '#gifSpeedInputWrap:focus-within{border-color:rgba(200,160,60,0.9);background:rgba(200,160,60,0.08);}'+
+    '#gifSpeedPrefix{font-family:Cinzel,serif;font-size:15px;font-weight:700;color:#c8a03c;pointer-events:none;user-select:none;}'+
+    '#gifSpeedInput{background:transparent;border:none;outline:none;font-family:Cinzel,serif;'+
+      'font-size:17px;font-weight:700;color:#f0c84a;width:58px;text-align:center;padding:4px 2px;-moz-appearance:textfield;}'+
+    '#gifSpeedInput::-webkit-inner-spin-button,#gifSpeedInput::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}'+
+    '#gifSpeedPresets{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;}'+
+    '#gifSpeedPresets .spd-preset{font-family:Cinzel,serif;font-size:10.5px;padding:3px 9px;border-radius:6px;'+
+      'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.48);'+
+      'cursor:pointer;transition:all .15s;letter-spacing:.4px;}'+
+    '#gifSpeedPresets .spd-preset:hover{background:rgba(200,160,60,0.12);color:#c8a03c;border-color:rgba(200,160,60,0.45);}'+
     '#gifSpeedPresets .spd-preset.active{background:rgba(200,160,60,0.2);border-color:rgba(200,160,60,0.75);color:#f0c84a;font-weight:700;}';
   document.head.appendChild(s);
 }
 
 
 /* ════════════════════════════════════════════════════════
-   LECTURE GIF — réécriture des délais dans le binaire GIF
-   puis affichage via <img> natif (zéro artefact visuel).
-   La vitesse est appliquée en modifiant les blocs GCE
-   (Graphic Control Extension) directement dans les octets.
+   VIDEO MODAL
 ════════════════════════════════════════════════════════ */
-
 function _safeSrc(src) {
-  return src.split('').map(function (c) {
-    return c.charCodeAt(0) > 127 ? encodeURIComponent(c) : c;
+  return src.split('').map(function(c){
+    return c.charCodeAt(0)>127 ? encodeURIComponent(c) : c;
   }).join('');
 }
 
-/* URL blob de la session en cours */
-var _currentBlobUrl = null;
-
-function _revokeBlobUrl() {
-  if (_currentBlobUrl) { URL.revokeObjectURL(_currentBlobUrl); _currentBlobUrl = null; }
-}
-
-function _stopGif() {
-  _gifActive = false;
-  if (_gifTimer) { clearTimeout(_gifTimer); _gifTimer = null; }
-}
-
-/**
- * Réécrit tous les délais GCE d'un ArrayBuffer GIF.
- * Chaque GCE : 0x21 0xF9 0x04 [flags] [delay_lo] [delay_hi] [transp] 0x00
- * Le délai est en centisecondes (uint16 LE).
- * Nouveau délai = max(2, round(origDelay / speed))
- */
-function _rewriteGifDelays(buffer, speed) {
-  var bytes = new Uint8Array(buffer.slice(0));
-  var i = 0, len = bytes.length;
-  while (i < len - 7) {
-    if (bytes[i] === 0x21 && bytes[i + 1] === 0xF9 && bytes[i + 2] === 0x04) {
-      var orig = bytes[i + 4] | (bytes[i + 5] << 8);
-      if (orig === 0) orig = 10;
-      var nd = Math.max(2, Math.round(orig / speed));
-      bytes[i + 4] = nd & 0xFF;
-      bytes[i + 5] = (nd >> 8) & 0xFF;
-      i += 8;
-    } else {
-      i++;
-    }
-  }
-  return bytes.buffer;
-}
-
-function _showGifImg(buffer, container, onError, src) {
-  _revokeBlobUrl();
-  var modified = _rewriteGifDelays(buffer, _currentGifSpeed);
-  var blob = new Blob([modified], { type: 'image/gif' });
-  _currentBlobUrl = URL.createObjectURL(blob);
-
-  var img = document.createElement('img');
-  img.id  = 'videoModalMedia';
-  img.style.cssText = 'display:block;width:100%;min-height:100px;border-radius:18px;';
-  img.onerror = function () { img.style.display = 'none'; if (onError) onError(src); };
-  img.src = _currentBlobUrl;
-  container.insertBefore(img, container.firstChild);
-  container._gifBuffer = buffer; /* stocke le buffer original pour re-générer */
-}
-
-/* Appelé quand l'utilisateur change la vitesse → recharge l'img avec les nouveaux délais */
-function _reloadGifWithNewSpeed() {
-  var inner  = document.querySelector('.video-modal-inner');
-  var buffer = inner && inner._gifBuffer;
-  if (!buffer) return;
-  _revokeBlobUrl();
-  var modified = _rewriteGifDelays(buffer, _currentGifSpeed);
-  var blob = new Blob([modified], { type: 'image/gif' });
-  _currentBlobUrl = URL.createObjectURL(blob);
-  var img = inner.querySelector('#videoModalMedia');
-  if (img) img.src = _currentBlobUrl;
-}
-
-function _playGifFrames(src, container, onError) {
-  var loader = document.createElement('div');
-  loader.id  = 'gifLoader';
-  loader.style.cssText = 'color:rgba(200,160,60,0.7);font-family:Cinzel,serif;font-size:11px;' +
-    'letter-spacing:3px;text-align:center;padding:40px 0;';
-  loader.textContent = 'Chargement\u2026';
-  container.insertBefore(loader, container.firstChild);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', src, true);
-  xhr.responseType = 'arraybuffer';
-
-  xhr.onload = function () {
-    var l = container.querySelector('#gifLoader');
-    if (l) l.remove();
-    if (!xhr.response || !xhr.response.byteLength) {
-      _fallbackImg(src, container, onError); return;
-    }
-    _showGifImg(xhr.response, container, onError, src);
-  };
-
-  xhr.onerror = function () {
-    var l = container.querySelector('#gifLoader');
-    if (l) l.remove();
-    _fallbackImg(src, container, onError);
-  };
-
-  xhr.send();
-}
-
-function _fallbackImg(src, container, onError) {
-  var img = document.createElement('img');
-  img.id  = 'videoModalMedia';
-  img.style.cssText = 'display:block;width:100%;min-height:100px;';
-  img.onerror = function () { img.style.display = 'none'; if (onError) onError(src); };
-  img.src = src;
-  container.insertBefore(img, container.firstChild);
-}
-
-/* ════════════════════════════════════════════════════════
-   VIDEO MODAL — ouverture / fermeture
-════════════════════════════════════════════════════════ */
 function openVideoModal(src, pov, size) {
   var overlay = document.getElementById('videoModal');
   var badge   = document.getElementById('videoModalPov');
@@ -584,13 +491,12 @@ function openVideoModal(src, pov, size) {
   var inner   = document.querySelector('.video-modal-inner');
   var wrap    = document.querySelector('.video-modal-wrap');
 
-  _stopGif();
-  var old = inner.querySelector('#videoModalMedia, canvas, .static-screen-img');
-  if (old) old.remove();
+  /* Nettoyage */
+  _gifCleanup();
+  inner.querySelectorAll('#videoModalMedia, canvas, .static-screen-img').forEach(function(el){ el.remove(); });
+  if (wrap) { wrap.style.cssText=''; if(size) wrap.style.maxWidth=size+'px'; }
 
-  if (wrap) wrap.style.maxWidth = size ? size + 'px' : '';
-
-  _currentGifSrc   = src;
+  _currentGifSrc  = src;
   badge.innerHTML  = pov;
   errDiv.style.display = 'none';
 
@@ -598,26 +504,65 @@ function openVideoModal(src, pov, size) {
   var ext     = safeSrc.split('?')[0].split('.').pop().toLowerCase();
 
   if (ext === 'gif') {
+    /* ── Panneau de vitesse ── */
     _buildSpeedPanel(src);
-    _playGifFrames(safeSrc, inner, function (errSrc) {
-      errPath.textContent = errSrc; errDiv.style.display = 'block';
-    });
+
+    /* ── Loader ── */
+    var loader = document.createElement('div');
+    loader.id  = 'gifLoader';
+    loader.style.cssText = 'color:rgba(200,160,60,0.6);font-family:Cinzel,serif;font-size:11px;'+
+      'letter-spacing:3px;text-align:center;padding:48px 0;';
+    loader.textContent = 'Chargement\u2026';
+    inner.insertBefore(loader, inner.firstChild);
+
+    /* ── Fetch + patch délais ── */
+    fetch(safeSrc)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP '+r.status);
+        return r.arrayBuffer();
+      })
+      .then(function(buffer) {
+        var l = inner.querySelector('#gifLoader');
+        if (l) l.remove();
+
+        var url = _makeBlobAndShow(buffer, _currentGifSpeed);
+
+        var img = document.createElement('img');
+        img.id  = 'videoModalMedia';
+        img.style.cssText = 'display:block;width:100%;border-radius:18px;';
+        img.onerror = function() {
+          /* Si le blob échoue, fallback sur l'URL originale */
+          img.src = safeSrc;
+        };
+        img.src = url;
+        inner.insertBefore(img, inner.firstChild);
+      })
+      .catch(function() {
+        var l = inner.querySelector('#gifLoader');
+        if (l) l.remove();
+        /* Fallback : img native sans contrôle de vitesse */
+        var img = document.createElement('img');
+        img.id  = 'videoModalMedia';
+        img.style.cssText = 'display:block;width:100%;border-radius:18px;';
+        img.onerror = function() { errPath.textContent=safeSrc; errDiv.style.display='block'; };
+        img.src = safeSrc;
+        inner.insertBefore(img, inner.firstChild);
+      });
+
   } else {
+    /* ── Vidéo MP4/WEBM ── */
     var bar = document.querySelector('.video-modal-bar');
-    if (bar) { bar.innerHTML = ''; bar.style.visibility = 'hidden'; }
+    if (bar) { bar.innerHTML=''; bar.style.visibility='hidden'; }
+
     var video = document.createElement('video');
     video.id = 'videoModalMedia';
-    video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
-    video.style.cssText = 'display:block;width:100%;min-height:100px;';
+    video.autoplay=true; video.loop=true; video.muted=true; video.playsInline=true;
+    video.style.cssText='display:block;width:100%;min-height:100px;';
     var source = document.createElement('source');
     source.src  = safeSrc;
-    source.type = 'video/' + (ext === 'webm' ? 'webm' : 'mp4');
+    source.type = 'video/'+(ext==='webm'?'webm':'mp4');
     video.appendChild(source);
-    video.addEventListener('canplay', function () { video.playbackRate = 1.0; });
-    video.onerror = function () {
-      video.style.display = 'none';
-      errPath.textContent = safeSrc; errDiv.style.display = 'block';
-    };
+    video.onerror = function(){ video.style.display='none'; errPath.textContent=safeSrc; errDiv.style.display='block'; };
     inner.insertBefore(video, inner.firstChild);
   }
 
@@ -625,19 +570,19 @@ function openVideoModal(src, pov, size) {
 }
 
 function closeVideoModal() {
-  _stopGif();
-  _revokeBlobUrl();
+  _gifCleanup();
   _currentGifSrc = '';
   var inner = document.querySelector('.video-modal-inner');
-  var media = inner && inner.querySelector('#videoModalMedia, canvas, .static-screen-img');
-  if (media) media.remove();
-  if (inner) { inner.style.cssText = ''; inner._gifBuffer = null; }
+  if (inner) {
+    inner.querySelectorAll('#videoModalMedia, canvas, .static-screen-img, #gifLoader').forEach(function(el){ el.remove(); });
+    inner.style.cssText = '';
+  }
   var wrap = document.querySelector('.video-modal-wrap');
   if (wrap) wrap.style.cssText = '';
   var badge = document.getElementById('videoModalPov');
-  if (badge) { badge.style.cssText = ''; badge.innerHTML = ''; }
+  if (badge) { badge.style.cssText=''; badge.innerHTML=''; }
   var bar = document.querySelector('.video-modal-bar');
-  if (bar) { bar.innerHTML = ''; bar.style.visibility = ''; }
+  if (bar) { bar.innerHTML=''; bar.style.visibility=''; }
   document.getElementById('videoModal').classList.remove('open');
 }
 
@@ -645,12 +590,13 @@ function closeVideoModalOverlay(e) {
   if (e.target === document.getElementById('videoModal')) closeVideoModal();
 }
 
-/* Retrocompatibilite */
+/* Rétrocompatibilité */
 function toggleGifSpeed() {}
+function _stopGif() {}
 
 
 /* ════════════════════════════════════════════════════════
-   PROJETS PERSONNELS — TOGGLE
+   PROJETS PERSONNELS
 ════════════════════════════════════════════════════════ */
 function togglePersoProjects() {
   var grid   = document.getElementById('persoGrid');
@@ -664,46 +610,32 @@ function togglePersoProjects() {
    EASTER EGG — taper "lol" en moins de 5s
 ════════════════════════════════════════════════════════ */
 (function () {
-  var seq = ['l', 'o', 'l'], ts = [], timer = null;
-
+  var seq=['l','o','l'], ts=[], timer=null;
   function showToast(msg, dur) {
-    var ex = document.getElementById('easterToast');
-    if (ex) ex.remove();
+    var ex=document.getElementById('easterToast'); if(ex) ex.remove();
     clearTimeout(timer);
-    var t = document.createElement('div');
-    t.id = 'easterToast';
-    t.innerHTML = msg;
-    t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);' +
-      'background:linear-gradient(135deg,#1a1a50,#2a2880);border:1px solid rgba(93,232,242,0.6);' +
-      'box-shadow:0 0 24px rgba(93,232,242,0.2);color:#5de8f2;font-family:Cinzel,serif;font-size:12px;' +
-      'letter-spacing:4px;padding:16px 36px;z-index:99999;pointer-events:none;opacity:0;' +
+    var t=document.createElement('div'); t.id='easterToast'; t.innerHTML=msg;
+    t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);'+
+      'background:linear-gradient(135deg,#1a1a50,#2a2880);border:1px solid rgba(93,232,242,0.6);'+
+      'box-shadow:0 0 24px rgba(93,232,242,0.2);color:#5de8f2;font-family:Cinzel,serif;font-size:12px;'+
+      'letter-spacing:4px;padding:16px 36px;z-index:99999;pointer-events:none;opacity:0;'+
       'transition:opacity .4s,transform .4s;text-align:center;white-space:nowrap;';
     document.body.appendChild(t);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
-    });
-    timer = setTimeout(function () {
-      t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)';
-      setTimeout(function () { if (t.parentNode) t.remove(); }, 400);
-    }, dur || 3500);
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; }); });
+    timer=setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; setTimeout(function(){ if(t.parentNode) t.remove(); },400); },dur||3500);
   }
-
-  document.addEventListener('keydown', function (e) {
-    var key = e.key.toLowerCase();
-    if (key === seq[ts.length]) {
-      var now = Date.now();
-      if (ts.length > 0 && now - ts[0] > 5000) { ts = []; if (key === seq[0]) ts.push(now); return; }
+  document.addEventListener('keydown', function(e){
+    var key=e.key.toLowerCase();
+    if (key===seq[ts.length]) {
+      var now=Date.now();
+      if (ts.length>0&&now-ts[0]>5000){ ts=[]; if(key===seq[0]) ts.push(now); return; }
       ts.push(now);
-      if (ts.length === seq.length) {
-        ts = [];
-        var on = document.documentElement.classList.toggle('custom-cursor');
-        showToast(on
-          ? '&#x2694;&#xFE0F; CURSEUR LOL ACTIVE &#x2694;&#xFE0F;'
-          : '&#x2694;&#xFE0F; CURSEUR LOL DESACTIVE &#x2694;&#xFE0F;', 3500);
+      if (ts.length===seq.length) {
+        ts=[];
+        var on=document.documentElement.classList.toggle('custom-cursor');
+        showToast(on?'&#x2694;&#xFE0F; CURSEUR LOL ACTIVE &#x2694;&#xFE0F;':'&#x2694;&#xFE0F; CURSEUR LOL DESACTIVE &#x2694;&#xFE0F;',3500);
       }
-    } else {
-      ts = (key === seq[0]) ? [Date.now()] : [];
-    }
+    } else { ts=(key===seq[0])?[Date.now()]:[]; }
   });
 })();
 
@@ -711,91 +643,79 @@ function togglePersoProjects() {
 /* ════════════════════════════════════════════════════════
    FERMETURE PAR TOUCHE ECHAP
 ════════════════════════════════════════════════════════ */
-document.addEventListener('keydown', function (e) {
-  if (e.key !== 'Escape') return;
-  document.querySelectorAll('.modal-overlay.active').forEach(function (m) { m.classList.remove('active'); });
-  document.querySelectorAll('.submodal-overlay.active').forEach(function (m) { m.classList.remove('active'); });
+document.addEventListener('keydown', function(e){
+  if (e.key!=='Escape') return;
+  document.querySelectorAll('.modal-overlay.active').forEach(function(m){ m.classList.remove('active'); });
+  document.querySelectorAll('.submodal-overlay.active').forEach(function(m){ m.classList.remove('active'); });
   closeVideoModal();
-  if (typeof closeCard === 'function') closeCard();
-  document.body.style.overflow = '';
+  if (typeof closeCard==='function') closeCard();
+  document.body.style.overflow='';
 });
 
 
 /* ════════════════════════════════════════════════════════
    OPTIMISATIONS PERFORMANCE
 ════════════════════════════════════════════════════════ */
-(function () {
-  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  if (isMobile) { var hg = document.querySelector('.hero-grid'); if (hg) hg.style.display = 'none'; }
+(function(){
+  var isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (isMobile){ var hg=document.querySelector('.hero-grid'); if(hg) hg.style.display='none'; }
 
-  var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  function loadImg(img) { if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } }
+  var BLANK='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  function loadImg(img){ if(img.dataset.src){ img.src=img.dataset.src; delete img.dataset.src; } }
 
   if ('IntersectionObserver' in window) {
-    var imgObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { loadImg(e.target); imgObs.unobserve(e.target); } });
-    }, { rootMargin: '300px' });
+    var imgObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ loadImg(e.target); imgObs.unobserve(e.target); } });
+    },{rootMargin:'300px'});
 
-    document.querySelectorAll('img').forEach(function (img) {
+    document.querySelectorAll('img').forEach(function(img){
       if (img.closest('#hero')) return;
-      if (!img.src || img.src === BLANK || img.src.startsWith('data:')) return;
-      img.dataset.src = img.src; img.src = BLANK; img.decoding = 'async'; img.loading = 'lazy';
+      if (!img.src||img.src===BLANK||img.src.startsWith('data:')) return;
+      img.dataset.src=img.src; img.src=BLANK; img.decoding='async'; img.loading='lazy';
       imgObs.observe(img);
     });
-    document.querySelectorAll('img[data-src]').forEach(function (img) { imgObs.observe(img); });
-
-    requestAnimationFrame(function () {
-      document.querySelectorAll('img[data-src]').forEach(function (img) {
-        var r = img.getBoundingClientRect();
-        if (r.top < window.innerHeight + 400) { loadImg(img); imgObs.unobserve(img); }
+    document.querySelectorAll('img[data-src]').forEach(function(img){ imgObs.observe(img); });
+    requestAnimationFrame(function(){
+      document.querySelectorAll('img[data-src]').forEach(function(img){
+        var r=img.getBoundingClientRect();
+        if(r.top<window.innerHeight+400){ loadImg(img); imgObs.unobserve(img); }
       });
     });
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') {
-        document.querySelectorAll('img[data-src]').forEach(function (img) {
-          var r = img.getBoundingClientRect();
-          if (r.top < window.innerHeight + 400) { loadImg(img); imgObs.unobserve(img); }
+    document.addEventListener('visibilitychange',function(){
+      if(document.visibilityState==='visible'){
+        document.querySelectorAll('img[data-src]').forEach(function(img){
+          var r=img.getBoundingClientRect();
+          if(r.top<window.innerHeight+400){ loadImg(img); imgObs.unobserve(img); }
         });
       }
     });
   } else {
-    document.querySelectorAll('img[data-src]').forEach(function (img) { loadImg(img); });
+    document.querySelectorAll('img[data-src]').forEach(function(img){ loadImg(img); });
   }
 
-  function loadLazy(el) { if (!el) return; el.querySelectorAll('img[data-src]').forEach(function (img) { loadImg(img); }); }
-  var _om  = window.openModal;    window.openModal    = function (id) { loadLazy(document.getElementById('modal-' + id)); if (typeof _om  === 'function') _om(id); };
-  var _osm = window.openSubModal; window.openSubModal = function (id) { loadLazy(document.getElementById(id));           if (typeof _osm === 'function') _osm(id); };
+  function loadLazy(el){ if(!el) return; el.querySelectorAll('img[data-src]').forEach(function(img){ loadImg(img); }); }
+  var _om=window.openModal;    window.openModal    =function(id){ loadLazy(document.getElementById('modal-'+id));  if(typeof _om==='function')  _om(id);  };
+  var _osm=window.openSubModal;window.openSubModal =function(id){ loadLazy(document.getElementById(id));           if(typeof _osm==='function') _osm(id); };
 
-  var _cv = window.closeVideoModal;
-  window.closeVideoModal = function () {
-    if (typeof _cv === 'function') _cv();
-    setTimeout(function () { var el = document.getElementById('videoModalPov'); if (el) el.innerHTML = ''; }, 500);
-  };
-
-  var scrollBar = document.getElementById('scrollProgress');
-  if (scrollBar) {
-    var ticking2 = false;
-    window.addEventListener('scroll', function () {
-      if (!ticking2) {
-        requestAnimationFrame(function () {
-          var st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
-          scrollBar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
-          ticking2 = false;
-        });
-        ticking2 = true;
-      }
-    }, { passive: true });
+  /* Scroll progress */
+  var scrollBar=document.getElementById('scrollProgress');
+  if (scrollBar){
+    var t2=false;
+    window.addEventListener('scroll',function(){
+      if(!t2){ requestAnimationFrame(function(){
+        var st=window.scrollY,dh=document.documentElement.scrollHeight-window.innerHeight;
+        scrollBar.style.width=(dh>0?(st/dh)*100:0)+'%'; t2=false;
+      }); t2=true; }
+    },{passive:true});
   }
 
-  document.addEventListener('touchstart', function () {}, { passive: true });
-  document.addEventListener('touchmove',  function () {}, { passive: true });
+  document.addEventListener('touchstart',function(){},{passive:true});
+  document.addEventListener('touchmove', function(){},{passive:true});
 
-  if (isMobile) {
-    var st = document.createElement('style');
-    st.textContent =
-      '.about-glow{display:none!important}' +
-      '.hero-grid{display:none!important}' +
-      '.scroll-indicator{animation:none!important;opacity:.25!important}' +
+  if (isMobile){
+    var st=document.createElement('style');
+    st.textContent='.about-glow{display:none!important}.hero-grid{display:none!important}'+
+      '.scroll-indicator{animation:none!important;opacity:.25!important}'+
       '.project-visual img{animation:logoEntrance 8s ease-in-out infinite!important}';
     document.head.appendChild(st);
   }
