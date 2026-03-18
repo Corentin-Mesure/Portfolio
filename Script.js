@@ -390,6 +390,8 @@ function _applySpeed(spd, src) {
   if (input) input.value = spd;
   _syncPresetHighlight(spd);
   _showSpeedToast(spd);
+  /* Recharge l'img avec les nouveaux délais immédiatement */
+  _reloadGifWithNewSpeed();
 }
 
 function _syncPresetHighlight(spd) {
@@ -456,17 +458,113 @@ function _injectSpeedCSS() {
 
 
 /* ════════════════════════════════════════════════════════
-   LECTURE GIF (omggif frame-par-frame)
+   LECTURE GIF — réécriture des délais dans le binaire GIF
+   puis affichage via <img> natif (zéro artefact visuel).
+   La vitesse est appliquée en modifiant les blocs GCE
+   (Graphic Control Extension) directement dans les octets.
 ════════════════════════════════════════════════════════ */
+
 function _safeSrc(src) {
   return src.split('').map(function (c) {
     return c.charCodeAt(0) > 127 ? encodeURIComponent(c) : c;
   }).join('');
 }
 
+/* URL blob de la session en cours */
+var _currentBlobUrl = null;
+
+function _revokeBlobUrl() {
+  if (_currentBlobUrl) { URL.revokeObjectURL(_currentBlobUrl); _currentBlobUrl = null; }
+}
+
+function _stopGif() {
+  _gifActive = false;
+  if (_gifTimer) { clearTimeout(_gifTimer); _gifTimer = null; }
+}
+
+/**
+ * Réécrit tous les délais GCE d'un ArrayBuffer GIF.
+ * Chaque GCE : 0x21 0xF9 0x04 [flags] [delay_lo] [delay_hi] [transp] 0x00
+ * Le délai est en centisecondes (uint16 LE).
+ * Nouveau délai = max(2, round(origDelay / speed))
+ */
+function _rewriteGifDelays(buffer, speed) {
+  var bytes = new Uint8Array(buffer.slice(0));
+  var i = 0, len = bytes.length;
+  while (i < len - 7) {
+    if (bytes[i] === 0x21 && bytes[i + 1] === 0xF9 && bytes[i + 2] === 0x04) {
+      var orig = bytes[i + 4] | (bytes[i + 5] << 8);
+      if (orig === 0) orig = 10;
+      var nd = Math.max(2, Math.round(orig / speed));
+      bytes[i + 4] = nd & 0xFF;
+      bytes[i + 5] = (nd >> 8) & 0xFF;
+      i += 8;
+    } else {
+      i++;
+    }
+  }
+  return bytes.buffer;
+}
+
+function _showGifImg(buffer, container, onError, src) {
+  _revokeBlobUrl();
+  var modified = _rewriteGifDelays(buffer, _currentGifSpeed);
+  var blob = new Blob([modified], { type: 'image/gif' });
+  _currentBlobUrl = URL.createObjectURL(blob);
+
+  var img = document.createElement('img');
+  img.id  = 'videoModalMedia';
+  img.style.cssText = 'display:block;width:100%;min-height:100px;border-radius:18px;';
+  img.onerror = function () { img.style.display = 'none'; if (onError) onError(src); };
+  img.src = _currentBlobUrl;
+  container.insertBefore(img, container.firstChild);
+  container._gifBuffer = buffer; /* stocke le buffer original pour re-générer */
+}
+
+/* Appelé quand l'utilisateur change la vitesse → recharge l'img avec les nouveaux délais */
+function _reloadGifWithNewSpeed() {
+  var inner  = document.querySelector('.video-modal-inner');
+  var buffer = inner && inner._gifBuffer;
+  if (!buffer) return;
+  _revokeBlobUrl();
+  var modified = _rewriteGifDelays(buffer, _currentGifSpeed);
+  var blob = new Blob([modified], { type: 'image/gif' });
+  _currentBlobUrl = URL.createObjectURL(blob);
+  var img = inner.querySelector('#videoModalMedia');
+  if (img) img.src = _currentBlobUrl;
+}
+
+function _playGifFrames(src, container, onError) {
+  var loader = document.createElement('div');
+  loader.id  = 'gifLoader';
+  loader.style.cssText = 'color:rgba(200,160,60,0.7);font-family:Cinzel,serif;font-size:11px;' +
+    'letter-spacing:3px;text-align:center;padding:40px 0;';
+  loader.textContent = 'Chargement\u2026';
+  container.insertBefore(loader, container.firstChild);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', src, true);
+  xhr.responseType = 'arraybuffer';
+
+  xhr.onload = function () {
+    var l = container.querySelector('#gifLoader');
+    if (l) l.remove();
+    if (!xhr.response || !xhr.response.byteLength) {
+      _fallbackImg(src, container, onError); return;
+    }
+    _showGifImg(xhr.response, container, onError, src);
+  };
+
+  xhr.onerror = function () {
+    var l = container.querySelector('#gifLoader');
+    if (l) l.remove();
+    _fallbackImg(src, container, onError);
+  };
+
+  xhr.send();
+}
+
 function _fallbackImg(src, container, onError) {
-  var bar = document.querySelector('.video-modal-bar');
-  if (bar) bar.style.visibility = 'hidden';
   var img = document.createElement('img');
   img.id  = 'videoModalMedia';
   img.style.cssText = 'display:block;width:100%;min-height:100px;';
@@ -474,119 +572,6 @@ function _fallbackImg(src, container, onError) {
   img.src = src;
   container.insertBefore(img, container.firstChild);
 }
-
-function _playGifFrames(src, container, onError) {
-  /* On utilise deux canvas :
-     - offscreen : reçoit le blit omggif (taille du GIF)
-     - canvas    : canvas visible, composite proprement chaque frame */
-  var canvas = document.createElement('canvas');
-  canvas.id  = 'videoModalMedia';
-  canvas.style.cssText = 'display:block;width:100%;';
-  container.insertBefore(canvas, container.firstChild);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', src, true);
-  xhr.responseType = 'arraybuffer';
-
-  xhr.onload = function () {
-    if (!xhr.response || !xhr.response.byteLength) {
-      canvas.remove(); _fallbackImg(src, container, onError); return;
-    }
-    var gr;
-    try { gr = new window.GifReader(new Uint8Array(xhr.response)); }
-    catch (e) { canvas.remove(); _fallbackImg(src, container, onError); return; }
-
-    var W = gr.width, H = gr.height, N = gr.numFrames();
-    if (!N) { canvas.remove(); _fallbackImg(src, container, onError); return; }
-
-    canvas.width  = W;
-    canvas.height = H;
-
-    var ctx = canvas.getContext('2d');
-
-    /* Canvas offscreen pour recevoir le blit omggif */
-    var offscreen = document.createElement('canvas');
-    offscreen.width  = W;
-    offscreen.height = H;
-    var offCtx = offscreen.getContext('2d');
-
-    /* Pré-décode toutes les frames en ImageData */
-    var frames = [];
-    try {
-      for (var f = 0; f < N; f++) {
-        var info   = gr.frameInfo(f);
-        var pixels = new Uint8ClampedArray(W * H * 4);
-        gr.decodeAndBlitFrameRGBA(f, pixels);
-        frames.push({
-          data:     new ImageData(pixels, W, H),
-          x:        info.x        || 0,
-          y:        info.y        || 0,
-          w:        info.width,
-          h:        info.height,
-          delay:    info.delay    || 10,
-          disposal: info.disposal || 0
-        });
-      }
-    } catch (e) {
-      canvas.remove(); _fallbackImg(src, container, onError); return;
-    }
-
-    var sid = ++_gifSessionId;
-    _gifActive = true;
-    var idx = 0;
-
-    /* Snapshot du canvas avant d'afficher une frame (pour disposal=3) */
-    var savedSnapshot = null;
-
-    function tick() {
-      if (!_gifActive || sid !== _gifSessionId) return;
-
-      var frame = frames[idx];
-
-      /* --- Gestion du disposal de la frame PRECEDENTE --- */
-      var prevIdx = (idx === 0) ? N - 1 : idx - 1;
-      var prev    = frames[prevIdx];
-
-      if (idx > 0 || N === 1) {
-        switch (prev.disposal) {
-          case 2:
-            /* Effacer la zone de la frame précédente avec du transparent */
-            ctx.clearRect(prev.x, prev.y, prev.w, prev.h);
-            break;
-          case 3:
-            /* Restaurer le snapshot pris avant d'avoir affiché la frame précédente */
-            if (savedSnapshot) {
-              ctx.putImageData(savedSnapshot, 0, 0);
-            }
-            break;
-          /* case 0 et 1 : ne rien faire, on laisse le canvas tel quel */
-        }
-      }
-
-      /* Sauvegarde avant d'afficher si la frame courante demande disposal=3 */
-      if (frame.disposal === 3) {
-        savedSnapshot = ctx.getImageData(0, 0, W, H);
-      }
-
-      /* Blit de la frame courante via le canvas offscreen */
-      offCtx.putImageData(frame.data, 0, 0);
-      ctx.drawImage(offscreen,
-        frame.x, frame.y, frame.w, frame.h,   /* source dans l'offscreen */
-        frame.x, frame.y, frame.w, frame.h    /* destination sur le canvas visible */
-      );
-
-      var ms = Math.max(16, (frame.delay * 10) / _currentGifSpeed);
-      idx = (idx + 1) % N;
-      _gifTimer = setTimeout(tick, ms);
-    }
-
-    tick();
-  };
-
-  xhr.onerror = function () { canvas.remove(); _fallbackImg(src, container, onError); };
-  xhr.send();
-}
-
 
 /* ════════════════════════════════════════════════════════
    VIDEO MODAL — ouverture / fermeture
@@ -614,15 +599,9 @@ function openVideoModal(src, pov, size) {
 
   if (ext === 'gif') {
     _buildSpeedPanel(src);
-    if (typeof window.GifReader === 'function') {
-      _playGifFrames(safeSrc, inner, function (errSrc) {
-        errPath.textContent = errSrc; errDiv.style.display = 'block';
-      });
-    } else {
-      _fallbackImg(safeSrc, inner, function (errSrc) {
-        errPath.textContent = errSrc; errDiv.style.display = 'block';
-      });
-    }
+    _playGifFrames(safeSrc, inner, function (errSrc) {
+      errPath.textContent = errSrc; errDiv.style.display = 'block';
+    });
   } else {
     var bar = document.querySelector('.video-modal-bar');
     if (bar) { bar.innerHTML = ''; bar.style.visibility = 'hidden'; }
@@ -647,11 +626,12 @@ function openVideoModal(src, pov, size) {
 
 function closeVideoModal() {
   _stopGif();
+  _revokeBlobUrl();
   _currentGifSrc = '';
   var inner = document.querySelector('.video-modal-inner');
   var media = inner && inner.querySelector('#videoModalMedia, canvas, .static-screen-img');
   if (media) media.remove();
-  if (inner) inner.style.cssText = '';
+  if (inner) { inner.style.cssText = ''; inner._gifBuffer = null; }
   var wrap = document.querySelector('.video-modal-wrap');
   if (wrap) wrap.style.cssText = '';
   var badge = document.getElementById('videoModalPov');
