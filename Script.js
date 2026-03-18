@@ -476,6 +476,9 @@ function _fallbackImg(src, container, onError) {
 }
 
 function _playGifFrames(src, container, onError) {
+  /* On utilise deux canvas :
+     - offscreen : reçoit le blit omggif (taille du GIF)
+     - canvas    : canvas visible, composite proprement chaque frame */
   var canvas = document.createElement('canvas');
   canvas.id  = 'videoModalMedia';
   canvas.style.cssText = 'display:block;width:100%;';
@@ -498,43 +501,85 @@ function _playGifFrames(src, container, onError) {
 
     canvas.width  = W;
     canvas.height = H;
-    var ctx  = canvas.getContext('2d');
-    var comp = ctx.createImageData(W, H);
-    var sid  = ++_gifSessionId;
+
+    var ctx = canvas.getContext('2d');
+
+    /* Canvas offscreen pour recevoir le blit omggif */
+    var offscreen = document.createElement('canvas');
+    offscreen.width  = W;
+    offscreen.height = H;
+    var offCtx = offscreen.getContext('2d');
+
+    /* Pré-décode toutes les frames en ImageData */
+    var frames = [];
+    try {
+      for (var f = 0; f < N; f++) {
+        var info   = gr.frameInfo(f);
+        var pixels = new Uint8ClampedArray(W * H * 4);
+        gr.decodeAndBlitFrameRGBA(f, pixels);
+        frames.push({
+          data:     new ImageData(pixels, W, H),
+          x:        info.x        || 0,
+          y:        info.y        || 0,
+          w:        info.width,
+          h:        info.height,
+          delay:    info.delay    || 10,
+          disposal: info.disposal || 0
+        });
+      }
+    } catch (e) {
+      canvas.remove(); _fallbackImg(src, container, onError); return;
+    }
+
+    var sid = ++_gifSessionId;
     _gifActive = true;
-    var idx  = 0;
+    var idx = 0;
+
+    /* Snapshot du canvas avant d'afficher une frame (pour disposal=3) */
+    var savedSnapshot = null;
 
     function tick() {
       if (!_gifActive || sid !== _gifSessionId) return;
-      var info   = gr.frameInfo(idx);
-      var pixels = new Uint8ClampedArray(W * H * 4);
-      try { gr.decodeAndBlitFrameRGBA(idx, pixels); }
-      catch (e) { idx = (idx + 1) % N; _gifTimer = setTimeout(tick, 50); return; }
 
-      if (info.disposal === 2) {
-        var fx = info.x || 0, fy = info.y || 0, fw = info.width, fh = info.height;
-        for (var r = 0; r < fh; r++) for (var c = 0; c < fw; c++) {
-          var di = ((fy + r) * W + (fx + c)) * 4;
-          comp.data[di] = comp.data[di + 1] = comp.data[di + 2] = comp.data[di + 3] = 0;
+      var frame = frames[idx];
+
+      /* --- Gestion du disposal de la frame PRECEDENTE --- */
+      var prevIdx = (idx === 0) ? N - 1 : idx - 1;
+      var prev    = frames[prevIdx];
+
+      if (idx > 0 || N === 1) {
+        switch (prev.disposal) {
+          case 2:
+            /* Effacer la zone de la frame précédente avec du transparent */
+            ctx.clearRect(prev.x, prev.y, prev.w, prev.h);
+            break;
+          case 3:
+            /* Restaurer le snapshot pris avant d'avoir affiché la frame précédente */
+            if (savedSnapshot) {
+              ctx.putImageData(savedSnapshot, 0, 0);
+            }
+            break;
+          /* case 0 et 1 : ne rien faire, on laisse le canvas tel quel */
         }
       }
-      var fx2 = info.x || 0, fy2 = info.y || 0, fw2 = info.width, fh2 = info.height;
-      for (var r2 = 0; r2 < fh2; r2++) for (var c2 = 0; c2 < fw2; c2++) {
-        var si2 = (r2 * fw2 + c2) * 4, di2 = ((fy2 + r2) * W + (fx2 + c2)) * 4;
-        if (pixels[si2 + 3] > 0) {
-          comp.data[di2]     = pixels[si2];
-          comp.data[di2 + 1] = pixels[si2 + 1];
-          comp.data[di2 + 2] = pixels[si2 + 2];
-          comp.data[di2 + 3] = pixels[si2 + 3];
-        }
-      }
-      ctx.putImageData(comp, 0, 0);
 
-      /* _currentGifSpeed est lu en temps reel : le changement est immediat */
-      var ms = Math.max(16, ((info.delay || 10) * 10) / _currentGifSpeed);
+      /* Sauvegarde avant d'afficher si la frame courante demande disposal=3 */
+      if (frame.disposal === 3) {
+        savedSnapshot = ctx.getImageData(0, 0, W, H);
+      }
+
+      /* Blit de la frame courante via le canvas offscreen */
+      offCtx.putImageData(frame.data, 0, 0);
+      ctx.drawImage(offscreen,
+        frame.x, frame.y, frame.w, frame.h,   /* source dans l'offscreen */
+        frame.x, frame.y, frame.w, frame.h    /* destination sur le canvas visible */
+      );
+
+      var ms = Math.max(16, (frame.delay * 10) / _currentGifSpeed);
       idx = (idx + 1) % N;
       _gifTimer = setTimeout(tick, ms);
     }
+
     tick();
   };
 
