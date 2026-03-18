@@ -8,8 +8,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
-
-
 </head>
 <body>
 
@@ -268,7 +266,6 @@
     </div>
   </div>
 
-  <!-- BOUTON PROJETS PERSONNELS -->
   <div class="perso-teaser reveal">
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
@@ -279,7 +276,6 @@
     <div class="perso-teaser-line"></div>
   </div>
 
-  <!-- PROJETS PERSONNELS CACHES -->
   <div class="perso-grid" id="persoGrid">
     <div class="project-card perso-card">
       <div class="project-visual project-visual-3">
@@ -298,7 +294,6 @@
       </div>
     </div>
   </div>
-
 </section>
 
 <!-- ═══ MODAL ANIMAL'AND ═══ -->
@@ -343,9 +338,9 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/inscription.gif','&#x1F464; POV Membre', 500)"><span class="step-num">01</span><span class="step-text">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/inscription.gif','&#x1F464; POV Membre',500)"><span class="step-num">01</span><span class="step-text">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openImageModal('images/screen-en-attente.png','&#x1F5C4;&#xFE0F; Base de donnees')"><span class="step-num">02</span><span class="step-text">La demande est enregistree en base PostgreSQL avec le statut <strong>&#171; en attente &#187;</strong>. L'acces est bloque jusqu'a validation.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin', 500)"><span class="step-num">03</span><span class="step-text">Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">03</span><span class="step-text">Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_conversation_membre.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text">Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openImageModal(['images/screen_admin.png','images/screen_membre.png'],'&#x1F46A; Admin vs Membre')"><span class="step-num">05</span><span class="step-text">La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
@@ -360,7 +355,7 @@
       <p class="submodal-desc">Le coeur de l'application repose sur une messagerie instantanee via <button class="tech-accordion" onclick="toggleAcc('acc-socketio')"><span>Socket.io</span><span class="acc-arrow">&#x203A;</span></button>. Les messages sont persistes en PostgreSQL et distribues en temps reel.<div class="tech-accordion-body" id="acc-socketio"><div class="tech-accordion-inner"><ul><li>Socket.io etablit une <strong>connexion permanente</strong> entre le serveur et l'application (WebSocket).</li><li>Contrairement au HTTP classique, Socket.io permet au serveur de <strong>pousser instantanement</strong> les donnees des qu'un evenement se produit.</li><li>Des qu'un message est envoye, le serveur notifie immediatement tous les clients connectes — <strong>sans rechargement, sans delai</strong>.</li></ul></div></div></p>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur selectionne une conversation et redige son message.</span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/messages_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees', 1600)"><span class="step-num">02</span><span class="step-text">A l'envoi, le message est <strong>enregistre en base PostgreSQL</strong> pour garantir la persistance.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/messages_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text">A l'envoi, le message est <strong>enregistre en base PostgreSQL</strong> pour garantir la persistance.<br><span class="step-play-hint">Voir le screen</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_message_tempsréel.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text"><strong>Si le destinataire est connecte</strong>, il recoit le message <strong>instantanement via Socket.io</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F514; Notification')"><span class="step-num">04</span><span class="step-text"><strong>Si le destinataire est absent</strong>, une <strong>notification push Firebase Messaging</strong> est declenchee.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openImageModal('images/screen_horodatage.png','&#x1F4AC; Chat')"><span class="step-num">05</span><span class="step-text">Chaque message affiche l'auteur, le contenu et <strong>l'horodatage precis</strong> de l'envoi.<br><span class="step-play-hint">Voir le screen</span></span></div>
@@ -376,8 +371,8 @@
     <div class="submodal-body">
       <p class="submodal-desc">Grace a Firebase Cloud Messaging (FCM), les utilisateurs sont alertes des nouveaux messages meme lorsqu'ils n'ont pas l'application ouverte.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_token.png','&#x1F5C4;&#xFE0F; Base de donnees', 1400)"><span class="step-num">01</span><span class="step-text">Lors de la connexion, l'application recupere le <strong>token FCM</strong> de l'appareil et l'enregistre en base.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_log.png','&#x1F5C4;&#xFE0F; Log serveur', 1200)"><span class="step-num">02</span><span class="step-text">Quand un message est envoye, le backend <strong>declenche une notification FCM</strong> vers les membres du salon.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_token.png','&#x1F5C4;&#xFE0F; Base de donnees',1400)"><span class="step-num">01</span><span class="step-text">Lors de la connexion, l'application recupere le <strong>token FCM</strong> de l'appareil et l'enregistre en base.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_log.png','&#x1F5C4;&#xFE0F; Log serveur',1200)"><span class="step-num">02</span><span class="step-text">Quand un message est envoye, le backend <strong>declenche une notification FCM</strong> vers les membres du salon.<br><span class="step-play-hint">Voir le log</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text">La notification apparait meme si l'application est <strong>fermee ou en arriere-plan</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un tap sur la notification <strong>ouvre directement le salon</strong> concerne.</span></div>
       </div>
@@ -395,7 +390,7 @@
         <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_de_groupe.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">02</span><span class="step-text"><strong>Groupes (admins uniquement) :</strong> seuls les administrateurs peuvent creer des groupes visibles par tous.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_group_et_conversation.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text">L'<strong>historique complet</strong> est charge a l'ouverture et les nouveaux messages arrivent en temps reel via Socket.io.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openImageModal('images/screen_presence.png','&#x1F7E2; Presence en ligne')"><span class="step-num">04</span><span class="step-text">Un indicateur de <strong>presence en ligne</strong> permet de savoir quels membres sont connectes.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_suppression.png','&#x1F5C4;&#xFE0F; Base de donnees', 900)"><span class="step-num">05</span><span class="step-text"><strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimes de la base PostgreSQL.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_suppression.png','&#x1F5C4;&#xFE0F; Base de donnees',900)"><span class="step-num">05</span><span class="step-text"><strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimes de la base PostgreSQL.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
@@ -408,7 +403,7 @@
       <p class="submodal-desc">Les utilisateurs peuvent animer leur salon en creant des sondages interactifs. Les votes et resultats sont visibles en temps reel.</p>
       <div class="submodal-steps">
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text">N'importe quel membre peut creer un sondage en definissant une <strong>question et plusieurs options</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/polls_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees', 1600)"><span class="step-num">02</span><span class="step-text">Le sondage est enregistre en PostgreSQL et diffuse via <strong>Socket.io</strong> a tous les membres.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/polls_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text">Le sondage est enregistre en PostgreSQL et diffuse via <strong>Socket.io</strong> a tous les membres.<br><span class="step-play-hint">Voir le screen</span></span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque membre vote une seule fois. <strong>Un seul vote par utilisateur</strong> est autorise.</span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text">Les <strong>resultats se mettent a jour en direct</strong> avec le pourcentage de votes pour chaque option.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
@@ -498,191 +493,18 @@
 </div>
 
 <!-- SOUS-MODALS ANIMAL'VEST -->
-<div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant (email, mot de passe) n'est requis.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison de la commande. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les articles <strong>en rupture de stock</strong> sont automatiquement signales ou masques selon le stock disponible.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La visionneuse plein ecran supporte le <strong>zoom et le pinch</strong> (InteractiveViewer), l'interface se masque au tap pour profiter de l'image sans distraction.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. Chaque carte affiche l'icone et le nom de l'unite.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories de la boutique qui lui sont associees.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les administrateurs voient un bouton <strong>&#xB7;&#xB7;&#xB7;</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories (Militaire, Animaux, Sport...) avec une barre de recherche.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree, depuis la fiche produit ou la grille.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Ces informations sont <strong>encodees dans le champ notes</strong> de la commande et accessibles par l'admin via une fiche client dediee avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La commande est <strong>enregistree en base de donnees</strong> avec le statut <em style="color:var(--cyan)">&#171; en attente &#187;</em>. L'administrateur recoit une notification push.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le membre peut <strong>suivre l'etat de sa commande</strong> directement depuis l'application et recoit un email a chaque changement de statut.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-virement" onclick="closeSubModal(event,'vest-virement')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4B3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Paiement par virement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-virement')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Le paiement des commandes se fait exclusivement par virement bancaire. Aucune donnee bancaire ne transit par l'application.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Apres validation de la commande, une <strong>dialog de confirmation</strong> informe le membre que le paiement s'effectue uniquement par <strong>virement bancaire</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le <strong>RIB de l'association</strong> est disponible sur l'application Animal'and Chat. Le membre doit s'y connecter pour obtenir les coordonnees bancaires.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le numero de commande est communique dans la dialog pour que le membre puisse le mentionner en <strong>reference de virement</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Sans reception du virement</strong>, la commande sera automatiquement annulee. Cela evite tout blocage de stock inutile.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de 7 cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Gestion des admins :</strong> liste des comptes administrateurs avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier le mot de passe.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Pour garantir la traçabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie de numero de colis apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression se remplit caractere par caractere et devient <strong>verte</strong> a la validation complete.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel pour guider l'admin pendant la saisie.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et visible dans la fiche commande du panel. Un email de suivi est automatiquement envoye au membre.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-notif" onclick="closeSubModal(event,'vest-notif')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Firebase Cloud Messaging permet d'alerter l'administrateur en temps reel des qu'une nouvelle commande est passee.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">La notification est recue <strong>meme si l'app est fermee</strong> ou en arriere-plan.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un tap sur la notification <strong>ouvre directement</strong> le detail de la commande concernee dans le panel admin.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye au membre avec le detail des articles commandes.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">&#171; traitee &#187;</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; expediee &#187;</em>, un email avec le <strong>numero de colis</strong> est envoye pour permettre le suivi de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; livree &#187;</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut — aucune action manuelle supplementaire n'est requise.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> les regles sont centralisees dans un fichier partage entre l'ecran de connexion et le profil. Minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> lors de la saisie d'un mot de passe, une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ (nom, email, prix, description) dispose d'un formatter qui bloque en temps reel les caracteres dangereux comme &lt; &gt; " ' ; / pour prevenir les injections.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> les formulaires sensibles (creation de compte admin, ajout de produit) sont proteges par un limiteur de 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT et les identifiants "se souvenir de moi" sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes. Les deux apps coexistent sans partager de donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT, la normalisation des prix et la gestion des erreurs.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant (email, mot de passe) n'est requis.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison de la commande. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les articles <strong>en rupture de stock</strong> sont automatiquement signales ou masques selon le stock disponible.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">La visionneuse plein ecran supporte le <strong>zoom et le pinch</strong> (InteractiveViewer), l'interface se masque au tap pour profiter de l'image sans distraction.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. Chaque carte affiche l'icone et le nom de l'unite.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories de la boutique qui lui sont associees.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les administrateurs voient un bouton <strong>···</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories (Militaire, Animaux, Sport...) avec une barre de recherche.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree, depuis la fiche produit ou la grille.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Ces informations sont <strong>encodees dans le champ notes</strong> de la commande et accessibles par l'admin via une fiche client dediee avec option copier.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">La commande est <strong>enregistree en base de donnees</strong> avec le statut <em style="color:var(--cyan)">&#171; en attente &#187;</em>. L'administrateur recoit une notification push.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le membre peut <strong>suivre l'etat de sa commande</strong> directement depuis l'application et recoit un email a chaque changement de statut.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-virement" onclick="closeSubModal(event,'vest-virement')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4B3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Paiement par virement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-virement')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Le paiement des commandes se fait exclusivement par virement bancaire. Aucune donnee bancaire ne transit par l'application.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Apres validation de la commande, une <strong>dialog de confirmation</strong> informe le membre que le paiement s'effectue uniquement par <strong>virement bancaire</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le <strong>RIB de l'association</strong> est disponible sur l'application Animal'and Chat. Le membre doit s'y connecter pour obtenir les coordonnees bancaires.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le numero de commande est communique dans la dialog pour que le membre puisse le mentionner en <strong>reference de virement</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Sans reception du virement</strong>, la commande sera automatiquement annulee. Cela evite tout blocage de stock inutile.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de 7 cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Gestion des admins :</strong> liste des comptes administrateurs avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.</span></div><div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier le mot de passe.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie de numero de colis apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression se remplit caractere par caractere et devient <strong>verte</strong> a la validation complete.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel pour guider l'admin pendant la saisie.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et visible dans la fiche commande du panel. Un email de suivi est automatiquement envoye au membre.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-notif" onclick="closeSubModal(event,'vest-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Firebase Cloud Messaging permet d'alerter l'administrateur en temps reel des qu'une nouvelle commande est passee.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">La notification est recue <strong>meme si l'app est fermee</strong> ou en arriere-plan.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un tap sur la notification <strong>ouvre directement</strong> le detail de la commande concernee dans le panel admin.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye au membre avec le detail des articles commandes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">&#171; traitee &#187;</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; expediee &#187;</em>, un email avec le <strong>numero de colis</strong> est envoye pour permettre le suivi de livraison.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; livree &#187;</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut — aucune action manuelle supplementaire n'est requise.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> les regles sont centralisees dans un fichier partage entre l'ecran de connexion et le profil. Minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> lors de la saisie d'un mot de passe, une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ (nom, email, prix, description) dispose d'un formatter qui bloque en temps reel les caracteres dangereux comme &lt; &gt; " ' ; / pour prevenir les injections.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> les formulaires sensibles (creation de compte admin, ajout de produit) sont proteges par un limiteur de 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT et les identifiants "se souvenir de moi" sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes. Les deux apps coexistent sans partager de donnees.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT, la normalisation des prix et la gestion des erreurs.</span></div></div></div></div></div>
 
 <!-- ═══ MODAL LOL ═══ -->
 <div class="modal-overlay" id="modal-lol" onclick="closeModal(event,'lol')">
@@ -741,174 +563,12 @@
       <div id="videoModalPov" class="video-modal-pov"></div>
       <button onclick="closeVideoModal()" class="video-modal-close">&#x2715;</button>
     </div>
-    <div class="video-modal-bar">
-      <button id="videoSpeedBtn" class="video-modal-speed active" onclick="toggleGifSpeed()">&#x26A1; x2</button>
-    </div>
+    <!-- La barre de vitesse est injectée dynamiquement par Script.js -->
+    <div class="video-modal-bar"></div>
   </div>
 </div>
 
 <script src="Script.js"></script>
-
-<script>
-/* ═══════════════════════════════════════════
-   OPTIMISATIONS PERFORMANCE v3
-   ═══════════════════════════════════════════ */
-(function() {
-
-  /* ── 1. Détection mobile ────────────────── */
-  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-  /* ── 2. Hero grid off sur mobile ─────────── */
-  if (isMobile) {
-    var hg = document.querySelector('.hero-grid');
-    if (hg) hg.style.display = 'none';
-  }
-
-  /* ── 3. Lazy load images ──────────────────── */
-  var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-  function loadImg(img) {
-    if (img.dataset.src) {
-      img.src = img.dataset.src;
-      delete img.dataset.src;
-    }
-  }
-
-  if ('IntersectionObserver' in window) {
-    var imgObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          loadImg(e.target);
-          imgObs.unobserve(e.target);
-        }
-      });
-    }, { rootMargin: '300px' });
-
-    document.querySelectorAll('img').forEach(function(img) {
-      if (img.closest('#hero')) return;
-      if (!img.src || img.src === BLANK || img.src.startsWith('data:')) return;
-      img.dataset.src = img.src;
-      img.src = BLANK;
-      img.decoding = 'async';
-      img.loading = 'lazy';
-      imgObs.observe(img);
-    });
-
-    /* Lazy load explicite pour les data-src déjà présents (simpleicons) */
-    document.querySelectorAll('img[data-src]').forEach(function(img) {
-      imgObs.observe(img);
-    });
-
-    /* ── FIX : forcer le chargement des icônes déjà visibles au load ── */
-    requestAnimationFrame(function() {
-      document.querySelectorAll('img[data-src]').forEach(function(img) {
-        var r = img.getBoundingClientRect();
-        if (r.top < window.innerHeight + 400) {
-          loadImg(img);
-          imgObs.unobserve(img);
-        }
-      });
-    });
-
-    /* Reload au retour de l'onglet (après crash / mise en veille) */
-    document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
-        document.querySelectorAll('img[data-src]').forEach(function(img) {
-          var r = img.getBoundingClientRect();
-          if (r.top < window.innerHeight + 400) {
-            loadImg(img);
-            imgObs.unobserve(img);
-          }
-        });
-      }
-    });
-
-  } else {
-    /* Fallback sans IntersectionObserver */
-    document.querySelectorAll('img[data-src]').forEach(function(img) { loadImg(img); });
-  }
-
-  /* ── 4. Charger lazy dans modal/submodal à l'ouverture ── */
-  function loadLazy(el) {
-    if (!el) return;
-    el.querySelectorAll('img[data-src]').forEach(function(img) {
-      loadImg(img);
-    });
-  }
-
-  var _om = window.openModal;
-  window.openModal = function(id) {
-    loadLazy(document.getElementById('modal-' + id));
-    if (typeof _om === 'function') _om(id);
-  };
-
-  var _osm = window.openSubModal;
-  window.openSubModal = function(id) {
-    loadLazy(document.getElementById(id));
-    if (typeof _osm === 'function') _osm(id);
-  };
-
-  /* ── 5. Images dans openImageModal : charger avec taille limitée ── */
-  var _oim = window.openImageModal;
-  window.openImageModal = function(src, label, maxW) {
-    if (isMobile && typeof src === 'string') {
-      var testImg = new Image();
-      testImg.onload = function() {
-        if (typeof _oim === 'function') _oim(src, label, maxW);
-      };
-      testImg.onerror = function() {
-        console.warn('Image introuvable:', src);
-      };
-      testImg.src = src;
-      return;
-    }
-    if (typeof _oim === 'function') _oim(src, label, maxW);
-  };
-
-  /* ── 6. Vider le video modal à la fermeture ── */
-  var _cv = window.closeVideoModal;
-  window.closeVideoModal = function() {
-    if (typeof _cv === 'function') _cv();
-    setTimeout(function() {
-      var el = document.getElementById('videoModalPov');
-      if (el) el.innerHTML = '';
-    }, 500);
-  };
-
-  /* ── 7. Scroll progress throttlé (rAF + passive) ── */
-  var scrollBar = document.getElementById('scrollProgress');
-  if (scrollBar) {
-    var ticking = false;
-    window.addEventListener('scroll', function() {
-      if (!ticking) {
-        requestAnimationFrame(function() {
-          var st = window.scrollY;
-          var dh = document.documentElement.scrollHeight - window.innerHeight;
-          scrollBar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-  }
-
-  /* ── 8. Passive touch listeners ─────────── */
-  document.addEventListener('touchstart', function(){}, { passive: true });
-  document.addEventListener('touchmove', function(){}, { passive: true });
-
-  /* ── 9. Réduire animations sur mobile ──── */
-  if (isMobile) {
-    var s = document.createElement('style');
-    s.textContent =
-      '.about-glow{display:none!important}' +
-      '.hero-grid{display:none!important}' +
-      '.scroll-indicator{animation:none!important;opacity:.25!important}' +
-      '.project-visual img{animation:logoEntrance 8s ease-in-out infinite!important}';
-    document.head.appendChild(s);
-  }
-
-})();
-</script>
 
 </body>
 </html>
