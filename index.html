@@ -524,22 +524,91 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4C5;</span>
-      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes.</p>
+      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
       <div class="modal-features">
-        <div class="modal-features-title">&#x2756; Fonctionnalites</div>
-        <div class="modal-feature">Compte praticien : formulaire de demande avec selection des dates de debut et fin de conge</div>
-        <div class="modal-feature">Verification automatique du solde de conges restants et refus si insuffisant</div>
-        <div class="modal-feature">Compte RH : liste des demandes en attente avec consultation et decision (accepter / refuser)</div>
-        <div class="modal-feature">Notification a la connexion sur l'etat des demandes en cours</div>
-        <div class="modal-feature">Backend Laravel avec API REST consommee par l'application C#</div>
-        <div class="modal-feature">Base de donnees MySQL pour la persistance des praticiens, demandes et soldes</div>
+        <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Comptes</span><span class="feat-preview">Deux comptes distincts : praticien et responsable RH avec acces differencies.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-demande')"><div style="flex:1"><span class="feat-title">&#x1F4C5; Demande de conges</span><span class="feat-preview">Formulaire de saisie avec selection des dates et verification automatique du solde.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-rh')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel RH</span><span class="feat-preview">Liste des demandes en attente, consultation et decision d'acceptation ou de refus.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications a la connexion</span><span class="feat-preview">Le praticien est notifie de l'etat de ses demandes des la connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Backend &amp; Base de donnees</span><span class="feat-preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
-        <span class="modal-tag">C#</span>
-        <span class="modal-tag">Windows Forms</span>
-        <span class="modal-tag">Laravel</span>
-        <span class="modal-tag">MySQL</span>
+        <span class="modal-tag">C#</span><span class="modal-tag">Windows Forms</span>
+        <span class="modal-tag">Laravel</span><span class="modal-tag">MySQL</span>
         <span class="modal-tag">API REST</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOUS-MODALS GSB CONGES -->
+<div class="submodal-overlay" id="gsb-connexion" onclick="closeSubModal(event,'gsb-connexion')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role de l'utilisateur.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_connexion.gif','&#x1F511; Connexion')"><span class="step-num">01</span><span class="step-text">L'utilisateur saisit ses identifiants sur l'ecran de connexion. Le systeme detecte automatiquement son role (praticien ou RH).<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le <strong>compte praticien</strong> donne acces au formulaire de demande de conges et a l'historique de ses demandes.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le <strong>compte RH</strong> donne acces a la liste complete des demandes de tous les praticiens avec les outils de validation.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="gsb-demande" onclick="closeSubModal(event,'gsb-demande')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Le praticien peut soumettre une demande de conges en selectionnant ses dates. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_demande.gif','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong> de conge via des selecteurs de date.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">L'interface affiche en temps reel le <strong>nombre de jours de conges restants</strong> dans son solde.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_refus_solde.gif','&#x26A0;&#xFE0F; Solde insuffisant')"><span class="step-num">03</span><span class="step-text">Si le solde est insuffisant, la demande est <strong>automatiquement refusee</strong> et un message d'erreur s'affiche.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_soumission.gif','&#x1F464; POV Praticien')"><span class="step-num">04</span><span class="step-text">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base en attente de validation RH.<br><span class="step-play-hint">Voir la demo</span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="gsb-rh" onclick="closeSubModal(event,'gsb-rh')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes de conges des praticiens.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_liste_rh.gif','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text">Le RH voit la <strong>liste de toutes les demandes</strong> en attente avec le nom du praticien et les dates demandees.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_detail_rh.gif','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">02</span><span class="step-text">En selectionnant un praticien, le RH consulte le <strong>detail complet de sa demande</strong> et son solde actuel.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_validation.gif','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">03</span><span class="step-text">Le RH peut <strong>accepter ou refuser</strong> la demande en un clic. Le solde du praticien est mis a jour automatiquement.<br><span class="step-play-hint">Voir la demo</span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_notif.gif','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'architecture respecte la separation des couches : l'interface graphique ne manipule que des <strong>objets C#</strong>, jamais directement la base.</span></div>
       </div>
     </div>
   </div>
