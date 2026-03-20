@@ -108,49 +108,84 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       clone = card.cloneNode(true);
       clone.id = 'flipCardClone'; clone.classList.add('is-clone'); clone.removeAttribute('onclick');
       /* will-change retiré — cause des recalculs GPU à la rotation sur mobile */
-      clone.style.cssText = [
-        'position:fixed',
-        'left:'+origRect.left+'px',
-        'top:'+origRect.top+'px',
-        'width:'+origRect.width+'px',
-        'height:'+origRect.height+'px',
-        'margin:0',
-        'z-index:1000',
-        'transform:rotateY(180deg)',
-        'transition:none',
-        'visibility:visible',
-        'transform-style:preserve-3d',
-        'aspect-ratio:unset'
-      ].join(';');
+      /* Calcul de la position finale centrée (visual viewport pour Safari iOS) */
+      var vvp = window.visualViewport || null;
+      var vw  = vvp ? Math.round(vvp.width)  : window.innerWidth;
+      var vh  = vvp ? Math.round(vvp.height) : window.innerHeight;
+      var vx  = vvp ? Math.round(vvp.offsetLeft) : 0;
+      var vy  = vvp ? Math.round(vvp.offsetTop)  : 0;
+      var tW,tH,tLeft,tTop;
+      if(_isMobileDevice){
+        tW    = Math.min(vw * 0.88, 400);
+        tH    = Math.min(tW * (4/3), vh * 0.85);
+        tW    = Math.min(tW, tH * (3/4));
+        tLeft = vx + (vw - tW) / 2;
+        tTop  = vy + (vh - tH) / 2;
+        if(tLeft < 8) tLeft = 8;
+        if(tTop  < 8) tTop  = 8;
+        if(tLeft + tW > vx + vw - 8) tLeft = vx + vw - tW - 8;
+        if(tTop  + tH > vy + vh - 8) tTop  = vy + vh - tH - 8;
+      } else {
+        var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
+        tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
+      }
+
+      /* Sur mobile : le clone apparaît DIRECTEMENT centré (scale 0→1),
+         pas de déplacement depuis la carte originale.
+         Sur desktop : animation classique depuis la position originale. */
+      if(_isMobileDevice){
+        clone.style.cssText = [
+          'position:fixed',
+          'left:'+tLeft+'px',
+          'top:'+tTop+'px',
+          'width:'+tW+'px',
+          'height:'+tH+'px',
+          'margin:0',
+          'z-index:1000',
+          'transform:rotateY(180deg) scale(0.85)',
+          'transform-style:preserve-3d',
+          'transition:none',
+          'visibility:visible',
+          'opacity:0',
+          'aspect-ratio:unset'
+        ].join(';');
+      } else {
+        clone.style.cssText = [
+          'position:fixed',
+          'left:'+origRect.left+'px',
+          'top:'+origRect.top+'px',
+          'width:'+origRect.width+'px',
+          'height:'+origRect.height+'px',
+          'margin:0',
+          'z-index:1000',
+          'transform:rotateY(180deg)',
+          'transition:none',
+          'visibility:visible',
+          'transform-style:preserve-3d',
+          'aspect-ratio:unset'
+        ].join(';');
+      }
       document.body.appendChild(clone);
       var bd = document.getElementById('cardBackdrop'); if (bd) bd.classList.add('active');
       document.body.style.overflow = 'hidden';
       var cb = clone.querySelector('.back-close');
       if (cb) { cb.style.display = 'flex'; cb.onclick = function (e) { e.stopPropagation(); window.closeCard(); }; }
       void clone.offsetHeight;
-      var vw=window.innerWidth,vh=window.innerHeight;
-      var tW,tH,tLeft,tTop;
+
       if(_isMobileDevice){
-        /* Adaptatif tous mobiles — basé sur les dimensions réelles de l'écran.
-           88% de la largeur (max 400px), hauteur contrainte par le ratio 3/4
-           et par 85% de vh. Légèrement remonté pour éviter la barre Safari. */
-        tW    = Math.min(vw * 0.88, 400);
-        tH    = Math.min(tW * (4/3), vh * 0.85);
-        tW    = Math.min(tW, tH * (3/4));
-        tLeft = (vw - tW) / 2;
-        tTop  = (vh - tH) / 2 - (vh * 0.03);
-        /* Sécurité : jamais hors écran */
-        if(tLeft < 8) tLeft = 8;
-        if(tTop  < 8) tTop  = 8;
-        if(tLeft + tW > vw - 8) tLeft = vw - tW - 8;
-        if(tTop  + tH > vh - 8) tTop  = vh - tH - 8;
+        /* Mobile : apparition sur place avec scale + fade */
+        clone.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease';
+        clone.style.transform  = 'rotateY(180deg) scale(1)';
+        clone.style.opacity    = '1';
+        state = 'open';
+        expandTimer = setTimeout(function(){ if(clone) clone.classList.add('expanded'); }, 500);
       } else {
-        var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
-        tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
+        /* Desktop : animation classique de déplacement */
+        clone.style.transition='left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
+        clone.style.left=tLeft+'px'; clone.style.top=tTop+'px'; clone.style.width=tW+'px'; clone.style.height=tH+'px';
+        state = 'open';
+        expandTimer = setTimeout(function(){ if(clone) clone.classList.add('expanded'); }, 1050);
       }
-      clone.style.transition='left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
-      clone.style.left=tLeft+'px'; clone.style.top=tTop+'px'; clone.style.width=tW+'px'; clone.style.height=tH+'px';
-      state = 'open'; expandTimer = setTimeout(function () { if (clone) clone.classList.add('expanded'); }, 1050);
     }, 900);
   };
   window.closeCard = function () {
@@ -158,17 +193,33 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
     state = 'closing'; clearTimeout(expandTimer); clone.classList.remove('expanded');
     var bd = document.getElementById('cardBackdrop'); if (bd) bd.classList.remove('active');
     var card = document.getElementById('flipCard');
-    clone.style.transition='left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';
-    clone.style.left=origRect.left+'px'; clone.style.top=origRect.top+'px'; clone.style.width=origRect.width+'px'; clone.style.height=origRect.height+'px';
-    setTimeout(function () {
-      if (!clone) return;
-      clone.style.transition = 'transform .65s cubic-bezier(0.4,0.2,0.2,1)'; clone.style.transform = 'rotateY(0deg)';
-      setTimeout(function () {
-        if (clone) { clone.remove(); clone = null; } document.body.style.overflow = '';
-        if (card) { card.style.transition='none'; card.style.transform='rotateY(0deg)'; card.style.visibility='visible'; void card.offsetHeight; card.style.transition=''; card.style.transform=''; }
+
+    if(_isMobileDevice){
+      /* Mobile : disparition sur place avec scale + fade */
+      clone.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease';
+      clone.style.transform  = 'rotateY(180deg) scale(0.85)';
+      clone.style.opacity    = '0';
+      setTimeout(function(){
+        if(clone){ clone.remove(); clone = null; }
+        document.body.style.overflow = '';
+        if(card){ card.style.transition='none'; card.style.transform='rotateY(0deg)'; card.style.visibility='visible'; void card.offsetHeight; card.style.transition=''; card.style.transform=''; }
         state = 'closed';
-      }, 660);
-    }, 620);
+      }, 360);
+    } else {
+      /* Desktop : retour animé vers la position de la carte originale */
+      var currentRect = card ? card.getBoundingClientRect() : origRect;
+      clone.style.transition='left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';
+      clone.style.left=currentRect.left+'px'; clone.style.top=currentRect.top+'px'; clone.style.width=currentRect.width+'px'; clone.style.height=currentRect.height+'px';
+      setTimeout(function () {
+        if (!clone) return;
+        clone.style.transition = 'transform .65s cubic-bezier(0.4,0.2,0.2,1)'; clone.style.transform = 'rotateY(0deg)';
+        setTimeout(function () {
+          if (clone) { clone.remove(); clone = null; } document.body.style.overflow = '';
+          if (card) { card.style.transition='none'; card.style.transform='rotateY(0deg)'; card.style.visibility='visible'; void card.offsetHeight; card.style.transition=''; card.style.transform=''; }
+          state = 'closed';
+        }, 660);
+      }, 620);
+    }
   };
 })();
 
