@@ -7,6 +7,43 @@
 var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
 /* ════════════════════════════════════════════════════════
+   FIX SAFARI IOS — ROTATION
+   Safari ignore animation-duration:0.01ms dans un * global.
+   On injecte une <style> qui coupe tout via une classe,
+   et on la pose/retire autour de chaque changement d'orientation.
+════════════════════════════════════════════════════════ */
+(function () {
+  if (!_isMobileDevice) return;
+
+  /* Injecte une fois la règle CSS de blocage */
+  var _freezeStyle = document.createElement('style');
+  _freezeStyle.textContent =
+    'body.orientation-freeze *,' +
+    'body.orientation-freeze *::before,' +
+    'body.orientation-freeze *::after {' +
+      'animation-play-state: paused !important;' +
+      'transition: none !important;' +
+    '}' +
+    /* Bloque aussi le scroll-behavior qui peut déclencher des repaints */
+    'body.orientation-freeze html { scroll-behavior: auto !important; }';
+  document.head.appendChild(_freezeStyle);
+
+  var _freezeTimer = null;
+
+  window.addEventListener('orientationchange', function () {
+    /* Geler immédiatement */
+    document.body.classList.add('orientation-freeze');
+    clearTimeout(_freezeTimer);
+
+    /* Attendre que le navigateur ait fini de recalculer le layout
+       (Safari prend ~400ms après orientationchange) puis dégeler */
+    _freezeTimer = setTimeout(function () {
+      document.body.classList.remove('orientation-freeze');
+    }, 500);
+  });
+})();
+
+/* ════════════════════════════════════════════════════════
    SCROLL + NAV ACTIVE
 ════════════════════════════════════════════════════════ */
 (function () {
@@ -568,7 +605,7 @@ document.addEventListener('keydown',function(e){
 
   if(isMobile){
     var st=document.createElement('style');
-    st.textContent='.about-glow{display:none!important}.hero-grid{display:none!important}.scroll-indicator{animation:none!important;opacity:.25!important}.project-visual img{animation:logoEntrance 8s ease-in-out infinite!important}';
+    st.textContent='.about-glow{display:none!important}.hero-grid{display:none!important}.scroll-indicator{animation:none!important;opacity:.25!important}.project-visual img{animation:logoMobile 5s ease-in-out infinite!important;filter:none!important}';
     document.head.appendChild(st);
   }
 
