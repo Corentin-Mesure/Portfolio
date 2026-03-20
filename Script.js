@@ -64,10 +64,21 @@
       card.style.visibility = 'hidden';
       clone = card.cloneNode(true);
       clone.id = 'flipCardClone'; clone.classList.add('is-clone'); clone.removeAttribute('onclick');
-      clone.style.cssText = ['position:fixed','left:'+origRect.left+'px','top:'+origRect.top+'px',
-        'width:'+origRect.width+'px','height:'+origRect.height+'px','margin:0','z-index:1000',
-        'transform:rotateY(180deg)','transition:none','visibility:visible','transform-style:preserve-3d',
-        'aspect-ratio:unset','will-change:left,top,width,height'].join(';');
+      /* FIX : will-change retiré — cause des recalculs GPU à la rotation sur mobile */
+      clone.style.cssText = [
+        'position:fixed',
+        'left:'+origRect.left+'px',
+        'top:'+origRect.top+'px',
+        'width:'+origRect.width+'px',
+        'height:'+origRect.height+'px',
+        'margin:0',
+        'z-index:1000',
+        'transform:rotateY(180deg)',
+        'transition:none',
+        'visibility:visible',
+        'transform-style:preserve-3d',
+        'aspect-ratio:unset'
+      ].join(';');
       document.body.appendChild(clone);
       var bd = document.getElementById('cardBackdrop'); if (bd) bd.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -148,14 +159,25 @@ function openImageModal(srcs,pov,size) {
 }
 
 /* ════════════════════════════════════════════════════════
-   CACHE GIF — ArrayBuffer par src, jamais supprimé
+   CACHE GIF — ArrayBuffer par src, jamais supprimé sauf si > 40 MB
 ════════════════════════════════════════════════════════ */
 var _gifCache = {};   /* src → ArrayBuffer original (jamais modifié) */
 
-/* Patch des délais GCE dans UNE COPIE du buffer.
-   GCE = 21 F9 04 [flags] [lo] [hi] [transp] 00  — délai en cs (uint16 LE) */
+/* FIX : vérifie la taille totale du cache et le vide si > 40 MB */
+function _checkAndEvictCache() {
+  var total = 0;
+  var keys = Object.keys(_gifCache);
+  for (var i = 0; i < keys.length; i++) {
+    total += _gifCache[keys[i]].byteLength;
+  }
+  if (total > 40 * 1024 * 1024) {
+    _gifCache = {};
+  }
+}
+
+/* Patch des délais GCE dans UNE COPIE du buffer. */
 function _patchDelays(origBuffer, speed) {
-  var bytes = new Uint8Array(origBuffer.slice(0)); /* copie propre */
+  var bytes = new Uint8Array(origBuffer.slice(0));
   for (var i = 0; i < bytes.length - 7; i++) {
     if (bytes[i]===0x21 && bytes[i+1]===0xF9 && bytes[i+2]===0x04) {
       var d = bytes[i+4] | (bytes[i+5]<<8);
@@ -169,8 +191,6 @@ function _patchDelays(origBuffer, speed) {
   return bytes.buffer;
 }
 
-/* Crée un blob URL à partir du buffer patché.
-   On garde une liste et on révoque tout à la fermeture du modal. */
 var _blobUrls = [];
 function _makeBlobUrl(origBuffer, speed) {
   var patched = _patchDelays(origBuffer, speed);
@@ -264,11 +284,14 @@ function _setSpd(spd, src) {
 }
 
 /* ════════════════════════════════════════════════════════
-   RELOAD GIF — double-buffer pour zéro flash noir
+   RELOAD GIF — FIX : blobs révoqués AVANT d'en créer un nouveau
 ════════════════════════════════════════════════════════ */
 function _reloadImg(src, spd) {
   var buf = _gifCache[src];
   if (!buf) return;
+
+  /* FIX : révoquer les anciens blobs AVANT d'en créer un nouveau */
+  _revokeBlobs();
 
   var newUrl = _makeBlobUrl(buf, spd);
   var inner  = document.querySelector('.video-modal-inner');
@@ -276,7 +299,6 @@ function _reloadImg(src, spd) {
 
   var oldImg = inner.querySelector('#videoModalMedia');
 
-  /* Crée la nouvelle image hors-écran (invisible, ne déplace pas le layout) */
   var newImg = document.createElement('img');
   newImg.id  = 'videoModalMedia-next';
   newImg.style.cssText = oldImg
@@ -284,12 +306,10 @@ function _reloadImg(src, spd) {
     : 'display:block;width:100%;border-radius:18px;position:absolute;opacity:0;pointer-events:none;';
 
   newImg.onload = function () {
-    /* Vérifier que le modal est toujours ouvert sur le même GIF */
     if (!_modalOpen || _currentSrc !== src) {
       newImg.remove();
       return;
     }
-    /* Swap : rendre visible et retirer l'ancien */
     newImg.id = 'videoModalMedia';
     newImg.style.position = '';
     newImg.style.opacity  = '1';
@@ -300,7 +320,6 @@ function _reloadImg(src, spd) {
   newImg.onerror = function () { newImg.remove(); };
   newImg.src = newUrl;
 
-  /* Injecter dans le DOM — invisible tant que non chargé */
   if (oldImg && oldImg.parentNode) {
     inner.insertBefore(newImg, oldImg);
   } else {
@@ -408,6 +427,8 @@ function openVideoModal(src, pov, size) {
         .then(function(buf) {
           var l=inner.querySelector('#gifLoader'); if(l) l.remove();
           if (!_modalOpen || _currentSrc !== src) return;
+          /* FIX : vérifier la mémoire avant de mettre en cache */
+          _checkAndEvictCache();
           _gifCache[src] = buf;
           _showGif(inner, src, buf);
         })
@@ -563,13 +584,16 @@ document.addEventListener('keydown',function(e){
     document.head.appendChild(st);
   }
 
-  /* ── Pré-fetch des GIFs en arrière-plan (un par un, 500ms d'écart) ── */
+  /* ════════════════════════════════════════════════════
+     FIX : Pré-fetch limité à 3 GIFs sur mobile (RAM limitée)
+     Sur desktop, tous les GIFs sont pré-chargés comme avant
+  ════════════════════════════════════════════════════ */
   var GIF_SRCS = [
     'videos/inscription.gif',
     'videos/accept_inscription.gif',
     'videos/creation_conversation_membre.gif',
     'videos/creation_de_groupe.gif',
-    'videos/test_message_temps\u00e9el.gif',
+    'videos/test_message_tempsréel.gif',
     'videos/test_notif.gif',
     'videos/test_message_accueil.gif',
     'videos/test_group_et_conversation.gif',
@@ -578,18 +602,28 @@ document.addEventListener('keydown',function(e){
     'videos/test_role_suppresion.gif'
   ];
 
+  /* Sur mobile : prefetch limité aux 3 premiers GIFs uniquement */
+  var GIF_PREFETCH_LIMIT = isMobile ? 3 : GIF_SRCS.length;
+
   function prefetchNext(idx) {
-    if (idx >= GIF_SRCS.length) return;
+    if (idx >= GIF_PREFETCH_LIMIT) return;
     var src = GIF_SRCS[idx];
     if (_gifCache[src]) { prefetchNext(idx+1); return; }
     var a = document.createElement('a'); a.href = src;
     fetch(a.href)
       .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject(); })
-      .then(function(buf){ _gifCache[src]=buf; setTimeout(function(){ prefetchNext(idx+1); },500); })
+      .then(function(buf){
+        /* FIX : vérifier la mémoire avant d'ajouter au cache */
+        _checkAndEvictCache();
+        _gifCache[src]=buf;
+        setTimeout(function(){ prefetchNext(idx+1); },500);
+      })
       .catch(function(){ setTimeout(function(){ prefetchNext(idx+1); },500); });
   }
 
   window.addEventListener('load', function(){
-    setTimeout(function(){ prefetchNext(0); }, 4000);
+    /* FIX : délai plus long sur mobile pour ne pas concurrencer le rendu initial */
+    var delay = isMobile ? 8000 : 4000;
+    setTimeout(function(){ prefetchNext(0); }, delay);
   });
 })();
