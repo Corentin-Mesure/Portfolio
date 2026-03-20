@@ -133,11 +133,20 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       var isMob=_isMobileDevice;
       var tW,tH,tLeft,tTop;
       if(isMob){
-        tW=Math.min(vw*0.92,420);
-        tH=Math.min(tW*(4/3),vh*0.88);
+        /* Largeur : 96% de l'écran, max 460px */
+        tW=Math.min(vw*0.96,460);
+        /* Hauteur : ratio 3/4, max 90% de l'écran */
+        tH=Math.min(tW*(4/3),vh*0.90);
+        /* Recalcule tW si tH a été limité */
         tW=Math.min(tW,tH*(3/4));
-        tLeft=(vw-tW)/2;
-        tTop=(vh-tH)/2;
+        /* Décalage : +20px vers la droite, +40px vers le bas par rapport au centre */
+        tLeft=(vw-tW)/2 + 20;
+        tTop=(vh-tH)/2  + 40;
+        /* Garde la carte dans l'écran */
+        if(tLeft+tW>vw-8) tLeft=vw-tW-8;
+        if(tTop+tH>vh-8)  tTop=vh-tH-8;
+        if(tLeft<8) tLeft=8;
+        if(tTop<8)  tTop=8;
       } else {
         var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
         tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
