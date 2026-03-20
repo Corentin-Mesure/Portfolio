@@ -49,7 +49,7 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
 (function () {
   var sp       = document.getElementById('scrollProgress');
   var navLinks = Array.from(document.querySelectorAll('.nav-links a'));
-  var sections = Array.from(document.querySelectorAll('section,#about,#timeline,#skills,#projects,#contact-section'));
+  var sections = Array.from(document.querySelectorAll('section,#about,#timeline,#skills,#projects,#projet-ap,#contact-section'));
   var ticking  = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
@@ -588,6 +588,11 @@ function toggleGifSpeed() {}
 /* ════════════════════════════════════════════════════════
    PROJETS PERSONNELS
 ════════════════════════════════════════════════════════ */
+function toggleApProjects() {
+  var grid=document.getElementById('apGrid'),btn=document.getElementById('apTeaserBtn');
+  var open=grid.classList.toggle('open'); btn.classList.toggle('open',open);
+}
+
 function togglePersoProjects() {
   var grid=document.getElementById('persoGrid'),btn=document.getElementById('persoTeaserBtn');
   var open=grid.classList.toggle('open'); btn.classList.toggle('open',open);
