@@ -1,6 +1,12 @@
 'use strict';
 
 /* ════════════════════════════════════════════════════════
+   DÉTECTION MOBILE — utilisée pour désactiver le système
+   ArrayBuffer/blob/vitesse sur mobile (crash RAM)
+════════════════════════════════════════════════════════ */
+var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+/* ════════════════════════════════════════════════════════
    SCROLL + NAV ACTIVE
 ════════════════════════════════════════════════════════ */
 (function () {
@@ -64,7 +70,7 @@
       card.style.visibility = 'hidden';
       clone = card.cloneNode(true);
       clone.id = 'flipCardClone'; clone.classList.add('is-clone'); clone.removeAttribute('onclick');
-      /* FIX : will-change retiré — cause des recalculs GPU à la rotation sur mobile */
+      /* will-change retiré — cause des recalculs GPU à la rotation sur mobile */
       clone.style.cssText = [
         'position:fixed',
         'left:'+origRect.left+'px',
@@ -159,23 +165,19 @@ function openImageModal(srcs,pov,size) {
 }
 
 /* ════════════════════════════════════════════════════════
-   CACHE GIF — ArrayBuffer par src, jamais supprimé sauf si > 40 MB
+   CACHE GIF (desktop uniquement)
+   Sur mobile : non utilisé, GIFs affichés directement via <img src>
 ════════════════════════════════════════════════════════ */
-var _gifCache = {};   /* src → ArrayBuffer original (jamais modifié) */
+var _gifCache = {};
 
-/* FIX : vérifie la taille totale du cache et le vide si > 40 MB */
 function _checkAndEvictCache() {
   var total = 0;
   var keys = Object.keys(_gifCache);
-  for (var i = 0; i < keys.length; i++) {
-    total += _gifCache[keys[i]].byteLength;
-  }
-  if (total > 40 * 1024 * 1024) {
-    _gifCache = {};
-  }
+  for (var i = 0; i < keys.length; i++) { total += _gifCache[keys[i]].byteLength; }
+  if (total > 40 * 1024 * 1024) { _gifCache = {}; }
 }
 
-/* Patch des délais GCE dans UNE COPIE du buffer. */
+/* Patch des délais GCE dans UNE COPIE du buffer */
 function _patchDelays(origBuffer, speed) {
   var bytes = new Uint8Array(origBuffer.slice(0));
   for (var i = 0; i < bytes.length - 7; i++) {
@@ -202,25 +204,20 @@ function _makeBlobUrl(origBuffer, speed) {
 function _revokeBlobs() {
   var toRevoke = _blobUrls.slice();
   _blobUrls = [];
-  setTimeout(function() {
-    toRevoke.forEach(function(u){ URL.revokeObjectURL(u); });
-  }, 1000);
+  setTimeout(function() { toRevoke.forEach(function(u){ URL.revokeObjectURL(u); }); }, 1000);
 }
 
 /* ════════════════════════════════════════════════════════
    ÉTAT DU MODAL GIF
 ════════════════════════════════════════════════════════ */
-var _modalOpen   = false;
-var _currentSrc  = '';
-var _currentSpd  = 1;
+var _modalOpen  = false;
+var _currentSrc = '';
+var _currentSpd = 1;
 
-function _gifReset() {
-  _modalOpen  = false;
-  _currentSrc = '';
-}
+function _gifReset() { _modalOpen = false; _currentSrc = ''; }
 
 /* ════════════════════════════════════════════════════════
-   VITESSE PAR GIF — localStorage
+   VITESSE PAR GIF — localStorage (desktop uniquement)
 ════════════════════════════════════════════════════════ */
 var _GIF_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3];
 var _SPEED_KEY   = 'gifSpeed:';
@@ -230,7 +227,7 @@ function _loadSpd(src)  { var v=parseFloat(localStorage.getItem(_SPEED_KEY+_base
 function _saveSpd(src,s){ localStorage.setItem(_SPEED_KEY+_basename(src), s); }
 
 /* ════════════════════════════════════════════════════════
-   PANNEAU DE VITESSE
+   PANNEAU DE VITESSE (desktop uniquement)
 ════════════════════════════════════════════════════════ */
 function _buildPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
@@ -283,48 +280,29 @@ function _setSpd(spd, src) {
   _reloadImg(src, spd);
 }
 
-/* ════════════════════════════════════════════════════════
-   RELOAD GIF — FIX : blobs révoqués AVANT d'en créer un nouveau
-════════════════════════════════════════════════════════ */
 function _reloadImg(src, spd) {
   var buf = _gifCache[src];
   if (!buf) return;
-
-  /* FIX : révoquer les anciens blobs AVANT d'en créer un nouveau */
   _revokeBlobs();
-
   var newUrl = _makeBlobUrl(buf, spd);
   var inner  = document.querySelector('.video-modal-inner');
   if (!inner) return;
-
   var oldImg = inner.querySelector('#videoModalMedia');
-
   var newImg = document.createElement('img');
   newImg.id  = 'videoModalMedia-next';
   newImg.style.cssText = oldImg
     ? oldImg.style.cssText + ';position:absolute;opacity:0;pointer-events:none;'
     : 'display:block;width:100%;border-radius:18px;position:absolute;opacity:0;pointer-events:none;';
-
   newImg.onload = function () {
-    if (!_modalOpen || _currentSrc !== src) {
-      newImg.remove();
-      return;
-    }
+    if (!_modalOpen || _currentSrc !== src) { newImg.remove(); return; }
     newImg.id = 'videoModalMedia';
-    newImg.style.position = '';
-    newImg.style.opacity  = '1';
-    newImg.style.pointerEvents = '';
+    newImg.style.position = ''; newImg.style.opacity = '1'; newImg.style.pointerEvents = '';
     if (oldImg && oldImg.parentNode) oldImg.remove();
   };
-
   newImg.onerror = function () { newImg.remove(); };
   newImg.src = newUrl;
-
-  if (oldImg && oldImg.parentNode) {
-    inner.insertBefore(newImg, oldImg);
-  } else {
-    inner.insertBefore(newImg, inner.firstChild);
-  }
+  if (oldImg && oldImg.parentNode) { inner.insertBefore(newImg, oldImg); }
+  else { inner.insertBefore(newImg, inner.firstChild); }
 }
 
 function _hlPreset(spd) {
@@ -384,9 +362,7 @@ function _safeSrc(src) {
 
 function _resolveGifSrc(src) {
   if (src.match(/^(https?:|data:|blob:)/)) return src;
-  var a = document.createElement('a');
-  a.href = src;
-  return a.href;
+  var a = document.createElement('a'); a.href = src; return a.href;
 }
 
 function openVideoModal(src, pov, size) {
@@ -396,12 +372,14 @@ function openVideoModal(src, pov, size) {
   var errPath = document.getElementById('videoModalErrPath');
   var inner   = document.querySelector('.video-modal-inner');
   var wrap    = document.querySelector('.video-modal-wrap');
+  var bar     = document.querySelector('.video-modal-bar');
 
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
   if (wrap) { wrap.style.cssText = ''; if (size) wrap.style.maxWidth = size+'px'; }
+  if (bar)  { bar.innerHTML = ''; bar.style.visibility = 'hidden'; }
 
-  badge.innerHTML  = pov;
+  badge.innerHTML = pov;
   errDiv.style.display = 'none';
 
   var safeSrc = _safeSrc(src);
@@ -410,8 +388,24 @@ function openVideoModal(src, pov, size) {
   if (ext === 'gif') {
     _currentSrc = src;
     _modalOpen  = true;
-    _buildPanel(src);
 
+    /* ══ MOBILE : affichage direct, zéro ArrayBuffer, zéro blob ══════════
+       Le système de vitesse (fetch + ArrayBuffer + Blob) charge les GIFs
+       entièrement en RAM. Sur mobile ça provoque le crash
+       "un problème récurrent est survenu". On affiche directement via
+       <img src> : le navigateur streame et gère lui-même la mémoire. */
+    if (_isMobileDevice) {
+      var imgM = document.createElement('img'); imgM.id = 'videoModalMedia';
+      imgM.style.cssText = 'display:block;width:100%;border-radius:18px;';
+      imgM.onerror = function(){ errPath.textContent = safeSrc; errDiv.style.display = 'block'; };
+      imgM.src = safeSrc;
+      inner.insertBefore(imgM, inner.firstChild);
+      overlay.classList.add('open');
+      return;
+    }
+
+    /* ══ DESKTOP : système complet ArrayBuffer/blob/accélérateur ══════ */
+    _buildPanel(src);
     var absSrc = _resolveGifSrc(safeSrc);
 
     if (_gifCache[src]) {
@@ -425,49 +419,43 @@ function openVideoModal(src, pov, size) {
       fetch(absSrc)
         .then(function(r) { if(!r.ok) throw new Error('HTTP '+r.status); return r.arrayBuffer(); })
         .then(function(buf) {
-          var l=inner.querySelector('#gifLoader'); if(l) l.remove();
+          var l = inner.querySelector('#gifLoader'); if(l) l.remove();
           if (!_modalOpen || _currentSrc !== src) return;
-          /* FIX : vérifier la mémoire avant de mettre en cache */
           _checkAndEvictCache();
           _gifCache[src] = buf;
           _showGif(inner, src, buf);
         })
         .catch(function() {
-          var l=inner.querySelector('#gifLoader'); if(l) l.remove();
+          var l = inner.querySelector('#gifLoader'); if(l) l.remove();
           if (!_modalOpen || _currentSrc !== src) return;
-          var imgF=document.createElement('img'); imgF.id='videoModalMedia';
-          imgF.style.cssText='display:block;width:100%;border-radius:18px;';
-          imgF.onerror=function(){ errPath.textContent=safeSrc; errDiv.style.display='block'; };
+          var imgF = document.createElement('img'); imgF.id = 'videoModalMedia';
+          imgF.style.cssText = 'display:block;width:100%;border-radius:18px;';
+          imgF.onerror = function(){ errPath.textContent = safeSrc; errDiv.style.display = 'block'; };
           imgF.src = safeSrc;
           inner.insertBefore(imgF, inner.firstChild);
         });
     }
 
   } else {
-    var bar=document.querySelector('.video-modal-bar');
-    if(bar){bar.innerHTML='';bar.style.visibility='hidden';}
-    var video=document.createElement('video'); video.id='videoModalMedia';
+    var video = document.createElement('video'); video.id = 'videoModalMedia';
     video.autoplay=true; video.loop=true; video.muted=true; video.playsInline=true;
-    video.style.cssText='display:block;width:100%;min-height:100px;';
-    var source=document.createElement('source');
-    source.src=safeSrc; source.type='video/'+(ext==='webm'?'webm':'mp4');
+    video.style.cssText = 'display:block;width:100%;min-height:100px;';
+    var source = document.createElement('source');
+    source.src = safeSrc; source.type = 'video/'+(ext==='webm'?'webm':'mp4');
     video.appendChild(source);
-    video.onerror=function(){video.style.display='none';errPath.textContent=safeSrc;errDiv.style.display='block';};
-    inner.insertBefore(video,inner.firstChild);
+    video.onerror = function(){ video.style.display='none'; errPath.textContent=safeSrc; errDiv.style.display='block'; };
+    inner.insertBefore(video, inner.firstChild);
   }
 
   overlay.classList.add('open');
 }
 
-/* Affiche le GIF depuis le buffer en cache */
+/* Affiche le GIF depuis le buffer en cache (desktop uniquement) */
 function _showGif(inner, src, buf) {
   var url = _makeBlobUrl(buf, _currentSpd);
-  var img = document.createElement('img'); img.id='videoModalMedia';
+  var img = document.createElement('img'); img.id = 'videoModalMedia';
   img.style.cssText = 'display:block;width:100%;border-radius:18px;';
-  img.onerror = function() {
-    img.onerror = null;
-    img.src = _safeSrc(src);
-  };
+  img.onerror = function() { img.onerror = null; img.src = _safeSrc(src); };
   img.src = url;
   inner.insertBefore(img, inner.firstChild);
 }
@@ -475,14 +463,14 @@ function _showGif(inner, src, buf) {
 function closeVideoModal() {
   _gifReset();
   _revokeBlobs();
-  var inner=document.querySelector('.video-modal-inner');
+  var inner = document.querySelector('.video-modal-inner');
   if(inner){
     inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
-    inner.style.cssText='';
+    inner.style.cssText = '';
   }
-  var wrap=document.querySelector('.video-modal-wrap'); if(wrap) wrap.style.cssText='';
-  var badge=document.getElementById('videoModalPov'); if(badge){badge.style.cssText='';badge.innerHTML='';}
-  var bar=document.querySelector('.video-modal-bar'); if(bar){bar.innerHTML='';bar.style.visibility='';}
+  var wrap = document.querySelector('.video-modal-wrap'); if(wrap) wrap.style.cssText = '';
+  var badge = document.getElementById('videoModalPov'); if(badge){badge.style.cssText='';badge.innerHTML='';}
+  var bar = document.querySelector('.video-modal-bar'); if(bar){bar.innerHTML='';bar.style.visibility='';}
   document.getElementById('videoModal').classList.remove('open');
 }
 
@@ -538,7 +526,7 @@ document.addEventListener('keydown',function(e){
    PERFORMANCE — lazy load + pré-fetch GIFs
 ════════════════════════════════════════════════════════ */
 (function(){
-  var isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  var isMobile = _isMobileDevice;
   if(isMobile){var hg=document.querySelector('.hero-grid');if(hg)hg.style.display='none';}
 
   var BLANK='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
@@ -584,46 +572,42 @@ document.addEventListener('keydown',function(e){
     document.head.appendChild(st);
   }
 
-  /* ════════════════════════════════════════════════════
-     FIX : Pré-fetch limité à 3 GIFs sur mobile (RAM limitée)
-     Sur desktop, tous les GIFs sont pré-chargés comme avant
-  ════════════════════════════════════════════════════ */
-  var GIF_SRCS = [
-    'videos/inscription.gif',
-    'videos/accept_inscription.gif',
-    'videos/creation_conversation_membre.gif',
-    'videos/creation_de_groupe.gif',
-    'videos/test_message_tempsréel.gif',
-    'videos/test_notif.gif',
-    'videos/test_message_accueil.gif',
-    'videos/test_group_et_conversation.gif',
-    'videos/test_fond_ecran.gif',
-    'videos/test_sondage.gif',
-    'videos/test_role_suppresion.gif'
-  ];
+  /* Pré-fetch GIFs en arrière-plan :
+     - Mobile  : DÉSACTIVÉ — les GIFs sont chargés à la demande directement,
+                 pas d'ArrayBuffer en RAM au chargement de la page.
+     - Desktop : pré-charge tous les GIFs pour le système d'accélérateur. */
+  if (!isMobile) {
+    var GIF_SRCS = [
+      'videos/inscription.gif',
+      'videos/accept_inscription.gif',
+      'videos/creation_conversation_membre.gif',
+      'videos/creation_de_groupe.gif',
+      'videos/test_message_tempsréel.gif',
+      'videos/test_notif.gif',
+      'videos/test_message_accueil.gif',
+      'videos/test_group_et_conversation.gif',
+      'videos/test_fond_ecran.gif',
+      'videos/test_sondage.gif',
+      'videos/test_role_suppresion.gif'
+    ];
 
-  /* Sur mobile : prefetch limité aux 3 premiers GIFs uniquement */
-  var GIF_PREFETCH_LIMIT = isMobile ? 3 : GIF_SRCS.length;
+    function prefetchNext(idx) {
+      if (idx >= GIF_SRCS.length) return;
+      var src = GIF_SRCS[idx];
+      if (_gifCache[src]) { prefetchNext(idx+1); return; }
+      var a = document.createElement('a'); a.href = src;
+      fetch(a.href)
+        .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject(); })
+        .then(function(buf){
+          _checkAndEvictCache();
+          _gifCache[src] = buf;
+          setTimeout(function(){ prefetchNext(idx+1); }, 500);
+        })
+        .catch(function(){ setTimeout(function(){ prefetchNext(idx+1); }, 500); });
+    }
 
-  function prefetchNext(idx) {
-    if (idx >= GIF_PREFETCH_LIMIT) return;
-    var src = GIF_SRCS[idx];
-    if (_gifCache[src]) { prefetchNext(idx+1); return; }
-    var a = document.createElement('a'); a.href = src;
-    fetch(a.href)
-      .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject(); })
-      .then(function(buf){
-        /* FIX : vérifier la mémoire avant d'ajouter au cache */
-        _checkAndEvictCache();
-        _gifCache[src]=buf;
-        setTimeout(function(){ prefetchNext(idx+1); },500);
-      })
-      .catch(function(){ setTimeout(function(){ prefetchNext(idx+1); },500); });
+    window.addEventListener('load', function(){
+      setTimeout(function(){ prefetchNext(0); }, 4000);
+    });
   }
-
-  window.addEventListener('load', function(){
-    /* FIX : délai plus long sur mobile pour ne pas concurrencer le rendu initial */
-    var delay = isMobile ? 8000 : 4000;
-    setTimeout(function(){ prefetchNext(0); }, delay);
-  });
 })();
