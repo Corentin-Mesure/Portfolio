@@ -129,24 +129,21 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       if (cb) { cb.style.display = 'flex'; cb.onclick = function (e) { e.stopPropagation(); window.closeCard(); }; }
       void clone.offsetHeight;
       var vw=window.innerWidth,vh=window.innerHeight;
-      /* FIX MOBILE : sur mobile la carte prend 92% de la largeur et s'adapte en hauteur */
-      var isMob=_isMobileDevice;
       var tW,tH,tLeft,tTop;
-      if(isMob){
-        /* Largeur : 96% de l'écran, max 460px */
-        tW=Math.min(vw*0.96,460);
-        /* Hauteur : ratio 3/4, max 90% de l'écran */
-        tH=Math.min(tW*(4/3),vh*0.90);
-        /* Recalcule tW si tH a été limité */
-        tW=Math.min(tW,tH*(3/4));
-        /* Décalage : +20px vers la droite, +40px vers le bas par rapport au centre */
-        tLeft=(vw-tW)/2 + 20;
-        tTop=(vh-tH)/2  + 40;
-        /* Garde la carte dans l'écran */
-        if(tLeft+tW>vw-8) tLeft=vw-tW-8;
-        if(tTop+tH>vh-8)  tTop=vh-tH-8;
-        if(tLeft<8) tLeft=8;
-        if(tTop<8)  tTop=8;
+      if(_isMobileDevice){
+        /* Adaptatif tous mobiles — basé sur les dimensions réelles de l'écran.
+           88% de la largeur (max 400px), hauteur contrainte par le ratio 3/4
+           et par 85% de vh. Légèrement remonté pour éviter la barre Safari. */
+        tW    = Math.min(vw * 0.88, 400);
+        tH    = Math.min(tW * (4/3), vh * 0.85);
+        tW    = Math.min(tW, tH * (3/4));
+        tLeft = (vw - tW) / 2;
+        tTop  = (vh - tH) / 2 - (vh * 0.03);
+        /* Sécurité : jamais hors écran */
+        if(tLeft < 8) tLeft = 8;
+        if(tTop  < 8) tTop  = 8;
+        if(tLeft + tW > vw - 8) tLeft = vw - tW - 8;
+        if(tTop  + tH > vh - 8) tTop  = vh - tH - 8;
       } else {
         var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
         tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
