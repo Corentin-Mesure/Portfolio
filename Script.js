@@ -128,8 +128,20 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       var cb = clone.querySelector('.back-close');
       if (cb) { cb.style.display = 'flex'; cb.onclick = function (e) { e.stopPropagation(); window.closeCard(); }; }
       void clone.offsetHeight;
-      var vw=window.innerWidth,vh=window.innerHeight,maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
-      var tH=maxH,tW=Math.min(maxW,tH*(5/6)),tLeft=(vw-tW)/2,tTop=(vh-tH)/2;
+      var vw=window.innerWidth,vh=window.innerHeight;
+      /* FIX MOBILE : sur mobile la carte prend 92% de la largeur et s'adapte en hauteur */
+      var isMob=_isMobileDevice;
+      var tW,tH,tLeft,tTop;
+      if(isMob){
+        tW=Math.min(vw*0.92,420);
+        tH=Math.min(tW*(4/3),vh*0.88);
+        tW=Math.min(tW,tH*(3/4));
+        tLeft=(vw-tW)/2;
+        tTop=(vh-tH)/2;
+      } else {
+        var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
+        tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
+      }
       clone.style.transition='left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
       clone.style.left=tLeft+'px'; clone.style.top=tTop+'px'; clone.style.width=tW+'px'; clone.style.height=tH+'px';
       state = 'open'; expandTimer = setTimeout(function () { if (clone) clone.classList.add('expanded'); }, 1050);
