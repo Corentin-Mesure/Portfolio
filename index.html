@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
 
@@ -230,6 +229,8 @@
     <h2 class="section-title">Projets</h2>
     <div class="section-line"></div>
   </div>
+
+  <!-- Projets de stage -->
   <div class="projects-grid">
     <div class="project-card reveal">
       <div class="project-visual project-visual-1">
@@ -266,7 +267,36 @@
     </div>
   </div>
 
-  <div class="perso-teaser reveal">
+  <!-- Projets AP -->
+  <div class="perso-teaser reveal" style="margin-top:52px;">
+    <div class="perso-teaser-line"></div>
+    <button class="perso-teaser-btn" id="apTeaserBtn" onclick="toggleApProjects()">
+      <span class="perso-teaser-icon">&#x2756;</span>
+      <span>Voir mes projets AP</span>
+      <span class="perso-teaser-arrow">&#x2193;</span>
+    </button>
+    <div class="perso-teaser-line"></div>
+  </div>
+
+  <div class="perso-grid" id="apGrid">
+    <div class="project-card perso-card">
+      <div class="project-visual project-visual-3">
+        <span class="project-glyph">&#x1F4BB;</span>
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-body">
+        <div class="project-type">Projet AP — En cours</div>
+        <h3 class="project-title">Projet AP</h3>
+        <p class="project-desc">Projet en cours de developpement. Description et details a venir prochainement.</p>
+        <div class="project-tags">
+          <span class="project-tag">A venir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projets personnels -->
+  <div class="perso-teaser reveal" style="margin-top:32px;">
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
       <span class="perso-teaser-icon">&#x2756;</span>
@@ -563,7 +593,6 @@
       <div id="videoModalPov" class="video-modal-pov"></div>
       <button onclick="closeVideoModal()" class="video-modal-close">&#x2715;</button>
     </div>
-    <!-- La barre de vitesse est injectée dynamiquement par Script.js -->
     <div class="video-modal-bar"></div>
   </div>
 </div>
