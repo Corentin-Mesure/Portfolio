@@ -52,6 +52,7 @@ body {
 
 /* ════════════════════════════════════════════════════════
    BARRE DE PROGRESSION
+   FIX : will-change retiré — trop coûteux à la rotation sur mobile
 ════════════════════════════════════════════════════════ */
 
 .scroll-progress {
@@ -63,7 +64,6 @@ body {
   background: linear-gradient(to right, var(--gold-dim), var(--gold), var(--gold-light));
   box-shadow: 0 0 8px var(--gold);
   z-index:    9999;
-  will-change: width;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -387,7 +387,7 @@ section {
   position:        relative;
   transform-style: preserve-3d;
   z-index:         10;
-  will-change:     transform;
+  /* FIX : will-change retiré — force un layer GPU recalculé à chaque rotation */
   transition:      transform 0.85s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 
@@ -982,7 +982,7 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   background:  linear-gradient(160deg, #342c68, #201840);
   border:      1px solid rgba(176, 144, 240, 0.4);
   transform:   translateY(30px) scale(0.97);
-  will-change: transform;
+  /* FIX : will-change retiré — force recalcul GPU à la rotation mobile */
   transition:  transform 0.4s ease;
 }
 
@@ -1205,7 +1205,6 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   align-items: center; justify-content: center;
   padding: 80px 20px 20px;
   box-sizing: border-box;
-  /* FIX CRASH ZOOM : bloquer le pinch-zoom natif sur le modal */
   touch-action: pan-y;
   overscroll-behavior: contain;
 }
@@ -1220,11 +1219,9 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   border: 1px solid rgba(200, 160, 60, 0.5);
   overflow: hidden; box-shadow: 0 0 60px rgba(200, 160, 60, 0.2);
   animation: videoModalIn 0.25s ease;
-  /* FIX CRASH ZOOM : bloquer le pinch-zoom sur le contenu du modal */
   touch-action: pan-y;
 }
 
-/* FIX CRASH ZOOM : contraindre la taille max des images/GIF dans le modal */
 .video-modal-inner img,
 .video-modal-inner canvas {
   display: block;
@@ -1233,7 +1230,6 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   object-fit: contain !important;
   border-radius: 18px;
   min-height: 100px;
-  /* Bloquer le zoom natif sur l'image elle-même */
   touch-action: pan-y !important;
   -webkit-overflow-scrolling: touch;
 }
@@ -1363,6 +1359,17 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
 
 @media (max-width: 768px) {
 
+  /* FIX CRASH ROTATION : désactiver les animations coûteuses sur mobile */
+  /* backdrop-filter:blur injecté par _injectCSS() en JS est aussi supprimé
+     côté JS car le panneau de vitesse n'est pas créé sur mobile */
+
+  /* Stopper toutes les animations CSS pendant une rotation */
+  @media (orientation: landscape) {
+    .project-visual img { animation: none !important; }
+    .flip-hint { animation: none !important; }
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+
   /* NAV */
   nav {
     padding: 10px 14px !important;
@@ -1406,9 +1413,7 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     align-items: center !important;
     justify-content: center !important;
   }
-  .about-section-header {
-    margin-bottom: 24px !important;
-  }
+  .about-section-header { margin-bottom: 24px !important; }
   .about-visual {
     max-width: 100% !important;
     width: 100% !important;
@@ -1429,9 +1434,7 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     justify-content: flex-start !important;
     gap: 10px !important;
   }
-  .flip-front {
-    padding: 16px !important;
-  }
+  .flip-front { padding: 16px !important; }
   .about-initials { font-size: 52px !important; }
   .back-text, .back-text-extra { font-size: 12px !important; line-height: 1.6 !important; }
   .back-skill-tag { font-size: 9px !important; padding: 4px 10px !important; }
@@ -1461,32 +1464,19 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
     justify-content: center !important;
     margin-bottom: 10px !important;
   }
-  .skill-icon-item {
-    width: 40px !important;
-    flex: 0 0 40px !important;
-  }
-  .skill-icon-item img {
-    width: 24px !important;
-    height: 24px !important;
-  }
+  .skill-icon-item { width: 40px !important; flex: 0 0 40px !important; }
+  .skill-icon-item img { width: 24px !important; height: 24px !important; }
   .skill-icon-item span {
-    font-size: 7px !important;
-    max-width: 40px !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    display: block !important;
-    text-align: center !important;
+    font-size: 7px !important; max-width: 40px !important;
+    overflow: hidden !important; text-overflow: ellipsis !important;
+    white-space: nowrap !important; display: block !important; text-align: center !important;
   }
   .skill-name { font-size: 11px !important; letter-spacing: 1.5px !important; margin-bottom: 10px !important; text-align: center !important; }
   .skill-items { justify-content: center !important; gap: 5px !important; }
   .skill-tag { font-size: 9px !important; padding: 3px 9px !important; }
 
   /* PROJECTS - 1 colonne */
-  .projects-grid, .perso-grid {
-    grid-template-columns: 1fr !important;
-    gap: 18px !important;
-  }
+  .projects-grid, .perso-grid { grid-template-columns: 1fr !important; gap: 18px !important; }
   .project-card:hover { transform: none !important; }
   .project-visual { height: 160px !important; }
   .project-visual img { height: 90px !important; }
@@ -1506,21 +1496,13 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   .contact-title { font-size: clamp(22px, 7vw, 34px) !important; letter-spacing: 2px !important; margin-bottom: 16px !important; }
   .contact-text { font-size: 13px !important; margin-bottom: 28px !important; }
   .contact-links {
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    max-width: 320px !important;
-    margin: 0 auto !important;
-    justify-content: center !important;
+    flex-wrap: wrap !important; gap: 8px !important;
+    max-width: 320px !important; margin: 0 auto !important; justify-content: center !important;
   }
   .contact-link {
-    font-size: 10px !important;
-    padding: 10px 0 !important;
-    letter-spacing: 1.5px !important;
-    flex: 0 0 calc(50% - 4px) !important;
-    width: calc(50% - 4px) !important;
-    justify-content: center !important;
-    text-align: center !important;
-    box-sizing: border-box !important;
+    font-size: 10px !important; padding: 10px 0 !important; letter-spacing: 1.5px !important;
+    flex: 0 0 calc(50% - 4px) !important; width: calc(50% - 4px) !important;
+    justify-content: center !important; text-align: center !important; box-sizing: border-box !important;
   }
 
   /* MODALS */
@@ -1550,20 +1532,12 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   .step-play-hint { font-size: 10px !important; }
   .tech-accordion { font-size: 0.85em !important; }
 
-  /* VIDEO MODAL — FIX CRASH ZOOM sur mobile */
-  .video-modal-overlay {
-    padding: 60px 12px 16px !important;
-    touch-action: pan-y !important;
-  }
+  /* VIDEO MODAL */
+  .video-modal-overlay { padding: 60px 12px 16px !important; touch-action: pan-y !important; }
   .video-modal-wrap { max-width: 100% !important; }
-  .video-modal-inner {
-    touch-action: pan-y !important;
-  }
+  .video-modal-inner { touch-action: pan-y !important; }
   .video-modal-inner img,
-  .video-modal-inner canvas {
-    max-height: 55vh !important;
-    touch-action: pan-y !important;
-  }
+  .video-modal-inner canvas { max-height: 55vh !important; touch-action: pan-y !important; }
 
   /* FOOTER */
   footer { padding: 24px 16px !important; }
