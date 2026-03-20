@@ -268,33 +268,6 @@
     </div>
   </div>
 
-  <!-- Projets AP -->
-  <div class="perso-teaser reveal" style="margin-top:52px;">
-    <div class="perso-teaser-line"></div>
-    <button class="perso-teaser-btn" id="apTeaserBtn" onclick="toggleApProjects()">
-      <span class="perso-teaser-icon">&#x2756;</span>
-      <span>Voir mes projets AP</span>
-      <span class="perso-teaser-arrow">&#x2193;</span>
-    </button>
-    <div class="perso-teaser-line"></div>
-  </div>
-
-  <div class="perso-grid" id="apGrid">
-    <div class="project-card perso-card">
-      <div class="project-visual project-visual-3">
-        <span class="project-glyph">&#x1F4BB;</span>
-        <div class="project-overlay"></div>
-      </div>
-      <div class="project-body">
-        <div class="project-type">Projet AP — En cours</div>
-        <h3 class="project-title">Projet AP</h3>
-        <p class="project-desc">Projet en cours de developpement. Description et details a venir prochainement.</p>
-        <div class="project-tags">
-          <span class="project-tag">A venir</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Projets personnels -->
   <div class="perso-teaser reveal" style="margin-top:32px;">
@@ -537,6 +510,41 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> les regles sont centralisees dans un fichier partage entre l'ecran de connexion et le profil. Minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> lors de la saisie d'un mot de passe, une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ (nom, email, prix, description) dispose d'un formatter qui bloque en temps reel les caracteres dangereux comme &lt; &gt; " ' ; / pour prevenir les injections.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> les formulaires sensibles (creation de compte admin, ajout de produit) sont proteges par un limiteur de 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT et les identifiants "se souvenir de moi" sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes. Les deux apps coexistent sans partager de donnees.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT, la normalisation des prix et la gestion des erreurs.</span></div></div></div></div></div>
 
+<!-- ═══ MODAL GSB CONGES ═══ -->
+<div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
+  <div class="modal">
+    <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
+    <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-type">Application Windows — GSB Mission 1</div>
+        <div class="modal-title">GSB Gestion des Conges</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn('gsb-conges')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <span class="modal-emoji">&#x1F4C5;</span>
+      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes.</p>
+      <div class="modal-features">
+        <div class="modal-features-title">&#x2756; Fonctionnalites</div>
+        <div class="modal-feature">Compte praticien : formulaire de demande avec selection des dates de debut et fin de conge</div>
+        <div class="modal-feature">Verification automatique du solde de conges restants et refus si insuffisant</div>
+        <div class="modal-feature">Compte RH : liste des demandes en attente avec consultation et decision (accepter / refuser)</div>
+        <div class="modal-feature">Notification a la connexion sur l'etat des demandes en cours</div>
+        <div class="modal-feature">Backend Laravel avec API REST consommee par l'application C#</div>
+        <div class="modal-feature">Base de donnees MySQL pour la persistance des praticiens, demandes et soldes</div>
+      </div>
+      <div class="modal-tags">
+        <span class="modal-tag">C#</span>
+        <span class="modal-tag">Windows Forms</span>
+        <span class="modal-tag">Laravel</span>
+        <span class="modal-tag">MySQL</span>
+        <span class="modal-tag">API REST</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ MODAL LOL ═══ -->
 <div class="modal-overlay" id="modal-lol" onclick="closeModal(event,'lol')">
   <div class="modal">
@@ -574,20 +582,46 @@
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
+
+    <!-- Mission 1 — C# Gestion des conges -->
     <div class="project-card reveal">
-      <div class="project-visual project-visual-3">
-        <span class="project-glyph">&#x1F4BB;</span>
+      <div class="project-visual" style="background:linear-gradient(135deg,#1a2a4a,#2a4a8a,#1a2a4a);height:200px;display:flex;align-items:center;justify-content:center;position:relative;">
+        <span style="font-size:64px;opacity:0.5;">&#x1F4C5;</span>
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Projet AP — En cours</div>
-        <h3 class="project-title">Projet AP</h3>
-        <p class="project-desc">Projet en cours de developpement. Description et details a venir prochainement.</p>
+        <div class="project-type">Application Windows — GSB Mission 1</div>
+        <h3 class="project-title">GSB Gestion des Conges</h3>
+        <p class="project-desc">Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.</p>
         <div class="project-tags">
-          <span class="project-tag">A venir</span>
+          <span class="project-tag">C#</span>
+          <span class="project-tag">Laravel</span>
+          <span class="project-tag">MySQL</span>
+          <span class="project-tag">Windows Forms</span>
+        </div>
+        <button class="project-btn" onclick="openModal('gsb-conges')"><span>&#x2756; Ouvrir</span></button>
+      </div>
+    </div>
+
+    <!-- Mission 5 — Flutter notes (a venir) -->
+    <div class="project-card reveal">
+      <div class="project-visual" style="background:linear-gradient(135deg,#0a2a1a,#1a5a3a,#0a2a1a);height:200px;display:flex;align-items:center;justify-content:center;position:relative;">
+        <span style="font-size:64px;opacity:0.5;">&#x2B50;</span>
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-body">
+        <div class="project-type">Application Mobile — GSB Mission 5</div>
+        <h3 class="project-title">GSB Notes Praticiens</h3>
+        <p class="project-desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
+        <div class="project-tags">
+          <span class="project-tag">Flutter</span>
+          <span class="project-tag">Dart</span>
+          <span class="project-tag">MySQL</span>
+          <span class="project-tag">&#x23F3; En cours</span>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
