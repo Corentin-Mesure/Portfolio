@@ -427,180 +427,67 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     { src: 'videos/kc/clip_canna.gif',        label: 'Canna 🗡️' },
   ];
 
-  /* Sauvegarde du contenu original de la carte Animal'and */
-  var _originalCard = null;
 
-  /* ── CSS KC injecté une seule fois ── */
-  function _injectKCCSS(){
-    if(document.getElementById('kcCSS')) return;
-    var s=document.createElement('style');s.id='kcCSS';
-    s.textContent=
-      /* Visuel KC — remplace le visuel Animal'and */
-      '.kc-visual-replace{'+
-        'position:absolute;inset:0;z-index:3;'+
-        'background:linear-gradient(135deg,rgba(140,8,8,0.95) 0%,rgba(8,16,80,0.95) 100%);'+
-        'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;'+
-        'animation:kcFadeIn 0.45s ease forwards;}'+
-      '.kc-visual-replace .kc-main-logo{'+
-        'width:110px;height:110px;object-fit:contain;border-radius:50%;'+
-        'filter:drop-shadow(0 0 22px rgba(255,50,50,0.95)) drop-shadow(0 0 44px rgba(50,80,255,0.85));'+
-        'animation:kcPulse 2.2s ease-in-out infinite;}'+
-      '.kc-visual-replace .kc-main-label{'+
-        'font-family:Cinzel,serif;font-size:11px;letter-spacing:4px;color:rgba(255,180,180,0.8);'+
-        'text-transform:uppercase;}'+
-      /* Badge */
-      '.kc-badge{position:absolute;top:10px;right:10px;z-index:10;'+
-        'font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;'+
-        'background:rgba(140,8,8,0.95);border:1px solid rgba(255,70,70,0.75);'+
-        'color:#fff;padding:4px 12px;border-radius:4px;text-transform:uppercase;}'+
-      /* Carte KC */
-      '.kc-active-card{'+
-        'border-color:rgba(200,20,20,0.7)!important;'+
-        'box-shadow:0 0 30px rgba(160,10,10,0.4),0 0 60px rgba(10,25,180,0.25)!important;}'+
-      '.kc-active-card:hover{'+
-        'border-color:rgba(255,50,50,1)!important;'+
-        'box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 70px rgba(180,20,20,0.65)!important;}'+
-      /* Bouton KC */
-      '.kc-btn{'+
-        'background:linear-gradient(90deg,rgba(160,10,10,0.3),rgba(10,20,100,0.3))!important;'+
-        'border-color:rgba(255,60,60,0.7)!important;'+
-        'color:#ff9999!important;}'+
-      '.kc-btn:hover{color:#fff!important;}'+
-      '.kc-btn::before{background:linear-gradient(90deg,#a00a0a,#0a1464)!important;}'+
-      /* Modal galerie clips */
-      '#kcGalleryOverlay{'+
-        'position:fixed;inset:0;z-index:5000;'+
-        'background:rgba(4,4,20,0.97);'+
-        'display:flex;flex-direction:column;align-items:center;justify-content:flex-start;'+
-        'padding:60px 24px 32px;overflow-y:auto;'+
-        'animation:kcFadeIn 0.35s ease forwards;}'+
-      '#kcGalleryOverlay .kc-gal-header{'+
-        'display:flex;align-items:center;gap:16px;margin-bottom:36px;width:100%;max-width:900px;}'+
-      '#kcGalleryOverlay .kc-gal-logo{width:48px;height:48px;object-fit:contain;border-radius:50%;'+
-        'filter:drop-shadow(0 0 10px rgba(255,50,50,0.9));}'+
-      '#kcGalleryOverlay .kc-gal-title{'+
-        'font-family:Cinzel,serif;font-size:22px;letter-spacing:4px;color:#fff;'+
-        'text-transform:uppercase;flex:1;}'+
-      '#kcGalleryOverlay .kc-gal-close{'+
-        'width:40px;height:40px;background:none;'+
-        'border:1px solid rgba(255,70,70,0.5);color:#ff8888;font-size:18px;'+
-        'display:flex;align-items:center;justify-content:center;'+
-        'transition:all 0.2s;border-radius:4px;}'+
-      '#kcGalleryOverlay .kc-gal-close:hover{background:rgba(200,20,20,0.4);color:#fff;border-color:rgba(255,70,70,1);}'+
-      '#kcGalleryOverlay .kc-gal-grid{'+
-        'display:grid;grid-template-columns:repeat(3,1fr);gap:16px;'+
-        'width:100%;max-width:900px;}'+
-      '.kc-clip-thumb{'+
-        'position:relative;border-radius:10px;overflow:hidden;'+
-        'border:1px solid rgba(255,50,50,0.2);'+
-        'background:#0a0a1a;'+
-        'aspect-ratio:9/16;'+
-        'display:flex;flex-direction:column;'+
-        'transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;}'+
-      '.kc-clip-thumb:hover{'+
-        'transform:translateY(-4px) scale(1.02);'+
-        'border-color:rgba(255,50,50,0.8);'+
-        'box-shadow:0 8px 30px rgba(160,10,10,0.5);}'+
-      '.kc-clip-thumb img{width:100%;height:100%;object-fit:cover;display:block;}'+
-      '.kc-clip-thumb .kc-clip-label{'+
-        'position:absolute;bottom:0;left:0;right:0;'+
-        'padding:8px 10px;'+
-        'background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);'+
-        'font-family:Cinzel,serif;font-size:10px;letter-spacing:2px;color:#fff;'+
-        'text-align:center;}'+
-      '.kc-clip-thumb .kc-clip-play{'+
-        'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;'+
-        'background:rgba(0,0,0,0.35);opacity:0;transition:opacity 0.2s;}'+
-      '.kc-clip-thumb:hover .kc-clip-play{opacity:1;}'+
-      '.kc-clip-thumb .kc-clip-play span{'+
-        'width:48px;height:48px;border-radius:50%;'+
-        'background:rgba(200,20,20,0.85);border:2px solid rgba(255,80,80,0.8);'+
-        'display:flex;align-items:center;justify-content:center;'+
-        'font-size:18px;color:#fff;'+
-        'box-shadow:0 0 20px rgba(200,20,20,0.6);}'+
-      /* Animations */
-      '@keyframes kcFadeIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}'+
-      '@keyframes kcPulse{'+
-        '0%,100%{transform:scale(1) rotate(0deg);filter:drop-shadow(0 0 22px rgba(255,50,50,0.95)) drop-shadow(0 0 44px rgba(50,80,255,0.85));}'+
-        '50%{transform:scale(1.12) rotate(3deg);filter:drop-shadow(0 0 38px rgba(255,50,50,1)) drop-shadow(0 0 65px rgba(50,80,255,1));}}'+
-      /* Toast KC */
-      '#kcToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(24px);'+
-        'background:linear-gradient(135deg,rgba(120,8,8,0.97),rgba(8,18,70,0.97));'+
-        'border:1px solid rgba(255,70,70,0.75);'+
-        'box-shadow:0 0 40px rgba(160,10,10,0.55),0 0 80px rgba(10,25,180,0.35);'+
-        'color:#fff;font-family:Cinzel,serif;font-size:13px;letter-spacing:4px;'+
-        'padding:20px 44px 16px;z-index:99999;pointer-events:none;'+
-        'opacity:0;transition:opacity .45s,transform .45s;text-align:center;white-space:nowrap;border-radius:6px;}'+
-      '#kcToast .kc-toast-logo{display:block;width:44px;height:44px;object-fit:contain;margin:0 auto 10px;border-radius:50%;'+
-        'filter:drop-shadow(0 0 10px rgba(255,60,60,0.9));}'+
-      '#kcToast .kc-toast-sub{display:block;font-size:10px;letter-spacing:3px;opacity:0.65;margin-top:6px;color:#ffaaaa;}'+
-      /* Responsive galerie */
-      '@media(max-width:600px){#kcGalleryOverlay .kc-gal-grid{grid-template-columns:repeat(2,1fr)!important;}}';
-    document.head.appendChild(s);
-  }
+  /* Sauvegarde originale des deux cartes */
+  var _originalCards = [];
 
-  /* ── Activer le mode KC ── */
+  /* ── Activer le mode KC — transforme les DEUX cartes ── */
   function _activateKC(){
     _kcActive=true;
     _injectKCCSS();
     document.documentElement.classList.add('custom-cursor');
+    _originalCards = [];
 
-    /* Trouver UNIQUEMENT la carte Animal'and — identifiée par son titre */
-    var card = null;
-    document.querySelectorAll('#projects .project-card').forEach(function(c){
-      var t = c.querySelector('.project-title');
-      if(t && t.textContent.indexOf("Animal'and") !== -1) card = c;
+    var cards = document.querySelectorAll('#projects .projects-grid .project-card');
+    cards.forEach(function(card, idx){
+      var vis = card.querySelector('.project-visual');
+      var savedImgs = [];
+      vis.querySelectorAll('img').forEach(function(img){
+        savedImgs.push({alt:img.alt||'', src:img.src, dataSrc:img.dataset.src||''});
+      });
+
+      _originalCards.push({
+        card           : card,
+        visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
+        type           : card.querySelector('.project-type').textContent,
+        title          : card.querySelector('.project-title').textContent,
+        desc           : card.querySelector('.project-desc').textContent,
+        btnHTML        : card.querySelector('.project-btn').outerHTML,
+        savedImgs      : savedImgs,
+      });
+
+      /* Vider visuel proprement */
+      vis.style.position = 'relative';
+      while(vis.firstChild) vis.removeChild(vis.firstChild);
+
+      /* Injecter logo KC */
+      var ov = document.createElement('div'); ov.className='kc-visual-replace';
+      var lg = document.createElement('img'); lg.className='kc-main-logo';
+      lg.setAttribute('src','icon_kc.jpeg'); lg.removeAttribute('data-src');
+      lg.alt='Karmine Corp'; lg.loading='eager';
+      var lbl = document.createElement('div'); lbl.className='kc-main-label';
+      lbl.textContent = idx===0 ? "Animal\'and Chat" : "Animal\'vest";
+      ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
+      var badge=document.createElement('div'); badge.className='kc-badge';
+      badge.textContent='LOL MODE'; vis.appendChild(badge);
+
+      /* Textes KC */
+      card.querySelector('.project-type').textContent  = 'Esport \u2014 LEC / LFL';
+      card.querySelector('.project-title').textContent = 'Karmine Corp';
+      card.querySelector('.project-desc').textContent  = idx===0
+        ? 'ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires.'
+        : 'Go KC go ! Une equipe, une famille, une passion. Rouge et bleu dans le sang.';
+
+      /* Bouton KC */
+      var oldBtn = card.querySelector('.project-btn');
+      var newBtn = document.createElement('button');
+      newBtn.className = 'project-btn kc-btn';
+      newBtn.innerHTML = idx===0 ? '<span>\uD83C\uDFAC Voir les clips</span>' : '<span>\uD83C\uDFC6 Allez KC !</span>';
+      newBtn.onclick = idx===0 ? _openGallery : function(){ _kcToast(true); };
+      oldBtn.replaceWith(newBtn);
+
+      card.classList.add('kc-active-card');
     });
-    if(!card) card = document.querySelector('#projects .project-card'); /* fallback premier */
-    if(!card) return;
-
-    /* Sauvegarder l'état original —
-       On sauvegarde aussi data-src des images (lazy load) */
-    var vis = card.querySelector('.project-visual');
-    var savedImgs = [];
-    vis.querySelectorAll('img').forEach(function(img){
-      savedImgs.push({ el:img, src: img.src, dataSrc: img.dataset.src||'' });
-    });
-
-    _originalCard = {
-      visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
-      type           : card.querySelector('.project-type').textContent,
-      title          : card.querySelector('.project-title').textContent,
-      desc           : card.querySelector('.project-desc').textContent,
-      btnHTML        : card.querySelector('.project-btn').outerHTML,
-      savedImgs      : savedImgs,
-    };
-
-    /* ── Vider totalement le visuel et injecter KC ── */
-    vis.style.position = 'relative';
-    while(vis.firstChild) vis.removeChild(vis.firstChild); /* vider proprement */
-
-    var ov = document.createElement('div'); ov.className='kc-visual-replace';
-    var lg = document.createElement('img'); lg.className='kc-main-logo';
-    lg.src='icon_kc.jpeg'; lg.alt='KC';
-    /* Pas de lazy load sur ce logo */
-    delete lg.dataset.src;
-    var lbl = document.createElement('div'); lbl.className='kc-main-label'; lbl.textContent='Karmine Corp';
-    ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
-
-    var badge=document.createElement('div');badge.className='kc-badge';badge.textContent='LOL MODE';
-    vis.appendChild(badge);
-
-    /* ── Transformer les textes ── */
-    card.querySelector('.project-type').textContent  = 'Esport — LEC / LFL';
-    card.querySelector('.project-title').textContent = 'Karmine Corp';
-    card.querySelector('.project-desc').textContent  = "ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires — c'est la KC.";
-
-    /* ── Remplacer le bouton ── */
-    var oldBtn = card.querySelector('.project-btn');
-    var newBtn = document.createElement('button');
-    newBtn.className = 'project-btn kc-btn';
-    newBtn.innerHTML = '<span>\uD83C\uDFAC Voir les clips</span>';
-    newBtn.onclick = _openGallery;
-    oldBtn.replaceWith(newBtn);
-
-    /* ── Style carte ── */
-    card.classList.add('kc-active-card');
 
     _kcToast(true);
   }
@@ -610,46 +497,35 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     _kcActive=false;
     document.documentElement.classList.remove('custom-cursor');
 
-    /* Retrouver la carte KC (titre = Karmine Corp maintenant) */
-    var card = null;
-    document.querySelectorAll('#projects .project-card').forEach(function(c){
-      var t = c.querySelector('.project-title');
-      if(t && t.textContent.indexOf('Karmine Corp') !== -1) card = c;
+    _originalCards.forEach(function(saved){
+      var card = saved.card;
+      var vis = card.querySelector('.project-visual');
+
+      while(vis.firstChild) vis.removeChild(vis.firstChild);
+      saved.visualChildren.forEach(function(node){ vis.appendChild(node.cloneNode(true)); });
+
+      saved.savedImgs.forEach(function(info){
+        vis.querySelectorAll('img').forEach(function(img){
+          if(img.alt===info.alt){ img.src=info.src; if(info.dataSrc) img.dataset.src=info.dataSrc; }
+        });
+      });
+
+      card.querySelector('.project-type').textContent  = saved.type;
+      card.querySelector('.project-title').textContent = saved.title;
+      card.querySelector('.project-desc').textContent  = saved.desc;
+
+      var kcBtn = card.querySelector('.project-btn');
+      if(kcBtn) kcBtn.outerHTML = saved.btnHTML;
+
+      card.classList.remove('kc-active-card');
     });
-    if(!card || !_originalCard) return;
 
-    /* Restaurer le visuel proprement */
-    var vis = card.querySelector('.project-visual');
-    while(vis.firstChild) vis.removeChild(vis.firstChild);
-    _originalCard.visualChildren.forEach(function(node){ vis.appendChild(node.cloneNode(true)); });
-
-    /* Restaurer les src des images (lazy load) */
-    _originalCard.savedImgs.forEach(function(info){
-      var freshImg = vis.querySelector('img[alt="'+info.el.alt+'"]');
-      if(freshImg){
-        freshImg.src = info.src;
-        if(info.dataSrc) freshImg.dataset.src = info.dataSrc;
-      }
-    });
-
-    /* Restaurer textes */
-    card.querySelector('.project-type').textContent  = _originalCard.type;
-    card.querySelector('.project-title').textContent = _originalCard.title;
-    card.querySelector('.project-desc').textContent  = _originalCard.desc;
-
-    /* Restaurer le bouton */
-    var kcBtn = card.querySelector('.project-btn');
-    if(kcBtn) kcBtn.outerHTML = _originalCard.btnHTML;
-
-    card.classList.remove('kc-active-card');
-    _originalCard = null;
-
-    /* Fermer galerie si ouverte */
+    _originalCards = [];
     var gal = document.getElementById('kcGalleryOverlay'); if(gal) gal.remove();
     document.body.style.overflow='';
-
     _kcToast(false);
   }
+
 
   /* ── Ouvrir la galerie de clips ── */
   function _openGallery(){
