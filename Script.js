@@ -545,40 +545,57 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     _injectKCCSS();
     document.documentElement.classList.add('custom-cursor');
 
-    /* Trouver la carte Animal'and — premier .project-card dans #projects */
-    var card = document.querySelector('#projects .project-card');
+    /* Trouver UNIQUEMENT la carte Animal'and — identifiée par son titre */
+    var card = null;
+    document.querySelectorAll('#projects .project-card').forEach(function(c){
+      var t = c.querySelector('.project-title');
+      if(t && t.textContent.indexOf("Animal'and") !== -1) card = c;
+    });
+    if(!card) card = document.querySelector('#projects .project-card'); /* fallback premier */
     if(!card) return;
 
-    /* Sauvegarder l'état original */
+    /* Sauvegarder l'état original —
+       On sauvegarde aussi data-src des images (lazy load) */
+    var vis = card.querySelector('.project-visual');
+    var savedImgs = [];
+    vis.querySelectorAll('img').forEach(function(img){
+      savedImgs.push({ el:img, src: img.src, dataSrc: img.dataset.src||'' });
+    });
+
     _originalCard = {
-      visualHTML : card.querySelector('.project-visual').innerHTML,
-      type       : card.querySelector('.project-type').textContent,
-      title      : card.querySelector('.project-title').textContent,
-      desc       : card.querySelector('.project-desc').textContent,
-      btnHTML    : card.querySelector('.project-btn').outerHTML,
+      visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
+      type           : card.querySelector('.project-type').textContent,
+      title          : card.querySelector('.project-title').textContent,
+      desc           : card.querySelector('.project-desc').textContent,
+      btnHTML        : card.querySelector('.project-btn').outerHTML,
+      savedImgs      : savedImgs,
     };
 
-    /* ── Transformer le visuel ── */
-    var vis = card.querySelector('.project-visual');
+    /* ── Vider totalement le visuel et injecter KC ── */
     vis.style.position = 'relative';
-    vis.innerHTML = ''; /* vider logos existants */
+    while(vis.firstChild) vis.removeChild(vis.firstChild); /* vider proprement */
+
     var ov = document.createElement('div'); ov.className='kc-visual-replace';
-    var lg = document.createElement('img'); lg.className='kc-main-logo'; lg.src='icon_kc.jpeg'; lg.alt='KC';
+    var lg = document.createElement('img'); lg.className='kc-main-logo';
+    lg.src='icon_kc.jpeg'; lg.alt='KC';
+    /* Pas de lazy load sur ce logo */
+    delete lg.dataset.src;
     var lbl = document.createElement('div'); lbl.className='kc-main-label'; lbl.textContent='Karmine Corp';
     ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
-    /* Badge */
-    var badge=document.createElement('div');badge.className='kc-badge';badge.textContent='LOL MODE';vis.appendChild(badge);
+
+    var badge=document.createElement('div');badge.className='kc-badge';badge.textContent='LOL MODE';
+    vis.appendChild(badge);
 
     /* ── Transformer les textes ── */
     card.querySelector('.project-type').textContent  = 'Esport — LEC / LFL';
     card.querySelector('.project-title').textContent = 'Karmine Corp';
-    card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure équipe de League of Legends. Ambiance, passion, victoires — c\'est la KC.';
+    card.querySelector('.project-desc').textContent  = "ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires — c'est la KC.";
 
     /* ── Remplacer le bouton ── */
     var oldBtn = card.querySelector('.project-btn');
     var newBtn = document.createElement('button');
     newBtn.className = 'project-btn kc-btn';
-    newBtn.innerHTML = '<span>🎬 Voir les clips</span>';
+    newBtn.innerHTML = '<span>\uD83C\uDFAC Voir les clips</span>';
     newBtn.onclick = _openGallery;
     oldBtn.replaceWith(newBtn);
 
@@ -593,24 +610,43 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     _kcActive=false;
     document.documentElement.classList.remove('custom-cursor');
 
-    var card = document.querySelector('#projects .project-card');
+    /* Retrouver la carte KC (titre = Karmine Corp maintenant) */
+    var card = null;
+    document.querySelectorAll('#projects .project-card').forEach(function(c){
+      var t = c.querySelector('.project-title');
+      if(t && t.textContent.indexOf('Karmine Corp') !== -1) card = c;
+    });
     if(!card || !_originalCard) return;
 
-    /* Restaurer le visuel */
-    card.querySelector('.project-visual').innerHTML = _originalCard.visualHTML;
+    /* Restaurer le visuel proprement */
+    var vis = card.querySelector('.project-visual');
+    while(vis.firstChild) vis.removeChild(vis.firstChild);
+    _originalCard.visualChildren.forEach(function(node){ vis.appendChild(node.cloneNode(true)); });
+
+    /* Restaurer les src des images (lazy load) */
+    _originalCard.savedImgs.forEach(function(info){
+      var freshImg = vis.querySelector('img[alt="'+info.el.alt+'"]');
+      if(freshImg){
+        freshImg.src = info.src;
+        if(info.dataSrc) freshImg.dataset.src = info.dataSrc;
+      }
+    });
+
+    /* Restaurer textes */
     card.querySelector('.project-type').textContent  = _originalCard.type;
     card.querySelector('.project-title').textContent = _originalCard.title;
     card.querySelector('.project-desc').textContent  = _originalCard.desc;
 
     /* Restaurer le bouton */
     var kcBtn = card.querySelector('.project-btn');
-    kcBtn.outerHTML = _originalCard.btnHTML;
+    if(kcBtn) kcBtn.outerHTML = _originalCard.btnHTML;
 
     card.classList.remove('kc-active-card');
     _originalCard = null;
 
     /* Fermer galerie si ouverte */
     var gal = document.getElementById('kcGalleryOverlay'); if(gal) gal.remove();
+    document.body.style.overflow='';
 
     _kcToast(false);
   }
