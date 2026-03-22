@@ -432,63 +432,77 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
   var _originalCards = [];
 
   /* ── Activer le mode KC — transforme les DEUX cartes ── */
+  /* ── Activer le mode KC — transforme les DEUX cartes ── */
   function _activateKC(){
-    _kcActive=true;
-    _injectKCCSS();
-    document.documentElement.classList.add('custom-cursor');
-    _originalCards = [];
+    try {
+      _injectKCCSS();
+      document.documentElement.classList.add('custom-cursor');
+      _originalCards = [];
 
-    var cards = document.querySelectorAll('#projects .project-card:not(.perso-card)');
-    cards.forEach(function(card, idx){
-      var vis = card.querySelector('.project-visual');
-      var savedImgs = [];
-      vis.querySelectorAll('img').forEach(function(img){
-        savedImgs.push({alt:img.alt||'', src:img.src, dataSrc:img.dataset.src||''});
+      /* Sélecteur large — prend toutes les cartes dans #projects sauf perso */
+      var allCards = Array.from(document.querySelectorAll('#projects .project-card'));
+      var cards = allCards.filter(function(c){ return !c.classList.contains('perso-card'); });
+
+      if(cards.length === 0){ console.warn('KC: aucune carte trouvée'); _kcActive=false; return; }
+
+      cards.forEach(function(card, idx){
+        var vis = card.querySelector('.project-visual');
+        if(!vis) return;
+        var savedImgs = [];
+        vis.querySelectorAll('img').forEach(function(img){
+          savedImgs.push({alt:img.alt||'', src:img.src, dataSrc:img.dataset.src||''});
+        });
+
+        _originalCards.push({
+          card           : card,
+          display        : card.style.display || '',
+          visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
+          type           : card.querySelector('.project-type') ? card.querySelector('.project-type').textContent : '',
+          title          : card.querySelector('.project-title') ? card.querySelector('.project-title').textContent : '',
+          desc           : card.querySelector('.project-desc') ? card.querySelector('.project-desc').textContent : '',
+          btnHTML        : card.querySelector('.project-btn') ? card.querySelector('.project-btn').outerHTML : '',
+          savedImgs      : savedImgs,
+        });
+
+        /* Animal'vest (idx===1) — on cache */
+        if(idx === 1){ card.style.display='none'; return; }
+
+        /* Animal'and (idx===0) — transformation KC */
+        vis.style.position = 'relative';
+        while(vis.firstChild) vis.removeChild(vis.firstChild);
+
+        var ov = document.createElement('div'); ov.className='kc-visual-replace';
+        var lg = document.createElement('img'); lg.className='kc-main-logo';
+        lg.setAttribute('src','icon_kc.jpeg'); lg.removeAttribute('data-src');
+        lg.alt='Karmine Corp'; lg.loading='eager';
+        var lbl = document.createElement('div'); lbl.className='kc-main-label';
+        lbl.textContent='Karmine Corp';
+        ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
+        var badge=document.createElement('div'); badge.className='kc-badge';
+        badge.textContent='LOL MODE'; vis.appendChild(badge);
+
+        if(card.querySelector('.project-type'))  card.querySelector('.project-type').textContent  = 'Esport \u2014 LEC / LFL';
+        if(card.querySelector('.project-title')) card.querySelector('.project-title').textContent = 'Karmine Corp';
+        if(card.querySelector('.project-desc'))  card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires.';
+
+        var oldBtn = card.querySelector('.project-btn');
+        if(oldBtn){
+          var newBtn = document.createElement('button');
+          newBtn.className = 'project-btn kc-btn';
+          newBtn.innerHTML = '<span>\uD83C\uDFAC Voir les clips</span>';
+          newBtn.onclick = _openGallery;
+          oldBtn.replaceWith(newBtn);
+        }
+
+        card.classList.add('kc-active-card');
       });
 
-      _originalCards.push({
-        card           : card,
-        display        : card.style.display || '',
-        visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
-        type           : card.querySelector('.project-type').textContent,
-        title          : card.querySelector('.project-title').textContent,
-        desc           : card.querySelector('.project-desc').textContent,
-        btnHTML        : card.querySelector('.project-btn').outerHTML,
-        savedImgs      : savedImgs,
-      });
-
-      /* Animal'vest (idx===1) — on cache simplement */
-      if(idx === 1){ card.style.display='none'; return; }
-
-      /* Animal'and (idx===0) — transformation KC */
-      vis.style.position = 'relative';
-      while(vis.firstChild) vis.removeChild(vis.firstChild);
-
-      var ov = document.createElement('div'); ov.className='kc-visual-replace';
-      var lg = document.createElement('img'); lg.className='kc-main-logo';
-      lg.setAttribute('src','icon_kc.jpeg'); lg.removeAttribute('data-src');
-      lg.alt='Karmine Corp'; lg.loading='eager';
-      var lbl = document.createElement('div'); lbl.className='kc-main-label';
-      lbl.textContent='Karmine Corp';
-      ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
-      var badge=document.createElement('div'); badge.className='kc-badge';
-      badge.textContent='LOL MODE'; vis.appendChild(badge);
-
-      card.querySelector('.project-type').textContent  = 'Esport \u2014 LEC / LFL';
-      card.querySelector('.project-title').textContent = 'Karmine Corp';
-      card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires.';
-
-      var oldBtn = card.querySelector('.project-btn');
-      var newBtn = document.createElement('button');
-      newBtn.className = 'project-btn kc-btn';
-      newBtn.innerHTML = '<span>\uD83C\uDFAC Voir les clips</span>';
-      newBtn.onclick = _openGallery;
-      oldBtn.replaceWith(newBtn);
-
-      card.classList.add('kc-active-card');
-    });
-
-    _kcToast(true);
+      _kcActive = true;
+      _kcToast(true);
+    } catch(err) {
+      console.error('KC activate error:', err);
+      _kcActive = false;
+    }
   }
 
   /* ── Désactiver le mode KC ── */
