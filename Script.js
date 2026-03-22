@@ -1,21 +1,15 @@
 'use strict';
 
 /* ════════════════════════════════════════════════════════
-   DÉTECTION MOBILE — utilisée pour désactiver le système
-   ArrayBuffer/blob/vitesse sur mobile (crash RAM)
+   DÉTECTION MOBILE
 ════════════════════════════════════════════════════════ */
 var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
 /* ════════════════════════════════════════════════════════
    FIX SAFARI IOS — ROTATION
-   Safari ignore animation-duration:0.01ms dans un * global.
-   On injecte une <style> qui coupe tout via une classe,
-   et on la pose/retire autour de chaque changement d'orientation.
 ════════════════════════════════════════════════════════ */
 (function () {
   if (!_isMobileDevice) return;
-
-  /* Injecte une fois la règle CSS de blocage */
   var _freezeStyle = document.createElement('style');
   _freezeStyle.textContent =
     'body.orientation-freeze *,' +
@@ -24,19 +18,12 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       'animation-play-state: paused !important;' +
       'transition: none !important;' +
     '}' +
-    /* Bloque aussi le scroll-behavior qui peut déclencher des repaints */
     'body.orientation-freeze html { scroll-behavior: auto !important; }';
   document.head.appendChild(_freezeStyle);
-
   var _freezeTimer = null;
-
   window.addEventListener('orientationchange', function () {
-    /* Geler immédiatement */
     document.body.classList.add('orientation-freeze');
     clearTimeout(_freezeTimer);
-
-    /* Attendre que le navigateur ait fini de recalculer le layout
-       (Safari prend ~400ms après orientationchange) puis dégeler */
     _freezeTimer = setTimeout(function () {
       document.body.classList.remove('orientation-freeze');
     }, 500);
@@ -107,8 +94,6 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       card.style.visibility = 'hidden';
       clone = card.cloneNode(true);
       clone.id = 'flipCardClone'; clone.classList.add('is-clone'); clone.removeAttribute('onclick');
-      /* will-change retiré — cause des recalculs GPU à la rotation sur mobile */
-      /* Calcul de la position finale centrée (visual viewport pour Safari iOS) */
       var vvp = window.visualViewport || null;
       var vw  = vvp ? Math.round(vvp.width)  : window.innerWidth;
       var vh  = vvp ? Math.round(vvp.height) : window.innerHeight;
@@ -129,40 +114,19 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
         var maxH=Math.min(vh*.995,1060),maxW=Math.min(vw*.96,900);
         tH=maxH; tW=Math.min(maxW,tH*(5/6)); tLeft=(vw-tW)/2; tTop=(vh-tH)/2;
       }
-
-      /* Sur mobile : le clone apparaît DIRECTEMENT centré (scale 0→1),
-         pas de déplacement depuis la carte originale.
-         Sur desktop : animation classique depuis la position originale. */
       if(_isMobileDevice){
         clone.style.cssText = [
-          'position:fixed',
-          'left:'+tLeft+'px',
-          'top:'+tTop+'px',
-          'width:'+tW+'px',
-          'height:'+tH+'px',
-          'margin:0',
-          'z-index:1000',
-          'transform:rotateY(180deg) scale(0.85)',
-          'transform-style:preserve-3d',
-          'transition:none',
-          'visibility:visible',
-          'opacity:0',
-          'aspect-ratio:unset'
+          'position:fixed','left:'+tLeft+'px','top:'+tTop+'px',
+          'width:'+tW+'px','height:'+tH+'px','margin:0','z-index:1000',
+          'transform:rotateY(180deg) scale(0.85)','transform-style:preserve-3d',
+          'transition:none','visibility:visible','opacity:0','aspect-ratio:unset'
         ].join(';');
       } else {
         clone.style.cssText = [
-          'position:fixed',
-          'left:'+origRect.left+'px',
-          'top:'+origRect.top+'px',
-          'width:'+origRect.width+'px',
-          'height:'+origRect.height+'px',
-          'margin:0',
-          'z-index:1000',
-          'transform:rotateY(180deg)',
-          'transition:none',
-          'visibility:visible',
-          'transform-style:preserve-3d',
-          'aspect-ratio:unset'
+          'position:fixed','left:'+origRect.left+'px','top:'+origRect.top+'px',
+          'width:'+origRect.width+'px','height:'+origRect.height+'px','margin:0',
+          'z-index:1000','transform:rotateY(180deg)','transition:none',
+          'visibility:visible','transform-style:preserve-3d','aspect-ratio:unset'
         ].join(';');
       }
       document.body.appendChild(clone);
@@ -171,16 +135,13 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       var cb = clone.querySelector('.back-close');
       if (cb) { cb.style.display = 'flex'; cb.onclick = function (e) { e.stopPropagation(); window.closeCard(); }; }
       void clone.offsetHeight;
-
       if(_isMobileDevice){
-        /* Mobile : apparition sur place avec scale + fade */
         clone.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease';
         clone.style.transform  = 'rotateY(180deg) scale(1)';
         clone.style.opacity    = '1';
         state = 'open';
         expandTimer = setTimeout(function(){ if(clone) clone.classList.add('expanded'); }, 500);
       } else {
-        /* Desktop : animation classique de déplacement */
         clone.style.transition='left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
         clone.style.left=tLeft+'px'; clone.style.top=tTop+'px'; clone.style.width=tW+'px'; clone.style.height=tH+'px';
         state = 'open';
@@ -193,9 +154,7 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
     state = 'closing'; clearTimeout(expandTimer); clone.classList.remove('expanded');
     var bd = document.getElementById('cardBackdrop'); if (bd) bd.classList.remove('active');
     var card = document.getElementById('flipCard');
-
     if(_isMobileDevice){
-      /* Mobile : disparition sur place avec scale + fade */
       clone.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease';
       clone.style.transform  = 'rotateY(180deg) scale(0.85)';
       clone.style.opacity    = '0';
@@ -206,7 +165,6 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
         state = 'closed';
       }, 360);
     } else {
-      /* Desktop : retour animé vers la position de la carte originale */
       var currentRect = card ? card.getBoundingClientRect() : origRect;
       clone.style.transition='left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';
       clone.style.left=currentRect.left+'px'; clone.style.top=currentRect.top+'px'; clone.style.width=currentRect.width+'px'; clone.style.height=currentRect.height+'px';
@@ -272,7 +230,6 @@ function openImageModal(srcs,pov,size) {
 
 /* ════════════════════════════════════════════════════════
    CACHE GIF (desktop uniquement)
-   Sur mobile : non utilisé, GIFs affichés directement via <img src>
 ════════════════════════════════════════════════════════ */
 var _gifCache = {};
 
@@ -283,7 +240,6 @@ function _checkAndEvictCache() {
   if (total > 40 * 1024 * 1024) { _gifCache = {}; }
 }
 
-/* Patch des délais GCE dans UNE COPIE du buffer */
 function _patchDelays(origBuffer, speed) {
   var bytes = new Uint8Array(origBuffer.slice(0));
   for (var i = 0; i < bytes.length - 7; i++) {
@@ -313,18 +269,12 @@ function _revokeBlobs() {
   setTimeout(function() { toRevoke.forEach(function(u){ URL.revokeObjectURL(u); }); }, 1000);
 }
 
-/* ════════════════════════════════════════════════════════
-   ÉTAT DU MODAL GIF
-════════════════════════════════════════════════════════ */
 var _modalOpen  = false;
 var _currentSrc = '';
 var _currentSpd = 1;
 
 function _gifReset() { _modalOpen = false; _currentSrc = ''; }
 
-/* ════════════════════════════════════════════════════════
-   VITESSE PAR GIF — localStorage (desktop uniquement)
-════════════════════════════════════════════════════════ */
 var _GIF_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3];
 var _SPEED_KEY   = 'gifSpeed:';
 
@@ -332,9 +282,6 @@ function _basename(src) { return src ? src.split('/').pop().split('?')[0] : ''; 
 function _loadSpd(src)  { var v=parseFloat(localStorage.getItem(_SPEED_KEY+_basename(src))); return (!isNaN(v)&&v>0)?v:1; }
 function _saveSpd(src,s){ localStorage.setItem(_SPEED_KEY+_basename(src), s); }
 
-/* ════════════════════════════════════════════════════════
-   PANNEAU DE VITESSE (desktop uniquement)
-════════════════════════════════════════════════════════ */
 function _buildPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
   if (!bar) return;
@@ -465,7 +412,6 @@ function _injectCSS() {
 function _safeSrc(src) {
   return src.split('').map(function(c){ return c.charCodeAt(0)>127?encodeURIComponent(c):c; }).join('');
 }
-
 function _resolveGifSrc(src) {
   if (src.match(/^(https?:|data:|blob:)/)) return src;
   var a = document.createElement('a'); a.href = src; return a.href;
@@ -479,57 +425,38 @@ function openVideoModal(src, pov, size) {
   var inner   = document.querySelector('.video-modal-inner');
   var wrap    = document.querySelector('.video-modal-wrap');
   var bar     = document.querySelector('.video-modal-bar');
-
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
   if (wrap) { wrap.style.cssText = ''; if (size) wrap.style.maxWidth = size+'px'; }
   if (bar)  { bar.innerHTML = ''; bar.style.visibility = 'hidden'; }
-
   badge.innerHTML = pov;
   errDiv.style.display = 'none';
-
   var safeSrc = _safeSrc(src);
   var ext = safeSrc.split('?')[0].split('.').pop().toLowerCase();
-
   if (ext === 'gif') {
-    _currentSrc = src;
-    _modalOpen  = true;
-
-    /* ══ MOBILE : affichage direct, zéro ArrayBuffer, zéro blob ══════════
-       Le système de vitesse (fetch + ArrayBuffer + Blob) charge les GIFs
-       entièrement en RAM. Sur mobile ça provoque le crash
-       "un problème récurrent est survenu". On affiche directement via
-       <img src> : le navigateur streame et gère lui-même la mémoire. */
+    _currentSrc = src; _modalOpen = true;
     if (_isMobileDevice) {
       var imgM = document.createElement('img'); imgM.id = 'videoModalMedia';
       imgM.style.cssText = 'display:block;width:100%;border-radius:18px;';
       imgM.onerror = function(){ errPath.textContent = safeSrc; errDiv.style.display = 'block'; };
       imgM.src = safeSrc;
       inner.insertBefore(imgM, inner.firstChild);
-      overlay.classList.add('open');
-      return;
+      overlay.classList.add('open'); return;
     }
-
-    /* ══ DESKTOP : système complet ArrayBuffer/blob/accélérateur ══════ */
     _buildPanel(src);
     var absSrc = _resolveGifSrc(safeSrc);
-
-    if (_gifCache[src]) {
-      _showGif(inner, src, _gifCache[src]);
-    } else {
+    if (_gifCache[src]) { _showGif(inner, src, _gifCache[src]); }
+    else {
       var loader = document.createElement('div'); loader.id = 'gifLoader';
       loader.style.cssText = 'color:rgba(200,160,60,0.6);font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;text-align:center;padding:48px 0;width:100%;';
       loader.textContent = 'Chargement\u2026';
       inner.insertBefore(loader, inner.firstChild);
-
       fetch(absSrc)
         .then(function(r) { if(!r.ok) throw new Error('HTTP '+r.status); return r.arrayBuffer(); })
         .then(function(buf) {
           var l = inner.querySelector('#gifLoader'); if(l) l.remove();
           if (!_modalOpen || _currentSrc !== src) return;
-          _checkAndEvictCache();
-          _gifCache[src] = buf;
-          _showGif(inner, src, buf);
+          _checkAndEvictCache(); _gifCache[src] = buf; _showGif(inner, src, buf);
         })
         .catch(function() {
           var l = inner.querySelector('#gifLoader'); if(l) l.remove();
@@ -541,7 +468,6 @@ function openVideoModal(src, pov, size) {
           inner.insertBefore(imgF, inner.firstChild);
         });
     }
-
   } else {
     var video = document.createElement('video'); video.id = 'videoModalMedia';
     video.autoplay=true; video.loop=true; video.muted=true; video.playsInline=true;
@@ -552,11 +478,9 @@ function openVideoModal(src, pov, size) {
     video.onerror = function(){ video.style.display='none'; errPath.textContent=safeSrc; errDiv.style.display='block'; };
     inner.insertBefore(video, inner.firstChild);
   }
-
   overlay.classList.add('open');
 }
 
-/* Affiche le GIF depuis le buffer en cache (desktop uniquement) */
 function _showGif(inner, src, buf) {
   var url = _makeBlobUrl(buf, _currentSpd);
   var img = document.createElement('img'); img.id = 'videoModalMedia';
@@ -567,22 +491,15 @@ function _showGif(inner, src, buf) {
 }
 
 function closeVideoModal() {
-  _gifReset();
-  _revokeBlobs();
+  _gifReset(); _revokeBlobs();
   var inner = document.querySelector('.video-modal-inner');
-  if(inner){
-    inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();});
-    inner.style.cssText = '';
-  }
+  if(inner){ inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function(el){el.remove();}); inner.style.cssText = ''; }
   var wrap = document.querySelector('.video-modal-wrap'); if(wrap) wrap.style.cssText = '';
   var badge = document.getElementById('videoModalPov'); if(badge){badge.style.cssText='';badge.innerHTML='';}
   var bar = document.querySelector('.video-modal-bar'); if(bar){bar.innerHTML='';bar.style.visibility='';}
   document.getElementById('videoModal').classList.remove('open');
 }
-
-function closeVideoModalOverlay(e) {
-  if(e.target===document.getElementById('videoModal')) closeVideoModal();
-}
+function closeVideoModalOverlay(e) { if(e.target===document.getElementById('videoModal')) closeVideoModal(); }
 function toggleGifSpeed() {}
 
 /* ════════════════════════════════════════════════════════
@@ -592,33 +509,322 @@ function toggleApProjects() {
   var grid=document.getElementById('apGrid'),btn=document.getElementById('apTeaserBtn');
   var open=grid.classList.toggle('open'); btn.classList.toggle('open',open);
 }
-
 function togglePersoProjects() {
   var grid=document.getElementById('persoGrid'),btn=document.getElementById('persoTeaserBtn');
   var open=grid.classList.toggle('open'); btn.classList.toggle('open',open);
 }
 
 /* ════════════════════════════════════════════════════════
-   EASTER EGG lol
+   EASTER EGG — LOL / KARMINE CORP
 ════════════════════════════════════════════════════════ */
 (function(){
-  var seq=['l','o','l'],ts=[],tmr=null;
-  function toast(msg,dur){
-    var ex=document.getElementById('easterToast');if(ex)ex.remove();clearTimeout(tmr);
-    var t=document.createElement('div');t.id='easterToast';t.innerHTML=msg;
-    t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,#1a1a50,#2a2880);border:1px solid rgba(93,232,242,0.6);box-shadow:0 0 24px rgba(93,232,242,0.2);color:#5de8f2;font-family:Cinzel,serif;font-size:12px;letter-spacing:4px;padding:16px 36px;z-index:99999;pointer-events:none;opacity:0;transition:opacity .4s,transform .4s;text-align:center;white-space:nowrap;';
-    document.body.appendChild(t);
-    requestAnimationFrame(function(){requestAnimationFrame(function(){t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';});});
-    tmr=setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';setTimeout(function(){if(t.parentNode)t.remove();},400);},dur||3500);
+
+  var KC_LOGO = 'https://upload.wikimedia.org/wikipedia/fr/thumb/9/90/Karmine_Corp_logo.png/250px-Karmine_Corp_logo.png';
+
+  var KC_CARDS = [
+    {
+      visual: 'linear-gradient(135deg,#001133,#002a66,#001133)',
+      type:   'Esport — League of Legends',
+      title:  'Karmine Corp',
+      desc:   'La KCorp domine la scene francaise et europeenne depuis 2020. Fondee par Kameto et Prime, l\'organisation a remporte la LFL et les European Masters a plusieurs reprises.',
+      tags:   ['LFL','European Masters','Kameto','Prime','Blue Wall'],
+      btn:    '\u2694\uFE0F Voir les clips KC'
+    },
+    {
+      visual: 'linear-gradient(135deg,#000d22,#001a44,#000d22)',
+      type:   'Joueurs — Roster KCorp',
+      title:  'Les Joueurs',
+      desc:   'Skyroz, Targamas, Rekkles, Canna, Yike... Des legendes qui ont porte les couleurs bleues et blanches sur toutes les grandes scenes d\'Europe.',
+      tags:   ['Skyroz','Targamas','Rekkles','Yike','Canna'],
+      btn:    '\uD83C\uDFAE Voir les highlights'
+    }
+  ];
+
+  /* GIFs LoL publics */
+  var KC_GIFS = [
+    { url: 'https://media.tenor.com/3VJAGm7Tc7UAAAAC/lol-league-of-legends.gif', label: '\u2694\uFE0F LoL Highlight' },
+    { url: 'https://media.tenor.com/VHcfmO1Y6d4AAAAC/league-of-legends-lol.gif', label: '\u2728 Pentakill' },
+    { url: 'https://media.tenor.com/X4S3EJgEFhsAAAAC/league-of-legends.gif',     label: '\uD83C\uDFAF Outplay' },
+    { url: 'https://media.tenor.com/oQxb4I3e1EIAAAAC/lol.gif',                   label: '\uD83D\uDCA5 Epic Play' },
+    { url: 'https://media.tenor.com/FKXkXLGGTYkAAAAC/league-of-legends-lol.gif', label: '\uD83C\uDF1F Big Play' },
+    { url: 'https://media.tenor.com/ZNy_W2eNtL0AAAAC/faker-league-of-legends.gif', label: '\uD83D\uDC51 GOAT' },
+    { url: 'https://media.tenor.com/r87-HB-NLEMAAAAC/league-of-legends-lol.gif', label: '\uD83D\uDE80 Insane' },
+    { url: 'https://media.tenor.com/cPHWkuXlHbkAAAAC/lol-league-of-legends.gif', label: '\uD83D\uDCAB Clean' },
+    { url: 'https://media.tenor.com/NyW3a2_v1LUAAAAC/lol-league-of-legends.gif', label: '\u26A1 Flash' },
+    { url: 'https://media.tenor.com/8_MK2X9-cygAAAAC/lol-league-of-legends.gif', label: '\uD83D\uDD25 Fire' },
+    { url: 'https://media.tenor.com/w1VdNBTXBsEAAAAC/lol-montage.gif',           label: '\uD83C\uDFAE Montage' },
+    { url: 'https://media.tenor.com/5h8QWVvWwEkAAAAC/karmine-corp-kc.gif',        label: '\uD83C\uDFC6 KCorp Victory' }
+  ];
+
+  var _kcActive = false;
+  var _origData = [];
+
+  /* Injecte le CSS de la galerie une seule fois */
+  function _injectKCCSS() {
+    if (document.getElementById('kcGalleryCSS')) return;
+    var css = document.createElement('style'); css.id = 'kcGalleryCSS';
+    css.textContent =
+      '@keyframes kcFadeIn{from{opacity:0}to{opacity:1}}'+
+      '@keyframes kcCardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}'+
+      '.kc-gif-card{cursor:pointer;border-radius:12px;overflow:hidden;'+
+        'border:1px solid rgba(74,158,255,0.25);background:#000b1e;'+
+        'transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;'+
+        'animation:kcCardIn 0.4s ease both;}'+
+      '.kc-gif-card:hover{transform:scale(1.04);border-color:rgba(74,158,255,0.7);box-shadow:0 0 24px rgba(74,158,255,0.3);}'+
+      '.kc-gif-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#001133;}'+
+      '.kc-gif-label{padding:8px 12px;font-family:Cinzel,serif;font-size:10px;letter-spacing:2px;color:#4a9eff;text-align:center;}'+
+      '.kc-gif-fullscreen{position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.95);'+
+        'display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}'+
+      '.kc-gif-fullscreen img{max-width:90vw;max-height:80vh;border-radius:12px;border:2px solid rgba(74,158,255,0.5);}'+
+      '.kc-fs-close{position:absolute;top:20px;right:20px;background:none;'+
+        'border:1px solid rgba(74,158,255,0.5);color:#4a9eff;width:40px;height:40px;'+
+        'border-radius:50%;font-size:18px;cursor:pointer;'+
+        'display:flex;align-items:center;justify-content:center;}'+
+      '.kc-fs-close:hover{background:#4a9eff;color:#000;}';
+    document.head.appendChild(css);
   }
-  document.addEventListener('keydown',function(e){
-    var key=e.key.toLowerCase();
-    if(key===seq[ts.length]){
-      var now=Date.now();if(ts.length>0&&now-ts[0]>5000){ts=[];if(key===seq[0])ts.push(now);return;}
+
+  /* Sauvegarde l'état original des cartes */
+  function _saveOriginals() {
+    _origData = [];
+    document.querySelectorAll('#projects .project-card').forEach(function(card, i) {
+      var vis   = card.querySelector('.project-visual');
+      var img   = card.querySelector('.project-visual img');
+      var type  = card.querySelector('.project-type');
+      var title = card.querySelector('.project-title');
+      var desc  = card.querySelector('.project-desc');
+      var tags  = card.querySelector('.project-tags');
+      var btn   = card.querySelector('.project-btn');
+      _origData.push({
+        visBg:     vis  ? vis.style.background  : '',
+        imgSrc:    img  ? img.src               : null,
+        imgStyle:  img  ? img.getAttribute('style') : '',
+        typeHTML:  type ? type.innerHTML        : '',
+        titleHTML: title? title.innerHTML       : '',
+        titleColor:title? title.style.color     : '',
+        descHTML:  desc ? desc.innerHTML        : '',
+        tagsHTML:  tags ? tags.innerHTML        : '',
+        btnHTML:   btn  ? btn.outerHTML         : '',
+        cardBorder:card.style.borderColor
+      });
+    });
+  }
+
+  /* Applique le thème KC */
+  function _applyKC() {
+    _injectKCCSS();
+    document.querySelectorAll('#projects .project-card').forEach(function(card, i) {
+      var data  = KC_CARDS[i % KC_CARDS.length];
+      var vis   = card.querySelector('.project-visual');
+      var img   = card.querySelector('.project-visual img');
+      var type  = card.querySelector('.project-type');
+      var title = card.querySelector('.project-title');
+      var desc  = card.querySelector('.project-desc');
+      var tags  = card.querySelector('.project-tags');
+
+      if (vis) { vis.style.transition='background 0.6s'; vis.style.background = data.visual; }
+
+      if (img) {
+        img.style.transition='opacity 0.4s';
+        img.style.opacity='0';
+        setTimeout(function(){
+          img.src = KC_LOGO;
+          img.style.height='120px'; img.style.width='auto';
+          img.style.filter='drop-shadow(0 0 20px rgba(0,100,255,0.8))';
+          img.style.opacity='1';
+        }, 250);
+      }
+
+      if (type)  type.innerHTML  = data.type;
+      if (title) { title.style.color='#4a9eff'; title.innerHTML = data.title; }
+      if (desc)  desc.innerHTML  = data.desc;
+      if (tags) {
+        tags.innerHTML = data.tags.map(function(t){
+          return '<span class="project-tag" style="border-color:rgba(74,158,255,0.4);color:#4a9eff;background:rgba(0,100,255,0.08)">'+t+'</span>';
+        }).join('');
+      }
+
+      /* Remplace le bouton */
+      var oldBtn = card.querySelector('.project-btn');
+      if (oldBtn) {
+        var newBtn = document.createElement('button');
+        newBtn.className = 'project-btn';
+        newBtn.style.cssText = 'border-color:#4a9eff;color:#4a9eff;margin-top:20px;';
+        newBtn.innerHTML = '<span>'+data.btn+'</span>';
+        newBtn.onclick = function(){ _openKCGallery(); };
+        oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+      }
+
+      card.style.transition='border-color 0.5s';
+      card.style.borderColor='rgba(74,158,255,0.45)';
+    });
+  }
+
+  /* Restaure l'état original */
+  function _restoreOriginals() {
+    document.querySelectorAll('#projects .project-card').forEach(function(card, i) {
+      var d = _origData[i]; if (!d) return;
+      var vis   = card.querySelector('.project-visual');
+      var img   = card.querySelector('.project-visual img');
+      var type  = card.querySelector('.project-type');
+      var title = card.querySelector('.project-title');
+      var desc  = card.querySelector('.project-desc');
+      var tags  = card.querySelector('.project-tags');
+
+      if (vis)  { vis.style.background = d.visBg; }
+      if (img)  {
+        img.style.opacity='0';
+        setTimeout(function(){
+          img.src = d.imgSrc;
+          if(d.imgStyle) img.setAttribute('style', d.imgStyle);
+          img.style.opacity='';
+        }, 250);
+      }
+      if (type)  type.innerHTML  = d.typeHTML;
+      if (title) { title.style.color = d.titleColor; title.innerHTML = d.titleHTML; }
+      if (desc)  desc.innerHTML  = d.descHTML;
+      if (tags)  tags.innerHTML  = d.tagsHTML;
+
+      /* Restaure le bouton original via innerHTML */
+      var oldBtn = card.querySelector('.project-btn');
+      if (oldBtn && d.btnHTML) {
+        var wrap = document.createElement('div');
+        wrap.innerHTML = d.btnHTML;
+        var restored = wrap.firstChild;
+        oldBtn.parentNode.replaceChild(restored, oldBtn);
+      }
+
+      card.style.borderColor = d.cardBorder || '';
+    });
+  }
+
+  /* Galerie GIFs KC */
+  function _openKCGallery() {
+    var existing = document.getElementById('kcGalleryOverlay');
+    if (existing) { existing.remove(); return; }
+
+    var overlay = document.createElement('div');
+    overlay.id  = 'kcGalleryOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,5,20,0.97);'+
+      'display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:60px 20px 40px;'+
+      'animation:kcFadeIn 0.3s ease;';
+
+    /* Header */
+    var header = document.createElement('div');
+    header.style.cssText = 'text-align:center;margin-bottom:40px;width:100%;max-width:1100px;position:relative;';
+    header.innerHTML =
+      '<img src="'+KC_LOGO+'" style="height:60px;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(74,158,255,0.8))" onerror="this.style.display=\'none\'">'+
+      '<h2 style="font-family:Cinzel,serif;font-size:clamp(20px,4vw,36px);letter-spacing:4px;color:#4a9eff;text-transform:uppercase;margin-bottom:8px;">Karmine Corp</h2>'+
+      '<p style="font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;color:rgba(74,158,255,0.6);text-transform:uppercase;">Clips & Highlights — League of Legends</p>'+
+      '<p style="font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:rgba(74,158,255,0.4);margin-top:8px;text-transform:uppercase;">Cliquer sur un clip pour le voir en plein ecran</p>';
+
+    var closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕ Fermer';
+    closeBtn.style.cssText = 'position:absolute;top:0;right:0;background:none;border:1px solid rgba(74,158,255,0.4);'+
+      'color:#4a9eff;font-family:Cinzel,serif;font-size:11px;letter-spacing:2px;padding:8px 20px;cursor:pointer;transition:all 0.2s;';
+    closeBtn.onmouseover = function(){ this.style.background='#4a9eff';this.style.color='#000'; };
+    closeBtn.onmouseout  = function(){ this.style.background='none';this.style.color='#4a9eff'; };
+    closeBtn.onclick = function(){ overlay.remove(); };
+    header.appendChild(closeBtn);
+    overlay.appendChild(header);
+
+    /* Grille */
+    var grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;width:100%;max-width:1100px;';
+
+    KC_GIFS.forEach(function(gif, idx) {
+      var card = document.createElement('div');
+      card.className = 'kc-gif-card';
+      card.style.animationDelay = (idx * 0.05) + 's';
+
+      var img = document.createElement('img');
+      img.src = gif.url; img.loading = 'lazy'; img.alt = gif.label;
+      img.onerror = function(){
+        img.remove();
+        var ph = document.createElement('div');
+        ph.style.cssText = 'aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:32px;background:#001133;';
+        ph.textContent = '\u2694\uFE0F';
+        card.insertBefore(ph, card.firstChild);
+      };
+
+      var label = document.createElement('div');
+      label.className = 'kc-gif-label';
+      label.textContent = gif.label;
+
+      card.appendChild(img);
+      card.appendChild(label);
+
+      card.onclick = function(){
+        var fs = document.createElement('div'); fs.className = 'kc-gif-fullscreen';
+        var fsImg = document.createElement('img'); fsImg.src = gif.url; fsImg.alt = gif.label;
+        var fsLabel = document.createElement('div');
+        fsLabel.style.cssText = 'font-family:Cinzel,serif;font-size:14px;letter-spacing:3px;color:#4a9eff;';
+        fsLabel.textContent = gif.label;
+        var fsClose = document.createElement('button'); fsClose.className = 'kc-fs-close'; fsClose.innerHTML = '✕';
+        fsClose.onclick = function(e){ e.stopPropagation(); fs.remove(); };
+        fs.onclick = function(){ fs.remove(); };
+        fs.appendChild(fsImg); fs.appendChild(fsLabel); fs.appendChild(fsClose);
+        document.body.appendChild(fs);
+      };
+
+      grid.appendChild(card);
+    });
+
+    overlay.appendChild(grid);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+    document.body.appendChild(overlay);
+  }
+
+  /* Toast KC */
+  function _kcToast(msg) {
+    var old = document.getElementById('kcToast'); if(old) old.remove();
+    var t = document.createElement('div'); t.id = 'kcToast';
+    t.innerHTML = msg;
+    t.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);'+
+      'background:rgba(0,15,50,0.96);border:1px solid rgba(74,158,255,0.7);'+
+      'color:#4a9eff;font-family:Cinzel,serif;font-size:12px;letter-spacing:4px;'+
+      'padding:14px 36px;border-radius:4px;z-index:9999999;pointer-events:none;'+
+      'opacity:0;transition:opacity .35s,transform .35s;text-align:center;'+
+      'box-shadow:0 0 30px rgba(74,158,255,0.3);';
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+    });});
+    setTimeout(function(){
+      t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)';
+      setTimeout(function(){ if(t.parentNode) t.remove(); }, 400);
+    }, 3200);
+  }
+
+  /* Séquence "lol" */
+  var seq=['l','o','l'], ts=[];
+
+  document.addEventListener('keydown', function(e){
+    var key = e.key.toLowerCase();
+    if (key === seq[ts.length]) {
+      var now = Date.now();
+      if (ts.length > 0 && now - ts[0] > 5000) { ts = []; if(key===seq[0]) ts.push(now); return; }
       ts.push(now);
-      if(ts.length===seq.length){ts=[];var on=document.documentElement.classList.toggle('custom-cursor');toast(on?'&#x2694;&#xFE0F; CURSEUR LOL ACTIVE &#x2694;&#xFE0F;':'&#x2694;&#xFE0F; CURSEUR LOL DESACTIVE &#x2694;&#xFE0F;',3500);}
-    } else {ts=(key===seq[0])?[Date.now()]:[]; }
+      if (ts.length === seq.length) {
+        ts = [];
+        _kcActive = !_kcActive;
+        if (_kcActive) {
+          _saveOriginals();
+          _applyKC();
+          _kcToast('\u2694\uFE0F KARMINE CORP MODE \u2694\uFE0F<br><span style="font-size:9px;letter-spacing:2px;opacity:0.7">Clique sur Ouvrir pour les clips</span>');
+          document.documentElement.classList.add('custom-cursor');
+        } else {
+          _restoreOriginals();
+          _kcToast('\u2715 Mode Normal');
+          document.documentElement.classList.remove('custom-cursor');
+          var g = document.getElementById('kcGalleryOverlay'); if(g) g.remove();
+        }
+      }
+    } else {
+      ts = (key === seq[0]) ? [Date.now()] : [];
+    }
   });
+
 })();
 
 /* ════════════════════════════════════════════════════════
@@ -629,6 +835,8 @@ document.addEventListener('keydown',function(e){
   document.querySelectorAll('.modal-overlay.active').forEach(function(m){m.classList.remove('active');});
   document.querySelectorAll('.submodal-overlay.active').forEach(function(m){m.classList.remove('active');});
   closeVideoModal();
+  var kg = document.getElementById('kcGalleryOverlay'); if(kg) kg.remove();
+  var kfs = document.querySelector('.kc-gif-fullscreen'); if(kfs) kfs.remove();
   if(typeof closeCard==='function') closeCard();
   document.body.style.overflow='';
 });
@@ -683,25 +891,14 @@ document.addEventListener('keydown',function(e){
     document.head.appendChild(st);
   }
 
-  /* Pré-fetch GIFs en arrière-plan :
-     - Mobile  : DÉSACTIVÉ — les GIFs sont chargés à la demande directement,
-                 pas d'ArrayBuffer en RAM au chargement de la page.
-     - Desktop : pré-charge tous les GIFs pour le système d'accélérateur. */
   if (!isMobile) {
     var GIF_SRCS = [
-      'videos/inscription.gif',
-      'videos/accept_inscription.gif',
-      'videos/creation_conversation_membre.gif',
-      'videos/creation_de_groupe.gif',
-      'videos/test_message_tempsréel.gif',
-      'videos/test_notif.gif',
-      'videos/test_message_accueil.gif',
-      'videos/test_group_et_conversation.gif',
-      'videos/test_fond_ecran.gif',
-      'videos/test_sondage.gif',
-      'videos/test_role_suppresion.gif'
+      'videos/inscription.gif','videos/accept_inscription.gif',
+      'videos/creation_conversation_membre.gif','videos/creation_de_groupe.gif',
+      'videos/test_message_tempsréel.gif','videos/test_notif.gif',
+      'videos/test_message_accueil.gif','videos/test_group_et_conversation.gif',
+      'videos/test_fond_ecran.gif','videos/test_sondage.gif','videos/test_role_suppresion.gif'
     ];
-
     function prefetchNext(idx) {
       if (idx >= GIF_SRCS.length) return;
       var src = GIF_SRCS[idx];
@@ -709,16 +906,9 @@ document.addEventListener('keydown',function(e){
       var a = document.createElement('a'); a.href = src;
       fetch(a.href)
         .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject(); })
-        .then(function(buf){
-          _checkAndEvictCache();
-          _gifCache[src] = buf;
-          setTimeout(function(){ prefetchNext(idx+1); }, 500);
-        })
+        .then(function(buf){ _checkAndEvictCache(); _gifCache[src] = buf; setTimeout(function(){ prefetchNext(idx+1); }, 500); })
         .catch(function(){ setTimeout(function(){ prefetchNext(idx+1); }, 500); });
     }
-
-    window.addEventListener('load', function(){
-      setTimeout(function(){ prefetchNext(0); }, 4000);
-    });
+    window.addEventListener('load', function(){ setTimeout(function(){ prefetchNext(0); }, 4000); });
   }
 })();
