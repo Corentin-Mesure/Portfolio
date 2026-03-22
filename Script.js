@@ -454,6 +454,9 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
         'box-shadow:0 0 25px rgba(150,5,5,0.45),0 0 55px rgba(5,15,150,0.2)!important;}'+
       '.kc-active-card:hover{border-color:rgba(255,40,40,1)!important;'+
         'box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 65px rgba(180,10,10,0.7)!important;transform:translateY(-8px)!important;}'+
+      /* Grille KC — 1 seule carte centrée */
+      '#projects .projects-grid.kc-grid{display:flex!important;justify-content:center!important;}'+
+      '#projects .projects-grid.kc-grid .kc-active-card{max-width:480px;width:100%;}'+
       '.kc-active-card .project-type{color:#ff6666!important;}'+
       '.kc-active-card .project-title{color:#ff4444!important;text-shadow:0 0 12px rgba(255,40,40,0.5)!important;}'+
       '.kc-active-card .project-desc{color:rgba(255,220,220,0.9)!important;}'+
@@ -532,7 +535,7 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
 
         var ov = document.createElement('div'); ov.className='kc-visual-replace';
         var lg = document.createElement('img'); lg.className='kc-main-logo';
-        lg.setAttribute('src','icon_kc.jpeg'); lg.removeAttribute('data-src');
+        lg.setAttribute('src','images/icon_kc.jpeg'); lg.removeAttribute('data-src');
         lg.alt='Karmine Corp'; lg.loading='eager';
         var lbl = document.createElement('div'); lbl.className='kc-main-label';
         lbl.textContent='Karmine Corp';
@@ -557,6 +560,9 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
       });
 
       _kcActive = true;
+      /* Centrer la grille avec une seule carte */
+      var grid = document.querySelector('#projects .projects-grid');
+      if(grid) grid.classList.add('kc-grid');
       _kcToast(true);
     } catch(err) {
       console.error('KC activate error:', err);
@@ -596,6 +602,8 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     });
 
     _originalCards = [];
+    var grid = document.querySelector('#projects .projects-grid');
+    if(grid) grid.classList.remove('kc-grid');
     var gal = document.getElementById('kcGalleryOverlay'); if(gal) gal.remove();
     document.body.style.overflow='';
     _kcToast(false);
@@ -609,7 +617,7 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
 
     /* Header */
     var header = document.createElement('div'); header.className='kc-gal-header';
-    var logo = document.createElement('img'); logo.className='kc-gal-logo'; logo.src='icon_kc.jpeg'; logo.alt='KC';
+    var logo = document.createElement('img'); logo.className='kc-gal-logo'; logo.src='images/icon_kc.jpeg'; logo.alt='KC';
     var title = document.createElement('div'); title.className='kc-gal-title'; title.textContent='🏆 Clips Karmine Corp';
     var closeBtn = document.createElement('button'); closeBtn.className='kc-gal-close'; closeBtn.innerHTML='&#x2715;';
     closeBtn.onclick = function(){ overlay.remove(); document.body.style.overflow=''; };
@@ -641,7 +649,7 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     var old=document.getElementById('kcToast');if(old)old.remove();
     var t=document.createElement('div');t.id='kcToast';
     t.innerHTML=
-      '<img class="kc-toast-logo" src="icon_kc.jpeg" alt="KC">'+
+      '<img class="kc-toast-logo" src="images/icon_kc.jpeg" alt="KC">'+
       (on?'🏆 KARMINE CORP MODE':'👋 MODE KC DÉSACTIVÉ')+
       '<span class="kc-toast-sub">'+(on?'ALLEZ LES BLEUS !':'À bientôt sur la Rift')+'</span>';
     document.body.appendChild(t);
