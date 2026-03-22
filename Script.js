@@ -431,7 +431,66 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
   /* Sauvegarde originale des deux cartes */
   var _originalCards = [];
 
-  /* ── Activer le mode KC — transforme les DEUX cartes ── */
+  /* ── CSS KC — injecté une seule fois ── */
+  function _injectKCCSS(){
+    if(document.getElementById('kcCSS')) return;
+    var s=document.createElement('style'); s.id='kcCSS';
+    s.textContent=
+      '.kc-visual-replace{position:absolute;inset:0;z-index:5;'+
+        'background:linear-gradient(135deg,#8B0000 0%,#0a0a2e 55%,#1a0050 100%);'+
+        'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;'+
+        'animation:kcFadeIn 0.4s ease forwards;}'+
+      '.kc-main-logo{width:120px;height:120px;object-fit:contain;display:block;'+
+        'filter:drop-shadow(0 0 18px rgba(255,30,30,0.95)) drop-shadow(0 0 36px rgba(30,60,255,0.85));'+
+        'animation:kcPulse 2.4s ease-in-out infinite;}'+
+      '.kc-main-label{font-family:Cinzel,serif;font-size:12px;letter-spacing:5px;'+
+        'color:rgba(255,200,200,0.85);text-transform:uppercase;text-align:center;}'+
+      '.kc-badge{position:absolute;top:10px;right:10px;z-index:10;'+
+        'font-family:Cinzel,serif;font-size:8px;letter-spacing:2px;'+
+        'background:rgba(130,5,5,0.95);border:1px solid rgba(255,60,60,0.8);'+
+        'color:#fff;padding:4px 10px;border-radius:3px;text-transform:uppercase;}'+
+      '.kc-active-card{background:linear-gradient(160deg,rgba(80,5,5,0.6),rgba(5,5,40,0.8))!important;'+
+        'border-color:rgba(200,15,15,0.8)!important;'+
+        'box-shadow:0 0 25px rgba(150,5,5,0.45),0 0 55px rgba(5,15,150,0.2)!important;}'+
+      '.kc-active-card:hover{border-color:rgba(255,40,40,1)!important;'+
+        'box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 65px rgba(180,10,10,0.7)!important;transform:translateY(-8px)!important;}'+
+      '.kc-active-card .project-type{color:#ff6666!important;}'+
+      '.kc-active-card .project-title{color:#ff4444!important;text-shadow:0 0 12px rgba(255,40,40,0.5)!important;}'+
+      '.kc-active-card .project-desc{color:rgba(255,220,220,0.9)!important;}'+
+      '.kc-active-card .project-tag{background:rgba(180,10,10,0.15)!important;border-color:rgba(255,50,50,0.3)!important;color:rgba(255,180,180,0.9)!important;}'+
+      '.kc-btn{border-color:rgba(255,50,50,0.8)!important;color:#ff7777!important;}'+
+      '.kc-btn:hover{color:#fff!important;}'+
+      '.kc-btn::before{background:linear-gradient(90deg,#8B0000,#0a0050)!important;}'+
+      '#kcGalleryOverlay{position:fixed;inset:0;z-index:5000;background:rgba(4,4,20,0.97);'+
+        'display:flex;flex-direction:column;align-items:center;justify-content:flex-start;'+
+        'padding:60px 24px 32px;overflow-y:auto;animation:kcFadeIn 0.35s ease forwards;}'+
+      '#kcGalleryOverlay .kc-gal-header{display:flex;align-items:center;gap:16px;margin-bottom:36px;width:100%;max-width:900px;}'+
+      '#kcGalleryOverlay .kc-gal-logo{width:48px;height:48px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,50,50,0.9));}'+
+      '#kcGalleryOverlay .kc-gal-title{font-family:Cinzel,serif;font-size:22px;letter-spacing:4px;color:#fff;text-transform:uppercase;flex:1;}'+
+      '#kcGalleryOverlay .kc-gal-close{width:40px;height:40px;background:none;border:1px solid rgba(255,70,70,0.5);color:#ff8888;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;border-radius:4px;}'+
+      '#kcGalleryOverlay .kc-gal-close:hover{background:rgba(200,20,20,0.4);color:#fff;border-color:rgba(255,70,70,1);}'+
+      '#kcGalleryOverlay .kc-gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:900px;}'+
+      '.kc-clip-thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(255,50,50,0.2);background:#0a0a1a;aspect-ratio:9/16;display:flex;flex-direction:column;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;}'+
+      '.kc-clip-thumb:hover{transform:translateY(-4px) scale(1.02);border-color:rgba(255,50,50,0.8);box-shadow:0 8px 30px rgba(160,10,10,0.5);}'+
+      '.kc-clip-thumb img{width:100%;height:100%;object-fit:cover;display:block;}'+
+      '.kc-clip-thumb .kc-clip-label{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);font-family:Cinzel,serif;font-size:10px;letter-spacing:2px;color:#fff;text-align:center;}'+
+      '.kc-clip-thumb .kc-clip-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);opacity:0;transition:opacity 0.2s;}'+
+      '.kc-clip-thumb:hover .kc-clip-play{opacity:1;}'+
+      '.kc-clip-thumb .kc-clip-play span{width:48px;height:48px;border-radius:50%;background:rgba(200,20,20,0.85);border:2px solid rgba(255,80,80,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 0 20px rgba(200,20,20,0.6);}'+
+      '@keyframes kcFadeIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}'+
+      '@keyframes kcPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.12) rotate(3deg);}}'+
+      '#kcToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(24px);'+
+        'background:linear-gradient(135deg,rgba(120,8,8,0.97),rgba(8,18,70,0.97));'+
+        'border:1px solid rgba(255,70,70,0.75);box-shadow:0 0 40px rgba(160,10,10,0.55),0 0 80px rgba(10,25,180,0.35);'+
+        'color:#fff;font-family:Cinzel,serif;font-size:13px;letter-spacing:4px;'+
+        'padding:20px 44px 16px;z-index:99999;pointer-events:none;'+
+        'opacity:0;transition:opacity .45s,transform .45s;text-align:center;white-space:nowrap;border-radius:6px;}'+
+      '#kcToast .kc-toast-logo{display:block;width:44px;height:44px;object-fit:contain;margin:0 auto 10px;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,60,60,0.9));}'+
+      '#kcToast .kc-toast-sub{display:block;font-size:10px;letter-spacing:3px;opacity:0.65;margin-top:6px;color:#ffaaaa;}'+
+      '@media(max-width:600px){#kcGalleryOverlay .kc-gal-grid{grid-template-columns:repeat(2,1fr)!important;}}';
+    document.head.appendChild(s);
+  }
+
   /* ── Activer le mode KC — transforme les DEUX cartes ── */
   function _activateKC(){
     try {
