@@ -438,7 +438,7 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
     document.documentElement.classList.add('custom-cursor');
     _originalCards = [];
 
-    var cards = document.querySelectorAll('#projects .projects-grid .project-card');
+    var cards = document.querySelectorAll('#projects .project-card:not(.perso-card)');
     cards.forEach(function(card, idx){
       var vis = card.querySelector('.project-visual');
       var savedImgs = [];
@@ -448,6 +448,7 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
 
       _originalCards.push({
         card           : card,
+        display        : card.style.display || '',
         visualChildren : Array.from(vis.childNodes).map(function(n){ return n.cloneNode(true); }),
         type           : card.querySelector('.project-type').textContent,
         title          : card.querySelector('.project-title').textContent,
@@ -456,34 +457,32 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
         savedImgs      : savedImgs,
       });
 
-      /* Vider visuel proprement */
+      /* Animal'vest (idx===1) — on cache simplement */
+      if(idx === 1){ card.style.display='none'; return; }
+
+      /* Animal'and (idx===0) — transformation KC */
       vis.style.position = 'relative';
       while(vis.firstChild) vis.removeChild(vis.firstChild);
 
-      /* Injecter logo KC */
       var ov = document.createElement('div'); ov.className='kc-visual-replace';
       var lg = document.createElement('img'); lg.className='kc-main-logo';
       lg.setAttribute('src','icon_kc.jpeg'); lg.removeAttribute('data-src');
       lg.alt='Karmine Corp'; lg.loading='eager';
       var lbl = document.createElement('div'); lbl.className='kc-main-label';
-      lbl.textContent = idx===0 ? "Animal\'and Chat" : "Animal\'vest";
+      lbl.textContent='Karmine Corp';
       ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
       var badge=document.createElement('div'); badge.className='kc-badge';
       badge.textContent='LOL MODE'; vis.appendChild(badge);
 
-      /* Textes KC */
       card.querySelector('.project-type').textContent  = 'Esport \u2014 LEC / LFL';
       card.querySelector('.project-title').textContent = 'Karmine Corp';
-      card.querySelector('.project-desc').textContent  = idx===0
-        ? 'ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires.'
-        : 'Go KC go ! Une equipe, une famille, une passion. Rouge et bleu dans le sang.';
+      card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure equipe de League of Legends. Ambiance, passion, victoires.';
 
-      /* Bouton KC */
       var oldBtn = card.querySelector('.project-btn');
       var newBtn = document.createElement('button');
       newBtn.className = 'project-btn kc-btn';
-      newBtn.innerHTML = idx===0 ? '<span>\uD83C\uDFAC Voir les clips</span>' : '<span>\uD83C\uDFC6 Allez KC !</span>';
-      newBtn.onclick = idx===0 ? _openGallery : function(){ _kcToast(true); };
+      newBtn.innerHTML = '<span>\uD83C\uDFAC Voir les clips</span>';
+      newBtn.onclick = _openGallery;
       oldBtn.replaceWith(newBtn);
 
       card.classList.add('kc-active-card');
@@ -499,8 +498,11 @@ function togglePersoProjects(){var grid=document.getElementById('persoGrid'),btn
 
     _originalCards.forEach(function(saved){
       var card = saved.card;
-      var vis = card.querySelector('.project-visual');
 
+      /* Restaurer la visibilité (Animal'vest était caché) */
+      card.style.display = saved.display;
+
+      var vis = card.querySelector('.project-visual');
       while(vis.firstChild) vis.removeChild(vis.firstChild);
       saved.visualChildren.forEach(function(node){ vis.appendChild(node.cloneNode(true)); });
 
