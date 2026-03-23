@@ -567,22 +567,22 @@ var _kcViewer=(function(){
       '.kc-grid-mode .kc-card{max-width:500px;width:100%;}',
       /* GALERIE JOUEURS */
       '#kcGallery{position:fixed;inset:0;z-index:6000;background:rgba(2,0,8,0.98);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;overflow-y:auto;animation:kcFadeIn 0.3s ease;}',
-      '.kc-gal-hdr{display:flex;align-items:center;gap:16px;padding:24px 40px 20px;width:100%;max-width:1600px;align-self:center;flex-shrink:0;}',
+      '.kc-gal-hdr{display:flex;align-items:center;gap:16px;padding:24px 40px 20px;width:100%;max-width:2200px;align-self:center;flex-shrink:0;}',
       '.kc-gal-hdr-logo{width:44px;height:44px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,50,50,0.9));}',
       '.kc-gal-hdr-title{font-family:Cinzel,serif;font-size:18px;letter-spacing:5px;color:#fff;text-transform:uppercase;flex:1;text-shadow:0 0 20px rgba(255,50,50,0.35);}',
       '.kc-gal-close{width:40px;height:40px;background:none;border:1px solid rgba(255,70,70,0.42);color:#ff8888;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;border-radius:4px;cursor:pointer;}',
       '.kc-gal-close:hover{background:rgba(200,20,20,0.4);color:#fff;border-color:rgba(255,60,60,0.9);}',
       /* Grille 5 joueurs côte à côte */
-      '.kc-players-grid{display:flex;gap:18px;padding:8px 40px 56px;width:100%;max-width:1600px;align-self:center;justify-content:center;flex-wrap:wrap;}',
+      '.kc-players-grid{display:flex;gap:24px;padding:16px 48px 64px;width:100%;max-width:2200px;align-self:center;justify-content:center;flex-wrap:wrap;}',
       /* Carte joueur format portrait */
-      '.kc-player-card{position:relative;flex:1;min-width:220px;max-width:300px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
+      '.kc-player-card{position:relative;flex:1;min-width:280px;max-width:400px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
       '.kc-player-card:hover{transform:translateY(-12px) scale(1.04);border-color:rgba(255,50,50,0.9);box-shadow:0 24px 70px rgba(140,5,5,0.65),0 0 50px rgba(255,50,50,0.22);}',
       '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;transition:transform 0.45s ease;}',
       '.kc-player-card:hover .kc-player-photo{transform:scale(1.07);}',
       '.kc-player-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,0,8,0.96) 0%,rgba(2,0,8,0.38) 42%,transparent 68%);pointer-events:none;}',
-      '.kc-player-info{position:absolute;bottom:0;left:0;right:0;padding:18px 15px 15px;pointer-events:none;}',
-      '.kc-player-role{font-family:Cinzel,serif;font-size:10px;letter-spacing:3px;color:rgba(68,136,255,0.85);text-transform:uppercase;margin-bottom:5px;display:block;}',
-      '.kc-player-name{font-family:Cinzel,serif;font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;display:block;text-shadow:0 0 22px rgba(255,50,50,0.55);}',
+      '.kc-player-info{position:absolute;bottom:0;left:0;right:0;padding:22px 18px 18px;pointer-events:none;}',
+      '.kc-player-role{font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;color:rgba(68,136,255,0.85);text-transform:uppercase;margin-bottom:5px;display:block;}',
+      '.kc-player-name{font-family:Cinzel,serif;font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;display:block;text-shadow:0 0 22px rgba(255,50,50,0.55);}',
       '.kc-player-cta{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:rgba(255,100,100,0.78);text-transform:uppercase;opacity:0;transition:opacity 0.22s;}',
       '.kc-player-card:hover .kc-player-cta{opacity:1;}',
       '.kc-player-cta::before{content:"\u25B6";font-size:8px;}',
@@ -595,7 +595,7 @@ var _kcViewer=(function(){
       '@keyframes kcFadeIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}',
       '@keyframes kcPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.1) rotate(3deg);}}',
       /* Responsive */
-      '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:160px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
+      '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:200px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
     ].join('');
     document.head.appendChild(s);
   }
@@ -654,7 +654,7 @@ var _kcViewer=(function(){
 
     var hdr=document.createElement('div');hdr.className='kc-gal-hdr';
     var hlogo=document.createElement('img');hlogo.className='kc-gal-hdr-logo';hlogo.src=KC_LOGO;hlogo.alt='KC';
-    var htitle=document.createElement('div');htitle.className='kc-gal-hdr-title';htitle.textContent='\uD83C\uDFC6 Karmine Corp \u2014 Roster 2025';
+    var htitle=document.createElement('div');htitle.className='kc-gal-hdr-title';htitle.textContent='\uD83C\uDFC6 Karmine Corp \u2014 Roster 2026';
     var hclose=document.createElement('button');hclose.className='kc-gal-close';hclose.innerHTML='&#x2715;';
     hclose.onclick=function(){overlay.remove();document.body.style.overflow='';};
     hdr.appendChild(hlogo);hdr.appendChild(htitle);hdr.appendChild(hclose);
