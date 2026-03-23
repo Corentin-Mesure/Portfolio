@@ -426,35 +426,35 @@ var _kcViewer=(function(){
       name:'Canna',role:'Top Lane',emoji:'\uD83D\uDDE1\uFE0F',
       photo:'images/kc/CANNA.webp',
       clips:[
-        {src:'videos/kc/clip_kc.mp4',label:'Canna \uD83D\uDDE1\uFE0F'},
+        {src:'videos/kc/clip_kc.gif',label:'Canna \uD83D\uDDE1\uFE0F'},
       ]
     },
     {
       name:'Yike',role:'Jungle',emoji:'\uD83C\uDF32',
       photo:'images/kc/YIKE.webp',
       clips:[
-        {src:'videos/kc/clip_kc.mp4',label:'Yike \uD83C\uDF32'},
+        {src:'videos/kc/clip_kc.gif',label:'Yike \uD83C\uDF32'},
       ]
     },
     {
       name:'Khyaehoo',role:'Mid Lane',emoji:'\u26A1',
       photo:'images/kc/KHYAEHOO.webp',
       clips:[
-        {src:'videos/kc/clip_kc.mp4',label:'Khyaehoo \u26A1'},
+        {src:'videos/kc/clip_kc.gif',label:'Khyaehoo \u26A1'},
       ]
     },
     {
       name:'Caliste',role:'ADC \u2014 Rookie of the Year',emoji:'\uD83C\uDFF9',
       photo:'images/kc/CALISTE.webp',
       clips:[
-        {src:'videos/kc/clip_kc.mp4',label:'Caliste \uD83C\uDFF9'},
+        {src:'videos/kc/clip_kc.gif',label:'Caliste \uD83C\uDFF9'},
       ]
     },
     {
       name:'Busio',role:'Support',emoji:'\uD83D\uDEE1\uFE0F',
       photo:'images/kc/BUSIO.jpg',
       clips:[
-        {src:'videos/kc/clip_kc.mp4',label:'Busio \uD83D\uDEE1\uFE0F'},
+        {src:'videos/kc/clip_kc.gif',label:'Busio \uD83D\uDEE1\uFE0F'},
       ]
     },
   ];
