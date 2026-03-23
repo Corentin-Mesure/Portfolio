@@ -354,51 +354,18 @@ var _kcViewer=(function(){
     document.querySelectorAll('.kc-dot').forEach(function(d){d.classList.toggle('active',parseInt(d.dataset.i)===i);});
     var p=document.getElementById('kcNavPrev');var n=document.getElementById('kcNavNext');
     if(p)p.disabled=(i===0);if(n)n.disabled=(i===_clips.length-1);
-    // Nettoyer le media précédent
-    var body=document.getElementById('kcViewerBody');
-    var prev=body&&body.querySelector('.kc-media');
-    if(prev){if(prev.tagName==='VIDEO'){prev.pause();prev.removeAttribute('src');prev.load();}prev.remove();}
-    if(_img)_img.style.display='none';
+    // Afficher le GIF directement dans _img (déjà dans le DOM)
     if(_loadingEl)_loadingEl.style.display='flex';
+    _img.style.display='none';
     var src=_safeSrc(clip.src);
-    var ext=src.split('?')[0].split('.').pop().toLowerCase();
-    var MEDIA_STYLE='width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);flex-shrink:0;display:none;';
-    if(ext==='mp4'||ext==='webm'){
-      var vid=document.createElement('video');
-      vid.className='kc-media';
-      vid.muted=true;vid.loop=true;vid.playsInline=true;vid.autoplay=true;
-      vid.style.cssText=MEDIA_STYLE+'background:#000;';
-      vid.src=src;
-      vid.oncanplaythrough=function(){
-        if(_loadingEl)_loadingEl.style.display='none';
-        vid.style.display='block';
-        vid.play().catch(function(){});
-      };
-      // Fallback rapide si canplaythrough ne se déclenche pas
-      var t=setTimeout(function(){
-        if(vid.readyState>=2){
-          if(_loadingEl)_loadingEl.style.display='none';
-          vid.style.display='block';
-          vid.play().catch(function(){});
-        }
-      },800);
-      vid.onerror=function(){clearTimeout(t);if(_loadingEl)_loadingEl.style.display='none';};
-      if(body)body.insertBefore(vid,_loadingEl);
-    } else {
-      // GIF / image
-      var gimg=document.createElement('img');
-      gimg.className='kc-media';
-      gimg.style.cssText=MEDIA_STYLE;
-      gimg.onload=function(){
-        if(_loadingEl)_loadingEl.style.display='none';
-        gimg.style.display='block';
-        gimg.style.animation='none';void gimg.offsetHeight;
-        gimg.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
-      };
-      gimg.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
-      gimg.src=src;
-      if(body)body.insertBefore(gimg,_loadingEl);
-    }
+    _img.onload=function(){
+      if(_loadingEl)_loadingEl.style.display='none';
+      _img.style.display='block';
+      _img.style.animation='none';void _img.offsetHeight;
+      _img.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
+    };
+    _img.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
+    _img.src=src;
   }
   function close(){
     if(!_overlay)return;
