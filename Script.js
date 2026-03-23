@@ -364,16 +364,28 @@ var _kcViewer=(function(){
       var vid=document.createElement('video');
       vid.id='kcViewerMedia';
       vid.autoplay=true;vid.loop=true;vid.muted=true;vid.playsInline=true;vid.controls=false;
+      vid.preload='auto';
       vid.style.cssText='width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:none;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;';
       var src_el=document.createElement('source');src_el.src=src;src_el.type='video/mp4';
       vid.appendChild(src_el);
-      vid.oncanplay=function(){
+      // Afficher dès le premier frame disponible, pas attendre canplay
+      vid.onloadeddata=function(){
         if(_loadingEl)_loadingEl.style.display='none';
         vid.style.display='block';
         vid.style.animation='none';void vid.offsetHeight;
         vid.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
+        vid.play().catch(function(){});
       };
+      // Fallback si loadeddata ne tire pas
+      vid.ontimeupdate=function(){
+        if(vid.style.display==='none'){
+          if(_loadingEl)_loadingEl.style.display='none';
+          vid.style.display='block';
+        }
+      };
+      vid.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
       if(body)body.insertBefore(vid,_loadingEl);
+      vid.load();
     } else {
       _img.style.display='none';_img.id='kcViewerMedia';
       _img.onload=function(){
