@@ -278,8 +278,8 @@ var _kcViewer=(function(){
       '#kcViewerClose{width:36px;height:36px;background:none;border:1px solid rgba(255,60,60,0.45);color:#ff8888;font-size:17px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;transition:all 0.2s;flex-shrink:0;}',
       '#kcViewerClose:hover{background:rgba(180,15,15,0.5);color:#fff;border-color:rgba(255,60,60,0.9);}',
       /* Zone image — maximisée */
-      '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:64px 80px 72px;}',
-      '#kcViewerImg{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);}',
+      '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:56px 72px 64px;}',
+      '#kcViewerImg{width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);}',
       '@keyframes kcvImgIn{from{opacity:0;transform:scale(0.92) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}',
       '#kcViewerLoading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}',
       '#kcViewerLoading .kc-spin{width:50px;height:50px;border:3px solid rgba(255,50,50,0.1);border-top-color:#ff3333;border-radius:50%;animation:kcSpin 0.7s linear infinite;}',
@@ -556,7 +556,7 @@ var _kcViewer=(function(){
       /* Carte joueur format portrait */
       '.kc-player-card{position:relative;flex:1;min-width:220px;max-width:300px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
       '.kc-player-card:hover{transform:translateY(-12px) scale(1.04);border-color:rgba(255,50,50,0.9);box-shadow:0 24px 70px rgba(140,5,5,0.65),0 0 50px rgba(255,50,50,0.22);}',
-      '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:transform 0.45s ease;}',
+      '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;transition:transform 0.45s ease;}',
       '.kc-player-card:hover .kc-player-photo{transform:scale(1.07);}',
       '.kc-player-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,0,8,0.96) 0%,rgba(2,0,8,0.38) 42%,transparent 68%);pointer-events:none;}',
       '.kc-player-info{position:absolute;bottom:0;left:0;right:0;padding:18px 15px 15px;pointer-events:none;}',
@@ -642,13 +642,15 @@ var _kcViewer=(function(){
 
     KC_PLAYERS.forEach(function(player){
       var card=document.createElement('div');card.className='kc-player-card';
-      if(player.photo){
-        var photo=document.createElement('img');photo.className='kc-player-photo';photo.src=player.photo;photo.alt=player.name;
-        photo.onerror=function(){photo.remove();var fb=document.createElement('div');fb.className='kc-player-nophoto';fb.textContent=player.emoji;card.insertBefore(fb,card.firstChild);};
-        card.appendChild(photo);
-      } else {
-        var fb=document.createElement('div');fb.className='kc-player-nophoto';fb.textContent=player.emoji;card.appendChild(fb);
-      }
+      // Toujours afficher la photo en priorité
+      var photo=document.createElement('img');photo.className='kc-player-photo';
+      photo.src=player.photo||'';photo.alt=player.name;photo.loading='eager';
+      photo.onerror=function(){
+        photo.style.display='none';
+        var fb=document.createElement('div');fb.className='kc-player-nophoto';fb.textContent=player.emoji;
+        card.insertBefore(fb,photo);
+      };
+      card.appendChild(photo);
       var ov=document.createElement('div');ov.className='kc-player-overlay';card.appendChild(ov);
       var info=document.createElement('div');info.className='kc-player-info';
       var role=document.createElement('span');role.className='kc-player-role';role.textContent=player.role;
