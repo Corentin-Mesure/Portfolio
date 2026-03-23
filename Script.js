@@ -279,7 +279,7 @@ var _kcViewer=(function(){
       '#kcViewerClose:hover{background:rgba(180,15,15,0.5);color:#fff;border-color:rgba(255,60,60,0.9);}',
       /* Zone image — maximisée */
       '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:56px 72px 64px;}',
-      '#kcViewerImg{width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);}',
+      '#kcViewerImg{width:75vw;height:75vh;object-fit:contain;object-position:center;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;}',
       '@keyframes kcvImgIn{from{opacity:0;transform:scale(0.92) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}',
       '#kcViewerLoading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}',
       '#kcViewerLoading .kc-spin{width:50px;height:50px;border:3px solid rgba(255,50,50,0.1);border-top-color:#ff3333;border-radius:50%;animation:kcSpin 0.7s linear infinite;}',
@@ -718,7 +718,9 @@ document.addEventListener('keydown',function(e){
     var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){loadImg(e.target);obs.unobserve(e.target);}});},{rootMargin:'300px'});
     document.querySelectorAll('img').forEach(function(img){
       if(img.closest('#hero'))return;
+      if(img.classList.contains('kc-player-photo'))return;// photos KC : pas de lazy-load
       if(!img.src||img.src===BLANK||img.src.startsWith('data:'))return;
+      if(img.classList.contains('kc-player-photo'))return;// ne pas lazy-loader les photos KC
       img.dataset.src=img.src;img.src=BLANK;img.decoding='async';img.loading='lazy';obs.observe(img);
     });
     document.querySelectorAll('img[data-src]').forEach(function(img){obs.observe(img);});
