@@ -608,6 +608,9 @@ var _kcViewer=(function(){
       '@keyframes kcPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.1) rotate(3deg);}}',
       /* Responsive */
       '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:200px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
+      /* Bannière KC */
+      '.kc-banner-wrap{width:100%;max-width:2200px;align-self:center;padding:0 48px 48px;}',
+      '.kc-banner-img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,50,50,0.18);box-shadow:0 0 60px rgba(140,5,5,0.35),0 0 120px rgba(5,10,140,0.2);object-fit:cover;}',,
     ].join('');
     document.head.appendChild(s);
   }
@@ -698,7 +701,15 @@ var _kcViewer=(function(){
       grd.appendChild(card);
     });
 
-    overlay.appendChild(hdr);overlay.appendChild(grd);
+    /* Bannière KC sous les joueurs */
+    var bannerWrap=document.createElement('div');bannerWrap.className='kc-banner-wrap';
+    var bannerImg=document.createElement('img');bannerImg.className='kc-banner-img';
+    bannerImg.src='images/kc/Brand-Banner-Karmine-Corp-V3.webp';
+    bannerImg.alt='Karmine Corp Banner';bannerImg.loading='eager';
+    bannerImg.onerror=function(){bannerWrap.style.display='none';};
+    bannerWrap.appendChild(bannerImg);
+
+    overlay.appendChild(hdr);overlay.appendChild(grd);overlay.appendChild(bannerWrap);
     overlay.addEventListener('click',function(e){if(e.target===overlay){overlay.remove();document.body.style.overflow='';}});
     document.body.appendChild(overlay);document.body.style.overflow='hidden';
   }
