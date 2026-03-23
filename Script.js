@@ -354,18 +354,40 @@ var _kcViewer=(function(){
     document.querySelectorAll('.kc-dot').forEach(function(d){d.classList.toggle('active',parseInt(d.dataset.i)===i);});
     var p=document.getElementById('kcNavPrev');var n=document.getElementById('kcNavNext');
     if(p)p.disabled=(i===0);if(n)n.disabled=(i===_clips.length-1);
-    // Afficher le GIF dans l'image
+    // Supprimer le media précédent (video ou img)
+    var body=document.getElementById('kcViewerBody');
+    var oldMedia=body&&body.querySelector('#kcViewerMedia');
+    if(oldMedia){if(oldMedia.tagName==='VIDEO'){oldMedia.pause();oldMedia.src='';}oldMedia.remove();}
     if(_img)_img.style.display='none';
     if(_loadingEl)_loadingEl.style.display='flex';
     var src=_safeSrc(clip.src);
-    _img.onload=function(){
+    var ext=src.split('?')[0].split('.').pop().toLowerCase();
+    if(ext==='mp4'||ext==='webm'){
+      // Lecteur vidéo inline
+      var vid=document.createElement('video');
+      vid.id='kcViewerMedia';
+      vid.loop=true;vid.muted=true;vid.playsInline=true;vid.autoplay=true;
+      vid.style.cssText='width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;flex-shrink:0;background:#000;';
       if(_loadingEl)_loadingEl.style.display='none';
-      _img.style.display='block';
-      _img.style.animation='none';void _img.offsetHeight;
-      _img.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
-    };
-    _img.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
-    _img.src=src;
+      var vsrc=document.createElement('source');vsrc.src=src;vsrc.type='video/mp4';
+      vid.appendChild(vsrc);
+      if(body)body.insertBefore(vid,_loadingEl);
+      var played=false;
+      vid.addEventListener('canplay',function(){if(!played){played=true;vid.play().catch(function(){});}});
+      vid.addEventListener('timeupdate',function(){if(!played){played=true;}if(_loadingEl)_loadingEl.style.display='none';});
+      vid.load();
+    } else {
+      // GIF / image
+      _img.id='kcViewerMedia';
+      _img.onload=function(){
+        if(_loadingEl)_loadingEl.style.display='none';
+        _img.style.display='block';
+        _img.style.animation='none';void _img.offsetHeight;
+        _img.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
+      };
+      _img.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
+      _img.src=src;
+    }
   }
   function close(){
     if(!_overlay)return;
@@ -393,35 +415,35 @@ var _kcViewer=(function(){
       name:'Canna',role:'Top Lane',emoji:'\uD83D\uDDE1\uFE0F',
       photo:'images/kc/CANNA.webp',
       clips:[
-        {src:'videos/kc/clip_kc.gif',label:'Canna \uD83D\uDDE1\uFE0F'},
+        {src:'videos/kc/clip_kc.mp4',label:'Canna \uD83D\uDDE1\uFE0F'},
       ]
     },
     {
       name:'Yike',role:'Jungle',emoji:'\uD83C\uDF32',
       photo:'images/kc/YIKE.webp',
       clips:[
-        {src:'videos/kc/clip_kc.gif',label:'Yike \uD83C\uDF32'},
+        {src:'videos/kc/clip_kc.mp4',label:'Yike \uD83C\uDF32'},
       ]
     },
     {
       name:'Khyaehoo',role:'Mid Lane',emoji:'\u26A1',
       photo:'images/kc/KHYAEHOO.webp',
       clips:[
-        {src:'videos/kc/clip_kc.gif',label:'Khyaehoo \u26A1'},
+        {src:'videos/kc/clip_kc.mp4',label:'Khyaehoo \u26A1'},
       ]
     },
     {
       name:'Caliste',role:'ADC \u2014 Rookie of the Year',emoji:'\uD83C\uDFF9',
       photo:'images/kc/CALISTE.webp',
       clips:[
-        {src:'videos/kc/clip_kc.gif',label:'Caliste \uD83C\uDFF9'},
+        {src:'videos/kc/clip_kc.mp4',label:'Caliste \uD83C\uDFF9'},
       ]
     },
     {
       name:'Busio',role:'Support',emoji:'\uD83D\uDEE1\uFE0F',
       photo:'images/kc/BUSIO.jpg',
       clips:[
-        {src:'videos/kc/clip_kc.gif',label:'Busio \uD83D\uDEE1\uFE0F'},
+        {src:'videos/kc/clip_kc.mp4',label:'Busio \uD83D\uDEE1\uFE0F'},
       ]
     },
   ];
