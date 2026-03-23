@@ -278,14 +278,14 @@ var _kcViewer=(function(){
       '#kcViewerClose{width:36px;height:36px;background:none;border:1px solid rgba(255,60,60,0.45);color:#ff8888;font-size:17px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;transition:all 0.2s;flex-shrink:0;}',
       '#kcViewerClose:hover{background:rgba(180,15,15,0.5);color:#fff;border-color:rgba(255,60,60,0.9);}',
       /* Zone image — maximisée */
-      '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:68px 100px 76px;}',
+      '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:64px 80px 72px;}',
       '#kcViewerImg{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);}',
       '@keyframes kcvImgIn{from{opacity:0;transform:scale(0.92) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}',
       '#kcViewerLoading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}',
       '#kcViewerLoading .kc-spin{width:50px;height:50px;border:3px solid rgba(255,50,50,0.1);border-top-color:#ff3333;border-radius:50%;animation:kcSpin 0.7s linear infinite;}',
       '#kcViewerLoading span{font-family:Cinzel,serif;font-size:11px;letter-spacing:4px;color:rgba(255,120,120,0.5);text-transform:uppercase;}',
       '@keyframes kcSpin{to{transform:rotate(360deg)}}',
-      '.kc-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:60px;height:60px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,50,50,0.3);color:#ff9999;font-size:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:all 0.18s;z-index:3;backdrop-filter:blur(12px);}',
+      '.kc-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:68px;height:68px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,50,50,0.3);color:#ff9999;font-size:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:all 0.18s;z-index:3;backdrop-filter:blur(12px);}',
       '.kc-nav-btn:hover{background:rgba(180,10,10,0.55);border-color:rgba(255,60,60,0.95);color:#fff;transform:translateY(-50%) scale(1.1);}',
       '.kc-nav-btn:disabled{opacity:0.12;cursor:default;pointer-events:none;}',
       '#kcNavPrev{left:20px;}#kcNavNext{right:20px;}',
@@ -389,7 +389,7 @@ var _kcViewer=(function(){
   var KC_PLAYERS=[
     {
       name:'Canna',role:'Top Lane',emoji:'\uD83D\uDDE1\uFE0F',
-      photo:'images/CANNA.webp',
+      photo:'images/kc/CANNA.webp',
       clips:[
         {src:'videos/kc/clip_canna.gif',label:'Canna \uD83D\uDDE1\uFE0F'},
         {src:'videos/kc/clip_pentakill.gif',label:'Pentakill \uD83D\uDD25'},
@@ -397,7 +397,7 @@ var _kcViewer=(function(){
     },
     {
       name:'Yike',role:'Jungle',emoji:'\uD83C\uDF32',
-      photo:'images/YIKE.webp',
+      photo:'images/kc/YIKE.webp',
       clips:[
         {src:'videos/kc/clip_baron.gif',label:'Baron Steal \uD83D\uDE24'},
         {src:'videos/kc/clip_comeback.gif',label:'Comeback \uD83D\uDCAA'},
@@ -405,7 +405,7 @@ var _kcViewer=(function(){
     },
     {
       name:'Khyaehoo',role:'Mid Lane',emoji:'\u26A1',
-      photo:'images/KHYAEHOO.webp',
+      photo:'images/kc/KHYAEHOO.webp',
       clips:[
         {src:'videos/kc/clip_ace.gif',label:'ACE ! \u2694\uFE0F'},
         {src:'videos/kc/clip_nexus.gif',label:'GG WP \uD83C\uDFC6'},
@@ -413,7 +413,7 @@ var _kcViewer=(function(){
     },
     {
       name:'Caliste',role:'ADC \u2014 Rookie of the Year',emoji:'\uD83C\uDFF9',
-      photo:'images/CALISTE.webp',
+      photo:'images/kc/CALISTE.webp',
       clips:[
         {src:'videos/kc/clip_rekkles.gif',label:'Caliste \uD83C\uDFF9'},
         {src:'videos/kc/clip_skyroz.gif',label:'MVP \uD83D\uDC51'},
@@ -421,7 +421,7 @@ var _kcViewer=(function(){
     },
     {
       name:'Busio',role:'Support',emoji:'\uD83D\uDEE1\uFE0F',
-      photo:'images/BUSIO.jpg',
+      photo:'images/kc/BUSIO.jpg',
       clips:[
         {src:'videos/kc/clip_targamas.gif',label:'Busio \uD83D\uDEE1\uFE0F'},
         {src:'videos/kc/clip_comeback.gif',label:'Save \uD83D\uDC99'},
@@ -546,22 +546,22 @@ var _kcViewer=(function(){
       '.kc-grid-mode .kc-card{max-width:500px;width:100%;}',
       /* GALERIE JOUEURS */
       '#kcGallery{position:fixed;inset:0;z-index:6000;background:rgba(2,0,8,0.98);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;overflow-y:auto;animation:kcFadeIn 0.3s ease;}',
-      '.kc-gal-hdr{display:flex;align-items:center;gap:16px;padding:22px 32px 18px;width:100%;max-width:1120px;align-self:center;flex-shrink:0;}',
+      '.kc-gal-hdr{display:flex;align-items:center;gap:16px;padding:24px 40px 20px;width:100%;max-width:1600px;align-self:center;flex-shrink:0;}',
       '.kc-gal-hdr-logo{width:44px;height:44px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,50,50,0.9));}',
       '.kc-gal-hdr-title{font-family:Cinzel,serif;font-size:18px;letter-spacing:5px;color:#fff;text-transform:uppercase;flex:1;text-shadow:0 0 20px rgba(255,50,50,0.35);}',
       '.kc-gal-close{width:40px;height:40px;background:none;border:1px solid rgba(255,70,70,0.42);color:#ff8888;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;border-radius:4px;cursor:pointer;}',
       '.kc-gal-close:hover{background:rgba(200,20,20,0.4);color:#fff;border-color:rgba(255,60,60,0.9);}',
       /* Grille 5 joueurs côte à côte */
-      '.kc-players-grid{display:flex;gap:18px;padding:8px 32px 44px;width:100%;max-width:1120px;align-self:center;justify-content:center;flex-wrap:wrap;}',
+      '.kc-players-grid{display:flex;gap:18px;padding:8px 40px 56px;width:100%;max-width:1600px;align-self:center;justify-content:center;flex-wrap:wrap;}',
       /* Carte joueur format portrait */
-      '.kc-player-card{position:relative;flex:1;min-width:150px;max-width:195px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
+      '.kc-player-card{position:relative;flex:1;min-width:220px;max-width:300px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
       '.kc-player-card:hover{transform:translateY(-12px) scale(1.04);border-color:rgba(255,50,50,0.9);box-shadow:0 24px 70px rgba(140,5,5,0.65),0 0 50px rgba(255,50,50,0.22);}',
       '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:transform 0.45s ease;}',
       '.kc-player-card:hover .kc-player-photo{transform:scale(1.07);}',
       '.kc-player-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,0,8,0.96) 0%,rgba(2,0,8,0.38) 42%,transparent 68%);pointer-events:none;}',
       '.kc-player-info{position:absolute;bottom:0;left:0;right:0;padding:18px 15px 15px;pointer-events:none;}',
-      '.kc-player-role{font-family:Cinzel,serif;font-size:9px;letter-spacing:3px;color:rgba(68,136,255,0.85);text-transform:uppercase;margin-bottom:5px;display:block;}',
-      '.kc-player-name{font-family:Cinzel,serif;font-size:19px;font-weight:700;letter-spacing:2px;color:#fff;display:block;text-shadow:0 0 22px rgba(255,50,50,0.55);}',
+      '.kc-player-role{font-family:Cinzel,serif;font-size:10px;letter-spacing:3px;color:rgba(68,136,255,0.85);text-transform:uppercase;margin-bottom:5px;display:block;}',
+      '.kc-player-name{font-family:Cinzel,serif;font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;display:block;text-shadow:0 0 22px rgba(255,50,50,0.55);}',
       '.kc-player-cta{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:rgba(255,100,100,0.78);text-transform:uppercase;opacity:0;transition:opacity 0.22s;}',
       '.kc-player-card:hover .kc-player-cta{opacity:1;}',
       '.kc-player-cta::before{content:"\u25B6";font-size:8px;}',
@@ -574,7 +574,7 @@ var _kcViewer=(function(){
       '@keyframes kcFadeIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}',
       '@keyframes kcPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.1) rotate(3deg);}}',
       /* Responsive */
-      '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:120px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
+      '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:160px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
     ].join('');
     document.head.appendChild(s);
   }
