@@ -354,40 +354,18 @@ var _kcViewer=(function(){
     document.querySelectorAll('.kc-dot').forEach(function(d){d.classList.toggle('active',parseInt(d.dataset.i)===i);});
     var p=document.getElementById('kcNavPrev');var n=document.getElementById('kcNavNext');
     if(p)p.disabled=(i===0);if(n)n.disabled=(i===_clips.length-1);
-    // Supprimer le media précédent
-    var body=document.getElementById('kcViewerBody');
-    var old=body&&body.querySelector('#kcViewerMedia');if(old)old.remove();
+    // Afficher le GIF dans l'image
+    if(_img)_img.style.display='none';
     if(_loadingEl)_loadingEl.style.display='flex';
     var src=_safeSrc(clip.src);
-    var ext=src.split('.').pop().toLowerCase();
-    if(ext==='mp4'||ext==='webm'){
-      var vid=document.createElement('video');
-      vid.id='kcViewerMedia';
-      vid.autoplay=true;vid.loop=true;vid.muted=true;vid.playsInline=true;vid.controls=false;
-      vid.preload='auto';
-      // Afficher immédiatement — pas d'attente d'événement
-      vid.style.cssText='width:75vw;height:75vh;object-fit:contain;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;background:#000;';
+    _img.onload=function(){
       if(_loadingEl)_loadingEl.style.display='none';
-      var src_el=document.createElement('source');src_el.src=src;src_el.type='video/mp4';
-      vid.appendChild(src_el);
-      vid.onerror=function(){
-        vid.style.display='none';
-        if(_loadingEl){_loadingEl.style.display='flex';_loadingEl.querySelector('span').textContent='Erreur de chargement';}
-      };
-      if(body)body.insertBefore(vid,_loadingEl);
-      vid.load();
-      vid.play().catch(function(){});
-    } else {
-      _img.style.display='none';_img.id='kcViewerMedia';
-      _img.onload=function(){
-        if(_loadingEl)_loadingEl.style.display='none';
-        _img.style.display='block';
-        _img.style.animation='none';void _img.offsetHeight;
-        _img.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
-      };
-      _img.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
-      _img.src=src;
-    }
+      _img.style.display='block';
+      _img.style.animation='none';void _img.offsetHeight;
+      _img.style.animation='kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1)';
+    };
+    _img.onerror=function(){if(_loadingEl)_loadingEl.style.display='none';};
+    _img.src=src;
   }
   function close(){
     if(!_overlay)return;
@@ -415,40 +393,40 @@ var _kcViewer=(function(){
       name:'Canna',role:'Top Lane',emoji:'\uD83D\uDDE1\uFE0F',
       photo:'images/kc/CANNA.webp',
       clips:[
-        {src:'videos/kc/clip_canna.mp4',label:'Canna \uD83D\uDDE1\uFE0F'},
-        {src:'videos/kc/clip_pentakill.mp4',label:'Pentakill \uD83D\uDD25'},
+        {src:'videos/kc/clip_canna.gif',label:'Canna \uD83D\uDDE1\uFE0F'},
+        {src:'videos/kc/clip_pentakill.gif',label:'Pentakill \uD83D\uDD25'},
       ]
     },
     {
       name:'Yike',role:'Jungle',emoji:'\uD83C\uDF32',
       photo:'images/kc/YIKE.webp',
       clips:[
-        {src:'videos/kc/clip_baron.mp4',label:'Baron Steal \uD83D\uDE24'},
-        {src:'videos/kc/clip_comeback.mp4',label:'Comeback \uD83D\uDCAA'},
+        {src:'videos/kc/clip_baron.gif',label:'Baron Steal \uD83D\uDE24'},
+        {src:'videos/kc/clip_comeback.gif',label:'Comeback \uD83D\uDCAA'},
       ]
     },
     {
       name:'Khyaehoo',role:'Mid Lane',emoji:'\u26A1',
       photo:'images/kc/KHYAEHOO.webp',
       clips:[
-        {src:'videos/kc/clip_ace.mp4',label:'ACE ! \u2694\uFE0F'},
-        {src:'videos/kc/clip_nexus.mp4',label:'GG WP \uD83C\uDFC6'},
+        {src:'videos/kc/clip_ace.gif',label:'ACE ! \u2694\uFE0F'},
+        {src:'videos/kc/clip_nexus.gif',label:'GG WP \uD83C\uDFC6'},
       ]
     },
     {
       name:'Caliste',role:'ADC \u2014 Rookie of the Year',emoji:'\uD83C\uDFF9',
       photo:'images/kc/CALISTE.webp',
       clips:[
-        {src:'videos/kc/clip_rekkles.mp4',label:'Caliste \uD83C\uDFF9'},
-        {src:'videos/kc/clip_skyroz.mp4',label:'MVP \uD83D\uDC51'},
+        {src:'videos/kc/clip_rekkles.gif',label:'Caliste \uD83C\uDFF9'},
+        {src:'videos/kc/clip_skyroz.gif',label:'MVP \uD83D\uDC51'},
       ]
     },
     {
       name:'Busio',role:'Support',emoji:'\uD83D\uDEE1\uFE0F',
       photo:'images/kc/BUSIO.jpg',
       clips:[
-        {src:'videos/kc/clip_targamas.mp4',label:'Busio \uD83D\uDEE1\uFE0F'},
-        {src:'videos/kc/clip_comeback.mp4',label:'Save \uD83D\uDC99'},
+        {src:'videos/kc/clip_targamas.gif',label:'Busio \uD83D\uDEE1\uFE0F'},
+        {src:'videos/kc/clip_comeback.gif',label:'Save \uD83D\uDC99'},
       ]
     },
   ];
@@ -601,7 +579,7 @@ var _kcViewer=(function(){
       '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:200px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}',
       /* Bannière KC */
       '.kc-banner-wrap{width:100%;max-width:2200px;align-self:center;padding:0 48px 48px;}',
-      '.kc-banner-img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,50,50,0.18);box-shadow:0 0 60px rgba(140,5,5,0.35),0 0 120px rgba(5,10,140,0.2);object-fit:cover;}',,
+      '.kc-banner-img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,50,50,0.18);box-shadow:0 0 60px rgba(140,5,5,0.35),0 0 120px rgba(5,10,140,0.2);object-fit:cover;}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -695,7 +673,7 @@ var _kcViewer=(function(){
     /* Bannière KC sous les joueurs */
     var bannerWrap=document.createElement('div');bannerWrap.className='kc-banner-wrap';
     var bannerImg=document.createElement('img');bannerImg.className='kc-banner-img';
-    bannerImg.src='images/kc/Brand-Banner-Karmine-Corp-V3.webp';
+    bannerImg.src='images/kc/Brand-Banner-Karmine-Corp-V3.webp';bannerImg.loading='eager';
     bannerImg.alt='Karmine Corp Banner';bannerImg.loading='eager';
     bannerImg.onerror=function(){bannerWrap.style.display='none';};
     bannerWrap.appendChild(bannerImg);
