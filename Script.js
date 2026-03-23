@@ -432,30 +432,22 @@ var _kcViewer=(function(){
     {
       name:'Yike',role:'Jungle',emoji:'\uD83C\uDF32',
       photo:'images/kc/YIKE.webp',
-      clips:[
-        {src:'videos/kc/clip_kc_final.mp4',label:'Yike \uD83C\uDF32'},
-      ]
+      clips:[]
     },
     {
       name:'Khyaehoo',role:'Mid Lane',emoji:'\u26A1',
       photo:'images/kc/KHYAEHOO.webp',
-      clips:[
-        {src:'videos/kc/clip_kc_final.mp4',label:'Khyaehoo \u26A1'},
-      ]
+      clips:[]
     },
     {
       name:'Caliste',role:'ADC \u2014 Rookie of the Year',emoji:'\uD83C\uDFF9',
       photo:'images/kc/CALISTE.webp',
-      clips:[
-        {src:'videos/kc/clip_kc_final.mp4',label:'Caliste \uD83C\uDFF9'},
-      ]
+      clips:[]
     },
     {
       name:'Busio',role:'Support',emoji:'\uD83D\uDEE1\uFE0F',
       photo:'images/kc/BUSIO.jpg',
-      clips:[
-        {src:'videos/kc/clip_kc_final.mp4',label:'Busio \uD83D\uDEE1\uFE0F'},
-      ]
+      clips:[]
     },
   ];
 
