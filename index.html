@@ -517,6 +517,7 @@
   </div>
 </div>
 
+<!-- ═══ VEST-CATALOGUE (MODIFIE) ═══ -->
 <div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
@@ -527,9 +528,14 @@
           <span class="step-num">01</span>
           <span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span>
         </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les articles <strong>en rupture de stock</strong> sont automatiquement signales ou masques selon le stock disponible.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F4CB; Categories')">
+          <span class="step-num">02</span>
+          <span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span>
+        </div>
       </div>
     </div>
   </div>
@@ -579,8 +585,7 @@
         </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Ces informations sont <strong>encodees dans le champ notes</strong> de la commande et accessibles par l'admin via une fiche client dediee avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La commande est <strong>enregistree en base de donnees</strong> avec le statut <em style="color:var(--cyan)">&#171; en attente &#187;</em>. L'administrateur recoit une notification push.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le membre peut <strong>suivre l'etat de sa commande</strong> directement depuis l'application et recoit un email a chaque changement de statut.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Le membre peut <strong>suivre l'etat de sa commande</strong> directement depuis l'application et recoit un email a chaque changement de statut.</span></div>
       </div>
     </div>
   </div>
