@@ -495,6 +495,7 @@
 
 <!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
 
+<!-- ✅ MODIFIÉ : vest-acces — étape 03 avec screen_guest_log -->
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
@@ -509,7 +510,10 @@
           <span class="step-num">02</span>
           <span class="step-text">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.<br><span class="step-play-hint">Voir le log</span></span>
         </div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend — Suppression 24h',900)">
+          <span class="step-num">03</span>
+          <span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.<br><span class="step-play-hint">Voir le log</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
         <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.</span></div>
       </div>
@@ -517,7 +521,7 @@
   </div>
 </div>
 
-<!-- ═══ VEST-CATALOGUE (MODIFIE) ═══ -->
+<!-- vest-catalogue -->
 <div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
@@ -547,7 +551,7 @@
     <div class="submodal-body">
       <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La visionneuse plein ecran supporte le <strong>zoom et le pinch</strong> (InteractiveViewer), l'interface se masque au tap pour profiter de l'image sans distraction.</span></div>
@@ -573,6 +577,7 @@
   </div>
 </div>
 
+<!-- ✅ MODIFIÉ : vest-panier — étape 03 supprimée, image emails ajoutée -->
 <div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
@@ -583,9 +588,14 @@
           <span class="step-num">01</span>
           <span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span>
         </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Ces informations sont <strong>encodees dans le champ notes</strong> de la commande et accessibles par l'admin via une fiche client dediee avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Le membre peut <strong>suivre l'etat de sa commande</strong> directement depuis l'application et recoit un email a chaque changement de statut.</span></div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span>
+        </div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)">
+          <span class="step-num">03</span>
+          <span class="step-text">Le membre recoit un <strong>email automatique a chaque changement de statut</strong> de sa commande : confirmation, preparation, expedition (avec numero de colis), livraison et annulation.<br><span class="step-play-hint">Voir les emails</span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -655,16 +665,24 @@
   </div>
 </div>
 
+<!-- ✅ MODIFIÉ : vest-mail — image montage emails agrandie -->
 <div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
+
+      <!-- IMAGE MONTAGE EMAILS — GRANDE TAILLE -->
+      <div style="margin:16px 0 24px;border-radius:10px;overflow:hidden;cursor:pointer;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques — toutes les etapes',1400)">
+        <img src="images/emails_automatiques_montage.png" alt="Emails automatiques Animal'vest" style="width:100%;height:auto;display:block;border-radius:10px;border:1px solid rgba(255,255,255,0.08);">
+        <div style="text-align:center;padding:8px 0 4px;font-size:12px;color:var(--cyan,#4ecdc4);letter-spacing:1px;">&#x1F50D; Cliquer pour agrandir</div>
+      </div>
+
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye au membre avec le detail des articles commandes.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">&#171; traitee &#187;</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; expediee &#187;</em>, un email avec le <strong>numero de colis</strong> est envoye pour permettre le suivi de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">&#171; livree &#187;</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">"traitee"</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">"expediee"</em>, un email avec le <strong>numero de colis</strong> est envoye pour permettre le suivi de livraison.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">"livree"</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
         <div class="submodal-step"><span class="step-num">05</span><span class="step-text">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut — aucune action manuelle supplementaire n'est requise.</span></div>
       </div>
     </div>
