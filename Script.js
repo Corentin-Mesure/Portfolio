@@ -356,6 +356,11 @@ function _zoomAttach(wrap, img) {
 
 function _buildZoomBar(bar) {
   _injectZoomCSS();
+
+  /* ── FIX : empêcher les clics sur la barre de fermer la modal ── */
+  bar.addEventListener('click', function (e) { e.stopPropagation(); });
+  bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+
   var p = document.createElement('div');
   p.id = '_zPanel';
   p.innerHTML =
@@ -537,6 +542,11 @@ function _saveSpd(src, s) { localStorage.setItem(_SPEED_KEY + _basename(src), s)
 function _buildPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
   if (!bar) return;
+
+  /* ── FIX : empêcher les clics sur la barre de fermer la modal ── */
+  bar.addEventListener('click', function (e) { e.stopPropagation(); });
+  bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+
   _currentSpd = _loadSpd(src);
   var name = _basename(src).replace(/\.gif$/i, '').replace(/_/g, ' ');
   if (name.length > 26) name = name.slice(0, 24) + '\u2026';
