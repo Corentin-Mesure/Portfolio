@@ -476,7 +476,6 @@
         <button class="modal-feature-btn" onclick="openSubModal('vest-galerie')"><div style="flex:1"><span class="feat-title">&#x1F5BC;&#xFE0F; Galerie multi-photos</span><span class="feat-preview">Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-categories')"><div style="flex:1"><span class="feat-title">&#x1F4CB; Categories &amp; Unites</span><span class="feat-preview">Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-panier')"><div style="flex:1"><span class="feat-title">&#x1F6D2; Panier &amp; Commandes</span><span class="feat-preview">Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-virement')"><div style="flex:1"><span class="feat-title">&#x1F4B3; Paiement par virement</span><span class="feat-preview">Le reglement se fait uniquement par virement bancaire, RIB disponible sur Animal'and Chat.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-admin')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview">Gestion des produits, des stocks, des commandes et suivi avec notes internes.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-colis')"><div style="flex:1"><span class="feat-title">&#x1F4E6; Numero de colis obligatoire</span><span class="feat-preview">L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications push</span><span class="feat-preview">L'admin est alerte en temps reel des qu'une nouvelle commande est passee.</span></div><span class="feat-arrow">&#x203A;</span></button>
@@ -495,7 +494,6 @@
 
 <!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
 
-<!-- ✅ MODIFIÉ : vest-acces — étape 03 avec screen_guest_log -->
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
@@ -521,7 +519,6 @@
   </div>
 </div>
 
-<!-- vest-catalogue -->
 <div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
@@ -577,7 +574,6 @@
   </div>
 </div>
 
-<!-- ✅ MODIFIÉ : vest-panier — étape 03 supprimée, image emails ajoutée -->
 <div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
@@ -596,21 +592,6 @@
           <span class="step-num">03</span>
           <span class="step-text">Le membre recoit un <strong>email automatique a chaque changement de statut</strong> de sa commande : confirmation, preparation, expedition (avec numero de colis), livraison et annulation.<br><span class="step-play-hint">Voir les emails</span></span>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="submodal-overlay" id="vest-virement" onclick="closeSubModal(event,'vest-virement')">
-  <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4B3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Paiement par virement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-virement')">&#x2715;</button></div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Le paiement des commandes se fait exclusivement par virement bancaire. Aucune donnee bancaire ne transit par l'application.</p>
-      <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Apres validation de la commande, une <strong>dialog de confirmation</strong> informe le membre que le paiement s'effectue uniquement par <strong>virement bancaire</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le <strong>RIB de l'association</strong> est disponible sur l'application Animal'and Chat. Le membre doit s'y connecter pour obtenir les coordonnees bancaires.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le numero de commande est communique dans la dialog pour que le membre puisse le mentionner en <strong>reference de virement</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Sans reception du virement</strong>, la commande sera automatiquement annulee. Cela evite tout blocage de stock inutile.</span></div>
       </div>
     </div>
   </div>
@@ -665,19 +646,15 @@
   </div>
 </div>
 
-<!-- ✅ MODIFIÉ : vest-mail — image montage emails agrandie -->
 <div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
-
-      <!-- IMAGE MONTAGE EMAILS — TRES GRANDE TAILLE -->
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques — toutes les etapes',1400)">
         <img src="images/emails_automatiques_montage.png" alt="Emails automatiques Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
-
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye au membre avec le detail des articles commandes.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">"traitee"</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
