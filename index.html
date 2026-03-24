@@ -494,6 +494,7 @@
 
 <!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
 
+<!-- MODIFICATION 1 : vest-acces — étape 05 avec connexion_admin.gif -->
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
@@ -513,7 +514,10 @@
           <span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.<br><span class="step-play-hint">Voir le log</span></span>
         </div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/connexion_admin.gif','&#x1F6E1;&#xFE0F; POV Admin',500)">
+          <span class="step-num">05</span>
+          <span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -542,6 +546,7 @@
   </div>
 </div>
 
+<!-- MODIFICATIONS 2 & 3 : vest-galerie — étape 02 avec galerie_etape2.gif + suppression étape 04 -->
 <div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
@@ -549,14 +554,14 @@
       <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
         <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La visionneuse plein ecran supporte le <strong>zoom et le pinch</strong> (InteractiveViewer), l'interface se masque au tap pour profiter de l'image sans distraction.</span></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MODIFICATIONS 4 & 5 : vest-categories — étapes 02 et 03 avec démos -->
 <div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
@@ -567,8 +572,14 @@
           <span class="step-num">01</span>
           <span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span>
         </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Les administrateurs voient un bouton <strong>···</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/category_accueil.gif','&#x1F4CB; Categories')">
+          <span class="step-num">02</span>
+          <span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_cate_accueil.gif','&#x1F6E1;&#xFE0F; POV Admin')">
+          <span class="step-num">03</span>
+          <span class="step-text">Les administrateurs voient un bouton <strong>&#xB7;&#xB7;&#xB7;</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
       </div>
     </div>
   </div>
