@@ -551,7 +551,7 @@
     <div class="submodal-body">
       <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designee comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.<br><span class="step-play-hint">Voir la demo</span></span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
       </div>
@@ -605,6 +605,7 @@
   </div>
 </div>
 
+<!-- ═══ SOUS-MODAL PANEL ADMIN — AVEC MONTAGE COMMANDES ═══ -->
 <div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
@@ -619,9 +620,10 @@
           <span class="step-num">02</span>
           <span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Suivi des commandes')">
+        <!-- ✅ ÉTAPE 03 — Montage gestion des commandes -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/montage_commandes.png','&#x1F4CB; Gestion des commandes — tous les statuts',1400)">
           <span class="step-num">03</span>
-          <span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.<br><span class="step-play-hint">Voir le screen</span></span>
+          <span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut (en attente, confirmee, preparation, expediee, livree, annulee). Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.<br><span class="step-play-hint">Voir le montage</span></span>
         </div>
         <div class="submodal-step">
           <span class="step-num">04</span>
@@ -640,11 +642,17 @@
   </div>
 </div>
 
+<!-- ═══ SOUS-MODAL NUMERO DE COLIS — AVEC MONTAGE COMMANDES ═══ -->
 <div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
+      <!-- ✅ IMAGE MONTAGE intégrée en haut du sous-modal -->
+      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/montage_commandes.png','&#x1F4E6; Gestion des commandes — statut expedition',1400)">
+        <img src="images/montage_commandes.png" alt="Montage gestion des commandes Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
+      </div>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie de numero de colis apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression se remplit caractere par caractere et devient <strong>verte</strong> a la validation complete.</span></div>
@@ -753,9 +761,7 @@
   </div>
 </div>
 
-<!-- ═══ SOUS-MODALS GSB CONGES — AVEC SCREENS ═══ -->
-
-<!-- gsb-connexion : étape 01 = schema.PNG -->
+<!-- SOUS-MODALS GSB -->
 <div class="submodal-overlay" id="gsb-connexion" onclick="closeSubModal(event,'gsb-connexion')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div>
@@ -773,38 +779,28 @@
   </div>
 </div>
 
-<!-- gsb-demande : étape 01 = demandecongés.PNG, étape 02 = notifconnexion2.PNG, étape 03 = attente.PNG, étape 04 = notifconnexion.PNG -->
 <div class="submodal-overlay" id="gsb-demande" onclick="closeSubModal(event,'gsb-demande')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">Le praticien peut soumettre une demande de conges en selectionnant ses dates. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
       <div class="submodal-steps">
-
-        <!-- Étape 01 — formulaire demande de congés -->
         <div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien — Formulaire de demande')">
           <span class="step-num">01</span>
           <span class="step-text">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong> de conge. L'historique de ses demandes est visible directement sous le formulaire.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-
-        <!-- Étape 02 — notif solde restant -->
         <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges restants')">
           <span class="step-num">02</span>
           <span class="step-text">En cliquant sur <strong>"Voir mes jours restants"</strong>, une notification affiche le <strong>nombre de jours de conges disponibles</strong> dans son solde.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-
-        <!-- Étape 03 — demande envoyée / en attente -->
         <div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande envoyee — En attente de validation')">
           <span class="step-num">03</span>
           <span class="step-text">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base. Un popup confirme l'envoi avec le nombre de jours concernes et le solde restant si elle est acceptee.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-
-        <!-- Étape 04 — notif refus -->
         <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')">
           <span class="step-num">04</span>
           <span class="step-text">Si la demande est <strong>refusee par le RH</strong>, une notification s'affiche a la prochaine connexion du praticien pour l'informer du refus.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-
       </div>
     </div>
   </div>
