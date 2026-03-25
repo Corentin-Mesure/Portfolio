@@ -494,7 +494,6 @@
 
 <!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
 
-<!-- MODIFICATION 1 : vest-acces — étape 05 avec connexion_admin.gif -->
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
@@ -546,7 +545,6 @@
   </div>
 </div>
 
-<!-- MODIFICATIONS 2 & 3 : vest-galerie — étape 02 avec galerie_etape2.gif + suppression étape 04 -->
 <div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
@@ -561,7 +559,6 @@
   </div>
 </div>
 
-<!-- MODIFICATIONS 4 & 5 : vest-categories — étapes 02 et 03 avec démos -->
 <div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
@@ -608,21 +605,48 @@
   </div>
 </div>
 
+<!-- ═══ SOUS-MODAL VEST-ADMIN — MODIFIÉ ═══ -->
 <div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
       <div class="submodal-steps">
+
         <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/7_-_Panel_Admin.gif','&#x1F6E1;&#xFE0F; Panel Admin')">
           <span class="step-num">01</span>
           <span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir la demo</span></span>
         </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.</span></div>
+
+        <!-- ✅ MODIF ÉTAPE 02 — image formulaire nouveau produit -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_produit_form.jpg','&#x1F4E6; Gestion du catalogue')">
+          <span class="step-num">02</span>
+          <span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.<br><span class="step-play-hint">Voir le screen</span></span>
+        </div>
+
+        <!-- ✅ MODIF ÉTAPE 03 — image commandes + fiche client -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Suivi des commandes')">
+          <span class="step-num">03</span>
+          <span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.<br><span class="step-play-hint">Voir le screen</span></span>
+        </div>
+
+        <div class="submodal-step">
+          <span class="step-num">04</span>
+          <span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span>
+        </div>
+
+        <!-- ✅ MODIF ÉTAPE 05 — image liste admins + bottom sheet -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')">
+          <span class="step-num">05</span>
+          <span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.<br><span class="step-play-hint">Voir le screen</span></span>
+        </div>
+
+        <!-- ✅ MODIF ÉTAPE 06 — image formulaire création compte admin -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')">
+          <span class="step-num">06</span>
+          <span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.<br><span class="step-play-hint">Voir le screen</span></span>
+        </div>
+
       </div>
     </div>
   </div>
