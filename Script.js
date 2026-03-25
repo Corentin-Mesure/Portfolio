@@ -437,6 +437,11 @@ function openImageModal(srcs, pov, size) {
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,.static-screen-img').forEach(function (el) { el.remove(); });
 
+  /* ── Masquer les boutons natifs du modal (croix du HTML statique) ── */
+  overlay.querySelectorAll('button').forEach(function (b) {
+    if (b.id !== '_imgModalClose') { b.dataset.hiddenByImg = '1'; b.style.display = 'none'; }
+  });
+
   /* ── Barre de zoom ── */
   if (bar) {
     bar.innerHTML = '';
@@ -856,6 +861,7 @@ function closeVideoModal() {
   var badge = document.getElementById('videoModalPov');     if (badge) { badge.style.cssText = ''; badge.innerHTML = ''; }
   var bar   = document.querySelector('.video-modal-bar');   if (bar)   { bar.innerHTML = ''; bar.style.visibility = ''; bar.style.pointerEvents = ''; }
   var ic = document.getElementById('_imgModalClose');       if (ic) ic.remove();
+  document.querySelectorAll('[data-hidden-by-img]').forEach(function (b) { b.style.display = ''; delete b.dataset.hiddenByImg; });
   document.getElementById('videoModal').classList.remove('open');
 }
 function closeVideoModalOverlay(e) {
