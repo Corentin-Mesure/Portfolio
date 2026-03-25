@@ -296,7 +296,6 @@ function _zoomAttach(wrap, img) {
 
   /* ── Drag souris — uniquement sur l'image, jamais sur un bouton/input ── */
   wrap.addEventListener('mousedown', function (e) {
-    /* FIX : ignorer tout clic sur un élément interactif pour ne pas bloquer les contrôles */
     if (e.button !== 0) return;
     var tag = (e.target.tagName || '').toUpperCase();
     if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || tag === 'A') return;
@@ -360,13 +359,10 @@ function _zoomAttach(wrap, img) {
 function _buildZoomBar(bar) {
   _injectZoomCSS();
 
-  /* FIX PRINCIPAL : forcer pointer-events:auto sur la barre et ses enfants
-     (le conteneur parent peut avoir pointer-events:none)              */
   bar.style.pointerEvents = 'auto';
   bar.style.position      = 'relative';
   bar.style.zIndex        = '10';
 
-  /* Empêcher les clics sur la barre de fermer la modal */
   bar.addEventListener('click',     function (e) { e.stopPropagation(); });
   bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
 
@@ -411,7 +407,6 @@ function _injectZoomCSS() {
   var s = document.createElement('style');
   s.id = '_zCSS';
   s.textContent =
-    /* FIX : pointer-events:auto garanti sur le panneau et tous ses enfants */
     '#_zPanel{display:flex;align-items:center;gap:8px;padding:10px 14px;' +
     'background:rgba(0,0,0,0.62);backdrop-filter:blur(12px);border-radius:15px;' +
     'border:1px solid rgba(200,160,60,0.28);width:100%;box-sizing:border-box;' +
@@ -445,7 +440,6 @@ function openImageModal(srcs, pov, size) {
   /* ── Barre de zoom ── */
   if (bar) {
     bar.innerHTML = '';
-    /* FIX : s'assurer que la barre est cliquable même si le wrap parent a pointer-events:none */
     bar.style.pointerEvents = 'auto';
     bar.style.position      = 'relative';
     bar.style.zIndex        = '10';
@@ -462,7 +456,6 @@ function openImageModal(srcs, pov, size) {
     wrap.style.cssText =
       'background:transparent;box-shadow:none;border:none;padding:0;' +
       'max-width:' + maxW + ';width:' + maxW + ';pointer-events:none;';
-    /* FIX : re-autoriser les événements sur la barre qui est enfant du wrap */
     if (bar) {
       bar.style.pointerEvents = 'auto';
       bar.style.position      = 'relative';
@@ -516,6 +509,31 @@ function openImageModal(srcs, pov, size) {
     inner.appendChild(wrapper);
   });
 
+  /* ── Bouton fermeture flottant (hors zone zoom, toujours cliquable) ── */
+  var existingClose = document.getElementById('_imgModalClose');
+  if (existingClose) existingClose.remove();
+  var closeBtn = document.createElement('button');
+  closeBtn.id = '_imgModalClose';
+  closeBtn.innerHTML = '&#x2715;';
+  closeBtn.style.cssText =
+    'position:fixed;top:18px;right:22px;z-index:10001;' +
+    'width:42px;height:42px;background:rgba(0,0,0,0.65);' +
+    'border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
+    'font-size:18px;border-radius:8px;cursor:pointer;' +
+    'display:flex;align-items:center;justify-content:center;' +
+    'backdrop-filter:blur(8px);transition:background .15s,transform .1s;' +
+    'pointer-events:auto;';
+  closeBtn.onmouseenter = function () {
+    closeBtn.style.background = 'rgba(200,160,60,0.25)';
+    closeBtn.style.transform  = 'scale(1.1)';
+  };
+  closeBtn.onmouseleave = function () {
+    closeBtn.style.background = 'rgba(0,0,0,0.65)';
+    closeBtn.style.transform  = 'scale(1)';
+  };
+  closeBtn.onclick = function (e) { e.stopPropagation(); closeVideoModal(); };
+  overlay.appendChild(closeBtn);
+
   overlay.classList.add('open');
 }
 
@@ -567,12 +585,10 @@ function _buildPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
   if (!bar) return;
 
-  /* FIX : forcer pointer-events:auto sur la barre de vitesse GIF aussi */
   bar.style.pointerEvents = 'auto';
   bar.style.position      = 'relative';
   bar.style.zIndex        = '10';
 
-  /* Empêcher les clics sur la barre de fermer la modal */
   bar.addEventListener('click',     function (e) { e.stopPropagation(); });
   bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
 
@@ -688,7 +704,6 @@ function _injectGifCSS() {
   var s = document.createElement('style');
   s.id = 'gifSpeedCSS';
   s.textContent =
-    /* FIX : pointer-events:auto sur le panneau et tous ses enfants */
     '#gifSpeedPanel{display:flex;flex-direction:column;align-items:center;gap:9px;padding:11px 14px 10px;' +
     'background:rgba(0,0,0,0.62);backdrop-filter:blur(12px);border-radius:15px;' +
     'border:1px solid rgba(200,160,60,0.28);width:100%;box-sizing:border-box;' +
@@ -747,7 +762,6 @@ function openVideoModal(src, pov, size) {
   if (bar)  {
     bar.innerHTML = '';
     bar.style.visibility = 'hidden';
-    /* FIX : même pour la modal vidéo, s'assurer que la barre est cliquable */
     bar.style.pointerEvents = 'auto';
   }
   badge.innerHTML = pov;
@@ -841,6 +855,7 @@ function closeVideoModal() {
   var wrap  = document.querySelector('.video-modal-wrap');  if (wrap)  wrap.style.cssText  = '';
   var badge = document.getElementById('videoModalPov');     if (badge) { badge.style.cssText = ''; badge.innerHTML = ''; }
   var bar   = document.querySelector('.video-modal-bar');   if (bar)   { bar.innerHTML = ''; bar.style.visibility = ''; bar.style.pointerEvents = ''; }
+  var ic = document.getElementById('_imgModalClose');       if (ic) ic.remove();
   document.getElementById('videoModal').classList.remove('open');
 }
 function closeVideoModalOverlay(e) {
