@@ -437,9 +437,11 @@ function openImageModal(srcs, pov, size) {
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,.static-screen-img').forEach(function (el) { el.remove(); });
 
-  /* ── Masquer les boutons natifs du modal (croix du HTML statique) ── */
+  /* ── Masquer TOUS les boutons natifs de l'overlay sauf _imgModalClose ── */
   overlay.querySelectorAll('button').forEach(function (b) {
-    if (b.id !== '_imgModalClose') { b.dataset.hiddenByImg = '1'; b.style.display = 'none'; }
+    if (b.id === '_imgModalClose') return;
+    b.dataset.hiddenByImg = '1';
+    b.style.display = 'none';
   });
 
   /* ── Barre de zoom ── */
@@ -514,9 +516,11 @@ function openImageModal(srcs, pov, size) {
     inner.appendChild(wrapper);
   });
 
-  /* ── Bouton fermeture flottant (hors zone zoom, toujours cliquable) ── */
+  /* ── Supprimer l'ancien bouton flottant s'il existe ── */
   var existingClose = document.getElementById('_imgModalClose');
   if (existingClose) existingClose.remove();
+
+  /* ── Bouton fermeture flottant unique (position:fixed, toujours au-dessus) ── */
   var closeBtn = document.createElement('button');
   closeBtn.id = '_imgModalClose';
   closeBtn.innerHTML = '&#x2715;';
@@ -537,7 +541,9 @@ function openImageModal(srcs, pov, size) {
     closeBtn.style.transform  = 'scale(1)';
   };
   closeBtn.onclick = function (e) { e.stopPropagation(); closeVideoModal(); };
-  overlay.appendChild(closeBtn);
+
+  /* ── Ajout directement au body pour éviter tout conflit de z-index ── */
+  document.body.appendChild(closeBtn);
 
   overlay.classList.add('open');
 }
@@ -860,7 +866,9 @@ function closeVideoModal() {
   var wrap  = document.querySelector('.video-modal-wrap');  if (wrap)  wrap.style.cssText  = '';
   var badge = document.getElementById('videoModalPov');     if (badge) { badge.style.cssText = ''; badge.innerHTML = ''; }
   var bar   = document.querySelector('.video-modal-bar');   if (bar)   { bar.innerHTML = ''; bar.style.visibility = ''; bar.style.pointerEvents = ''; }
-  var ic = document.getElementById('_imgModalClose');       if (ic) ic.remove();
+  /* ── Supprimer le bouton flottant (attaché au body) ── */
+  var ic = document.getElementById('_imgModalClose'); if (ic) ic.remove();
+  /* ── Restaurer les boutons natifs masqués ── */
   document.querySelectorAll('[data-hidden-by-img]').forEach(function (b) { b.style.display = ''; delete b.dataset.hiddenByImg; });
   document.getElementById('videoModal').classList.remove('open');
 }
