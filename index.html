@@ -321,7 +321,7 @@
         <button class="modal-feature-btn" onclick="openSubModal('feat-sondages')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Sondages</span><span class="feat-preview">Creation de sondages dans les salons, resultats mis a jour en temps reel.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title">&#x1F3A8; Personnalisation</span><span class="feat-preview">Fond d'ecran personnalisable par l'utilisateur selon ses preferences.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview">Gestion complete des comptes : roles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Backend &amp; Base de donnees</span><span class="feat-preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Socket.io</span>
@@ -444,14 +444,13 @@
 
 <div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'ensemble des donnees est stocke dans une base PostgreSQL hebergee sur un serveur OVH, deploye via Termius SSH.</p>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Firebase</strong> est utilise uniquement pour les <strong>notifications push via FCM</strong>. Toute la couche temps reel est geree par <strong>Socket.io</strong>.</span></div>
       </div>
     </div>
   </div>
@@ -481,7 +480,7 @@
         <button class="modal-feature-btn" onclick="openSubModal('vest-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications push</span><span class="feat-preview">L'admin est alerte en temps reel des qu'une nouvelle commande est passee.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Backend &amp; Base de donnees</span><span class="feat-preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span>
@@ -605,53 +604,55 @@
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL PANEL ADMIN — AVEC MONTAGE COMMANDES ═══ -->
+<!-- ═══ SOUS-MODAL PANEL ADMIN ANIMAL'VEST ═══ -->
 <div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/7_-_Panel_Admin.gif','&#x1F6E1;&#xFE0F; Panel Admin')">
+
+        <!-- ÉTAPE 01 — image panelrh ajoutée -->
+        <div class="submodal-step has-video" onclick="openImageModal('images/panelrh.PNG','&#x1F6E1;&#xFE0F; Panel Admin — Liste des praticiens (RH)')">
           <span class="step-num">01</span>
-          <span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir la demo</span></span>
+          <span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_produit_form.jpg','&#x1F4E6; Gestion du catalogue')">
-          <span class="step-num">02</span>
-          <span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-        <!-- ✅ ÉTAPE 03 — Montage gestion des commandes -->
+
+        <!-- ÉTAPE 02 supprimée — ancienne étape 03 devient 02 -->
         <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Gestion des commandes — tous les statuts',1400)">
-          <span class="step-num">03</span>
+          <span class="step-num">02</span>
           <span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut (en attente, confirmee, preparation, expediee, livree, annulee). Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
 
-
-         <div class="submodal-step has-video" onclick="openImageModal('images/montage_commandes.png','&#x1F6E1;&#xFE0F; Gestion des admins')">
-          <span class="step-num">04</span>
-          <span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> <br><span class="step-play-hint">Voir le montage</span></span>
+        <!-- Ancienne étape 04 devient 03 — démo retirée -->
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong>.</span>
         </div>
 
+        <!-- Ancienne étape 05 devient 04 -->
         <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')">
-          <span class="step-num">05</span>
+          <span class="step-num">04</span>
           <span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
+
+        <!-- Ancienne étape 06 devient 05 -->
         <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')">
-          <span class="step-num">06</span>
+          <span class="step-num">05</span>
           <span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.<br><span class="step-play-hint">Voir le screen</span></span>
         </div>
+
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL NUMERO DE COLIS — AVEC MONTAGE COMMANDES ═══ -->
+<!-- ═══ SOUS-MODAL NUMERO DE COLIS ═══ -->
 <div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
-      <!-- ✅ IMAGE MONTAGE intégrée en haut du sous-modal -->
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/montage_commandes.png','&#x1F4E6; Gestion des commandes — statut expedition',1400)">
         <img src="images/montage_commandes.png" alt="Montage gestion des commandes Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
@@ -718,7 +719,7 @@
 
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p>
       <div class="submodal-steps">
@@ -753,7 +754,7 @@
         <button class="modal-feature-btn" onclick="openSubModal('gsb-demande')"><div style="flex:1"><span class="feat-title">&#x1F4C5; Demande de conges</span><span class="feat-preview">Formulaire de saisie avec selection des dates et verification automatique du solde.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('gsb-rh')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel RH</span><span class="feat-preview">Liste des demandes en attente, consultation et decision d'acceptation ou de refus.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('gsb-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications a la connexion</span><span class="feat-preview">Le praticien est notifie de l'etat de ses demandes des la connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Backend &amp; Base de donnees</span><span class="feat-preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">C#</span><span class="modal-tag">Windows Forms</span>
@@ -823,29 +824,33 @@
   </div>
 </div>
 
+<!-- ═══ SOUS-MODAL NOTIFICATIONS A LA CONNEXION — notifconnexion.png ajoutée étape 01 ═══ -->
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_notif.gif','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/notifconnexion.png','&#x1F514; Notification a la connexion')">
+          <span class="step-num">01</span>
+          <span class="step-text">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir le screen</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ═══ SOUS-MODAL BASE DE DONNEES GSB (anciennement "Backend & Base de donnees") ═══ -->
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'architecture respecte la separation des couches : l'interface graphique ne manipule que des <strong>objets C#</strong>, jamais directement la base.</span></div>
       </div>
     </div>
   </div>
