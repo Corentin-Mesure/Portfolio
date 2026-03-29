@@ -1443,3 +1443,380 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   40%  { transform: translateY(-8px) scale(1.04); }
   100% { transform: translateY(0px)  scale(1);    }
 }
+
+/* ════════════════════════════════════════════════════════
+   SETTINGS — BOUTON NAV
+════════════════════════════════════════════════════════ */
+
+.settings-btn {
+  background: none;
+  border: 1px solid rgba(200,160,60,0.35);
+  color: rgba(200,160,60,0.7);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.4s;
+  flex-shrink: 0;
+  margin-left: 8px;
+  line-height: 1;
+}
+
+.settings-btn:hover {
+  background: rgba(200,160,60,0.12);
+  color: var(--gold);
+  border-color: rgba(200,160,60,0.7);
+  transform: rotate(60deg);
+}
+
+/* ════════════════════════════════════════════════════════
+   SETTINGS — OVERLAY
+════════════════════════════════════════════════════════ */
+
+#settingsOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 4000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#settingsOverlay.sp-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ════════════════════════════════════════════════════════
+   SETTINGS — PANNEAU LATÉRAL
+════════════════════════════════════════════════════════ */
+
+#settingsPanel {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 390px;
+  max-width: 95vw;
+  height: 100vh;
+  background: linear-gradient(160deg, #0d0b18, #110e22, #0e0b1a);
+  border-left: 1px solid rgba(200,160,60,0.22);
+  z-index: 4001;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.38s cubic-bezier(0.16,1,0.3,1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200,160,60,0.3) transparent;
+}
+
+#settingsPanel::-webkit-scrollbar { width: 3px; }
+#settingsPanel::-webkit-scrollbar-thumb { background: rgba(200,160,60,0.3); border-radius: 3px; }
+
+#settingsPanel.sp-open {
+  right: 0;
+}
+
+/* ── En-tête ── */
+.sp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid rgba(200,160,60,0.12);
+  position: sticky;
+  top: 0;
+  background: linear-gradient(160deg, #0d0b18, #110e22);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.sp-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--gold, #c8a03c);
+  text-transform: uppercase;
+}
+
+.sp-close {
+  background: none;
+  border: 1px solid rgba(200,160,60,0.3);
+  color: rgba(200,160,60,0.6);
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sp-close:hover {
+  background: rgba(200,160,60,0.15);
+  border-color: rgba(200,160,60,0.6);
+  color: var(--gold);
+}
+
+/* ── Sections ── */
+.sp-section {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-shrink: 0;
+}
+
+.sp-section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: rgba(200,160,60,0.45);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ── Lignes ── */
+.sp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.035);
+}
+
+.sp-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sp-row:first-of-type {
+  padding-top: 0;
+}
+
+.sp-row-info span {
+  display: block;
+  font-size: 13px;
+  color: rgba(255,255,255,0.82);
+  margin-bottom: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.sp-row-info small {
+  display: block;
+  font-size: 11px;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.35;
+}
+
+/* ── Toggle switch ── */
+.sp-toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.sp-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.sp-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.1);
+  border-radius: 22px;
+  cursor: pointer;
+  transition: background 0.25s;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.sp-toggle-track::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.25s;
+}
+
+.sp-toggle input:checked + .sp-toggle-track {
+  background: rgba(200,160,60,0.85);
+  border-color: rgba(200,160,60,0.5);
+}
+
+.sp-toggle input:checked + .sp-toggle-track::before {
+  transform: translateX(18px);
+  background: #fff;
+}
+
+/* ── Select ── */
+.sp-select {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(200,160,60,0.28);
+  color: rgba(255,255,255,0.85);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 110px;
+  transition: border-color 0.2s;
+}
+
+.sp-select:hover {
+  border-color: rgba(200,160,60,0.55);
+}
+
+.sp-select option {
+  background: #110e22;
+  color: #fff;
+}
+
+/* ── Boutons danger ── */
+.sp-btn-danger {
+  background: none;
+  border: 1px solid rgba(220,50,50,0.28);
+  color: rgba(220,50,50,0.65);
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.sp-btn-danger:hover {
+  background: rgba(220,50,50,0.1);
+  border-color: rgba(220,50,50,0.55);
+  color: #f87171;
+}
+
+/* ── Toast de confirmation ── */
+#spToast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: rgba(14,11,30,0.97);
+  border: 1px solid rgba(200,160,60,0.45);
+  color: var(--gold, #c8a03c);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  padding: 10px 28px;
+  border-radius: 24px;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.22s, transform 0.22s;
+  white-space: nowrap;
+}
+
+#spToast.sp-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Pied de page panneau ── */
+.sp-footer {
+  margin-top: auto;
+  padding: 16px 24px 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.12);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════════════════
+   SETTINGS — CLASSES ÉTAT APPLIQUÉES AU BODY
+════════════════════════════════════════════════════════ */
+
+/* Désactiver toutes les animations */
+body.sp-no-anim *,
+body.sp-no-anim *::before,
+body.sp-no-anim *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Désactiver les effets visuels lourds */
+body.sp-no-fx .about-glow { display: none !important; }
+body.sp-no-fx .hero-grid { opacity: 0.02 !important; }
+body.sp-no-fx .project-visual img { animation: none !important; filter: none !important; }
+body.sp-no-fx .skill-card:hover { transform: none !important; }
+body.sp-no-fx .project-card:hover { transform: none !important; box-shadow: none !important; }
+body.sp-no-fx .hero-cta::before { display: none !important; }
+body.sp-no-fx .project-btn::before { display: none !important; }
+body.sp-no-fx .contact-link::before { display: none !important; }
+body.sp-no-fx .skill-card::before { display: none !important; }
+
+/* Masquer la hero grid */
+body.sp-no-grid .hero-grid { display: none !important; }
+
+/* Masquer la barre de progression */
+body.sp-no-prog #scrollProgress { display: none !important; }
+
+/* Mode compact */
+body.sp-compact section,
+body.sp-compact #about,
+body.sp-compact #timeline,
+body.sp-compact #contact-section {
+  padding-top: 50px !important;
+  padding-bottom: 50px !important;
+}
+
+body.sp-compact .arcane-divider {
+  padding: 8px 0 !important;
+}
+
+body.sp-compact .section-header {
+  margin-bottom: 40px !important;
+}
+
+body.sp-compact .projects-grid {
+  gap: 18px !important;
+}
+
+body.sp-compact .skills-grid {
+  gap: 1px !important;
+}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE MOBILE — panneau settings
+════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  #settingsPanel {
+    width: 100vw;
+    max-width: 100vw;
+    right: -100vw;
+  }
+  #settingsPanel.sp-open {
+    right: 0;
+  }
+  .sp-row-info span { font-size: 10px; }
+  .sp-row-info small { font-size: 10px; }
+}
