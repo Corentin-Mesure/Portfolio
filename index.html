@@ -624,21 +624,51 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-<!-- SOUS-MODAL MCD ANIMAL'VEST -->
+<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — NOUVEAU (vanilla JS, sans Mermaid) ══ -->
 <div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
-  <div class="submodal" style="max-width:900px;width:95vw;">
+  <div class="submodal" style="max-width:920px;width:95vw;">
     <div class="submodal-header">
       <span class="submodal-icon">&#x1F5C2;&#xFE0F;</span>
       <div class="submodal-type">Fonctionnalite</div>
       <div class="submodal-title">MCD du projet</div>
       <button class="submodal-close" onclick="closeSubModalBtn('vest-mcd')">&#x2715;</button>
     </div>
-    <div class="submodal-body">
-      <p class="submodal-desc">Modele Conceptuel de Donnees de la base PostgreSQL d'Animal'vest — 7 tables, relations et cles etrangeres.</p>
-      <div id="vest-mcd-erd" style="overflow-x:auto;padding:8px 0;min-height:300px;"></div>
-      <p class="submodal-desc" style="margin-top:16px;font-size:12px;opacity:0.7;">
-        &#x26A0; <strong>Note :</strong> <code>products.category</code> est une varchar libre — la table <code>categories</code> existe en parallele sans cle etrangere directe.
-      </p>
+    <div class="submodal-body" style="padding:0;">
+
+      <!-- MCD Container -->
+      <div id="mcd-root" style="padding:12px 16px 20px;font-family:var(--font-mono,monospace);">
+        <div id="mcd-stage" style="width:100%;overflow-x:auto;">
+          <div id="mcd-cvs" style="position:relative;margin:0 auto;"></div>
+        </div>
+        <div id="mcd-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0 4px;font-size:11px;color:var(--color-text-secondary,#888);align-items:center;"></div>
+      </div>
+
+      <style>
+        #mcd-cvs svg { position:absolute;top:0;left:0;pointer-events:none;z-index:0;overflow:visible; }
+        .mcd-tbl { position:absolute;border-radius:9px;overflow:hidden;border:1.5px solid transparent;z-index:2;transition:box-shadow .18s,opacity .18s;cursor:default;background:var(--color-background-primary,#fff); }
+        .mcd-tbl.mcd-hi { box-shadow:0 4px 22px rgba(0,0,0,0.18);z-index:10; }
+        .mcd-tbl.mcd-dim { opacity:0.1; }
+        .mcd-head { padding:7px 12px;font-size:12px;font-weight:500;color:#fff;display:flex;align-items:center;gap:5px; }
+        .mcd-row { display:flex;align-items:center;gap:5px;padding:4px 10px;font-size:11px;border-bottom:.5px solid var(--color-border-tertiary,#e5e5e5);color:var(--color-text-primary,#111); }
+        .mcd-row:last-child { border-bottom:none; }
+        .mcd-row.mcd-pk { color:var(--color-text-warning,#b97b00);font-weight:500; }
+        .mcd-row.mcd-fk { color:var(--color-text-info,#185FA5); }
+        .mcd-cn { flex:1; }
+        .mcd-ct { color:var(--color-text-secondary,#888);font-size:9.5px; }
+        .mcd-bdg { font-size:8.5px;padding:1px 4px;border-radius:3px;font-weight:600;margin-right:2px; }
+        .mcd-bpk { background:rgba(186,117,23,.2);color:var(--color-text-warning,#b97b00); }
+        .mcd-bfk { background:rgba(24,95,165,.16);color:var(--color-text-info,#185FA5); }
+        .mcd-conn { fill:none;stroke-width:1.8;transition:stroke-opacity .15s,stroke-width .15s; }
+        .mcd-conn.mcd-hi { stroke-width:2.8;stroke-opacity:1!important; }
+        .mcd-conn.mcd-dim { stroke-opacity:.04!important; }
+        .mcd-fd { transition:opacity .15s; }
+        .mcd-fd.mcd-dim { opacity:.04!important; }
+        .mcd-litem { display:flex;align-items:center;gap:4px; }
+        .mcd-lsq { width:10px;height:10px;border-radius:2px; }
+        @keyframes mcd-flow { to { stroke-dashoffset:-18; } }
+        .mcd-fl { stroke-dasharray:6 4;animation:mcd-flow 1.2s linear infinite; }
+      </style>
+
     </div>
   </div>
 </div>
@@ -748,7 +778,7 @@
 <div class="arcane-divider"><div class="divider-gem"></div></div>
 
 <!-- ═══════════════════════════════════════
-     PROJET AP — GSB Notes Praticiens : 2 cards côte à côte, texte en dessous
+     PROJET AP — GSB Notes Praticiens
      ═══════════════════════════════════════ -->
 <section id="projet-ap">
   <div class="section-header reveal">
@@ -861,12 +891,9 @@
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════
-         CARD 3 : GSB NOTES — pleine largeur, 2 animations côte à côte EN HAUT, texte EN BAS
-         ═══════════════════════════════════════ -->
+    <!-- CARD 3 : GSB NOTES — pleine largeur -->
     <div class="project-card ap-full reveal">
 
-      <!-- Rangée des 2 visuals animés côte à côte -->
       <div class="ap-visuals-row">
 
         <!-- Visual gauche : POV Praticien -->
@@ -882,17 +909,14 @@
           <div class="ap-particle" style="width:2px;height:2px;background:#c8a96e;bottom:60px;right:76px;animation:apP4 4.5s ease-in-out infinite .3s;"></div>
           <div class="ap-particle" style="background:#b090ff;bottom:76px;left:56px;animation:apP5 3.2s ease-in-out infinite 2.1s;"></div>
           <div class="ap-particle" style="width:2px;height:2px;background:#ffd966;bottom:66px;right:56px;animation:apP6 4.8s ease-in-out infinite 1.0s;"></div>
-          <!-- Icône praticien / étoiles -->
           <svg class="ap-icon-svg" width="80" height="80" viewBox="0 0 72 72" style="animation-delay:1s;filter:drop-shadow(0 0 14px rgba(150,90,255,0.5));" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="apPg1a" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8d0ff"/><stop offset="50%" stop-color="#b090ff"/><stop offset="100%" stop-color="#6040b0"/></linearGradient>
               <linearGradient id="apStarGolda" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffeaa0"/><stop offset="50%" stop-color="#e8c97e"/><stop offset="100%" stop-color="#8a6a3a"/></linearGradient>
               <radialGradient id="apStarGlowa" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd966" stop-opacity="0.65"/><stop offset="100%" stop-color="#ffd966" stop-opacity="0"/></radialGradient>
             </defs>
-            <!-- Silhouette praticien -->
             <circle cx="36" cy="20" r="10" fill="url(#apPg1a)" opacity="0.9"/>
             <path d="M18 52 Q18 36 36 36 Q54 36 54 52" fill="url(#apPg1a)" opacity="0.7"/>
-            <!-- Badge étoile sur l'épaule -->
             <polygon points="54,30 56.2,36.7 63.4,36.7 57.6,40.8 59.8,47.5 54,43.4 48.2,47.5 50.4,40.8 44.6,36.7 51.8,36.7" fill="url(#apStarGolda)" stroke="#c8a96e" stroke-width="0.6"/>
             <polygon points="36,60 40.5,66.5 36,73 31.5,66.5" fill="url(#apPg1a)" opacity="0.92"/>
             <line x1="36" y1="60" x2="36" y2="62.5" stroke="#e8d0ff" stroke-width="0.9" opacity="0.65"/>
@@ -901,7 +925,7 @@
           <div class="project-overlay"></div>
         </div>
 
-        <!-- Visual droit : POV Admin / étoiles de notation -->
+        <!-- Visual droit : Notes & Evaluations -->
         <div class="ap-project-visual" style="background:linear-gradient(135deg,#1a0d20 0%,#2d1540 55%,#1a0d20 100%);">
           <div class="ap-dots" style="--ap-dot-color:rgba(255,180,80,0.15);"></div>
           <div class="ap-fc tl" style="--ap-fc-color:#ffd080;"></div><div class="ap-fc tr" style="--ap-fc-color:#ffd080;"></div>
@@ -914,7 +938,6 @@
           <div class="ap-particle" style="width:2px;height:2px;background:#ffd080;bottom:60px;right:76px;animation:apP4 4.5s ease-in-out infinite 0.7s;"></div>
           <div class="ap-particle" style="background:#c8a96e;bottom:76px;left:56px;animation:apP5 3.2s ease-in-out infinite 2.5s;"></div>
           <div class="ap-particle" style="width:2px;height:2px;background:#ffd966;bottom:66px;right:56px;animation:apP6 4.8s ease-in-out infinite 1.4s;"></div>
-          <!-- Icône étoiles de notation (grande étoile centrale + rangée) -->
           <svg class="ap-icon-svg" width="80" height="80" viewBox="0 0 72 72" style="animation-delay:1.6s;filter:drop-shadow(0 0 14px rgba(200,140,30,0.55));" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="apPg1b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8d0ff"/><stop offset="50%" stop-color="#b090ff"/><stop offset="100%" stop-color="#6040b0"/></linearGradient>
@@ -924,7 +947,6 @@
             <circle cx="36" cy="27" r="22" fill="url(#apStarGlowb)"/>
             <polygon points="36,6 41,21.6 57.4,21.6 44.2,31.4 49.2,47 36,37.4 22.8,47 27.8,31.4 14.6,21.6 31,21.6" fill="url(#apStarGoldb)" stroke="#c8a96e" stroke-width="0.8" stroke-linejoin="round"/>
             <polygon points="36,12 39.6,22.8 51.4,22.8 42.2,29.6 45.8,40.4 36,33.6 26.2,40.4 29.8,29.6 20.6,22.8 32.4,22.8" fill="#ffeaa0" opacity="0.28"/>
-            <!-- Rangée 5 étoiles en bas -->
             <polygon points="12,52 13.5,56.6 18.4,56.6 14.4,59.4 15.9,64 12,61.2 8.1,64 9.6,59.4 5.6,56.6 10.5,56.6" fill="url(#apStarGoldb)" opacity="0.9"/>
             <polygon points="23,52 24.5,56.6 29.4,56.6 25.4,59.4 26.9,64 23,61.2 19.1,64 20.6,59.4 16.6,56.6 21.5,56.6" fill="url(#apStarGoldb)" opacity="0.9"/>
             <polygon points="34,52 35.5,56.6 40.4,56.6 36.4,59.4 37.9,64 34,61.2 30.1,64 31.6,59.4 27.6,56.6 32.5,56.6" fill="url(#apStarGoldb)" opacity="0.9"/>
@@ -940,7 +962,6 @@
 
       </div><!-- /ap-visuals-row -->
 
-      <!-- Texte en dessous sur toute la largeur -->
       <div class="project-body">
         <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 3</div>
         <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
@@ -993,160 +1014,276 @@
 
 <script src="Script.js"></script>
 
-<!-- MERMAID — MCD Animal'vest -->
-<script type="module">
-import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+<!-- ══ SCRIPT MCD Animal'vest — vanilla JS, sans dépendance externe ══ -->
+<script>
+(function(){
 
-const DIAGRAM = `erDiagram
-  users {
-    int id PK
-    varchar username
-    varchar email
-    varchar password_hash
-    varchar display_name
-    varchar role
-    text avatar_url
-    boolean is_guest
-    timestamp created_at
-    timestamp last_seen
-    varchar fcm_token
-  }
-  categories {
-    int id PK
-    varchar name
-    varchar icon
-    int position
-    timestamptz created_at
-  }
-  units {
-    int id PK
-    varchar name
-    varchar icon
-    timestamptz created_at
-  }
-  unit_categories {
-    int id PK
-    int unit_id FK
-    varchar category_name
-  }
-  products {
-    int id PK
-    varchar name
-    text description
-    numeric price
-    varchar category
-    text image_url
-    text_arr sizes
-    boolean is_active
-    int created_by FK
-    timestamp created_at
-    timestamp updated_at
-    text_arr image_urls
-  }
-  cart_items {
-    int id PK
-    int user_id FK
-    int product_id FK
-    varchar size
-    int quantity
-    timestamp created_at
-    timestamp updated_at
-  }
-  orders {
-    int id PK
-    int user_id FK
-    varchar user_email
-    varchar user_display_name
-    numeric total
-    varchar status
-    text notes
-    text admin_notes
-    varchar tracking_number
-    text shipping_address
-    timestamp created_at
-    timestamp updated_at
-  }
-  order_items {
-    int id PK
-    int order_id FK
-    int product_id FK
-    varchar product_name
-    text product_image_url
-    numeric price
-    varchar size
-    int quantity
-    numeric subtotal
-  }
+  const MCD_W=200, MCD_RH=22, MCD_HH=34;
 
-  users ||--o{ cart_items : "ajoute"
-  users ||--o{ orders : "passe"
-  users ||--o{ products : "cree"
-  products ||--o{ cart_items : "dans"
-  products ||--o{ order_items : "reference"
-  orders ||--|{ order_items : "contient"
-  units ||--|{ unit_categories : "a"
-`;
+  const MCD_GROUPS=[
+    {label:'Utilisateurs', color:'#5f4ab7'},
+    {label:'Catalogue',    color:'#0F6E56'},
+    {label:'Commandes',    color:'#993C1D'},
+    {label:'Structure',    color:'#185FA5'},
+  ];
 
-let rendered = false;
+  const MCD_TABLES=[
+    {id:'users',           g:0, x:20,  y:20,  cols:[
+      {n:'id',pk:true,t:'int'},{n:'username',t:'varchar'},{n:'email',t:'varchar'},
+      {n:'role',t:'varchar'},{n:'display_name',t:'varchar'},{n:'is_guest',t:'bool'},
+      {n:'fcm_token',t:'varchar'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'products',        g:1, x:320, y:20,  cols:[
+      {n:'id',pk:true,t:'int'},{n:'name',t:'varchar'},{n:'description',t:'text'},
+      {n:'price',t:'numeric'},{n:'category',t:'varchar'},{n:'sizes',t:'text[]'},
+      {n:'is_active',t:'bool'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'orders',          g:2, x:620, y:20,  cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},{n:'total',t:'numeric'},
+      {n:'status',t:'varchar'},{n:'notes',t:'text'},{n:'admin_notes',t:'text'},
+      {n:'tracking_number',t:'varchar'},{n:'shipping_address',t:'text'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'cart_items',      g:1, x:320, y:400, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'product_id',fk:'products',t:'int'},{n:'size',t:'varchar'},
+      {n:'quantity',t:'int'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'order_items',     g:2, x:620, y:400, cols:[
+      {n:'id',pk:true,t:'int'},{n:'order_id',fk:'orders',t:'int'},
+      {n:'product_id',fk:'products',t:'int'},{n:'product_name',t:'varchar'},
+      {n:'price',t:'numeric'},{n:'size',t:'varchar'},
+      {n:'quantity',t:'int'},{n:'subtotal',t:'numeric'}
+    ]},
+    {id:'units',           g:3, x:20,  y:680, cols:[
+      {n:'id',pk:true,t:'int'},{n:'name',t:'varchar'},{n:'icon',t:'varchar'}
+    ]},
+    {id:'unit_categories', g:3, x:320, y:680, cols:[
+      {n:'id',pk:true,t:'int'},{n:'unit_id',fk:'units',t:'int'},{n:'category_name',t:'varchar'}
+    ]},
+  ];
 
-async function renderMCD() {
-  if (rendered) return;
-  rendered = true;
-  const container = document.getElementById('vest-mcd-erd');
-  if (!container) return;
+  const MCD_RELS=[
+    {f:'orders',          t:'users',    lbl:'passée par', cf:'0,N', ct:'1,1', color:'#7a6fd0', pfSign: 1, ptSign:-1},
+    {f:'cart_items',      t:'users',    lbl:'de',         cf:'0,N', ct:'1,1', color:'#7a6fd0', pfSign:-1, ptSign: 1},
+    {f:'cart_items',      t:'products', lbl:'contient',   cf:'0,N', ct:'0,N', color:'#1D9E75', pfSign: 1, ptSign:-1},
+    {f:'order_items',     t:'orders',   lbl:'dans',       cf:'1,N', ct:'1,1', color:'#D85A30', pfSign: 1, ptSign:-1},
+    {f:'order_items',     t:'products', lbl:'référence',  cf:'0,N', ct:'1,1', color:'#1D9E75', pfSign:-1, ptSign: 1},
+    {f:'unit_categories', t:'units',    lbl:'regroupe',   cf:'1,N', ct:'1,1', color:'#378ADD', pfSign: 1, ptSign:-1},
+  ];
 
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
-  await document.fonts.ready;
+  let mcdRendered=false;
 
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'base',
-    fontFamily: 'inherit',
-    themeVariables: {
-      darkMode: dark,
-      fontSize: '13px',
-      fontFamily: 'inherit',
-      lineColor: dark ? '#9c9a92' : '#73726c',
-      textColor: dark ? '#c2c0b6' : '#3d3d3a',
-    },
-  });
+  function mcdInit(){
+    if(mcdRendered) return;
+    mcdRendered=true;
 
-  try {
-    const { svg } = await mermaid.render('vest-mcd-svg', DIAGRAM);
-    container.innerHTML = svg;
+    const tMap={};
+    MCD_TABLES.forEach(t=>tMap[t.id]=t);
 
-    document.querySelectorAll('#vest-mcd-erd svg .node').forEach(node => {
-      const firstPath = node.querySelector('path[d]');
-      if (!firstPath) return;
-      const d = firstPath.getAttribute('d');
-      const nums = d.match(/-?[\d.]+/g)?.map(Number);
-      if (!nums || nums.length < 8) return;
-      const xs = [nums[0], nums[2], nums[4], nums[6]];
-      const ys = [nums[1], nums[3], nums[5], nums[7]];
-      const x = Math.min(...xs), y = Math.min(...ys);
-      const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
-      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      rect.setAttribute('x', x); rect.setAttribute('y', y);
-      rect.setAttribute('width', w); rect.setAttribute('height', h);
-      rect.setAttribute('rx', '8');
-      for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
-        if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
-      }
-      firstPath.replaceWith(rect);
+    const maxX=MCD_TABLES.reduce((m,t)=>Math.max(m,t.x+MCD_W),0)+80;
+    const maxY=MCD_TABLES.reduce((m,t)=>Math.max(m,t.y+300),0)+60;
+
+    const cvs=document.getElementById('mcd-cvs');
+    if(!cvs) return;
+    cvs.style.width=maxX+'px';
+    cvs.style.height=maxY+'px';
+
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width',maxX);
+    svg.setAttribute('height',maxY);
+    cvs.appendChild(svg);
+
+    // Build table elements
+    MCD_TABLES.forEach(t=>{
+      const g=MCD_GROUPS[t.g];
+      const el=document.createElement('div');
+      el.className='mcd-tbl'; el.id='mcd_t_'+t.id;
+      el.style.cssText='left:'+t.x+'px;top:'+t.y+'px;width:'+MCD_W+'px;border-color:'+g.color+'66';
+      let rows='';
+      t.cols.forEach(c=>{
+        let cls='mcd-row', badge='';
+        if(c.pk){ cls+=' mcd-pk'; badge='<span class="mcd-bdg mcd-bpk">PK</span>'; }
+        else if(c.fk){ badge='<span class="mcd-bdg mcd-bfk">FK</span>'; cls+=' mcd-fk'; }
+        rows+='<div class="'+cls+'"><span class="mcd-cn">'+badge+c.n+'</span><span class="mcd-ct">'+c.t+'</span></div>';
+      });
+      el.innerHTML='<div class="mcd-head" style="background:'+g.color+'"><span style="opacity:.6;font-size:10px">▪</span>'+t.id+'</div><div>'+rows+'</div>';
+      cvs.appendChild(el);
     });
 
-    document.querySelectorAll('#vest-mcd-erd svg .row-rect-odd path, #vest-mcd-erd svg .row-rect-even path')
-      .forEach(p => p.setAttribute('stroke', 'none'));
+    // Legend
+    const leg=document.getElementById('mcd-legend');
+    if(leg){
+      MCD_GROUPS.forEach(g=>{
+        leg.innerHTML+='<div class="mcd-litem"><div class="mcd-lsq" style="background:'+g.color+'"></div>'+g.label+'</div>';
+      });
+      leg.innerHTML+='<span style="margin-left:6px;opacity:.65;font-size:10.5px"><b>1,1</b> exactement un &nbsp;<b>0,N</b> zéro ou plusieurs &nbsp;<b>1,N</b> un ou plusieurs</span>';
+    }
 
-  } catch(e) {
-    container.innerHTML = '<p style="color:var(--color-text-secondary,#888);padding:16px;">Erreur de rendu du MCD.</p>';
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        mcdDraw(svg, tMap);
+      });
+    });
   }
-}
 
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('[onclick*="vest-mcd"]');
-  if (btn) setTimeout(renderMCD, 120);
-});
+  function mcdBorderPoint(t, h, targetX, targetY){
+    const cx=t.x+MCD_W/2, cy=t.y+h/2;
+    const dx=targetX-cx, dy=targetY-cy;
+    let x,y,s;
+    if(Math.abs(dx)>=Math.abs(dy)){
+      s=dx>0?'r':'l';
+      x=dx>0?t.x+MCD_W:t.x;
+      y=Math.min(Math.max(targetY,t.y+14),t.y+h-14);
+    } else {
+      s=dy>0?'b':'t';
+      y=dy>0?t.y+h:t.y;
+      x=Math.min(Math.max(targetX,t.x+20),t.x+MCD_W-20);
+    }
+    return {x,y,s};
+  }
+
+  function mcdCtrlPt(p, other){
+    const dist=Math.max(70,Math.abs(p.x-other.x)*0.45+Math.abs(p.y-other.y)*0.3);
+    if(p.s==='r') return{x:p.x+dist,y:p.y};
+    if(p.s==='l') return{x:p.x-dist,y:p.y};
+    if(p.s==='b') return{x:p.x,y:p.y+dist};
+    return{x:p.x,y:p.y-dist};
+  }
+
+  function mcdUnitTan(from, toward){
+    const dx=toward.x-from.x, dy=toward.y-from.y;
+    const len=Math.sqrt(dx*dx+dy*dy)||1;
+    return {dx:dx/len, dy:dy/len};
+  }
+
+  function mcdBadgePos(ep, tan, along, perp, sign){
+    const ax=ep.x+tan.dx*along, ay=ep.y+tan.dy*along;
+    return {x:ax+(-tan.dy)*perp*sign, y:ay+tan.dx*perp*sign};
+  }
+
+  function mcdSvgEl(svg, tag, attrs){
+    const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    Object.entries(attrs).forEach(function(e){ el.setAttribute(e[0],e[1]); });
+    svg.appendChild(el);
+    return el;
+  }
+
+  function mcdDrawBadge(svg, x, y, label, color){
+    const els=[];
+    const fw=label.length*7.8+16, fh=19;
+    els.push(mcdSvgEl(svg,'rect',{x:x-fw/2,y:y-fh/2,width:fw,height:fh,rx:4,
+      fill:color+'2a',stroke:color+'99','stroke-width':'1.2','class':'mcd-fd'}));
+    const tx=mcdSvgEl(svg,'text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central',
+      'font-size':'12.5','font-family':'var(--font-mono,monospace)','font-weight':'700',
+      fill:color,'class':'mcd-fd'});
+    tx.textContent=label;
+    els.push(tx);
+    return els;
+  }
+
+  function mcdDrawRelLabel(svg, x, y, label, color){
+    const els=[];
+    const fw=label.length*6.2+14;
+    els.push(mcdSvgEl(svg,'rect',{x:x-fw/2,y:y-9,width:fw,height:16,rx:4,
+      fill:'var(--color-background-primary,#fff)',stroke:color+'55','stroke-width':'1','class':'mcd-fd'}));
+    const tx=mcdSvgEl(svg,'text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central',
+      'font-size':'10','font-family':'var(--font-sans,sans-serif)',fill:color,'class':'mcd-fd'});
+    tx.textContent=label;
+    els.push(tx);
+    return els;
+  }
+
+  function mcdDraw(svg, tMap){
+    const connEls=[];
+
+    MCD_RELS.forEach(function(r, i){
+      const ft=tMap[r.f], tt=tMap[r.t];
+      const fEl=document.getElementById('mcd_t_'+r.f);
+      const tEl=document.getElementById('mcd_t_'+r.t);
+      const fh=fEl?fEl.offsetHeight:(MCD_HH+ft.cols.length*MCD_RH+2);
+      const th=tEl?tEl.offsetHeight:(MCD_HH+tt.cols.length*MCD_RH+2);
+
+      const fcx=ft.x+MCD_W/2, fcy=ft.y+fh/2;
+      const tcx=tt.x+MCD_W/2, tcy=tt.y+th/2;
+
+      const fp=mcdBorderPoint(ft,fh,tcx,tcy);
+      const tp=mcdBorderPoint(tt,th,fcx,fcy);
+      const c1=mcdCtrlPt(fp,tp);
+      const c2=mcdCtrlPt(tp,fp);
+
+      const path=mcdSvgEl(svg,'path',{
+        d:'M'+fp.x+','+fp.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+tp.x+','+tp.y,
+        'class':'mcd-conn mcd-fl', stroke:r.color, 'stroke-opacity':'0.4'
+      });
+      path.style.animationDelay=(i*0.2)+'s';
+
+      const extras=[];
+
+      [fp,tp].forEach(function(p){
+        extras.push(mcdSvgEl(svg,'circle',{cx:p.x,cy:p.y,r:'3.5',fill:r.color,opacity:'0.65','class':'mcd-fd'}));
+      });
+
+      const tanF=mcdUnitTan(fp,c1);
+      const cfPos=mcdBadgePos(fp,tanF,34,22,r.pfSign);
+      extras.push.apply(extras, mcdDrawBadge(svg,cfPos.x,cfPos.y,r.cf,r.color));
+
+      const tanT=mcdUnitTan(tp,c2);
+      const ctPos=mcdBadgePos(tp,tanT,34,22,r.ptSign);
+      extras.push.apply(extras, mcdDrawBadge(svg,ctPos.x,ctPos.y,r.ct,r.color));
+
+      const mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
+      const my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
+      const mdx=c2.x-c1.x, mdy=c2.y-c1.y, ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+      const lx=mx+(-mdy/ml)*18, ly=my+(mdx/ml)*18;
+      extras.push.apply(extras, mcdDrawRelLabel(svg,lx,ly,r.lbl,r.color));
+
+      connEls.push({path:path, r:r, extras:extras, idx:i});
+    });
+
+    MCD_TABLES.forEach(function(t){
+      const el=document.getElementById('mcd_t_'+t.id);
+      if(!el) return;
+      el.addEventListener('mouseenter', function(){
+        const relSet=new Set();
+        MCD_RELS.forEach(function(rel,j){ if(rel.f===t.id||rel.t===t.id) relSet.add(j); });
+        const tblSet=new Set([t.id]);
+        relSet.forEach(function(j){ tblSet.add(MCD_RELS[j].f); tblSet.add(MCD_RELS[j].t); });
+        MCD_TABLES.forEach(function(tt){
+          const e=document.getElementById('mcd_t_'+tt.id);
+          if(!e) return;
+          if(tblSet.has(tt.id)){ e.classList.add('mcd-hi'); e.classList.remove('mcd-dim'); }
+          else { e.classList.add('mcd-dim'); e.classList.remove('mcd-hi'); }
+        });
+        connEls.forEach(function(ce){
+          if(relSet.has(ce.idx)){
+            ce.path.classList.add('mcd-hi'); ce.path.classList.remove('mcd-dim');
+            ce.extras.forEach(function(e){ e.classList.remove('mcd-dim'); });
+          } else {
+            ce.path.classList.add('mcd-dim'); ce.path.classList.remove('mcd-hi');
+            ce.extras.forEach(function(e){ e.classList.add('mcd-dim'); });
+          }
+        });
+      });
+      el.addEventListener('mouseleave', function(){
+        MCD_TABLES.forEach(function(tt){
+          const e=document.getElementById('mcd_t_'+tt.id);
+          if(e) e.classList.remove('mcd-hi','mcd-dim');
+        });
+        connEls.forEach(function(ce){
+          ce.path.classList.remove('mcd-hi','mcd-dim');
+          ce.extras.forEach(function(e){ e.classList.remove('mcd-dim'); });
+        });
+      });
+    });
+  }
+
+  // Trigger render when the MCD sub-modal is opened
+  document.addEventListener('click', function(e){
+    const btn=e.target.closest('[onclick*="vest-mcd"]');
+    if(btn) setTimeout(mcdInit, 150);
+  });
+
+})();
 </script>
 
 </body>
