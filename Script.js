@@ -1789,3 +1789,32 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLang(currentLang);
   applyAnimState(animEnabled);
 });
+
+const TRANSLATIONS = { fr: { ... }, en: { ... } };
+
+let currentLang = localStorage.getItem('portfolio-lang') || 'fr';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  localStorage.setItem('portfolio-lang', lang);
+  const dict = TRANSLATIONS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+}
+function toggleLang() { applyLang(currentLang === 'fr' ? 'en' : 'fr'); }
+
+let animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
+function applyAnimState(enabled) {
+  animEnabled = enabled;
+  localStorage.setItem('portfolio-anim', enabled ? 'on' : 'off');
+  document.documentElement.classList.toggle('no-anim', !enabled);
+}
+function toggleAnimations() { applyAnimState(!animEnabled); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyLang(currentLang);
+  applyAnimState(animEnabled);
+});
