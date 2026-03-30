@@ -16,41 +16,24 @@
 <nav>
   <div class="nav-logo">CM</div>
   <ul class="nav-links">
-    <li><a href="#about"          data-i18n="nav.about">A propos</a></li>
-    <li><a href="#timeline"       data-i18n="nav.timeline">Parcours</a></li>
-    <li><a href="#skills"         data-i18n="nav.skills">Competences</a></li>
-    <li><a href="#projects"       data-i18n="nav.projects">Projets</a></li>
-    <li><a href="#projet-ap"      data-i18n="nav.ap">Projet AP</a></li>
+    <li><a href="#about"           data-i18n="nav.about">A propos</a></li>
+    <li><a href="#timeline"        data-i18n="nav.timeline">Parcours</a></li>
+    <li><a href="#skills"          data-i18n="nav.skills">Competences</a></li>
+    <li><a href="#projects"        data-i18n="nav.projects">Projets</a></li>
+    <li><a href="#projet-ap"       data-i18n="nav.ap">Projet AP</a></li>
     <li><a href="#contact-section" data-i18n="nav.contact">Contact</a></li>
   </ul>
-
-  <!-- ═══ TOOLBAR ═══ -->
   <div class="nav-toolbar">
-
-    <!-- Bouton langue -->
-    <button
-      class="toolbar-btn lang-btn"
-      onclick="toggleLang()"
-      data-tip-fr="Switch to English"
-      data-tip-en="Passer en Français"
-      aria-label="Changer la langue"
-    >
+    <button class="toolbar-btn lang-btn" onclick="toggleLang()" data-tip-fr="Switch to English" data-tip-en="Passer en Français" aria-label="Changer la langue">
       <span>&#x1F310;</span>
       <span class="btn-label lang-fr">FR → EN</span>
       <span class="btn-label lang-en">EN → FR</span>
     </button>
-
-    <!-- Bouton animations -->
-    <button
-      class="toolbar-btn anim-btn"
-      onclick="toggleAnimations()"
-      aria-label="Activer / désactiver les animations"
-    >
+    <button class="toolbar-btn anim-btn" onclick="toggleAnimations()" aria-label="Activer / désactiver les animations">
       <span class="anim-dot"></span>
       <span class="btn-label anim-off" data-i18n="btn.animOff">Anims ON</span>
       <span class="btn-label anim-on"  data-i18n="btn.animOn">Anims OFF</span>
     </button>
-
   </div>
 </nav>
 
@@ -259,7 +242,6 @@
     <h2 class="section-title" data-i18n="projects.title">Projets</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="projects-grid">
     <div class="project-card reveal">
       <div class="project-visual project-visual-1">
@@ -295,7 +277,6 @@
       </div>
     </div>
   </div>
-
   <div class="perso-teaser reveal" style="margin-top:32px;">
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
@@ -305,7 +286,6 @@
     </button>
     <div class="perso-teaser-line"></div>
   </div>
-
   <div class="perso-grid" id="persoGrid">
     <div class="project-card perso-card">
       <div class="project-visual project-visual-3">
@@ -377,7 +357,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-chat" onclick="closeSubModal(event,'feat-chat')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4AC;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f2.title">Chat en temps reel</div><button class="submodal-close" onclick="closeSubModalBtn('feat-chat')">&#x2715;</button></div>
@@ -394,7 +373,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-notif" onclick="closeSubModal(event,'feat-notif')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f3.title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('feat-notif')">&#x2715;</button></div>
@@ -409,7 +387,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-salons" onclick="closeSubModal(event,'feat-salons')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F43E;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f4.title">Conversations &amp; Groupes</div><button class="submodal-close" onclick="closeSubModalBtn('feat-salons')">&#x2715;</button></div>
@@ -425,7 +402,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-sondages" onclick="closeSubModal(event,'feat-sondages')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f5.title">Sondages</div><button class="submodal-close" onclick="closeSubModalBtn('feat-sondages')">&#x2715;</button></div>
@@ -440,7 +416,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-perso" onclick="closeSubModal(event,'feat-perso')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F3A8;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f6.title">Personnalisation</div><button class="submodal-close" onclick="closeSubModalBtn('feat-perso')">&#x2715;</button></div>
@@ -455,7 +430,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-admin" onclick="closeSubModal(event,'feat-admin')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f7.title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('feat-admin')">&#x2715;</button></div>
@@ -470,7 +444,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f8.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
@@ -496,7 +469,7 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji"><img src="images/logo_animalvest.png" style="height:80px;width:auto;object-fit:contain;"></span>
-      <p class="modal-desc" data-i18n="m2.desc">Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.</p>
+      <p class="modal-desc" data-i18n="m2.desc">Animal'vest est la boutique privee de l'association, reservee a ses membres.</p>
       <div class="modal-features">
         <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
         <button class="modal-feature-btn" onclick="openSubModal('vest-acces')"><div style="flex:1"><span class="feat-title" data-i18n="v1.title">&#x1F510; Acces membres uniquement</span><span class="feat-preview" data-i18n="v1.preview">Connexion sans identifiants via un compte temporaire supprime a la deconnexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
@@ -520,175 +493,165 @@
   </div>
 </div>
 
-<!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
+<!-- SOUS-MODALS ANIMAL'VEST -->
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v1.title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v1.desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p>
+      <p class="submodal-desc" data-i18n="v1.desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Authentification.gif','&#x1F510; Authentification')"><span class="step-num">01</span><span class="step-text" data-i18n="v1.s1">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant requis. L'administrateur dispose d'un espace de connexion dedie.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend',900)"><span class="step-num">02</span><span class="step-text" data-i18n="v1.s2">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.<br><span class="step-play-hint">Voir le log</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend — Suppression 24h',900)"><span class="step-num">03</span><span class="step-text" data-i18n="v1.s3">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.<br><span class="step-play-hint">Voir le log</span></span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v1.s4">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/connexion_admin.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">05</span><span class="step-text" data-i18n="v1.s5"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Authentification.gif','&#x1F510; Authentification')"><span class="step-num">01</span><span class="step-text" data-i18n="v1.s1">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend',900)"><span class="step-num">02</span><span class="step-text" data-i18n="v1.s2">Des que le membre <strong>ferme l'application</strong>, le compte temporaire est <strong>supprime automatiquement</strong>.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend — Suppression 24h',900)"><span class="step-num">03</span><span class="step-text" data-i18n="v1.s3">Si l'application reste ouverte, le compte est <strong>supprime au bout de 24h</strong>.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v1.s4">Seules l'email, l'adresse postale et le telephone sont conserves, <strong>supprimes au bout de 6 mois</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/connexion_admin.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">05</span><span class="step-text" data-i18n="v1.s5"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v2.title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v2.desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p>
+      <p class="submodal-desc" data-i18n="v2.desc">Les membres accedent a un catalogue complet des articles proposes, avec filtrage par categorie et selection de taille.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')"><span class="step-num">01</span><span class="step-text" data-i18n="v2.s1">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v2.s2">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v2.s3">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')"><span class="step-num">01</span><span class="step-text" data-i18n="v2.s1">La boutique affiche les <strong>produits disponibles</strong> en grille 2 colonnes. Un badge <strong>NEW</strong> apparait sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v2.s2">Un <strong>carousel de categories</strong> permet de filtrer les produits instantanement.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v2.s3">Chaque article possede une <strong>fiche detaillee</strong> avec tailles vetements (XS–XXL) et chaussures (37–45).</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v3.title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc" data-i18n="v3.desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text" data-i18n="v3.s1">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designee comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text" data-i18n="v3.s2">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v3.s3">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text" data-i18n="v3.s1">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit. La premiere est automatiquement l'<strong>image principale</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text" data-i18n="v3.s2">Chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs et compteur <strong>X/Y</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v3.s3">Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v4.title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v4.desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p>
+      <p class="submodal-desc" data-i18n="v4.desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Accueil.gif','&#x1F3E0; Accueil')"><span class="step-num">01</span><span class="step-text" data-i18n="v4.s1">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/category_accueil.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v4.s2">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_cate_accueil.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">03</span><span class="step-text" data-i18n="v4.s3">Les administrateurs voient un bouton <strong>&#xB7;&#xB7;&#xB7;</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Accueil.gif','&#x1F3E0; Accueil')"><span class="step-num">01</span><span class="step-text" data-i18n="v4.s1">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. Un tap deploie un <strong>dropdown anime</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/category_accueil.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v4.s2">Taper une categorie <strong>redirige directement</strong> vers la boutique filtree.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_cate_accueil.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">03</span><span class="step-text" data-i18n="v4.s3">Les admins voient un bouton <strong>···</strong> pour gerer les unites avec un <strong>selecteur d'icones Material</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v5.title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v5.desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p>
+      <p class="submodal-desc" data-i18n="v5.desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Panier.gif','&#x1F6D2; Panier')"><span class="step-num">01</span><span class="step-text" data-i18n="v5.s1">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v5.s2">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)"><span class="step-num">03</span><span class="step-text" data-i18n="v5.s3">Le membre recoit un <strong>email automatique a chaque changement de statut</strong> de sa commande : confirmation, preparation, expedition (avec numero de colis), livraison et annulation.<br><span class="step-play-hint">Voir les emails</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Panier.gif','&#x1F6D2; Panier')"><span class="step-num">01</span><span class="step-text" data-i18n="v5.s1">Le membre ajoute les articles a son <strong>panier</strong> et peut modifier les quantites avant validation.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v5.s2">En validant, un <strong>formulaire de commande</strong> s'ouvre : prenom, nom, email, telephone, adresse et notes.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)"><span class="step-num">03</span><span class="step-text" data-i18n="v5.s3">Le membre recoit un <strong>email automatique a chaque changement de statut</strong>.<br><span class="step-play-hint">Voir les emails</span></span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v6.title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v6.desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
+      <p class="submodal-desc" data-i18n="v6.desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/panelrh.PNG','&#x1F6E1;&#xFE0F; Panel Admin — Liste des praticiens (RH)')"><span class="step-num">01</span><span class="step-text" data-i18n="v6.s1"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Gestion des commandes — tous les statuts',1400)"><span class="step-num">02</span><span class="step-text" data-i18n="v6.s2"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v6.s3"><strong>Traitement manuel :</strong> l'admin change le statut de la commande : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong>.</span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')"><span class="step-num">04</span><span class="step-text" data-i18n="v6.s4"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')"><span class="step-num">05</span><span class="step-text" data-i18n="v6.s5"><strong>Creation de compte admin :</strong> formulaire avec indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/panelrh.PNG','&#x1F6E1;&#xFE0F; Panel Admin')"><span class="step-num">01</span><span class="step-text" data-i18n="v6.s1"><strong>Statistiques en temps reel :</strong> nombre de produits et decompte par statut de commande.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Gestion des commandes',1400)"><span class="step-num">02</span><span class="step-text" data-i18n="v6.s2"><strong>Suivi des commandes :</strong> liste filtrable avec fiche client et option copier.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v6.s3"><strong>Traitement manuel :</strong> changement de statut et ajout d'une <strong>note interne</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')"><span class="step-num">04</span><span class="step-text" data-i18n="v6.s4"><strong>Gestion des admins :</strong> retrait des droits ou suppression definitive.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')"><span class="step-num">05</span><span class="step-text" data-i18n="v6.s5"><strong>Creation de compte admin :</strong> formulaire avec indicateur de force du mot de passe.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v7.title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v7.desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
-      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/montage_commandes.png','&#x1F4E6; Gestion des commandes — statut expedition',1400)">
-        <img src="images/montage_commandes.png" alt="Montage gestion des commandes Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+      <p class="submodal-desc" data-i18n="v7.desc">Le passage au statut "expediee" est bloque tant qu'un numero de colis valide n'est pas saisi.</p>
+      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/montage_commandes.png','&#x1F4E6; Gestion des commandes',1400)">
+        <img src="images/montage_commandes.png" alt="Montage gestion des commandes" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v7.s1">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v7.s2">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression devient <strong>verte</strong> a la validation complete.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v7.s1">Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v7.s2">Le numero doit contenir <strong>exactement 8 chiffres</strong>. La barre de progression devient <strong>verte</strong>.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v7.s3">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v7.s4">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et un email de suivi est automatiquement envoye au membre.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v7.s4">Le numero est <strong>enregistre avec la commande</strong> et un email de suivi est automatiquement envoye.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-notif" onclick="closeSubModal(event,'vest-notif')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v8.title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v8.desc">Firebase Cloud Messaging permet d'alerter l'administrateur en temps reel des qu'une nouvelle commande est passee.</p>
+      <p class="submodal-desc" data-i18n="v8.desc">Firebase Cloud Messaging alerte l'administrateur en temps reel des qu'une nouvelle commande est passee.</p>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v8.s1">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v8.s2">La notification est recue <strong>meme si l'app est fermee</strong> ou en arriere-plan.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v8.s3">Un tap sur la notification <strong>ouvre directement</strong> le detail de la commande concernee dans le panel admin.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v8.s3">Un tap <strong>ouvre directement</strong> le detail de la commande dans le panel admin.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v9.title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc" data-i18n="v9.desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
-      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques — toutes les etapes',1400)">
-        <img src="images/emails_automatiques_montage.png" alt="Emails automatiques Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)">
+        <img src="images/emails_automatiques_montage.png" alt="Emails automatiques" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v9.s1">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye avec le detail des articles commandes.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v9.s2">Quand l'admin passe le statut a <em style="color:var(--cyan)">"traitee"</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v9.s3">Lors du passage a <em style="color:var(--cyan)">"expediee"</em>, un email avec le <strong>numero de colis</strong> est envoye pour le suivi.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v9.s4">Lors du passage a <em style="color:var(--cyan)">"livree"</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v9.s1">Commande <strong>confirmee</strong> : email de recapitulatif avec le detail des articles.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v9.s2">Statut <em style="color:var(--cyan)">"traitee"</em> : email informant que la commande est <strong>en cours de preparation</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v9.s3">Statut <em style="color:var(--cyan)">"expediee"</em> : email avec le <strong>numero de colis</strong> pour le suivi.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v9.s4">Statut <em style="color:var(--cyan)">"livree"</em> : email de <strong>confirmation de livraison</strong>.</span></div>
         <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v9.s5">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune de mot de passe :</strong> minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel :</strong> une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie :</strong> chaque champ bloque en temps reel les caracteres dangereux pour prevenir les injections.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter anti-abus :</strong> 5 tentatives maximum en 2 minutes, puis blocage de <strong>10 minutes</strong> avec compte a rebours visible.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>Stockage securise :</strong> les tokens JWT sont stockes dans le <strong>FlutterSecureStorage</strong>, chiffre nativement sur Android et iOS.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel :</strong> barre de progression et 4 criteres visuels animes.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie :</strong> chaque champ bloque les caracteres dangereux en temps reel.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes, puis blocage <strong>10 minutes</strong> avec compte a rebours.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>Stockage securise :</strong> tokens JWT dans <strong>FlutterSecureStorage</strong>, chiffre nativement.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="v11.desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p>
+      <p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter pour le front, base de donnees relationnelle, et Firebase pour les notifications.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT et la gestion des erreurs.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile multiplateforme (Android).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes, unites, categories et statuts.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">L'application est <strong>totalement independante</strong> d'Animal'and Chat.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> avec injection automatique du token JWT.</span></div>
       </div>
     </div>
   </div>
@@ -708,7 +671,7 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4C5;</span>
-      <p class="modal-desc" data-i18n="gsb1.desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
+      <p class="modal-desc" data-i18n="gsb1.desc">Application C# Windows developpee dans le cadre du projet AP GSB. Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
       <div class="modal-features">
         <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
         <button class="modal-feature-btn" onclick="openSubModal('gsb-connexion')"><div style="flex:1"><span class="feat-title" data-i18n="g1.title">&#x1F511; Connexion &amp; Comptes</span><span class="feat-preview" data-i18n="g1.preview">Deux comptes distincts : praticien et responsable RH avec acces differencies.</span></div><span class="feat-arrow">&#x203A;</span></button>
@@ -719,78 +682,194 @@
       </div>
       <div class="modal-tags">
         <span class="modal-tag">C#</span><span class="modal-tag">Windows Forms</span>
-        <span class="modal-tag">Laravel</span><span class="modal-tag">MySQL</span>
-        <span class="modal-tag">API REST</span>
+        <span class="modal-tag">Laravel</span><span class="modal-tag">MySQL</span><span class="modal-tag">API REST</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SOUS-MODALS GSB -->
+<!-- SOUS-MODALS GSB CONGES -->
 <div class="submodal-overlay" id="gsb-connexion" onclick="closeSubModal(event,'gsb-connexion')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g1.title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="g1.desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role de l'utilisateur.</p>
+      <p class="submodal-desc" data-i18n="g1.desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/schema.png','&#x1F4CA; Schema — Connexion &amp; Roles')"><span class="step-num">01</span><span class="step-text" data-i18n="g1.s1">Deux roles distincts : le <strong>Praticien</strong> et le <strong>Responsable RH</strong>. Selon le role detecte, l'interface personnalisee s'ouvre.<br><span class="step-play-hint">Voir le schema</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g1.s2">Le <strong>compte praticien</strong> donne acces au formulaire de demande de conges et a l'historique de ses demandes.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g1.s3">Le <strong>compte RH</strong> donne acces a la liste complete des demandes de tous les praticiens avec les outils de validation.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/schema.png','&#x1F4CA; Schema — Connexion &amp; Roles')"><span class="step-num">01</span><span class="step-text" data-i18n="g1.s1">Deux roles : le <strong>Praticien</strong> et le <strong>Responsable RH</strong>. Selon le role, l'interface dediee s'ouvre.<br><span class="step-play-hint">Voir le schema</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g1.s2">Le <strong>compte praticien</strong> donne acces au formulaire de demande et a l'historique.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g1.s3">Le <strong>compte RH</strong> donne acces a la liste complete des demandes avec les outils de validation.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="gsb-demande" onclick="closeSubModal(event,'gsb-demande')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g2.title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="g2.desc">Le praticien peut soumettre une demande de conges en selectionnant ses dates. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
+      <p class="submodal-desc" data-i18n="g2.desc">Le praticien peut soumettre une demande de conges. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien — Formulaire de demande')"><span class="step-num">01</span><span class="step-text" data-i18n="g2.s1">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong> de conge.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges restants')"><span class="step-num">02</span><span class="step-text" data-i18n="g2.s2">En cliquant sur <strong>"Voir mes jours restants"</strong>, le <strong>nombre de jours de conges disponibles</strong> s'affiche.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande envoyee — En attente de validation')"><span class="step-num">03</span><span class="step-text" data-i18n="g2.s3">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base. Un popup confirme l'envoi.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')"><span class="step-num">04</span><span class="step-text" data-i18n="g2.s4">Si la demande est <strong>refusee par le RH</strong>, une notification s'affiche a la prochaine connexion du praticien.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text" data-i18n="g2.s1">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong>.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges')"><span class="step-num">02</span><span class="step-text" data-i18n="g2.s2">En cliquant sur <strong>"Voir mes jours restants"</strong>, le solde disponible s'affiche.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande en attente')"><span class="step-num">03</span><span class="step-text" data-i18n="g2.s3">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')"><span class="step-num">04</span><span class="step-text" data-i18n="g2.s4">Si la demande est <strong>refusee</strong>, une notification s'affiche a la prochaine connexion.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="gsb-rh" onclick="closeSubModal(event,'gsb-rh')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g3.title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="g3.desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes de conges des praticiens.</p>
+      <p class="submodal-desc" data-i18n="g3.desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes des praticiens.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text" data-i18n="g3.s1">Le RH voit la <strong>liste de toutes les demandes</strong> en attente avec le nom du praticien et les dates demandees.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g3.s2">Le RH peut <strong>accepter ou refuser</strong> la demande en un clic. Le solde du praticien est mis a jour automatiquement.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text" data-i18n="g3.s1">Le RH voit la <strong>liste de toutes les demandes</strong> en attente avec nom et dates.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g3.s2">Le RH peut <strong>accepter ou refuser</strong> en un clic. Le solde est mis a jour automatiquement.</span></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
+      <p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees depuis la derniere visite.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations (connexion, demandes, validation).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique avec des objets metier mappes sur la BDD.</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
+<!-- ═══ MODAL GSB SALAIRES (MISSION 2) ═══ -->
+<div class="modal-overlay" id="modal-gsb-salaires" onclick="closeModal(event,'gsb-salaires')">
+  <div class="modal">
+    <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
+    <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-type">Application Web — GSB Mission 2</div>
+        <div class="modal-title">GSB Gestion des Salaires</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn('gsb-salaires')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <span class="modal-emoji">&#x1F4B0;</span>
+      <p class="modal-desc">Application web developpee avec le framework Laravel permettant au service RH de consulter et modifier les salaires des praticiens. Les salaires sont calcules automatiquement selon l'echelon attribue en fonction de l'anciennete. Une API REST est egalement exposee pour un portage mobile futur.</p>
+      <div class="modal-features">
+        <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Droits RH</span><span class="feat-preview">Acces securise reserve au service RH avec authentification Laravel.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-grille')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Grille tarifaire &amp; Echelons</span><span class="feat-preview">13 echelons selon l'anciennete du praticien, de 4 633 € a 9 368 € brut mensuel.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-anciennete')"><div style="flex:1"><span class="feat-title">&#x23F3; Calcul automatique de l'anciennete</span><span class="feat-preview">L'echelon et le salaire sont mis a jour automatiquement selon l'anciennete saisie.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-interface')"><div style="flex:1"><span class="feat-title">&#x1F5A5;&#xFE0F; Interface RH</span><span class="feat-preview">Consultation et filtrage des praticiens par nom, echelon ou salaire. Mise a jour directe.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-api')"><div style="flex:1"><span class="feat-title">&#x1F4F1; API REST</span><span class="feat-preview">Endpoint JSON exposant la liste des praticiens avec anciennete et salaire pour portage mobile.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">Base MySQL adaptee avec table echelons, migrations Laravel et seeders.</span></div><span class="feat-arrow">&#x203A;</span></button>
+      </div>
+      <div class="modal-tags">
+        <span class="modal-tag">Laravel</span><span class="modal-tag">PHP</span>
+        <span class="modal-tag">MySQL</span><span class="modal-tag">API REST</span>
+        <span class="modal-tag">Blade</span><span class="modal-tag">MVC</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOUS-MODALS GSB SALAIRES -->
+<div class="submodal-overlay" id="sal-connexion" onclick="closeSubModal(event,'sal-connexion')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Droits RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-connexion')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
+      <p class="submodal-desc">L'acces a l'application est restreint au service RH. Une authentification par identifiants est requise avant toute consultation ou modification des donnees salariales.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le responsable RH accede a une <strong>page de connexion dediee</strong> avec identifiant et mot de passe.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">L'authentification est geree par <strong>Laravel Auth</strong> avec sessions securisees. Aucun autre role ne peut acceder a l'interface.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Une fois connecte, le RH accede au <strong>tableau de bord</strong> listant tous les praticiens avec leurs informations salariales.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un <strong>middleware Laravel</strong> protege toutes les routes sensibles et redirige vers la connexion si la session est expiree.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="sal-grille" onclick="closeSubModal(event,'sal-grille')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Grille tarifaire &amp; Echelons</div><button class="submodal-close" onclick="closeSubModalBtn('sal-grille')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">La remuneration des praticiens suit une grille officielle de 13 echelons. Chaque echelon correspond a une tranche d'anciennete et un salaire brut fixe.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">La grille comporte <strong>13 echelons</strong>. Les echelons 1 a 8 durent <strong>2 ans</strong> chacun, les echelons 9 a 12 durent <strong>4 ans</strong>, et l'echelon 13 est le palier maximum (32+ ans).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Les salaires vont de <strong>4 633,98 €</strong> (echelon 1) a <strong>9 368,05 €</strong> (echelon 13). Chaque montant est stocke en base dans une table <strong>echelons</strong> dediee.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">La table <strong>echelons</strong> est reliee aux praticiens par une <strong>cle etrangere</strong>. Le salaire affiche est toujours lu depuis la grille officielle, jamais saisi manuellement.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">En cas de modification de la grille tarifaire, il suffit de <strong>mettre a jour la table echelons</strong> — tous les salaires affiches se recalculent automatiquement.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="sal-anciennete" onclick="closeSubModal(event,'sal-anciennete')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x23F3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Calcul automatique de l'anciennete</div><button class="submodal-close" onclick="closeSubModalBtn('sal-anciennete')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">L'echelon d'un praticien est determine automatiquement a partir de son anciennete en jours. Toute mise a jour declenche un recalcul immediat de l'echelon et du salaire correspondant.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'anciennete est stockee en <strong>nombre de jours</strong> en base. Les tranches vont de 1 a 281 086 jours (environ 32 ans), mappees sur 13 echelons.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un <strong>algorithme de correspondance</strong> compare l'anciennete aux 13 tranches definies et attribue automatiquement l'echelon approprie au praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Des que le RH <strong>modifie l'anciennete</strong> d'un praticien, l'echelon et le salaire sont <strong>recalcules et mis a jour en base</strong> instantanement.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Ce mecanisme garantit une <strong>coherence totale</strong> entre anciennete, echelon et salaire, sans risque d'erreur de saisie manuelle.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Le responsable RH dispose d'une interface web complete pour consulter, filtrer et mettre a jour les informations salariales de chaque praticien.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le tableau de bord affiche la <strong>liste complete des praticiens</strong> avec pour chacun : nom, anciennete en jours, echelon attribue et salaire brut mensuel.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un systeme de <strong>filtres</strong> permet de trier et rechercher les praticiens par nom, par echelon ou par tranche de salaire.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">En selectionnant un praticien, le RH accede a une <strong>fiche detaillee</strong> affichant anciennete, echelon actuel et salaire brut associe.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un <strong>formulaire de mise a jour</strong> permet de modifier directement l'anciennete. L'echelon et le salaire se recalculent automatiquement a la validation.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">L'interface est developpee avec les <strong>vues Blade de Laravel</strong>, offrant un rendu dynamique cote serveur, propre et maintenable.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">En anticipation d'un futur portage mobile, une API REST a ete developpee avec Laravel pour exposer les donnees des praticiens de maniere structuree et consommable par tout client externe.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Un <strong>endpoint GET</strong> expose la liste complete des praticiens avec anciennete, echelon et salaire brut au format <strong>JSON</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Les routes API sont definies dans <strong>routes/api.php</strong> de Laravel, separees des routes web pour une architecture propre et evolutive.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Les donnees sont serialisees via des <strong>ressources Laravel (API Resources)</strong> pour controler les champs exposes et garantir un format coherent.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Cette API est prete a etre <strong>consommee par une application Flutter</strong> (GSB Mission 5) ou tout autre client HTTP, sans modification cote serveur.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">La base MySQL existante du projet GSB a ete adaptee et enrichie pour integrer la gestion des anciennetes, des echelons et des salaires des praticiens.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Une table <strong>echelons</strong> a ete creee avec les 13 niveaux, leur duree respective et le salaire brut associe a chacun.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">La table <strong>praticiens</strong> a ete enrichie avec un champ <strong>anciennete (en jours)</strong> et une <strong>cle etrangere</strong> vers la table echelons.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Les <strong>migrations Laravel</strong> ont ete utilisees pour versionner et appliquer ces modifications de schema de maniere reproductible.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un <strong>seeder</strong> a permis de pre-remplir la table echelons avec les 13 lignes de la grille tarifaire officielle et d'affecter les anciennetes initiales aux praticiens.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Les <strong>modeles Eloquent</strong> de Laravel gerent les relations entre praticiens et echelons, simplifiant les requetes et garantissant l'integrite referentielle.</span></div>
       </div>
     </div>
   </div>
@@ -843,12 +922,27 @@
         <h3 class="project-title" data-i18n="gsb1.mTitle">GSB Gestion des Conges</h3>
         <p class="project-desc" data-i18n="ap.gsb1desc">Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.</p>
         <div class="project-tags">
-          <span class="project-tag">C#</span>
-          <span class="project-tag">Laravel</span>
-          <span class="project-tag">MySQL</span>
-          <span class="project-tag">Windows Forms</span>
+          <span class="project-tag">C#</span><span class="project-tag">Laravel</span>
+          <span class="project-tag">MySQL</span><span class="project-tag">Windows Forms</span>
         </div>
         <button class="project-btn" onclick="openModal('gsb-conges')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-visual" style="background:linear-gradient(135deg,#1a3a2a,#2a6a4a,#1a3a2a);height:200px;display:flex;align-items:center;justify-content:center;position:relative;">
+        <span style="font-size:64px;opacity:0.5;">&#x1F4B0;</span>
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-body">
+        <div class="project-type">Application Web — GSB Mission 2</div>
+        <h3 class="project-title">GSB Gestion des Salaires</h3>
+        <p class="project-desc">Interface web Laravel pour le service RH permettant de consulter et modifier les salaires des praticiens selon leur anciennete et echelon. API REST incluse pour portage mobile.</p>
+        <div class="project-tags">
+          <span class="project-tag">Laravel</span><span class="project-tag">PHP</span>
+          <span class="project-tag">MySQL</span><span class="project-tag">API REST</span>
+          <span class="project-tag">Blade</span>
+        </div>
+        <button class="project-btn" onclick="openModal('gsb-salaires')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
     <div class="project-card reveal">
@@ -861,8 +955,7 @@
         <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
         <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
         <div class="project-tags">
-          <span class="project-tag">Flutter</span>
-          <span class="project-tag">Dart</span>
+          <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
           <span class="project-tag">MySQL</span>
           <span class="project-tag" data-i18n="ap.inprogress">&#x23F3; En cours</span>
         </div>
@@ -906,6 +999,5 @@
 </div>
 
 <script src="Script.js"></script>
-
 </body>
 </html>
