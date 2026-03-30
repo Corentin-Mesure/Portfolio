@@ -1820,3 +1820,117 @@ body.sp-compact .skills-grid {
   .sp-row-info span { font-size: 10px; }
   .sp-row-info small { font-size: 10px; }
 }
+
+ /* ═══ TOOLBAR BUTTONS ═══ */
+  .nav-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.04);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .toolbar-btn:hover::before {
+    opacity: 1;
+  }
+
+  .toolbar-btn:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Active state — langue */
+  .toolbar-btn.lang-btn .lang-fr,
+  .toolbar-btn.lang-btn .lang-en { display: none; }
+  html[lang="fr"] .toolbar-btn.lang-btn .lang-en { display: inline; }
+  html[lang="en"] .toolbar-btn.lang-btn .lang-fr { display: inline; }
+
+  /* Active state — animations */
+  .toolbar-btn.anim-btn .anim-on,
+  .toolbar-btn.anim-btn .anim-off { display: none; }
+  html:not(.no-anim) .toolbar-btn.anim-btn .anim-off { display: inline; }
+  html.no-anim .toolbar-btn.anim-btn .anim-on  { display: inline; }
+
+  /* Indicateur lumineux animations */
+  .anim-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 6px #4ade80;
+    transition: background 0.3s, box-shadow 0.3s;
+    flex-shrink: 0;
+  }
+  html.no-anim .anim-dot {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+  }
+
+  /* Désactivation des animations */
+  html.no-anim *,
+  html.no-anim *::before,
+  html.no-anim *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Tooltip au survol */
+  .toolbar-btn[data-tip] {
+    position: relative;
+  }
+  .toolbar-btn[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .toolbar-btn[data-tip]:hover::after {
+    opacity: 1;
+  }
+
+  /* Responsive — masquer le texte sur petit écran */
+  @media (max-width: 768px) {
+    .toolbar-btn .btn-label { display: none; }
+    .toolbar-btn { padding: 6px 10px; }
+    .nav-toolbar { gap: 6px; }
+  }
