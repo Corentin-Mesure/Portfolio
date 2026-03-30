@@ -15,34 +15,28 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .ap-visuals-row {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .ap-project-visual {
   height: 220px;
   min-height: 180px;
   border-radius: 0;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .ap-project-visual:first-child {
   border-radius: 12px 0 0 0;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .ap-project-visual:last-child {
   border-radius: 0 12px 0 0;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .ap-visual-divider {
   width: 1px;
   background: linear-gradient(to bottom, transparent, rgba(180,140,255,0.4), transparent);
   align-self: stretch;
 }
-
 #projet-ap .projects-grid .project-card.ap-full .project-body {
   grid-column: 1 / -1;
   display: flex;
@@ -51,7 +45,6 @@
   padding: 24px 28px;
   border-top: 1px solid rgba(180,140,255,0.2);
 }
-
 @media (max-width: 768px) {
   #projet-ap .projects-grid .project-card.ap-full {
     grid-column: auto;
@@ -108,8 +101,6 @@
 .mcd-lsq { width:10px;height:10px;border-radius:2px; }
 @keyframes mcd-flow { to { stroke-dashoffset:-18; } }
 .mcd-fl { stroke-dasharray:6 4;animation:mcd-flow 1.2s linear infinite; }
-
-/* drag hint tooltip */
 .mcd-drag-hint {
   font-size:11px;
   color:rgba(180,140,255,0.6);
@@ -442,6 +433,7 @@
         <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title" data-i18n="f6.title">&#x1F3A8; Personnalisation</span><span class="feat-preview" data-i18n="f6.preview">Fond d'ecran personnalisable par l'utilisateur selon ses preferences.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title" data-i18n="f7.title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview" data-i18n="f7.preview">Gestion complete des comptes : roles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="f8.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="f8.preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-mcd-animaland')"><div style="flex:1"><span class="feat-title">&#x1F5C2;&#xFE0F; MCD de la base de donnees</span><span class="feat-preview">Schema complet des 16 tables PostgreSQL — relations, cles, contraintes.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Socket.io</span>
@@ -569,6 +561,27 @@
   </div>
 </div>
 
+<!-- ══ SOUS-MODAL MCD ANIMAL'AND — DRAGGABLE ══ -->
+<div class="submodal-overlay" id="feat-mcd-animaland" onclick="closeSubModal(event,'feat-mcd-animaland')">
+  <div class="submodal" style="max-width:1080px;width:96vw;">
+    <div class="submodal-header">
+      <span class="submodal-icon">&#x1F5C2;&#xFE0F;</span>
+      <div class="submodal-type">Base de donnees</div>
+      <div class="submodal-title">MCD Animal'and Chat — PostgreSQL</div>
+      <button class="submodal-close" onclick="closeSubModalBtn('feat-mcd-animaland')">&#x2715;</button>
+    </div>
+    <div class="submodal-body" style="padding:0;">
+      <div id="mcd-aa-root" style="padding:12px 16px 20px;font-family:var(--font-mono,monospace);">
+        <div class="mcd-drag-hint">&#x2725; Glisser les tables pour reorganiser — 16 tables PostgreSQL</div>
+        <div id="mcd-aa-stage" style="width:100%;overflow:auto;">
+          <div id="mcd-aa-cvs" style="position:relative;margin:0 auto;"></div>
+        </div>
+        <div id="mcd-aa-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0 4px;font-size:11px;color:#888;align-items:center;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ MODAL ANIMAL'VEST ═══ -->
 <div class="modal-overlay" id="modal-animalvest" onclick="closeModal(event,'animalvest')">
   <div class="modal">
@@ -667,7 +680,7 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — DRAGGABLE ══ -->
+<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — DRAGGABLE (original conservé) ══ -->
 <div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
   <div class="submodal" style="max-width:960px;width:95vw;">
     <div class="submodal-header">
@@ -688,7 +701,7 @@
   </div>
 </div>
 
-<!-- ═══ MODAL GSB CONGES ═══ -->
+<!-- ═══ MODALS GSB ═══ -->
 <div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
   <div class="modal">
     <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
@@ -724,7 +737,6 @@
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique.</span></div></div></div></div></div>
 
-<!-- ═══ MODAL GSB SALAIRES ═══ -->
 <div class="modal-overlay" id="modal-gsb-salaires" onclick="closeModal(event,'gsb-salaires')">
   <div class="modal">
     <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
@@ -800,8 +812,6 @@
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
-
-    <!-- CARD 1 : GSB CONGÉS -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1526 0%,#1a2d55 55%,#0d1526 100%);">
         <div class="ap-dots"></div>
@@ -854,8 +864,6 @@
         <button class="project-btn" onclick="openModal('gsb-conges')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
-
-    <!-- CARD 2 : GSB SALAIRES -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1a0d 0%,#193519 55%,#0d1a0d 100%);">
         <div class="ap-dots" style="--ap-dot-color:rgba(80,200,100,0.16);"></div>
@@ -890,8 +898,6 @@
         <button class="project-btn" onclick="openModal('gsb-salaires')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
-
-    <!-- CARD 3 : GSB NOTES — pleine largeur -->
     <div class="project-card ap-full reveal">
       <div class="ap-visuals-row">
         <div class="ap-project-visual" style="background:linear-gradient(135deg,#120d22 0%,#241540 55%,#120d22 100%);">
@@ -941,7 +947,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -981,20 +986,16 @@
 
 <script src="Script.js"></script>
 
-<!-- ══ MCD Animal'vest — DRAGGABLE ══ -->
+<!-- ══ MCD Animal'vest — DRAGGABLE (original conservé) ══ -->
 <script>
 (function(){
-
-  /* ─── Données ─── */
   const MCD_W = 200, MCD_RH = 22, MCD_HH = 34;
-
   const MCD_GROUPS = [
     {label:'Utilisateurs', color:'#5f4ab7'},
     {label:'Catalogue',    color:'#0F6E56'},
     {label:'Commandes',    color:'#993C1D'},
     {label:'Structure',    color:'#185FA5'},
   ];
-
   const MCD_TABLES = [
     {id:'users',           g:0, x:20,  y:20,  cols:[
       {n:'id',pk:true,t:'int'},{n:'username',t:'varchar'},{n:'email',t:'varchar'},
@@ -1029,7 +1030,6 @@
       {n:'id',pk:true,t:'int'},{n:'unit_id',fk:'units',t:'int'},{n:'category_name',t:'varchar'}
     ]},
   ];
-
   const MCD_RELS = [
     {f:'orders',          t:'users',    lbl:'passée par', cf:'0,N', ct:'1,1', color:'#7a6fd0', pfSign: 1, ptSign:-1},
     {f:'cart_items',      t:'users',    lbl:'de',         cf:'0,N', ct:'1,1', color:'#7a6fd0', pfSign:-1, ptSign: 1},
@@ -1038,386 +1038,469 @@
     {f:'order_items',     t:'products', lbl:'référence',  cf:'0,N', ct:'1,1', color:'#1D9E75', pfSign:-1, ptSign: 1},
     {f:'unit_categories', t:'units',    lbl:'regroupe',   cf:'1,N', ct:'1,1', color:'#378ADD', pfSign: 1, ptSign:-1},
   ];
+  var mcdRendered=false,svgEl=null,cvs=null,tMap={},pos={},heights={},connRegistry=[],drag=null;
+  MCD_TABLES.forEach(function(t){pos[t.id]={x:t.x,y:t.y};});
+  function mcdInit(){
+    if(mcdRendered)return;mcdRendered=true;
+    MCD_TABLES.forEach(function(t){tMap[t.id]=t;});
+    var maxX=MCD_TABLES.reduce(function(m,t){return Math.max(m,t.x+MCD_W);},0)+80;
+    var maxY=MCD_TABLES.reduce(function(m,t){return Math.max(m,t.y+340);},0)+80;
+    cvs=document.getElementById('mcd-cvs');if(!cvs)return;
+    cvs.style.width=maxX+'px';cvs.style.height=maxY+'px';
+    svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svgEl.setAttribute('width',maxX);svgEl.setAttribute('height',maxY);cvs.appendChild(svgEl);
+    MCD_TABLES.forEach(function(t){
+      var g=MCD_GROUPS[t.g],el=document.createElement('div');
+      el.className='mcd-tbl';el.id='mcd_t_'+t.id;
+      el.style.left=pos[t.id].x+'px';el.style.top=pos[t.id].y+'px';el.style.width=MCD_W+'px';
+      el.style.borderColor=g.color+'88';
+      var rows='';
+      t.cols.forEach(function(c){
+        var cls='mcd-row',badge='';
+        if(c.pk){cls+=' mcd-pk';badge='<span class="mcd-bdg mcd-bpk">PK</span>';}
+        else if(c.fk){badge='<span class="mcd-bdg mcd-bfk">FK</span>';cls+=' mcd-fk';}
+        rows+='<div class="'+cls+'"><span class="mcd-cn">'+badge+c.n+'</span><span class="mcd-ct">'+c.t+'</span></div>';
+      });
+      el.innerHTML='<div class="mcd-head" style="background:'+g.color+'"><span style="opacity:.5;font-size:10px">▪</span>'+t.id+'</div><div>'+rows+'</div>';
+      cvs.appendChild(el);
+      el.addEventListener('mousedown',function(e){dragStart(e,t.id);});
+      el.addEventListener('touchstart',function(e){dragStart(e,t.id);},{passive:false});
+    });
+    var leg=document.getElementById('mcd-legend');
+    if(leg){
+      MCD_GROUPS.forEach(function(g){leg.innerHTML+='<div class="mcd-litem"><div class="mcd-lsq" style="background:'+g.color+'"></div>'+g.label+'</div>';});
+      leg.innerHTML+='<span style="margin-left:6px;opacity:.6;font-size:10.5px"><b>1,1</b> exactement un &nbsp;<b>0,N</b> zéro ou plusieurs &nbsp;<b>1,N</b> un ou plusieurs</span>';
+    }
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      MCD_TABLES.forEach(function(t){var el=document.getElementById('mcd_t_'+t.id);heights[t.id]=el?el.offsetHeight:(MCD_HH+t.cols.length*MCD_RH+2);});
+      buildConnections();bindHover();
+    });});
+    document.addEventListener('mousemove',dragMove);document.addEventListener('mouseup',dragEnd);
+    document.addEventListener('touchmove',dragMove,{passive:false});document.addEventListener('touchend',dragEnd);
+  }
+  function buildConnections(){while(svgEl.firstChild)svgEl.removeChild(svgEl.firstChild);connRegistry=[];MCD_RELS.forEach(function(r,i){connRegistry.push(drawRelation(r,i));});}
+  function drawRelation(r,i){
+    var fh=heights[r.f]||180,th=heights[r.t]||180;
+    var fp=borderPoint(r.f,fh,centerOf(r.t,heights[r.t]||180));
+    var tp=borderPoint(r.t,th,centerOf(r.f,fh));
+    var c1=ctrlPt(fp,tp),c2=ctrlPt(tp,fp);
+    var path=svgEl.appendChild(mkSvg('path',{d:bezier(fp,c1,c2,tp),class:'mcd-conn mcd-fl',stroke:r.color,'stroke-opacity':'0.45'}));
+    path.style.animationDelay=(i*0.18)+'s';
+    var dots=[];
+    [fp,tp].forEach(function(p){dots.push(svgEl.appendChild(mkSvg('circle',{cx:p.x,cy:p.y,r:'3.5',fill:r.color,opacity:'0.65',class:'mcd-fd'})));});
+    var badges=[],tanF=unitVec(fp,c1),cfPos=badgePos(fp,tanF,34,22,r.pfSign);
+    badges=badges.concat(drawBadge(cfPos.x,cfPos.y,r.cf,r.color));
+    var tanT=unitVec(tp,c2),ctPos=badgePos(tp,tanT,34,22,r.ptSign);
+    badges=badges.concat(drawBadge(ctPos.x,ctPos.y,r.ct,r.color));
+    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
+    var my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    var lx=mx+(-mdy/ml)*18,ly=my+(mdx/ml)*18;
+    var lbl=drawRelLabel(lx,ly,r.lbl,r.color);
+    return{path:path,dots:dots,badges:badges,lbl:lbl,rel:r,idx:i};
+  }
+  function redrawRelation(entry){
+    var r=entry.rel,i=entry.idx,fh=heights[r.f]||180,th=heights[r.t]||180;
+    var fp=borderPoint(r.f,fh,centerOf(r.t,th)),tp=borderPoint(r.t,th,centerOf(r.f,fh));
+    var c1=ctrlPt(fp,tp),c2=ctrlPt(tp,fp);
+    entry.path.setAttribute('d',bezier(fp,c1,c2,tp));
+    entry.dots[0].setAttribute('cx',fp.x);entry.dots[0].setAttribute('cy',fp.y);
+    entry.dots[1].setAttribute('cx',tp.x);entry.dots[1].setAttribute('cy',tp.y);
+    entry.badges.forEach(function(el){svgEl.removeChild(el);});entry.lbl.forEach(function(el){svgEl.removeChild(el);});
+    var badges=[],tanF=unitVec(fp,c1),cfPos=badgePos(fp,tanF,34,22,r.pfSign);
+    badges=badges.concat(drawBadge(cfPos.x,cfPos.y,r.cf,r.color));
+    var tanT=unitVec(tp,c2),ctPos=badgePos(tp,tanT,34,22,r.ptSign);
+    badges=badges.concat(drawBadge(ctPos.x,ctPos.y,r.ct,r.color));
+    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x,my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    var lx=mx+(-mdy/ml)*18,ly=my+(mdx/ml)*18;
+    entry.badges=badges;entry.lbl=drawRelLabel(lx,ly,r.lbl,r.color);
+  }
+  function centerOf(id,h){return{x:pos[id].x+MCD_W/2,y:pos[id].y+h/2};}
+  function borderPoint(id,h,target){
+    var p=pos[id],cx=p.x+MCD_W/2,cy=p.y+h/2,dx=target.x-cx,dy=target.y-cy,x,y,s;
+    if(Math.abs(dx)>=Math.abs(dy)){s=dx>0?'r':'l';x=dx>0?p.x+MCD_W:p.x;y=Math.min(Math.max(target.y,p.y+14),p.y+h-14);}
+    else{s=dy>0?'b':'t';y=dy>0?p.y+h:p.y;x=Math.min(Math.max(target.x,p.x+20),p.x+MCD_W-20);}
+    return{x:x,y:y,s:s};
+  }
+  function ctrlPt(p,other){var dist=Math.max(70,Math.abs(p.x-other.x)*0.45+Math.abs(p.y-other.y)*0.3);if(p.s==='r')return{x:p.x+dist,y:p.y};if(p.s==='l')return{x:p.x-dist,y:p.y};if(p.s==='b')return{x:p.x,y:p.y+dist};return{x:p.x,y:p.y-dist};}
+  function bezier(fp,c1,c2,tp){return'M'+fp.x+','+fp.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+tp.x+','+tp.y;}
+  function unitVec(from,toward){var dx=toward.x-from.x,dy=toward.y-from.y,len=Math.sqrt(dx*dx+dy*dy)||1;return{dx:dx/len,dy:dy/len};}
+  function badgePos(ep,tan,along,perp,sign){return{x:ep.x+tan.dx*along+(-tan.dy)*perp*sign,y:ep.y+tan.dy*along+tan.dx*perp*sign};}
+  function mkSvg(tag,attrs){var el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});return el;}
+  function drawBadge(x,y,label,color){var fw=label.length*7.8+16,fh=19;var bg=svgEl.appendChild(mkSvg('rect',{x:x-fw/2,y:y-fh/2,width:fw,height:fh,rx:4,fill:color+'2a',stroke:color+'99','stroke-width':'1.2',class:'mcd-fd'}));var tx=svgEl.appendChild(mkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'12.5','font-family':'monospace','font-weight':'700',fill:color,class:'mcd-fd'}));tx.textContent=label;return[bg,tx];}
+  function drawRelLabel(x,y,label,color){var fw=label.length*6.2+14;var bg=svgEl.appendChild(mkSvg('rect',{x:x-fw/2,y:y-9,width:fw,height:16,rx:4,fill:'rgba(20,14,40,0.85)',stroke:color+'55','stroke-width':'1',class:'mcd-fd'}));var tx=svgEl.appendChild(mkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'10','font-family':'sans-serif',fill:color,class:'mcd-fd'}));tx.textContent=label;return[bg,tx];}
+  function getEventPos(e){if(e.touches&&e.touches.length>0)return{x:e.touches[0].clientX,y:e.touches[0].clientY};return{x:e.clientX,y:e.clientY};}
+  function dragStart(e,id){e.preventDefault();var ep=getEventPos(e);drag={id:id,startX:ep.x,startY:ep.y,origX:pos[id].x,origY:pos[id].y};var el=document.getElementById('mcd_t_'+id);if(el)el.classList.add('mcd-dragging');}
+  function dragMove(e){if(!drag)return;e.preventDefault();var ep=getEventPos(e),dx=ep.x-drag.startX,dy=ep.y-drag.startY,nx=Math.max(0,drag.origX+dx),ny=Math.max(0,drag.origY+dy);pos[drag.id].x=nx;pos[drag.id].y=ny;var el=document.getElementById('mcd_t_'+drag.id);if(el){el.style.left=nx+'px';el.style.top=ny+'px';}connRegistry.forEach(function(entry){if(entry.rel.f===drag.id||entry.rel.t===drag.id)redrawRelation(entry);});var minW=nx+MCD_W+40,minH=ny+(heights[drag.id]||180)+40;if(parseInt(cvs.style.width)<minW){cvs.style.width=minW+'px';svgEl.setAttribute('width',minW);}if(parseInt(cvs.style.height)<minH){cvs.style.height=minH+'px';svgEl.setAttribute('height',minH);}}
+  function dragEnd(){if(!drag)return;var el=document.getElementById('mcd_t_'+drag.id);if(el)el.classList.remove('mcd-dragging');drag=null;}
+  function bindHover(){
+    MCD_TABLES.forEach(function(t){
+      var el=document.getElementById('mcd_t_'+t.id);if(!el)return;
+      el.addEventListener('mouseenter',function(){if(drag)return;var relSet=new Set(),tblSet=new Set([t.id]);MCD_RELS.forEach(function(r,j){if(r.f===t.id||r.t===t.id)relSet.add(j);});relSet.forEach(function(j){tblSet.add(MCD_RELS[j].f);tblSet.add(MCD_RELS[j].t);});MCD_TABLES.forEach(function(tt){var e=document.getElementById('mcd_t_'+tt.id);if(!e)return;if(tblSet.has(tt.id)){e.classList.add('mcd-hi');e.classList.remove('mcd-dim');}else{e.classList.add('mcd-dim');e.classList.remove('mcd-hi');}});connRegistry.forEach(function(ce){var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);if(relSet.has(ce.idx)){ce.path.classList.add('mcd-hi');ce.path.classList.remove('mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});}else{ce.path.classList.add('mcd-dim');ce.path.classList.remove('mcd-hi');els.forEach(function(e){e.classList.add('mcd-dim');});}});});
+      el.addEventListener('mouseleave',function(){if(drag)return;MCD_TABLES.forEach(function(tt){var e=document.getElementById('mcd_t_'+tt.id);if(e)e.classList.remove('mcd-hi','mcd-dim');});connRegistry.forEach(function(ce){var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);ce.path.classList.remove('mcd-hi','mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});});});
+    });
+  }
+  document.addEventListener('click',function(e){var btn=e.target.closest('[onclick*="vest-mcd"]');if(btn)setTimeout(mcdInit,160);});
+})();
+</script>
+
+<!-- ══ MCD Animal'and Chat — DRAGGABLE — 16 tables PostgreSQL ══ -->
+<script>
+(function(){
+
+  /* ─── Config dimensions ─── */
+  var AA_W = 196, AA_RH = 21, AA_HH = 32;
+
+  /* ─── Groupes thématiques ─── */
+  var AA_GROUPS = [
+    {label:'Utilisateurs & Sécurité', color:'#3d6ee8'},  // 0 bleu
+    {label:'Messagerie',              color:'#2ca878'},  // 1 vert
+    {label:'Groupes & Conversations', color:'#d4862c'},  // 2 orange
+    {label:'Sondages',                color:'#b84fd4'},  // 3 violet
+    {label:'Notifications & Sessions',color:'#d44f7a'},  // 4 rose
+  ];
+
+  /* ─── Définition des 16 tables ─── */
+  var AA_TABLES = [
+    /* ── Utilisateurs & sécurité ── */
+    {id:'users', g:0, x:20, y:20, cols:[
+      {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
+      {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
+      {n:'role',t:'varchar(50)'},{n:'avatar_url',t:'text'},
+      {n:'is_online',t:'bool'},{n:'last_seen',t:'timestamp'},
+      {n:'status',t:'varchar(50)'},{n:'is_banned',t:'bool'},
+      {n:'banned_at',t:'timestamp'},{n:'banned_reason',t:'text'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+    {id:'pending_registrations', g:0, x:260, y:20, cols:[
+      {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
+      {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
+      {n:'status',t:'varchar(50)'},{n:'request_message',t:'text'},
+      {n:'reviewed_by',fk:'users',t:'int'},{n:'reviewed_at',t:'timestamp'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+    {id:'blacklist', g:0, x:500, y:20, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'username',t:'varchar(100)'},{n:'ip_address',t:'varchar(45)'},
+      {n:'device_fingerprint',t:'text'},{n:'reason',t:'text'},
+      {n:'ban_type',t:'varchar(20)'},{n:'banned_by',fk:'users',t:'int'},
+      {n:'unbanned_by',fk:'users',t:'int'},{n:'is_active',t:'bool'},
+      {n:'expires_at',t:'timestamp'},{n:'unbanned_at',t:'timestamp'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+    {id:'user_sessions', g:4, x:760, y:20, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'last_ip',t:'varchar(45)'},{n:'device_fingerprint',t:'text'},
+      {n:'device_info',t:'jsonb'},{n:'last_activity',t:'timestamp'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+
+    /* ── Messagerie ── */
+    {id:'messages', g:1, x:20, y:440, cols:[
+      {n:'id',pk:true,t:'int'},{n:'content',t:'text'},
+      {n:'sender_id',fk:'users',t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
+      {n:'group_id',fk:'groups',t:'int'},{n:'type',t:'varchar(20)'},
+      {n:'file_url',t:'text'},{n:'file_name',t:'text'},
+      {n:'is_read',t:'bool'},{n:'poll_id',fk:'polls',t:'int'},
+      {n:'edited_at',t:'timestamp'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'message_reactions', g:1, x:260, y:440, cols:[
+      {n:'id',pk:true,t:'int'},{n:'message_id',fk:'messages',t:'int'},
+      {n:'user_id',fk:'users',t:'int'},{n:'reaction',t:'varchar(50)'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+
+    /* ── Conversations ── */
+    {id:'conversations', g:2, x:500, y:440, cols:[
+      {n:'id',pk:true,t:'int'},{n:'created_at',t:'timestamp'}
+    ]},
+    {id:'conversation_participants', g:2, x:740, y:440, cols:[
+      {n:'id',pk:true,t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
+      {n:'user_id',fk:'users',t:'int'}
+    ]},
+
+    /* ── Groupes ── */
+    {id:'groups', g:2, x:20, y:800, cols:[
+      {n:'id',pk:true,t:'int'},{n:'name',t:'varchar(100)'},
+      {n:'description',t:'text'},{n:'avatar_url',t:'text'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+    {id:'group_members', g:2, x:260, y:800, cols:[
+      {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
+      {n:'user_id',fk:'users',t:'int'},{n:'is_admin',t:'bool'},
+      {n:'joined_at',t:'timestamp'}
+    ]},
+
+    /* ── Chat backgrounds ── */
+    {id:'chat_backgrounds', g:2, x:500, y:800, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'conversation_id',fk:'conversations',t:'int'},{n:'group_id',fk:'groups',t:'int'},
+      {n:'background_id',t:'varchar(100)'},{n:'image_url',t:'text'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
+    ]},
+
+    /* ── Sondages ── */
+    {id:'polls', g:3, x:760, y:800, cols:[
+      {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
+      {n:'creator_id',fk:'users',t:'int'},{n:'question',t:'text'},
+      {n:'allow_multiple_choices',t:'bool'},{n:'is_anonymous',t:'bool'},
+      {n:'deadline',t:'timestamp'},{n:'is_closed',t:'bool'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
+    ]},
+    {id:'poll_options', g:3, x:20, y:1160, cols:[
+      {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
+      {n:'option_text',t:'text'},{n:'option_order',t:'int'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+    {id:'poll_votes', g:3, x:260, y:1160, cols:[
+      {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
+      {n:'option_id',fk:'poll_options',t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'created_at',t:'timestamp'}
+    ]},
+
+    /* ── Notifications & FCM ── */
+    {id:'user_fcm_tokens', g:4, x:500, y:1160, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'fcm_token',t:'text'},{n:'device_id',t:'varchar(255)'},
+      {n:'device_type',t:'varchar(50)'},{n:'created_at',t:'timestamp'},
+      {n:'updated_at',t:'timestamp'}
+    ]},
+    {id:'notification_preferences', g:4, x:760, y:1160, cols:[
+      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'enabled',t:'bool'},{n:'private_messages',t:'bool'},
+      {n:'group_messages',t:'bool'},{n:'mentions',t:'bool'},
+      {n:'sound_enabled',t:'bool'},{n:'vibration_enabled',t:'bool'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
+    ]},
+  ];
+
+  /* ─── Relations ─── */
+  var AA_RELS = [
+    /* Inscriptions */
+    {f:'pending_registrations', t:'users',         lbl:'validée par', cf:'0,N', ct:'0,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
+    /* Blacklist */
+    {f:'blacklist',             t:'users',         lbl:'concerne',    cf:'0,N', ct:'0,1', color:'#e83d5a', pfSign:-1, ptSign: 1},
+    /* Sessions */
+    {f:'user_sessions',         t:'users',         lbl:'pour',        cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+    /* Messages → users */
+    {f:'messages',              t:'users',         lbl:'envoyé par',  cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
+    /* Messages → conversations */
+    {f:'messages',              t:'conversations', lbl:'dans',        cf:'0,N', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
+    /* Messages → groups */
+    {f:'messages',              t:'groups',        lbl:'dans groupe', cf:'0,N', ct:'0,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    /* Messages → polls */
+    {f:'messages',              t:'polls',         lbl:'contient',    cf:'0,1', ct:'0,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    /* Réactions */
+    {f:'message_reactions',     t:'messages',      lbl:'sur',         cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
+    {f:'message_reactions',     t:'users',         lbl:'par',         cf:'0,N', ct:'1,1', color:'#2ca878', pfSign: 1, ptSign:-1},
+    /* Participants */
+    {f:'conversation_participants', t:'conversations', lbl:'dans', cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'conversation_participants', t:'users',         lbl:'est', cf:'0,N', ct:'1,1', color:'#3d6ee8',  pfSign: 1, ptSign:-1},
+    /* Membres groupe */
+    {f:'group_members',         t:'groups',        lbl:'du groupe',   cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'group_members',         t:'users',         lbl:'membre',      cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
+    /* Chat backgrounds */
+    {f:'chat_backgrounds',      t:'users',         lbl:'de',          cf:'0,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'chat_backgrounds',      t:'conversations', lbl:'pour conv.',  cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
+    {f:'chat_backgrounds',      t:'groups',        lbl:'pour groupe', cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign: 1},
+    /* Polls */
+    {f:'polls',                 t:'groups',        lbl:'dans groupe', cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'polls',                 t:'users',         lbl:'créé par',    cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    {f:'poll_options',          t:'polls',         lbl:'option de',   cf:'1,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'poll_votes',            t:'polls',         lbl:'vote pour',   cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'poll_votes',            t:'poll_options',  lbl:'option',      cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    {f:'poll_votes',            t:'users',         lbl:'par',         cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign: 1},
+    /* FCM / Notifs */
+    {f:'user_fcm_tokens',       t:'users',         lbl:'pour',        cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+    {f:'notification_preferences', t:'users',      lbl:'prefs de',    cf:'0,1', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+  ];
 
   /* ─── État ─── */
-  var mcdRendered = false;
-  var svgEl = null;
-  var cvs = null;
-  var tMap = {};
-  var pos = {};          /* positions courantes {id: {x,y}} */
-  var heights = {};      /* hauteurs des divs {id: h} */
-  var connRegistry = []; /* [{path, dots, badges, label, relIdx}] */
+  var aaRendered=false, aaSvg=null, aaCvs=null;
+  var aaTMap={}, aaPos={}, aaHgt={}, aaConn=[], aaDrag=null;
 
-  /* ─── Drag state ─── */
-  var drag = null; /* {id, startX, startY, origX, origY} */
-
-  MCD_TABLES.forEach(function(t){ pos[t.id] = {x: t.x, y: t.y}; });
+  AA_TABLES.forEach(function(t){ aaPos[t.id]={x:t.x,y:t.y}; });
 
   /* ─── Init ─── */
-  function mcdInit(){
-    if(mcdRendered) return;
-    mcdRendered = true;
+  function aaInit(){
+    if(aaRendered) return;
+    aaRendered=true;
+    AA_TABLES.forEach(function(t){ aaTMap[t.id]=t; });
 
-    MCD_TABLES.forEach(function(t){ tMap[t.id] = t; });
+    var maxX=AA_TABLES.reduce(function(m,t){return Math.max(m,t.x+AA_W);},0)+80;
+    var maxY=AA_TABLES.reduce(function(m,t){return Math.max(m,t.y+420);},0)+80;
 
-    var maxX = MCD_TABLES.reduce(function(m,t){return Math.max(m, t.x + MCD_W);}, 0) + 80;
-    var maxY = MCD_TABLES.reduce(function(m,t){return Math.max(m, t.y + 340);}, 0) + 80;
+    aaCvs=document.getElementById('mcd-aa-cvs');
+    if(!aaCvs) return;
+    aaCvs.style.width=maxX+'px'; aaCvs.style.height=maxY+'px';
 
-    cvs = document.getElementById('mcd-cvs');
-    if(!cvs) return;
-    cvs.style.width  = maxX + 'px';
-    cvs.style.height = maxY + 'px';
+    aaSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    aaSvg.setAttribute('width',maxX); aaSvg.setAttribute('height',maxY);
+    aaCvs.appendChild(aaSvg);
 
-    /* SVG en premier (sous les divs) */
-    svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svgEl.setAttribute('width',  maxX);
-    svgEl.setAttribute('height', maxY);
-    cvs.appendChild(svgEl);
-
-    /* Tables */
-    MCD_TABLES.forEach(function(t){
-      var g   = MCD_GROUPS[t.g];
-      var el  = document.createElement('div');
-      el.className   = 'mcd-tbl';
-      el.id          = 'mcd_t_' + t.id;
-      el.style.left  = pos[t.id].x + 'px';
-      el.style.top   = pos[t.id].y + 'px';
-      el.style.width = MCD_W + 'px';
-      el.style.borderColor = g.color + '88';
-
-      var rows = '';
+    AA_TABLES.forEach(function(t){
+      var g=AA_GROUPS[t.g], el=document.createElement('div');
+      el.className='mcd-tbl'; el.id='aa_t_'+t.id;
+      el.style.left=aaPos[t.id].x+'px'; el.style.top=aaPos[t.id].y+'px';
+      el.style.width=AA_W+'px'; el.style.borderColor=g.color+'88';
+      var rows='';
       t.cols.forEach(function(c){
-        var cls = 'mcd-row', badge = '';
-        if(c.pk){ cls += ' mcd-pk'; badge = '<span class="mcd-bdg mcd-bpk">PK</span>'; }
-        else if(c.fk){ badge = '<span class="mcd-bdg mcd-bfk">FK</span>'; cls += ' mcd-fk'; }
-        rows += '<div class="' + cls + '"><span class="mcd-cn">' + badge + c.n + '</span><span class="mcd-ct">' + c.t + '</span></div>';
+        var cls='mcd-row',badge='';
+        if(c.pk){cls+=' mcd-pk';badge='<span class="mcd-bdg mcd-bpk">PK</span>';}
+        else if(c.fk){badge='<span class="mcd-bdg mcd-bfk">FK</span>';cls+=' mcd-fk';}
+        rows+='<div class="'+cls+'"><span class="mcd-cn">'+badge+c.n+'</span><span class="mcd-ct">'+c.t+'</span></div>';
       });
-
-      el.innerHTML = '<div class="mcd-head" style="background:' + g.color + '"><span style="opacity:.5;font-size:10px">▪</span>' + t.id + '</div><div>' + rows + '</div>';
-      cvs.appendChild(el);
-
-      /* Drag listeners */
-      el.addEventListener('mousedown',  function(e){ dragStart(e, t.id); });
-      el.addEventListener('touchstart', function(e){ dragStart(e, t.id); }, {passive:false});
+      el.innerHTML='<div class="mcd-head" style="background:'+g.color+'"><span style="opacity:.45;font-size:9px">▪</span>'+t.id+'</div><div>'+rows+'</div>';
+      aaCvs.appendChild(el);
+      el.addEventListener('mousedown', function(e){ aaDragStart(e,t.id); });
+      el.addEventListener('touchstart',function(e){ aaDragStart(e,t.id); },{passive:false});
     });
 
-    /* Légende */
-    var leg = document.getElementById('mcd-legend');
+    var leg=document.getElementById('mcd-aa-legend');
     if(leg){
-      MCD_GROUPS.forEach(function(g){
-        leg.innerHTML += '<div class="mcd-litem"><div class="mcd-lsq" style="background:' + g.color + '"></div>' + g.label + '</div>';
+      AA_GROUPS.forEach(function(g){
+        leg.innerHTML+='<div class="mcd-litem"><div class="mcd-lsq" style="background:'+g.color+'"></div>'+g.label+'</div>';
       });
-      leg.innerHTML += '<span style="margin-left:6px;opacity:.6;font-size:10.5px"><b>1,1</b> exactement un &nbsp;<b>0,N</b> zéro ou plusieurs &nbsp;<b>1,N</b> un ou plusieurs</span>';
+      leg.innerHTML+='<span style="margin-left:6px;opacity:.6;font-size:10.5px"><b>1,1</b> exactement un &nbsp;<b>0,N</b> zéro ou plusieurs &nbsp;<b>0,1</b> zéro ou un &nbsp;<b>1,N</b> un ou plusieurs</span>';
     }
 
-    /* Attendre que les divs aient leur hauteur réelle */
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        /* Stocker les hauteurs */
-        MCD_TABLES.forEach(function(t){
-          var el = document.getElementById('mcd_t_' + t.id);
-          heights[t.id] = el ? el.offsetHeight : (MCD_HH + t.cols.length * MCD_RH + 2);
-        });
-        buildConnections();
-        bindHover();
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      AA_TABLES.forEach(function(t){
+        var el=document.getElementById('aa_t_'+t.id);
+        aaHgt[t.id]=el?el.offsetHeight:(AA_HH+t.cols.length*AA_RH+2);
       });
-    });
+      aaBuildConn();
+      aaBindHover();
+    });});
 
-    /* Listeners globaux pour le drag */
-    document.addEventListener('mousemove',  dragMove);
-    document.addEventListener('mouseup',    dragEnd);
-    document.addEventListener('touchmove',  dragMove, {passive:false});
-    document.addEventListener('touchend',   dragEnd);
+    document.addEventListener('mousemove',  aaDragMove);
+    document.addEventListener('mouseup',    aaDragEnd);
+    document.addEventListener('touchmove',  aaDragMove, {passive:false});
+    document.addEventListener('touchend',   aaDragEnd);
   }
 
-  /* ─── Construction SVG des connexions ─── */
-  function buildConnections(){
-    /* Vider le SVG */
-    while(svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
-    connRegistry = [];
-
-    MCD_RELS.forEach(function(r, i){
-      var reg = drawRelation(r, i);
-      connRegistry.push(reg);
-    });
+  /* ─── Connexions ─── */
+  function aaBuildConn(){
+    while(aaSvg.firstChild) aaSvg.removeChild(aaSvg.firstChild);
+    aaConn=[];
+    AA_RELS.forEach(function(r,i){ aaConn.push(aaDrawRel(r,i)); });
   }
 
-  function drawRelation(r, i){
-    var fh = heights[r.f] || 180;
-    var th = heights[r.t] || 180;
-
-    var fp = borderPoint(r.f, fh, centerOf(r.t, heights[r.t]||180));
-    var tp = borderPoint(r.t, th, centerOf(r.f, fh));
-    var c1 = ctrlPt(fp, tp);
-    var c2 = ctrlPt(tp, fp);
-
-    var path = svgEl.appendChild(mkSvg('path', {
-      d: bezier(fp, c1, c2, tp),
-      class: 'mcd-conn mcd-fl',
-      stroke: r.color,
-      'stroke-opacity': '0.45'
-    }));
-    path.style.animationDelay = (i * 0.18) + 's';
-
-    var dots = [];
-    [fp, tp].forEach(function(p){
-      dots.push(svgEl.appendChild(mkSvg('circle', {
-        cx: p.x, cy: p.y, r: '3.5',
-        fill: r.color, opacity: '0.65', class: 'mcd-fd'
-      })));
+  function aaDrawRel(r,i){
+    var fh=aaHgt[r.f]||160, th=aaHgt[r.t]||160;
+    var fp=aaBP(r.f,fh,aaCtr(r.t,aaHgt[r.t]||160));
+    var tp=aaBP(r.t,th,aaCtr(r.f,fh));
+    var c1=aaCP(fp,tp), c2=aaCP(tp,fp);
+    var path=aaSvg.appendChild(aaMkSvg('path',{d:aaBez(fp,c1,c2,tp),class:'mcd-conn mcd-fl',stroke:r.color,'stroke-opacity':'0.42'}));
+    path.style.animationDelay=(i*0.12)+'s';
+    var dots=[];
+    [fp,tp].forEach(function(p){
+      dots.push(aaSvg.appendChild(aaMkSvg('circle',{cx:p.x,cy:p.y,r:'3',fill:r.color,opacity:'0.6',class:'mcd-fd'})));
     });
-
-    var badges = [];
-    var tanF = unitVec(fp, c1);
-    var cfPos = badgePos(fp, tanF, 34, 22, r.pfSign);
-    badges = badges.concat(drawBadge(cfPos.x, cfPos.y, r.cf, r.color));
-
-    var tanT = unitVec(tp, c2);
-    var ctPos = badgePos(tp, tanT, 34, 22, r.ptSign);
-    badges = badges.concat(drawBadge(ctPos.x, ctPos.y, r.ct, r.color));
-
-    var mx = 0.125*fp.x + 0.375*c1.x + 0.375*c2.x + 0.125*tp.x;
-    var my = 0.125*fp.y + 0.375*c1.y + 0.375*c2.y + 0.125*tp.y;
-    var mdx = c2.x - c1.x, mdy = c2.y - c1.y, ml = Math.sqrt(mdx*mdx + mdy*mdy) || 1;
-    var lx = mx + (-mdy/ml)*18, ly = my + (mdx/ml)*18;
-    var lbl = drawRelLabel(lx, ly, r.lbl, r.color);
-
-    return {path: path, dots: dots, badges: badges, lbl: lbl, rel: r, idx: i};
+    var badges=[];
+    badges=badges.concat(aaDrawBadge(aaBPos(fp,aaUV(fp,c1),30,20,r.pfSign),r.cf,r.color));
+    badges=badges.concat(aaDrawBadge(aaBPos(tp,aaUV(tp,c2),30,20,r.ptSign),r.ct,r.color));
+    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
+    var my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    var lbl=aaDrawLbl(mx+(-mdy/ml)*16,my+(mdx/ml)*16,r.lbl,r.color);
+    return{path:path,dots:dots,badges:badges,lbl:lbl,rel:r,idx:i};
   }
 
-  /* Redessine une seule relation à partir de son entrée dans connRegistry */
-  function redrawRelation(entry){
-    var r  = entry.rel;
-    var i  = entry.idx;
-    var fh = heights[r.f] || 180;
-    var th = heights[r.t] || 180;
-
-    var fp = borderPoint(r.f, fh, centerOf(r.t, th));
-    var tp = borderPoint(r.t, th, centerOf(r.f, fh));
-    var c1 = ctrlPt(fp, tp);
-    var c2 = ctrlPt(tp, fp);
-
-    entry.path.setAttribute('d', bezier(fp, c1, c2, tp));
-
-    /* Dots */
-    entry.dots[0].setAttribute('cx', fp.x); entry.dots[0].setAttribute('cy', fp.y);
-    entry.dots[1].setAttribute('cx', tp.x); entry.dots[1].setAttribute('cy', tp.y);
-
-    /* Recréer badges + label (plus simple que de les déplacer) */
-    entry.badges.forEach(function(el){ svgEl.removeChild(el); });
-    entry.lbl.forEach(function(el){ svgEl.removeChild(el); });
-
-    var badges = [];
-    var tanF = unitVec(fp, c1);
-    var cfPos = badgePos(fp, tanF, 34, 22, r.pfSign);
-    badges = badges.concat(drawBadge(cfPos.x, cfPos.y, r.cf, r.color));
-
-    var tanT = unitVec(tp, c2);
-    var ctPos = badgePos(tp, tanT, 34, 22, r.ptSign);
-    badges = badges.concat(drawBadge(ctPos.x, ctPos.y, r.ct, r.color));
-
-    var mx = 0.125*fp.x + 0.375*c1.x + 0.375*c2.x + 0.125*tp.x;
-    var my = 0.125*fp.y + 0.375*c1.y + 0.375*c2.y + 0.125*tp.y;
-    var mdx = c2.x - c1.x, mdy = c2.y - c1.y, ml = Math.sqrt(mdx*mdx + mdy*mdy) || 1;
-    var lx = mx + (-mdy/ml)*18, ly = my + (mdx/ml)*18;
-    var lbl = drawRelLabel(lx, ly, r.lbl, r.color);
-
-    entry.badges = badges;
-    entry.lbl    = lbl;
+  function aaRedrawRel(entry){
+    var r=entry.rel, fh=aaHgt[r.f]||160, th=aaHgt[r.t]||160;
+    var fp=aaBP(r.f,fh,aaCtr(r.t,th)), tp=aaBP(r.t,th,aaCtr(r.f,fh));
+    var c1=aaCP(fp,tp), c2=aaCP(tp,fp);
+    entry.path.setAttribute('d',aaBez(fp,c1,c2,tp));
+    entry.dots[0].setAttribute('cx',fp.x); entry.dots[0].setAttribute('cy',fp.y);
+    entry.dots[1].setAttribute('cx',tp.x); entry.dots[1].setAttribute('cy',tp.y);
+    entry.badges.forEach(function(el){ aaSvg.removeChild(el); });
+    entry.lbl.forEach(function(el){ aaSvg.removeChild(el); });
+    var badges=[];
+    badges=badges.concat(aaDrawBadge(aaBPos(fp,aaUV(fp,c1),30,20,r.pfSign),r.cf,r.color));
+    badges=badges.concat(aaDrawBadge(aaBPos(tp,aaUV(tp,c2),30,20,r.ptSign),r.ct,r.color));
+    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
+    var my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    entry.badges=badges;
+    entry.lbl=aaDrawLbl(mx+(-mdy/ml)*16,my+(mdx/ml)*16,r.lbl,r.color);
   }
 
   /* ─── Géométrie ─── */
-  function centerOf(id, h){
-    return { x: pos[id].x + MCD_W/2, y: pos[id].y + h/2 };
+  function aaCtr(id,h){ return{x:aaPos[id].x+AA_W/2,y:aaPos[id].y+h/2}; }
+  function aaBP(id,h,tgt){
+    var p=aaPos[id],cx=p.x+AA_W/2,cy=p.y+h/2,dx=tgt.x-cx,dy=tgt.y-cy,x,y,s;
+    if(Math.abs(dx)>=Math.abs(dy)){s=dx>0?'r':'l';x=dx>0?p.x+AA_W:p.x;y=Math.min(Math.max(tgt.y,p.y+12),p.y+h-12);}
+    else{s=dy>0?'b':'t';y=dy>0?p.y+h:p.y;x=Math.min(Math.max(tgt.x,p.x+16),p.x+AA_W-16);}
+    return{x:x,y:y,s:s};
+  }
+  function aaCP(p,o){var d=Math.max(60,Math.abs(p.x-o.x)*0.42+Math.abs(p.y-o.y)*0.28);if(p.s==='r')return{x:p.x+d,y:p.y};if(p.s==='l')return{x:p.x-d,y:p.y};if(p.s==='b')return{x:p.x,y:p.y+d};return{x:p.x,y:p.y-d};}
+  function aaBez(fp,c1,c2,tp){return'M'+fp.x+','+fp.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+tp.x+','+tp.y;}
+  function aaUV(from,toward){var dx=toward.x-from.x,dy=toward.y-from.y,l=Math.sqrt(dx*dx+dy*dy)||1;return{dx:dx/l,dy:dy/l};}
+  function aaBPos(ep,tan,along,perp,sign){return{x:ep.x+tan.dx*along+(-tan.dy)*perp*sign,y:ep.y+tan.dy*along+tan.dx*perp*sign};}
+  function aaMkSvg(tag,attrs){var el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});return el;}
+  function aaDrawBadge(pos,label,color){
+    var fw=label.length*7.5+14,fh=18,x=pos.x,y=pos.y;
+    var bg=aaSvg.appendChild(aaMkSvg('rect',{x:x-fw/2,y:y-fh/2,width:fw,height:fh,rx:4,fill:color+'28',stroke:color+'90','stroke-width':'1.1',class:'mcd-fd'}));
+    var tx=aaSvg.appendChild(aaMkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'12','font-family':'monospace','font-weight':'700',fill:color,class:'mcd-fd'}));
+    tx.textContent=label;
+    return[bg,tx];
+  }
+  function aaDrawLbl(x,y,label,color){
+    var fw=label.length*5.8+12;
+    var bg=aaSvg.appendChild(aaMkSvg('rect',{x:x-fw/2,y:y-8,width:fw,height:15,rx:4,fill:'rgba(18,12,36,0.88)',stroke:color+'50','stroke-width':'1',class:'mcd-fd'}));
+    var tx=aaSvg.appendChild(aaMkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'9.5','font-family':'sans-serif',fill:color,class:'mcd-fd'}));
+    tx.textContent=label;
+    return[bg,tx];
   }
 
-  function borderPoint(id, h, target){
-    var p = pos[id];
-    var cx = p.x + MCD_W/2, cy = p.y + h/2;
-    var dx = target.x - cx, dy = target.y - cy;
-    var x, y, s;
-    if(Math.abs(dx) >= Math.abs(dy)){
-      s = dx > 0 ? 'r' : 'l';
-      x = dx > 0 ? p.x + MCD_W : p.x;
-      y = Math.min(Math.max(target.y, p.y + 14), p.y + h - 14);
-    } else {
-      s = dy > 0 ? 'b' : 't';
-      y = dy > 0 ? p.y + h : p.y;
-      x = Math.min(Math.max(target.x, p.x + 20), p.x + MCD_W - 20);
-    }
-    return {x:x, y:y, s:s};
+  /* ─── Drag ─── */
+  function aaGetPos(e){if(e.touches&&e.touches.length>0)return{x:e.touches[0].clientX,y:e.touches[0].clientY};return{x:e.clientX,y:e.clientY};}
+  function aaDragStart(e,id){e.preventDefault();var ep=aaGetPos(e);aaDrag={id:id,sx:ep.x,sy:ep.y,ox:aaPos[id].x,oy:aaPos[id].y};var el=document.getElementById('aa_t_'+id);if(el)el.classList.add('mcd-dragging');}
+  function aaDragMove(e){
+    if(!aaDrag)return;e.preventDefault();
+    var ep=aaGetPos(e),nx=Math.max(0,aaDrag.ox+(ep.x-aaDrag.sx)),ny=Math.max(0,aaDrag.oy+(ep.y-aaDrag.sy));
+    aaPos[aaDrag.id].x=nx;aaPos[aaDrag.id].y=ny;
+    var el=document.getElementById('aa_t_'+aaDrag.id);if(el){el.style.left=nx+'px';el.style.top=ny+'px';}
+    aaConn.forEach(function(entry){if(entry.rel.f===aaDrag.id||entry.rel.t===aaDrag.id)aaRedrawRel(entry);});
+    var minW=nx+AA_W+40,minH=ny+(aaHgt[aaDrag.id]||160)+40;
+    if(parseInt(aaCvs.style.width)<minW){aaCvs.style.width=minW+'px';aaSvg.setAttribute('width',minW);}
+    if(parseInt(aaCvs.style.height)<minH){aaCvs.style.height=minH+'px';aaSvg.setAttribute('height',minH);}
   }
+  function aaDragEnd(){if(!aaDrag)return;var el=document.getElementById('aa_t_'+aaDrag.id);if(el)el.classList.remove('mcd-dragging');aaDrag=null;}
 
-  function ctrlPt(p, other){
-    var dist = Math.max(70, Math.abs(p.x - other.x)*0.45 + Math.abs(p.y - other.y)*0.3);
-    if(p.s === 'r') return {x: p.x + dist, y: p.y};
-    if(p.s === 'l') return {x: p.x - dist, y: p.y};
-    if(p.s === 'b') return {x: p.x, y: p.y + dist};
-    return {x: p.x, y: p.y - dist};
-  }
-
-  function bezier(fp, c1, c2, tp){
-    return 'M'+fp.x+','+fp.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+tp.x+','+tp.y;
-  }
-
-  function unitVec(from, toward){
-    var dx = toward.x - from.x, dy = toward.y - from.y;
-    var len = Math.sqrt(dx*dx + dy*dy) || 1;
-    return {dx: dx/len, dy: dy/len};
-  }
-
-  function badgePos(ep, tan, along, perp, sign){
-    return {
-      x: ep.x + tan.dx*along + (-tan.dy)*perp*sign,
-      y: ep.y + tan.dy*along + tan.dx*perp*sign
-    };
-  }
-
-  /* ─── SVG helpers ─── */
-  function mkSvg(tag, attrs){
-    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    Object.keys(attrs).forEach(function(k){ el.setAttribute(k, attrs[k]); });
-    return el;
-  }
-
-  function drawBadge(x, y, label, color){
-    var fw = label.length * 7.8 + 16, fh = 19;
-    var bg = svgEl.appendChild(mkSvg('rect', {
-      x: x - fw/2, y: y - fh/2, width: fw, height: fh, rx: 4,
-      fill: color + '2a', stroke: color + '99', 'stroke-width': '1.2', class: 'mcd-fd'
-    }));
-    var tx = svgEl.appendChild(mkSvg('text', {
-      x: x, y: y, 'text-anchor': 'middle', 'dominant-baseline': 'central',
-      'font-size': '12.5', 'font-family': 'monospace', 'font-weight': '700',
-      fill: color, class: 'mcd-fd'
-    }));
-    tx.textContent = label;
-    return [bg, tx];
-  }
-
-  function drawRelLabel(x, y, label, color){
-    var fw = label.length * 6.2 + 14;
-    var bg = svgEl.appendChild(mkSvg('rect', {
-      x: x - fw/2, y: y - 9, width: fw, height: 16, rx: 4,
-      fill: 'rgba(20,14,40,0.85)', stroke: color + '55', 'stroke-width': '1', class: 'mcd-fd'
-    }));
-    var tx = svgEl.appendChild(mkSvg('text', {
-      x: x, y: y, 'text-anchor': 'middle', 'dominant-baseline': 'central',
-      'font-size': '10', 'font-family': 'sans-serif', fill: color, class: 'mcd-fd'
-    }));
-    tx.textContent = label;
-    return [bg, tx];
-  }
-
-  /* ─── Drag & Drop ─── */
-  function getEventPos(e){
-    if(e.touches && e.touches.length > 0){
-      return {x: e.touches[0].clientX, y: e.touches[0].clientY};
-    }
-    return {x: e.clientX, y: e.clientY};
-  }
-
-  function dragStart(e, id){
-    e.preventDefault();
-    var ep = getEventPos(e);
-    drag = {
-      id:    id,
-      startX: ep.x,
-      startY: ep.y,
-      origX:  pos[id].x,
-      origY:  pos[id].y
-    };
-    var el = document.getElementById('mcd_t_' + id);
-    if(el) el.classList.add('mcd-dragging');
-  }
-
-  function dragMove(e){
-    if(!drag) return;
-    e.preventDefault();
-    var ep  = getEventPos(e);
-    var dx  = ep.x - drag.startX;
-    var dy  = ep.y - drag.startY;
-    var nx  = Math.max(0, drag.origX + dx);
-    var ny  = Math.max(0, drag.origY + dy);
-
-    pos[drag.id].x = nx;
-    pos[drag.id].y = ny;
-
-    var el = document.getElementById('mcd_t_' + drag.id);
-    if(el){ el.style.left = nx + 'px'; el.style.top = ny + 'px'; }
-
-    /* Redessiner uniquement les relations impliquant cette table */
-    connRegistry.forEach(function(entry){
-      if(entry.rel.f === drag.id || entry.rel.t === drag.id){
-        redrawRelation(entry);
-      }
-    });
-
-    /* Agrandir le canvas si nécessaire */
-    var minW = nx + MCD_W + 40;
-    var minH = ny + (heights[drag.id] || 180) + 40;
-    if(parseInt(cvs.style.width)  < minW){ cvs.style.width  = minW + 'px'; svgEl.setAttribute('width',  minW); }
-    if(parseInt(cvs.style.height) < minH){ cvs.style.height = minH + 'px'; svgEl.setAttribute('height', minH); }
-  }
-
-  function dragEnd(){
-    if(!drag) return;
-    var el = document.getElementById('mcd_t_' + drag.id);
-    if(el) el.classList.remove('mcd-dragging');
-    drag = null;
-  }
-
-  /* ─── Hover highlight ─── */
-  function bindHover(){
-    MCD_TABLES.forEach(function(t){
-      var el = document.getElementById('mcd_t_' + t.id);
-      if(!el) return;
-
-      el.addEventListener('mouseenter', function(){
-        if(drag) return;
-        var relSet = new Set();
-        MCD_RELS.forEach(function(r, j){ if(r.f === t.id || r.t === t.id) relSet.add(j); });
-        var tblSet = new Set([t.id]);
-        relSet.forEach(function(j){ tblSet.add(MCD_RELS[j].f); tblSet.add(MCD_RELS[j].t); });
-
-        MCD_TABLES.forEach(function(tt){
-          var e = document.getElementById('mcd_t_' + tt.id);
-          if(!e) return;
-          if(tblSet.has(tt.id)){ e.classList.add('mcd-hi');  e.classList.remove('mcd-dim'); }
-          else                  { e.classList.add('mcd-dim'); e.classList.remove('mcd-hi');  }
+  /* ─── Hover ─── */
+  function aaBindHover(){
+    AA_TABLES.forEach(function(t){
+      var el=document.getElementById('aa_t_'+t.id);if(!el)return;
+      el.addEventListener('mouseenter',function(){
+        if(aaDrag)return;
+        var relSet=new Set(),tblSet=new Set([t.id]);
+        AA_RELS.forEach(function(r,j){if(r.f===t.id||r.t===t.id){relSet.add(j);tblSet.add(r.f);tblSet.add(r.t);}});
+        AA_TABLES.forEach(function(tt){
+          var e=document.getElementById('aa_t_'+tt.id);if(!e)return;
+          if(tblSet.has(tt.id)){e.classList.add('mcd-hi');e.classList.remove('mcd-dim');}
+          else{e.classList.add('mcd-dim');e.classList.remove('mcd-hi');}
         });
-
-        connRegistry.forEach(function(ce){
-          var els = [ce.path].concat(ce.dots, ce.badges, ce.lbl);
-          if(relSet.has(ce.idx)){
-            ce.path.classList.add('mcd-hi');  ce.path.classList.remove('mcd-dim');
-            els.forEach(function(e){ e.classList.remove('mcd-dim'); });
-          } else {
-            ce.path.classList.add('mcd-dim'); ce.path.classList.remove('mcd-hi');
-            els.forEach(function(e){ e.classList.add('mcd-dim'); });
-          }
+        aaConn.forEach(function(ce){
+          var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);
+          if(relSet.has(ce.idx)){ce.path.classList.add('mcd-hi');ce.path.classList.remove('mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});}
+          else{ce.path.classList.add('mcd-dim');ce.path.classList.remove('mcd-hi');els.forEach(function(e){e.classList.add('mcd-dim');});}
         });
       });
-
-      el.addEventListener('mouseleave', function(){
-        if(drag) return;
-        MCD_TABLES.forEach(function(tt){
-          var e = document.getElementById('mcd_t_' + tt.id);
-          if(e) e.classList.remove('mcd-hi', 'mcd-dim');
-        });
-        connRegistry.forEach(function(ce){
-          var els = [ce.path].concat(ce.dots, ce.badges, ce.lbl);
-          ce.path.classList.remove('mcd-hi', 'mcd-dim');
-          els.forEach(function(e){ e.classList.remove('mcd-dim'); });
-        });
+      el.addEventListener('mouseleave',function(){
+        if(aaDrag)return;
+        AA_TABLES.forEach(function(tt){var e=document.getElementById('aa_t_'+tt.id);if(e)e.classList.remove('mcd-hi','mcd-dim');});
+        aaConn.forEach(function(ce){var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);ce.path.classList.remove('mcd-hi','mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});});
       });
     });
   }
 
   /* ─── Déclenchement à l'ouverture du sous-modal ─── */
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest('[onclick*="vest-mcd"]');
-    if(btn) setTimeout(mcdInit, 160);
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('[onclick*="feat-mcd-animaland"]');
+    if(btn) setTimeout(aaInit,180);
   });
 
 })();
