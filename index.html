@@ -7,6 +7,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ── Fix card GSB Notes : pleine largeur (2 colonnes) ── */
+#projet-ap .projects-grid .project-card.ap-full {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto;
+}
+#projet-ap .projects-grid .project-card.ap-full .ap-project-visual {
+  height: auto;
+  min-height: 220px;
+  border-radius: 12px 0 0 12px;
+}
+#projet-ap .projects-grid .project-card.ap-full .project-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  #projet-ap .projects-grid .project-card.ap-full {
+    grid-column: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  #projet-ap .projects-grid .project-card.ap-full .ap-project-visual {
+    border-radius: 12px 12px 0 0;
+    min-height: 180px;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -483,7 +513,6 @@
         <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title" data-i18n="v9.title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview" data-i18n="v9.preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title" data-i18n="v10.title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview" data-i18n="v10.preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="v11.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="v11.preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <!-- ══ NOUVEAU BOUTON MCD ══ -->
         <button class="modal-feature-btn" onclick="openSubModal('vest-mcd')"><div style="flex:1"><span class="feat-title">&#x1F5C2;&#xFE0F; MCD du projet</span><span class="feat-preview">Modele Conceptuel de Donnees — structure et relations de la base PostgreSQL.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
@@ -557,7 +586,7 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-<!-- ══ NOUVEAU SOUS-MODAL MCD ANIMAL'VEST ══ -->
+<!-- SOUS-MODAL MCD ANIMAL'VEST -->
 <div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
   <div class="submodal" style="max-width:900px;width:95vw;">
     <div class="submodal-header">
@@ -648,7 +677,7 @@
 <div class="submodal-overlay" id="sal-grille" onclick="closeSubModal(event,'sal-grille')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Grille tarifaire &amp; Echelons</div><button class="submodal-close" onclick="closeSubModalBtn('sal-grille')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">La remuneration suit une grille officielle de 13 echelons.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 echelons</strong>. Echelons 1-8 : 2 ans chacun, 9-12 : 4 ans, 13 : palier maximum (32+ ans).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires de <strong>4 633,98 €</strong> a <strong>9 368,05 €</strong> brut mensuel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>echelons</strong> reliee aux praticiens par une <strong>cle etrangere</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Modification de la grille = recalcul automatique de tous les salaires.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="sal-anciennete" onclick="closeSubModal(event,'sal-anciennete')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x23F3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Calcul automatique de l'anciennete</div><button class="submodal-close" onclick="closeSubModalBtn('sal-anciennete')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'echelon est determine automatiquement a partir de l'anciennete en jours.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Anciennete stockee en <strong>nombre de jours</strong>, mappee sur 13 echelons.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Algorithme de correspondance</strong> attribue automatiquement l'echelon.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Modification de l'anciennete = <strong>recalcul instantane</strong> de l'echelon et du salaire.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Coherence totale</strong> entre anciennete, echelon et salaire.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Interface web complete pour consulter, filtrer et mettre a jour les informations salariales.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complete des praticiens : nom, anciennete, echelon et salaire brut.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Filtres</strong> par nom, echelon ou tranche de salaire.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Fiche detaillee par praticien.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Formulaire de <strong>mise a jour de l'anciennete</strong> avec recalcul automatique.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique.</span></div></div></div></div></div>
-<div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">API REST Laravel pour exposer les donnees en vue d'un portage mobile futur.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Endpoint GET</strong> exposant la liste des praticiens au format <strong>JSON</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Routes definies dans <strong>routes/api.php</strong> de Laravel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Donnees serialisees via des <strong>API Resources Laravel</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Prete a etre consommee par une <strong>application Flutter</strong> (GSB Mission 5).</span></div></div></div></div></div>
+<div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">API REST Laravel pour exposer les donnees en vue d'un portage mobile futur.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Endpoint GET</strong> exposant la liste des praticiens au format <strong>JSON</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Routes definies dans <strong>routes/api.php</strong> de Laravel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Donnees serialisees via des <strong>API Resources Laravel</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Prete a etre consommee par une <strong>application Flutter</strong> (GSB Mission 3).</span></div></div></div></div></div>
 <div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetes, echelons et salaires.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>echelons</strong> avec 13 niveaux et salaires associes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticiens</strong> enrichie avec anciennete et cle etrangere vers echelons.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Migrations Laravel</strong> pour versionner les modifications de schema.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Seeder</strong> pour la grille tarifaire et les anciennetes initiales.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Modeles Eloquent</strong> pour les relations praticiens-echelons.</span></div></div></div></div></div>
 
 <!-- ═══ MODAL LOL ═══ -->
@@ -680,7 +709,11 @@
 
 <div class="arcane-divider"><div class="divider-gem"></div></div>
 
-<!-- PROJET AP -->
+<!-- ═══════════════════════════════════════
+     PROJET AP — CORRIGÉ
+     - Card GSB Notes : classe ap-full → pleine largeur (2 colonnes)
+     - Mission 5 → Mission 3
+     ═══════════════════════════════════════ -->
 <section id="projet-ap">
   <div class="section-header reveal">
     <span class="section-number">05</span>
@@ -792,8 +825,8 @@
       </div>
     </div>
 
-    <!-- CARD 3 : GSB NOTES -->
-    <div class="project-card reveal">
+    <!-- CARD 3 : GSB NOTES — pleine largeur (2 colonnes) — Mission 3 -->
+    <div class="project-card ap-full reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#120d22 0%,#241540 55%,#120d22 100%);">
         <div class="ap-dots" style="--ap-dot-color:rgba(180,140,255,0.18);"></div>
         <div class="ap-fc tl" style="--ap-fc-color:#b090ff;"></div><div class="ap-fc tr" style="--ap-fc-color:#b090ff;"></div>
@@ -828,7 +861,7 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 5</div>
+        <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 3</div>
         <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
         <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
         <div class="project-tags">
@@ -878,7 +911,7 @@
 
 <script src="Script.js"></script>
 
-<!-- ══ MERMAID — MCD Animal'vest ══ -->
+<!-- MERMAID — MCD Animal'vest -->
 <script type="module">
 import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
 
@@ -1028,7 +1061,6 @@ async function renderMCD() {
   }
 }
 
-// Declencher le rendu quand le sous-modal MCD est ouvert
 document.addEventListener('click', function(e) {
   const btn = e.target.closest('[onclick*="vest-mcd"]');
   if (btn) setTimeout(renderMCD, 120);
