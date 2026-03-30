@@ -1473,36 +1473,28 @@ document.addEventListener('keydown', function (e) {
 })();
 
 // ─── Dictionnaire de traductions ───────────────────────────────────────────
-const TRANSLATIONS = {
+// ─── Dictionnaire de traductions ───────────────────────────────────────────
+var TRANSLATIONS = {
   fr: {
-    // Nav
     "nav.about":    "A propos",
     "nav.timeline": "Parcours",
     "nav.skills":   "Competences",
     "nav.projects": "Projets",
     "nav.ap":       "Projet AP",
     "nav.contact":  "Contact",
-
-    // Hero
     "hero.subtitle": "Etudiant",
     "hero.cta1":     "Voir mes projets",
     "hero.cta2":     "&#x2B07; Telecharger CV",
     "hero.scroll":   "Defiler",
-
-    // Buttons
     "btn.animOff": "Anims ON",
     "btn.animOn":  "Anims OFF",
     "btn.open":    "&#x2756; Ouvrir",
-
-    // About
     "about.title":    "A propos",
     "about.flipHint": "&#x2756; Cliquer pour decouvrir &#x2756;",
     "about.text1":    "Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.",
     "about.text2":    "J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.",
     "about.projects": "Projets",
     "about.apps":     "Apps Play Store",
-
-    // Timeline
     "timeline.title": "Parcours",
     "tl1.title": "BTS SIO — 2eme annee", "tl1.sub": "Option SLAM",
     "tl1.desc": "Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.",
@@ -1513,8 +1505,6 @@ const TRANSLATIONS = {
     "tl3.title": "Lycee", "tl3.sub": "Bac Pro MELEC",
     "tl3.desc": "Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.",
     "tl3.badge": "Diplome",
-
-    // Skills
     "skills.title": "Competences",
     "skill1.name": "Developpement",
     "skill2.name": "Donnees", "skill2.tag4": "Modelisation BDD", "skill2.tag5": "SQL avance",
@@ -1522,8 +1512,6 @@ const TRANSLATIONS = {
     "skill4.name": "Bloc 1 — Support", "skill4.tag1": "Gestion patrimoine", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Deploiement service", "skill4.tag4": "Mode projet", "skill4.tag5": "Veille techno",
     "skill5.name": "Bloc 2 — SLAM", "skill5.tag1": "Conception applicative", "skill5.tag2": "Maintenance corrective", "skill5.tag3": "Maintenance evolutive", "skill5.tag4": "Architecture logicielle", "skill5.tag5": "UML / Modelisation",
     "skill6.name": "Bloc 3 — Cybersecurite", "skill6.tag1": "RGPD / CNIL", "skill6.tag2": "Gestion des acces", "skill6.tag3": "Securite applicative", "skill6.tag4": "Analyse logs", "skill6.tag5": "Prevention attaques",
-
-    // Projects
     "projects.title":    "Projets",
     "projects.personal": "Voir mes projets personnels",
     "p1.type": "Application Mobile — Chat Temps Reel",
@@ -1533,12 +1521,8 @@ const TRANSLATIONS = {
     "p2.desc": "Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.",
     "p3.type": "Projet Web — Personnel",
     "p3.desc": "Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.",
-
-    // Modal generic
     "modal.clickHint": "&#x2756; Cliquer sur une fonctionnalite pour en savoir plus",
     "submodal.feature": "Fonctionnalite",
-
-    // Modal Animal'and
     "m1.desc": "Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.",
     "f1.title": "&#x1F511; Inscription &amp; Acces", "f1.preview": "Validation manuelle des comptes par un administrateur avant acces.",
     "f1.desc": "L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.",
@@ -1554,8 +1538,6 @@ const TRANSLATIONS = {
     "f6.title": "&#x1F3A8; Personnalisation", "f6.preview": "Fond d'ecran personnalisable par l'utilisateur selon ses preferences.",
     "f7.title": "&#x1F6E1;&#xFE0F; Panel administrateur", "f7.preview": "Gestion complete des comptes : roles, bans, suppressions, inscriptions.",
     "f8.title": "&#x1F5C4;&#xFE0F; Base de donnees", "f8.preview": "PostgreSQL sur OVH, deploye via Termius SSH.",
-
-    // Modal Animal'vest
     "m2.desc": "Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.",
     "v1.title": "&#x1F510; Acces membres uniquement", "v1.preview": "Connexion sans identifiants via un compte temporaire supprime a la deconnexion.",
     "v2.title": "&#x1F6CD;&#xFE0F; Catalogue de produits", "v2.preview": "Consultation des articles avec photos, descriptions, prix et selection de taille.",
@@ -1568,8 +1550,6 @@ const TRANSLATIONS = {
     "v9.title": "&#x2709;&#xFE0F; Emails automatiques", "v9.preview": "Un email est envoye au membre a chaque changement de statut de sa commande.",
     "v10.title": "&#x1F512; Securite &amp; Mot de passe", "v10.preview": "Politique commune avec indicateur de force, formatters et rate limiter anti-abus.",
     "v11.title": "&#x1F5C4;&#xFE0F; Base de donnees", "v11.preview": "Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.",
-
-    // GSB
     "gsb1.type": "Application Windows — GSB Mission 1",
     "gsb1.mTitle": "GSB Gestion des Conges",
     "gsb1.desc": "Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.",
@@ -1580,64 +1560,45 @@ const TRANSLATIONS = {
     "g3.title": "&#x1F6E1;&#xFE0F; Panel RH", "g3.preview": "Liste des demandes en attente, consultation et decision d'acceptation ou de refus.",
     "g4.title": "&#x1F514; Notifications a la connexion", "g4.preview": "Le praticien est notifie de l'etat de ses demandes des la connexion.",
     "g5.title": "&#x1F5C4;&#xFE0F; Base de donnees", "g5.preview": "API REST Laravel, base MySQL, consommee par l'application C# Windows.",
-
-    // AP
     "ap.title": "Projet AP",
     "ap.gsb1desc": "Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.",
     "ap.gsb2desc": "Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.",
     "ap.inprogress": "&#x23F3; En cours",
-
-    // LoL
     "lol.desc": "Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.",
     "lol.features": "Fonctionnalites",
     "lol.f1": "Affichage et recherche de champions",
     "lol.f2": "Base de donnees MySQL des personnages",
     "lol.f3": "Design thematique inspire du jeu",
     "lol.f4": "Interface web responsive en PHP/HTML/CSS",
-
-    // Contact
     "contact.title":   "Me contacter",
     "contact.text":    "\"Chaque grand voyage commence par un premier message.\"<br>Discutons de ton prochain projet.",
     "contact.email":   "&#x2709; Email",
     "contact.linkedin":"&#x25C8; LinkedIn",
     "contact.cv":      "&#x2B07; CV PDF",
-
-    // Footer
     "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
-
-    // Video modal
     "video.notfound": "Fichier introuvable :"
   },
 
   en: {
-    // Nav
     "nav.about":    "About",
     "nav.timeline": "Journey",
     "nav.skills":   "Skills",
     "nav.projects": "Projects",
     "nav.ap":       "AP Project",
     "nav.contact":  "Contact",
-
-    // Hero
     "hero.subtitle": "Student",
     "hero.cta1":     "View my projects",
     "hero.cta2":     "&#x2B07; Download CV",
     "hero.scroll":   "Scroll",
-
-    // Buttons
     "btn.animOff": "Anims ON",
     "btn.animOn":  "Anims OFF",
     "btn.open":    "&#x2756; Open",
-
-    // About
     "about.title":    "About",
     "about.flipHint": "&#x2756; Click to discover &#x2756;",
     "about.text1":    "Hi, my name is Corentin. Let me tell you about my journey and how I ended up studying IT, even though I originally started in an Electrical Engineering vocational program.",
     "about.text2":    "I completed a vocational Bac Pro in Electrical Engineering and Connected Environments, but after two years I realized it was no longer the right fit for me. So I decided to pivot to IT, enrolled in a BTS SIO with a SLAM specialization, and honestly fell in love with it from day one. Today I build mobile and web applications — I even published an app on the Play Store during my internship.",
     "about.projects": "Projects",
     "about.apps":     "Play Store Apps",
-
-    // Timeline
     "timeline.title": "Journey",
     "tl1.title": "BTS SIO — 2nd year", "tl1.sub": "SLAM track",
     "tl1.desc": "Deepened skills and completed real-world projects including Animal'and published on the Play Store.",
@@ -1648,8 +1609,6 @@ const TRANSLATIONS = {
     "tl3.title": "High School", "tl3.sub": "Vocational Bac — MELEC",
     "tl3.desc": "Obtained the Vocational Baccalaureate in Electrical Engineering and Connected Environments.",
     "tl3.badge": "Graduated",
-
-    // Skills
     "skills.title": "Skills",
     "skill1.name": "Development",
     "skill2.name": "Data", "skill2.tag4": "DB Modeling", "skill2.tag5": "Advanced SQL",
@@ -1657,8 +1616,6 @@ const TRANSLATIONS = {
     "skill4.name": "Block 1 — Support", "skill4.tag1": "Asset management", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Service deployment", "skill4.tag4": "Project mode", "skill4.tag5": "Tech watch",
     "skill5.name": "Block 2 — SLAM", "skill5.tag1": "App design", "skill5.tag2": "Corrective maintenance", "skill5.tag3": "Evolutive maintenance", "skill5.tag4": "Software architecture", "skill5.tag5": "UML / Modeling",
     "skill6.name": "Block 3 — Cybersecurity", "skill6.tag1": "GDPR / CNIL", "skill6.tag2": "Access management", "skill6.tag3": "App security", "skill6.tag4": "Log analysis", "skill6.tag5": "Attack prevention",
-
-    // Projects
     "projects.title":    "Projects",
     "projects.personal": "View my personal projects",
     "p1.type": "Mobile App — Real-Time Chat",
@@ -1668,12 +1625,8 @@ const TRANSLATIONS = {
     "p2.desc": "Companion app to Animal'and dedicated to managing equipment and accessories for animals.",
     "p3.type": "Web Project — Personal",
     "p3.desc": "Web project set in the League of Legends universe with data display and immersive design.",
-
-    // Modal generic
     "modal.clickHint": "&#x2756; Click on a feature to learn more",
     "submodal.feature": "Feature",
-
-    // Modal Animal'and
     "m1.desc": "Animal'and Chat is a Flutter mobile messaging application. The backend is deployed on an OVH server via <strong>Termius SSH</strong>, the database is PostgreSQL, and notifications are handled by Firebase Messaging.",
     "f1.title": "&#x1F511; Registration &amp; Access", "f1.preview": "Manual account validation by an administrator before access is granted.",
     "f1.desc": "Access to the app is not open to everyone. Every new registration goes through a validation process before the user can log in.",
@@ -1689,8 +1642,6 @@ const TRANSLATIONS = {
     "f6.title": "&#x1F3A8; Customization", "f6.preview": "Wallpaper customizable by the user according to their preferences.",
     "f7.title": "&#x1F6E1;&#xFE0F; Admin panel", "f7.preview": "Full account management: roles, bans, deletions, registrations.",
     "f8.title": "&#x1F5C4;&#xFE0F; Database", "f8.preview": "PostgreSQL on OVH, deployed via Termius SSH.",
-
-    // Modal Animal'vest
     "m2.desc": "Animal'vest is the association's private shop, reserved for its members. It allows browsing the product catalog (jackets, accessories...), placing orders and tracking them, all managed by a built-in admin panel.",
     "v1.title": "&#x1F510; Members-only access", "v1.preview": "Login without credentials via a temporary account deleted on logout.",
     "v2.title": "&#x1F6CD;&#xFE0F; Product catalog", "v2.preview": "Browse items with photos, descriptions, prices and size selection.",
@@ -1703,8 +1654,6 @@ const TRANSLATIONS = {
     "v9.title": "&#x2709;&#xFE0F; Automatic emails", "v9.preview": "An email is sent to the member at each order status change.",
     "v10.title": "&#x1F512; Security &amp; Password", "v10.preview": "Shared policy with strength indicator, formatters and anti-abuse rate limiter.",
     "v11.title": "&#x1F5C4;&#xFE0F; Database", "v11.preview": "Flutter, Firebase for notifications and PostgreSQL/MySQL for data.",
-
-    // GSB
     "gsb1.type": "Windows App — GSB Mission 1",
     "gsb1.mTitle": "GSB Leave Management",
     "gsb1.desc": "C# Windows application developed as part of the GSB AP project (Galaxy Swiss Bourdin). It allows practitioners to submit leave requests and the HR manager to approve or reject them, with automatic balance management and login notifications.",
@@ -1715,56 +1664,41 @@ const TRANSLATIONS = {
     "g3.title": "&#x1F6E1;&#xFE0F; HR Panel", "g3.preview": "List of pending requests, review and accept/reject decision.",
     "g4.title": "&#x1F514; Login notifications", "g4.preview": "The practitioner is notified of their request status on login.",
     "g5.title": "&#x1F5C4;&#xFE0F; Database", "g5.preview": "Laravel REST API, MySQL database, consumed by the C# Windows app.",
-
-    // AP
     "ap.title": "AP Project",
     "ap.gsb1desc": "C# Windows application allowing practitioners to submit leave requests and the HR manager to accept or reject them. Balance management, notifications and admin panel.",
     "ap.gsb2desc": "Flutter application displaying GSB practitioner ratings. Two evaluator types (client and expert), ranking by score, detail view with comments. In development.",
     "ap.inprogress": "&#x23F3; In progress",
-
-    // LoL
     "lol.desc": "Immersive web project inspired by the League of Legends universe. Game data display, thematic design and database integration to manage champions and statistics.",
     "lol.features": "Features",
     "lol.f1": "Champion display and search",
     "lol.f2": "MySQL character database",
     "lol.f3": "Thematic design inspired by the game",
     "lol.f4": "Responsive PHP/HTML/CSS web interface",
-
-    // Contact
     "contact.title":    "Get in touch",
     "contact.text":     "\"Every great journey starts with a first message.\"<br>Let's talk about your next project.",
     "contact.email":    "&#x2709; Email",
     "contact.linkedin": "&#x25C8; LinkedIn",
     "contact.cv":       "&#x2B07; CV PDF",
-
-    // Footer
     "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
-
-    // Video modal
     "video.notfound": "File not found:"
   }
 };
 
 // ─── Langue courante ────────────────────────────────────────────────────────
-let currentLang = localStorage.getItem('portfolio-lang') || 'fr';
+var currentLang = localStorage.getItem('portfolio-lang') || 'fr';
 
 function applyLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
   localStorage.setItem('portfolio-lang', lang);
-
-  const dict = TRANSLATIONS[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
+  var dict = TRANSLATIONS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
     if (dict[key] !== undefined) {
       el.innerHTML = dict[key];
     }
   });
-
-  // Mettre à jour le title de la page
-  document.title = lang === 'en'
-    ? 'Corentin Mesure — Portfolio'
-    : 'Corentin Mesure — Portfolio';
+  document.title = 'Corentin Mesure — Portfolio';
 }
 
 function toggleLang() {
@@ -1772,7 +1706,7 @@ function toggleLang() {
 }
 
 // ─── Animations toggle ──────────────────────────────────────────────────────
-let animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
+var animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
 
 function applyAnimState(enabled) {
   animEnabled = enabled;
@@ -1785,9 +1719,8 @@ function toggleAnimations() {
 }
 
 // ─── Init au chargement ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   applyLang(currentLang);
   applyAnimState(animEnabled);
 });
-
 
