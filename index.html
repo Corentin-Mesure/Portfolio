@@ -680,7 +680,7 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — DRAGGABLE (original conservé) ══ -->
+<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — DRAGGABLE ══ -->
 <div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
   <div class="submodal" style="max-width:960px;width:95vw;">
     <div class="submodal-header">
@@ -986,7 +986,7 @@
 
 <script src="Script.js"></script>
 
-<!-- ══ MCD Animal'vest — DRAGGABLE (original conservé) ══ -->
+<!-- ══ MCD Animal'vest — DRAGGABLE ══ -->
 <script>
 (function(){
   const MCD_W = 200, MCD_RH = 22, MCD_HH = 34;
@@ -1101,7 +1101,7 @@
   }
   function redrawRelation(entry){
     var r=entry.rel,i=entry.idx,fh=heights[r.f]||180,th=heights[r.t]||180;
-    var fp=borderPoint(r.f,fh,centerOf(r.t,th)),tp=borderPoint(r.t,th,centerOf(r.f,fh));
+    var fp=borderPoint(r.f,fh,centerOf(r.t,heights[r.t]||180)),tp=borderPoint(r.t,th,centerOf(r.f,fh));
     var c1=ctrlPt(fp,tp),c2=ctrlPt(tp,fp);
     entry.path.setAttribute('d',bezier(fp,c1,c2,tp));
     entry.dots[0].setAttribute('cx',fp.x);entry.dots[0].setAttribute('cy',fp.y);
@@ -1161,10 +1161,10 @@
     {label:'Notifications & Sessions',color:'#d44f7a'},  // 4 rose
   ];
 
-  /* ─── Définition des 16 tables ─── */
+  /* ─── Définition des 16 tables — y espacés pour éviter les chevauchements ─── */
   var AA_TABLES = [
-    /* ── Utilisateurs & sécurité ── */
-    {id:'users', g:0, x:20, y:20, cols:[
+    /* ── Rangée 1 : Utilisateurs & sécurité — y:20 ── */
+    {id:'users',                    g:0, x:20,  y:20,  cols:[
       {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
       {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
       {n:'role',t:'varchar(50)'},{n:'avatar_url',t:'text'},
@@ -1173,14 +1173,14 @@
       {n:'banned_at',t:'timestamp'},{n:'banned_reason',t:'text'},
       {n:'created_at',t:'timestamp'}
     ]},
-    {id:'pending_registrations', g:0, x:260, y:20, cols:[
+    {id:'pending_registrations',    g:0, x:260, y:20,  cols:[
       {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
       {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
       {n:'status',t:'varchar(50)'},{n:'request_message',t:'text'},
       {n:'reviewed_by',fk:'users',t:'int'},{n:'reviewed_at',t:'timestamp'},
       {n:'created_at',t:'timestamp'}
     ]},
-    {id:'blacklist', g:0, x:500, y:20, cols:[
+    {id:'blacklist',                g:0, x:500, y:20,  cols:[
       {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'username',t:'varchar(100)'},{n:'ip_address',t:'varchar(45)'},
       {n:'device_fingerprint',t:'text'},{n:'reason',t:'text'},
@@ -1189,15 +1189,15 @@
       {n:'expires_at',t:'timestamp'},{n:'unbanned_at',t:'timestamp'},
       {n:'created_at',t:'timestamp'}
     ]},
-    {id:'user_sessions', g:4, x:760, y:20, cols:[
+    {id:'user_sessions',            g:4, x:760, y:20,  cols:[
       {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'last_ip',t:'varchar(45)'},{n:'device_fingerprint',t:'text'},
       {n:'device_info',t:'jsonb'},{n:'last_activity',t:'timestamp'},
       {n:'created_at',t:'timestamp'}
     ]},
 
-    /* ── Messagerie ── */
-    {id:'messages', g:1, x:20, y:440, cols:[
+    /* ── Rangée 2 : Messagerie & Conversations — y:560 ── */
+    {id:'messages',                 g:1, x:20,  y:560, cols:[
       {n:'id',pk:true,t:'int'},{n:'content',t:'text'},
       {n:'sender_id',fk:'users',t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
       {n:'group_id',fk:'groups',t:'int'},{n:'type',t:'varchar(20)'},
@@ -1205,68 +1205,62 @@
       {n:'is_read',t:'bool'},{n:'poll_id',fk:'polls',t:'int'},
       {n:'edited_at',t:'timestamp'},{n:'created_at',t:'timestamp'}
     ]},
-    {id:'message_reactions', g:1, x:260, y:440, cols:[
+    {id:'message_reactions',        g:1, x:260, y:560, cols:[
       {n:'id',pk:true,t:'int'},{n:'message_id',fk:'messages',t:'int'},
       {n:'user_id',fk:'users',t:'int'},{n:'reaction',t:'varchar(50)'},
       {n:'created_at',t:'timestamp'}
     ]},
-
-    /* ── Conversations ── */
-    {id:'conversations', g:2, x:500, y:440, cols:[
+    {id:'conversations',            g:2, x:500, y:560, cols:[
       {n:'id',pk:true,t:'int'},{n:'created_at',t:'timestamp'}
     ]},
-    {id:'conversation_participants', g:2, x:740, y:440, cols:[
+    {id:'conversation_participants',g:2, x:740, y:560, cols:[
       {n:'id',pk:true,t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
       {n:'user_id',fk:'users',t:'int'}
     ]},
 
-    /* ── Groupes ── */
-    {id:'groups', g:2, x:20, y:800, cols:[
+    /* ── Rangée 3 : Groupes, backgrounds & sondages — y:1060 ── */
+    {id:'groups',                   g:2, x:20,  y:1060, cols:[
       {n:'id',pk:true,t:'int'},{n:'name',t:'varchar(100)'},
       {n:'description',t:'text'},{n:'avatar_url',t:'text'},
       {n:'created_at',t:'timestamp'}
     ]},
-    {id:'group_members', g:2, x:260, y:800, cols:[
+    {id:'group_members',            g:2, x:260, y:1060, cols:[
       {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
       {n:'user_id',fk:'users',t:'int'},{n:'is_admin',t:'bool'},
       {n:'joined_at',t:'timestamp'}
     ]},
-
-    /* ── Chat backgrounds ── */
-    {id:'chat_backgrounds', g:2, x:500, y:800, cols:[
+    {id:'chat_backgrounds',         g:2, x:500, y:1060, cols:[
       {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'conversation_id',fk:'conversations',t:'int'},{n:'group_id',fk:'groups',t:'int'},
       {n:'background_id',t:'varchar(100)'},{n:'image_url',t:'text'},
       {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
     ]},
-
-    /* ── Sondages ── */
-    {id:'polls', g:3, x:760, y:800, cols:[
+    {id:'polls',                    g:3, x:760, y:1060, cols:[
       {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
       {n:'creator_id',fk:'users',t:'int'},{n:'question',t:'text'},
       {n:'allow_multiple_choices',t:'bool'},{n:'is_anonymous',t:'bool'},
       {n:'deadline',t:'timestamp'},{n:'is_closed',t:'bool'},
       {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
     ]},
-    {id:'poll_options', g:3, x:20, y:1160, cols:[
+
+    /* ── Rangée 4 : Options de sondage, votes & notifications — y:1580 ── */
+    {id:'poll_options',             g:3, x:20,  y:1580, cols:[
       {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
       {n:'option_text',t:'text'},{n:'option_order',t:'int'},
       {n:'created_at',t:'timestamp'}
     ]},
-    {id:'poll_votes', g:3, x:260, y:1160, cols:[
+    {id:'poll_votes',               g:3, x:260, y:1580, cols:[
       {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
       {n:'option_id',fk:'poll_options',t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'created_at',t:'timestamp'}
     ]},
-
-    /* ── Notifications & FCM ── */
-    {id:'user_fcm_tokens', g:4, x:500, y:1160, cols:[
+    {id:'user_fcm_tokens',          g:4, x:500, y:1580, cols:[
       {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'fcm_token',t:'text'},{n:'device_id',t:'varchar(255)'},
       {n:'device_type',t:'varchar(50)'},{n:'created_at',t:'timestamp'},
       {n:'updated_at',t:'timestamp'}
     ]},
-    {id:'notification_preferences', g:4, x:760, y:1160, cols:[
+    {id:'notification_preferences', g:4, x:760, y:1580, cols:[
       {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
       {n:'enabled',t:'bool'},{n:'private_messages',t:'bool'},
       {n:'group_messages',t:'bool'},{n:'mentions',t:'bool'},
@@ -1277,43 +1271,30 @@
 
   /* ─── Relations ─── */
   var AA_RELS = [
-    /* Inscriptions */
-    {f:'pending_registrations', t:'users',         lbl:'validée par', cf:'0,N', ct:'0,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
-    /* Blacklist */
-    {f:'blacklist',             t:'users',         lbl:'concerne',    cf:'0,N', ct:'0,1', color:'#e83d5a', pfSign:-1, ptSign: 1},
-    /* Sessions */
-    {f:'user_sessions',         t:'users',         lbl:'pour',        cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
-    /* Messages → users */
-    {f:'messages',              t:'users',         lbl:'envoyé par',  cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
-    /* Messages → conversations */
-    {f:'messages',              t:'conversations', lbl:'dans',        cf:'0,N', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
-    /* Messages → groups */
-    {f:'messages',              t:'groups',        lbl:'dans groupe', cf:'0,N', ct:'0,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    /* Messages → polls */
-    {f:'messages',              t:'polls',         lbl:'contient',    cf:'0,1', ct:'0,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    /* Réactions */
-    {f:'message_reactions',     t:'messages',      lbl:'sur',         cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
-    {f:'message_reactions',     t:'users',         lbl:'par',         cf:'0,N', ct:'1,1', color:'#2ca878', pfSign: 1, ptSign:-1},
-    /* Participants */
-    {f:'conversation_participants', t:'conversations', lbl:'dans', cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'conversation_participants', t:'users',         lbl:'est', cf:'0,N', ct:'1,1', color:'#3d6ee8',  pfSign: 1, ptSign:-1},
-    /* Membres groupe */
-    {f:'group_members',         t:'groups',        lbl:'du groupe',   cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'group_members',         t:'users',         lbl:'membre',      cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
-    /* Chat backgrounds */
-    {f:'chat_backgrounds',      t:'users',         lbl:'de',          cf:'0,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'chat_backgrounds',      t:'conversations', lbl:'pour conv.',  cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
-    {f:'chat_backgrounds',      t:'groups',        lbl:'pour groupe', cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign: 1},
-    /* Polls */
-    {f:'polls',                 t:'groups',        lbl:'dans groupe', cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'polls',                 t:'users',         lbl:'créé par',    cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    {f:'poll_options',          t:'polls',         lbl:'option de',   cf:'1,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'poll_votes',            t:'polls',         lbl:'vote pour',   cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'poll_votes',            t:'poll_options',  lbl:'option',      cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    {f:'poll_votes',            t:'users',         lbl:'par',         cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign: 1},
-    /* FCM / Notifs */
-    {f:'user_fcm_tokens',       t:'users',         lbl:'pour',        cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
-    {f:'notification_preferences', t:'users',      lbl:'prefs de',    cf:'0,1', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+    {f:'pending_registrations',     t:'users',         lbl:'validée par',  cf:'0,N', ct:'0,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
+    {f:'blacklist',                 t:'users',         lbl:'concerne',     cf:'0,N', ct:'0,1', color:'#e83d5a', pfSign:-1, ptSign: 1},
+    {f:'user_sessions',             t:'users',         lbl:'pour',         cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+    {f:'messages',                  t:'users',         lbl:'envoyé par',   cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
+    {f:'messages',                  t:'conversations', lbl:'dans',         cf:'0,N', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
+    {f:'messages',                  t:'groups',        lbl:'dans groupe',  cf:'0,N', ct:'0,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'messages',                  t:'polls',         lbl:'contient',     cf:'0,1', ct:'0,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    {f:'message_reactions',         t:'messages',      lbl:'sur',          cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
+    {f:'message_reactions',         t:'users',         lbl:'par',          cf:'0,N', ct:'1,1', color:'#2ca878', pfSign: 1, ptSign:-1},
+    {f:'conversation_participants', t:'conversations', lbl:'dans',         cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'conversation_participants', t:'users',         lbl:'est',          cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
+    {f:'group_members',             t:'groups',        lbl:'du groupe',    cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'group_members',             t:'users',         lbl:'membre',       cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
+    {f:'chat_backgrounds',          t:'users',         lbl:'de',           cf:'0,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
+    {f:'chat_backgrounds',          t:'conversations', lbl:'pour conv.',   cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
+    {f:'chat_backgrounds',          t:'groups',        lbl:'pour groupe',  cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign: 1},
+    {f:'polls',                     t:'groups',        lbl:'dans groupe',  cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'polls',                     t:'users',         lbl:'créé par',     cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    {f:'poll_options',              t:'polls',         lbl:'option de',    cf:'1,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'poll_votes',                t:'polls',         lbl:'vote pour',    cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
+    {f:'poll_votes',                t:'poll_options',  lbl:'option',       cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
+    {f:'poll_votes',                t:'users',         lbl:'par',          cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign: 1},
+    {f:'user_fcm_tokens',           t:'users',         lbl:'pour',         cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+    {f:'notification_preferences',  t:'users',         lbl:'prefs de',     cf:'0,1', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
   ];
 
   /* ─── État ─── */
@@ -1328,8 +1309,9 @@
     aaRendered=true;
     AA_TABLES.forEach(function(t){ aaTMap[t.id]=t; });
 
+    /* maxY calculé avec +500 pour laisser de la place aux tables les plus hautes */
     var maxX=AA_TABLES.reduce(function(m,t){return Math.max(m,t.x+AA_W);},0)+80;
-    var maxY=AA_TABLES.reduce(function(m,t){return Math.max(m,t.y+420);},0)+80;
+    var maxY=AA_TABLES.reduce(function(m,t){return Math.max(m,t.y+500);},0)+80;
 
     aaCvs=document.getElementById('mcd-aa-cvs');
     if(!aaCvs) return;
