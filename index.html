@@ -483,6 +483,8 @@
         <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title" data-i18n="v9.title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview" data-i18n="v9.preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title" data-i18n="v10.title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview" data-i18n="v10.preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="v11.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="v11.preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <!-- ══ NOUVEAU BOUTON MCD ══ -->
+        <button class="modal-feature-btn" onclick="openSubModal('vest-mcd')"><div style="flex:1"><span class="feat-title">&#x1F5C2;&#xFE0F; MCD du projet</span><span class="feat-preview">Modele Conceptuel de Donnees — structure et relations de la base PostgreSQL.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span>
@@ -554,6 +556,25 @@
 </div>
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
+
+<!-- ══ NOUVEAU SOUS-MODAL MCD ANIMAL'VEST ══ -->
+<div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
+  <div class="submodal" style="max-width:900px;width:95vw;">
+    <div class="submodal-header">
+      <span class="submodal-icon">&#x1F5C2;&#xFE0F;</span>
+      <div class="submodal-type">Fonctionnalite</div>
+      <div class="submodal-title">MCD du projet</div>
+      <button class="submodal-close" onclick="closeSubModalBtn('vest-mcd')">&#x2715;</button>
+    </div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Modele Conceptuel de Donnees de la base PostgreSQL d'Animal'vest — 7 tables, relations et cles etrangeres.</p>
+      <div id="vest-mcd-erd" style="overflow-x:auto;padding:8px 0;min-height:300px;"></div>
+      <p class="submodal-desc" style="margin-top:16px;font-size:12px;opacity:0.7;">
+        &#x26A0; <strong>Note :</strong> <code>products.category</code> est une varchar libre — la table <code>categories</code> existe en parallele sans cle etrangere directe.
+      </p>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MODAL GSB CONGES ═══ -->
 <div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
@@ -659,9 +680,7 @@
 
 <div class="arcane-divider"><div class="divider-gem"></div></div>
 
-<!-- ═══════════════════════════════════════════════
-     PROJET AP — 3 cards avec visuels animés
-═══════════════════════════════════════════════ -->
+<!-- PROJET AP -->
 <section id="projet-ap">
   <div class="section-header reveal">
     <span class="section-number">05</span>
@@ -670,7 +689,7 @@
   </div>
   <div class="projects-grid">
 
-    <!-- ── CARD 1 : GSB CONGÉS ── -->
+    <!-- CARD 1 : GSB CONGÉS -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1526 0%,#1a2d55 55%,#0d1526 100%);">
         <div class="ap-dots"></div>
@@ -724,7 +743,7 @@
       </div>
     </div>
 
-    <!-- ── CARD 2 : GSB SALAIRES ── -->
+    <!-- CARD 2 : GSB SALAIRES -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1a0d 0%,#193519 55%,#0d1a0d 100%);">
         <div class="ap-dots" style="--ap-dot-color:rgba(80,200,100,0.16);"></div>
@@ -773,7 +792,7 @@
       </div>
     </div>
 
-    <!-- ── CARD 3 : GSB NOTES ── -->
+    <!-- CARD 3 : GSB NOTES -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#120d22 0%,#241540 55%,#120d22 100%);">
         <div class="ap-dots" style="--ap-dot-color:rgba(180,140,255,0.18);"></div>
@@ -858,5 +877,163 @@
 </div>
 
 <script src="Script.js"></script>
+
+<!-- ══ MERMAID — MCD Animal'vest ══ -->
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+
+const DIAGRAM = `erDiagram
+  users {
+    int id PK
+    varchar username
+    varchar email
+    varchar password_hash
+    varchar display_name
+    varchar role
+    text avatar_url
+    boolean is_guest
+    timestamp created_at
+    timestamp last_seen
+    varchar fcm_token
+  }
+  categories {
+    int id PK
+    varchar name
+    varchar icon
+    int position
+    timestamptz created_at
+  }
+  units {
+    int id PK
+    varchar name
+    varchar icon
+    timestamptz created_at
+  }
+  unit_categories {
+    int id PK
+    int unit_id FK
+    varchar category_name
+  }
+  products {
+    int id PK
+    varchar name
+    text description
+    numeric price
+    varchar category
+    text image_url
+    text_arr sizes
+    boolean is_active
+    int created_by FK
+    timestamp created_at
+    timestamp updated_at
+    text_arr image_urls
+  }
+  cart_items {
+    int id PK
+    int user_id FK
+    int product_id FK
+    varchar size
+    int quantity
+    timestamp created_at
+    timestamp updated_at
+  }
+  orders {
+    int id PK
+    int user_id FK
+    varchar user_email
+    varchar user_display_name
+    numeric total
+    varchar status
+    text notes
+    text admin_notes
+    varchar tracking_number
+    text shipping_address
+    timestamp created_at
+    timestamp updated_at
+  }
+  order_items {
+    int id PK
+    int order_id FK
+    int product_id FK
+    varchar product_name
+    text product_image_url
+    numeric price
+    varchar size
+    int quantity
+    numeric subtotal
+  }
+
+  users ||--o{ cart_items : "ajoute"
+  users ||--o{ orders : "passe"
+  users ||--o{ products : "cree"
+  products ||--o{ cart_items : "dans"
+  products ||--o{ order_items : "reference"
+  orders ||--|{ order_items : "contient"
+  units ||--|{ unit_categories : "a"
+`;
+
+let rendered = false;
+
+async function renderMCD() {
+  if (rendered) return;
+  rendered = true;
+  const container = document.getElementById('vest-mcd-erd');
+  if (!container) return;
+
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  await document.fonts.ready;
+
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    fontFamily: 'inherit',
+    themeVariables: {
+      darkMode: dark,
+      fontSize: '13px',
+      fontFamily: 'inherit',
+      lineColor: dark ? '#9c9a92' : '#73726c',
+      textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    },
+  });
+
+  try {
+    const { svg } = await mermaid.render('vest-mcd-svg', DIAGRAM);
+    container.innerHTML = svg;
+
+    document.querySelectorAll('#vest-mcd-erd svg .node').forEach(node => {
+      const firstPath = node.querySelector('path[d]');
+      if (!firstPath) return;
+      const d = firstPath.getAttribute('d');
+      const nums = d.match(/-?[\d.]+/g)?.map(Number);
+      if (!nums || nums.length < 8) return;
+      const xs = [nums[0], nums[2], nums[4], nums[6]];
+      const ys = [nums[1], nums[3], nums[5], nums[7]];
+      const x = Math.min(...xs), y = Math.min(...ys);
+      const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', w); rect.setAttribute('height', h);
+      rect.setAttribute('rx', '8');
+      for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+        if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+      }
+      firstPath.replaceWith(rect);
+    });
+
+    document.querySelectorAll('#vest-mcd-erd svg .row-rect-odd path, #vest-mcd-erd svg .row-rect-even path')
+      .forEach(p => p.setAttribute('stroke', 'none'));
+
+  } catch(e) {
+    container.innerHTML = '<p style="color:var(--color-text-secondary,#888);padding:16px;">Erreur de rendu du MCD.</p>';
+  }
+}
+
+// Declencher le rendu quand le sous-modal MCD est ouvert
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[onclick*="vest-mcd"]');
+  if (btn) setTimeout(renderMCD, 120);
+});
+</script>
+
 </body>
 </html>
