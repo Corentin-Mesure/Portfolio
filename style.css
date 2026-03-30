@@ -1934,3 +1934,179 @@ body.sp-compact .skills-grid {
     .toolbar-btn { padding: 6px 10px; }
     .nav-toolbar { gap: 6px; }
   }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AP PROJECT VISUALS — animations style Animal'and
+   Coller à la fin de ton style.css
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── Conteneur principal ── */
+.ap-project-visual {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Corners (mêmes que .about-frame-corner) ── */
+.ap-fc {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  z-index: 4;
+  pointer-events: none;
+}
+.ap-fc::before,
+.ap-fc::after {
+  content: '';
+  position: absolute;
+  background: var(--ap-fc-color, #c8a96e);
+}
+.ap-fc::before { width: 100%; height: 1.5px; top: 0; left: 0; }
+.ap-fc::after  { width: 1.5px; height: 100%; top: 0; left: 0; }
+.ap-fc.tl { top: 8px; left: 8px; }
+.ap-fc.tr { top: 8px; right: 8px; transform: scaleX(-1); }
+.ap-fc.bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
+.ap-fc.br { bottom: 8px; right: 8px; transform: scale(-1); }
+
+/* ── Runes décoratives ── */
+.ap-rune {
+  position: absolute;
+  font-family: serif;
+  font-size: 12px;
+  color: rgba(200,169,110,0.13);
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+.ap-rune.tl { top: 22px; left: 22px; }
+.ap-rune.br { bottom: 22px; right: 22px; }
+
+/* ── Particules ── */
+.ap-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #e8c97e;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Glow radial derrière l'icône ── */
+.ap-glow {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  animation: apGlowPulse 3s ease-in-out infinite;
+}
+
+/* ── Dot pattern visible au hover ── */
+.ap-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    var(--ap-dot-color, rgba(200,169,110,0.15)) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.ap-project-visual:hover .ap-dots { opacity: 1; }
+
+/* ── SVG icon flottant ── */
+.ap-icon-svg {
+  position: relative;
+  z-index: 2;
+  animation: apIconFloat 4s ease-in-out infinite;
+  transition: filter 0.3s;
+}
+.ap-project-visual:hover .ap-icon-svg {
+  filter: drop-shadow(0 0 22px rgba(200,169,110,0.9)) !important;
+}
+
+/* ── Label sous l'icône ── */
+.ap-icon-label {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+  animation: apIconFloat 4s ease-in-out infinite;
+  animation-delay: 0.15s;
+}
+
+/* ══════════════════════
+   KEYFRAMES
+══════════════════════ */
+@keyframes apIconFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes apGlowPulse {
+  0%, 100% { opacity: 0.45; transform: translate(-50%,-50%) scale(1); }
+  50%       { opacity: 0.85; transform: translate(-50%,-50%) scale(1.18); }
+}
+
+@keyframes apP1 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.9; }
+  80%  { opacity: 0.3; }
+  100% { transform: translate(-30px,-54px); opacity: 0; }
+}
+@keyframes apP2 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.8; }
+  80%  { opacity: 0.25; }
+  100% { transform: translate(26px,-50px); opacity: 0; }
+}
+@keyframes apP3 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.7; }
+  80%  { opacity: 0.2; }
+  100% { transform: translate(-16px,-58px); opacity: 0; }
+}
+@keyframes apP4 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.65; }
+  80%  { opacity: 0.2; }
+  100% { transform: translate(34px,-46px); opacity: 0; }
+}
+@keyframes apP5 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.8; }
+  80%  { opacity: 0.3; }
+  100% { transform: translate(-24px,-40px); opacity: 0; }
+}
+@keyframes apP6 {
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 0.7; }
+  80%  { opacity: 0.2; }
+  100% { transform: translate(20px,-62px); opacity: 0; }
+}
+
+/* ── Désactiver les animations si l'utilisateur les coupe ── */
+body.no-anim .ap-icon-svg,
+body.no-anim .ap-icon-label,
+body.no-anim .ap-glow,
+body.no-anim .ap-particle {
+  animation: none !important;
+}
