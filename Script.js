@@ -1767,4 +1767,27 @@ function applyLang(lang) {
     : 'Corentin Mesure — Portfolio';
 }
 
+function toggleLang() {
+  applyLang(currentLang === 'fr' ? 'en' : 'fr');
+}
+
+// ─── Animations toggle ──────────────────────────────────────────────────────
+let animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
+
+function applyAnimState(enabled) {
+  animEnabled = enabled;
+  localStorage.setItem('portfolio-anim', enabled ? 'on' : 'off');
+  document.documentElement.classList.toggle('no-anim', !enabled);
+}
+
+function toggleAnimations() {
+  applyAnimState(!animEnabled);
+}
+
+// ─── Init au chargement ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  applyLang(currentLang);
+  applyAnimState(animEnabled);
+});
+
 
