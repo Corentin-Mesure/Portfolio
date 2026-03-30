@@ -7,6 +7,121 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* ═══ TOOLBAR BUTTONS ═══ */
+  .nav-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.04);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .toolbar-btn:hover::before {
+    opacity: 1;
+  }
+
+  .toolbar-btn:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Active state — langue */
+  .toolbar-btn.lang-btn .lang-fr,
+  .toolbar-btn.lang-btn .lang-en { display: none; }
+  html[lang="fr"] .toolbar-btn.lang-btn .lang-en { display: inline; }
+  html[lang="en"] .toolbar-btn.lang-btn .lang-fr { display: inline; }
+
+  /* Active state — animations */
+  .toolbar-btn.anim-btn .anim-on,
+  .toolbar-btn.anim-btn .anim-off { display: none; }
+  html:not(.no-anim) .toolbar-btn.anim-btn .anim-off { display: inline; }
+  html.no-anim .toolbar-btn.anim-btn .anim-on  { display: inline; }
+
+  /* Indicateur lumineux animations */
+  .anim-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 6px #4ade80;
+    transition: background 0.3s, box-shadow 0.3s;
+    flex-shrink: 0;
+  }
+  html.no-anim .anim-dot {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+  }
+
+  /* Désactivation des animations */
+  html.no-anim *,
+  html.no-anim *::before,
+  html.no-anim *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Tooltip au survol */
+  .toolbar-btn[data-tip] {
+    position: relative;
+  }
+  .toolbar-btn[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .toolbar-btn[data-tip]:hover::after {
+    opacity: 1;
+  }
+
+  /* Responsive — masquer le texte sur petit écran */
+  @media (max-width: 768px) {
+    .toolbar-btn .btn-label { display: none; }
+    .toolbar-btn { padding: 6px 10px; }
+    .nav-toolbar { gap: 6px; }
+  }
+</style>
 </head>
 <body>
 
@@ -16,13 +131,42 @@
 <nav>
   <div class="nav-logo">CM</div>
   <ul class="nav-links">
-    <li><a href="#about">A propos</a></li>
-    <li><a href="#timeline">Parcours</a></li>
-    <li><a href="#skills">Competences</a></li>
-    <li><a href="#projects">Projets</a></li>
-    <li><a href="#projet-ap">Projet AP</a></li>
-    <li><a href="#contact-section">Contact</a></li>
+    <li><a href="#about"          data-i18n="nav.about">A propos</a></li>
+    <li><a href="#timeline"       data-i18n="nav.timeline">Parcours</a></li>
+    <li><a href="#skills"         data-i18n="nav.skills">Competences</a></li>
+    <li><a href="#projects"       data-i18n="nav.projects">Projets</a></li>
+    <li><a href="#projet-ap"      data-i18n="nav.ap">Projet AP</a></li>
+    <li><a href="#contact-section" data-i18n="nav.contact">Contact</a></li>
   </ul>
+
+  <!-- ═══ TOOLBAR ═══ -->
+  <div class="nav-toolbar">
+
+    <!-- Bouton langue -->
+    <button
+      class="toolbar-btn lang-btn"
+      onclick="toggleLang()"
+      data-tip-fr="Switch to English"
+      data-tip-en="Passer en Français"
+      aria-label="Changer la langue"
+    >
+      <span>&#x1F310;</span>
+      <span class="btn-label lang-fr">FR → EN</span>
+      <span class="btn-label lang-en">EN → FR</span>
+    </button>
+
+    <!-- Bouton animations -->
+    <button
+      class="toolbar-btn anim-btn"
+      onclick="toggleAnimations()"
+      aria-label="Activer / désactiver les animations"
+    >
+      <span class="anim-dot"></span>
+      <span class="btn-label anim-off" data-i18n="btn.animOff">Anims ON</span>
+      <span class="btn-label anim-on"  data-i18n="btn.animOn">Anims OFF</span>
+    </button>
+
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -31,14 +175,14 @@
   <div class="hero-content">
     <div class="hero-eyebrow">BTS SIO SLAM</div>
     <h1 class="hero-name">Corentin<br>Mesure</h1>
-    <p class="hero-subtitle">Etudiant</p>
+    <p class="hero-subtitle" data-i18n="hero.subtitle">Etudiant</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="#projects" class="hero-cta">Voir mes projets</a>
-      <a href="cv-corentin-mesure.pdf" download class="hero-cta">&#x2B07; Telecharger CV</a>
+      <a href="#projects" class="hero-cta" data-i18n="hero.cta1">Voir mes projets</a>
+      <a href="cv-corentin-mesure.pdf" download class="hero-cta" data-i18n="hero.cta2">&#x2B07; Telecharger CV</a>
     </div>
   </div>
   <div class="scroll-indicator">
-    <span>Defiler</span>
+    <span data-i18n="hero.scroll">Defiler</span>
     <div class="scroll-line"></div>
   </div>
 </section>
@@ -50,7 +194,7 @@
 <div id="about">
   <div class="about-section-header reveal">
     <span class="section-number">01</span>
-    <h2 class="section-title">A propos</h2>
+    <h2 class="section-title" data-i18n="about.title">A propos</h2>
     <div class="section-line"></div>
   </div>
   <div class="about-visual reveal">
@@ -62,7 +206,7 @@
         <div class="about-frame-corner br"></div>
         <div class="about-initials">CM</div>
         <div class="about-glow"></div>
-        <div class="flip-hint">&#x2756; Cliquer pour decouvrir &#x2756;</div>
+        <div class="flip-hint" data-i18n="about.flipHint">&#x2756; Cliquer pour decouvrir &#x2756;</div>
       </div>
       <div class="flip-back">
         <div class="about-frame-corner tl"></div>
@@ -70,11 +214,11 @@
         <div class="about-frame-corner bl"></div>
         <div class="about-frame-corner br"></div>
         <button class="back-close" onclick="event.stopPropagation();closeCard()">&#x2715;</button>
-        <span class="back-tag">// A propos</span>
+        <span class="back-tag">// <span data-i18n="about.title">A propos</span></span>
         <div class="back-subtitle">Corentin Mesure</div>
         <div class="back-divider"></div>
-        <p class="back-text">Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.</p>
-        <p class="back-text-extra">J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.</p>
+        <p class="back-text" data-i18n="about.text1">Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.</p>
+        <p class="back-text-extra" data-i18n="about.text2">J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.</p>
         <div class="back-skills-row">
           <span class="back-skill-tag">Flutter</span>
           <span class="back-skill-tag">PHP</span>
@@ -84,8 +228,8 @@
         </div>
         <div class="back-stats">
           <div class="back-stat-item"><span class="back-stat-number">BTS</span><span class="back-stat-label">SIO SLAM</span></div>
-          <div class="back-stat-item"><span class="back-stat-number">3+</span><span class="back-stat-label">Projets</span></div>
-          <div class="back-stat-item"><span class="back-stat-number">2</span><span class="back-stat-label">Apps Play Store</span></div>
+          <div class="back-stat-item"><span class="back-stat-number">3+</span><span class="back-stat-label" data-i18n="about.projects">Projets</span></div>
+          <div class="back-stat-item"><span class="back-stat-number">2</span><span class="back-stat-label" data-i18n="about.apps">Apps Play Store</span></div>
         </div>
       </div>
     </div>
@@ -98,33 +242,33 @@
 <div id="timeline">
   <div class="section-header reveal" style="margin-bottom:60px;">
     <span class="section-number">02</span>
-    <h2 class="section-title">Parcours</h2>
+    <h2 class="section-title" data-i18n="timeline.title">Parcours</h2>
     <div class="section-line"></div>
   </div>
   <div class="timeline-track">
     <div class="timeline-item current">
       <div class="timeline-gem"></div>
       <div class="timeline-year">2024 — 2025</div>
-      <div class="timeline-title">BTS SIO — 2eme annee</div>
-      <div class="timeline-sub">Option SLAM</div>
-      <p class="timeline-desc">Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.</p>
-      <span class="timeline-badge active">&#x2756; En cours</span>
+      <div class="timeline-title" data-i18n="tl1.title">BTS SIO — 2eme annee</div>
+      <div class="timeline-sub" data-i18n="tl1.sub">Option SLAM</div>
+      <p class="timeline-desc" data-i18n="tl1.desc">Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.</p>
+      <span class="timeline-badge active" data-i18n="tl1.badge">&#x2756; En cours</span>
     </div>
     <div class="timeline-item">
       <div class="timeline-gem"></div>
       <div class="timeline-year">2023 — 2024</div>
-      <div class="timeline-title">BTS SIO — 1ere annee</div>
-      <div class="timeline-sub">Option SLAM</div>
-      <p class="timeline-desc">Apprentissage des fondamentaux du developpement web et mobile. Premiers projets Flutter, PHP et MySQL.</p>
-      <span class="timeline-badge">Valide</span>
+      <div class="timeline-title" data-i18n="tl2.title">BTS SIO — 1ere annee</div>
+      <div class="timeline-sub" data-i18n="tl2.sub">Option SLAM</div>
+      <p class="timeline-desc" data-i18n="tl2.desc">Apprentissage des fondamentaux du developpement web et mobile. Premiers projets Flutter, PHP et MySQL.</p>
+      <span class="timeline-badge" data-i18n="tl2.badge">Valide</span>
     </div>
     <div class="timeline-item">
       <div class="timeline-gem"></div>
       <div class="timeline-year">2020 — 2023</div>
-      <div class="timeline-title">Lycee</div>
-      <div class="timeline-sub">Bac Pro MELEC</div>
-      <p class="timeline-desc">Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.</p>
-      <span class="timeline-badge">Diplome</span>
+      <div class="timeline-title" data-i18n="tl3.title">Lycee</div>
+      <div class="timeline-sub" data-i18n="tl3.sub">Bac Pro MELEC</div>
+      <p class="timeline-desc" data-i18n="tl3.desc">Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.</p>
+      <span class="timeline-badge" data-i18n="tl3.badge">Diplome</span>
     </div>
   </div>
 </div>
@@ -135,7 +279,7 @@
 <section id="skills">
   <div class="section-header reveal">
     <span class="section-number">03</span>
-    <h2 class="section-title">Competences</h2>
+    <h2 class="section-title" data-i18n="skills.title">Competences</h2>
     <div class="section-line"></div>
   </div>
   <div class="skills-grid">
@@ -146,7 +290,7 @@
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/html5/E34F26" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="HTML5"><span>HTML5</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/dart/0175C2" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Dart"><span>Dart</span></div>
       </div>
-      <div class="skill-name">Developpement</div>
+      <div class="skill-name" data-i18n="skill1.name">Developpement</div>
       <div class="skill-items">
         <span class="skill-tag">HTML / CSS</span><span class="skill-tag">PHP</span>
         <span class="skill-tag">Flutter / Dart</span><span class="skill-tag">API REST</span>
@@ -158,11 +302,11 @@
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/postgresql/4169E1" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="PostgreSQL"><span>PostgreSQL</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/firebase/FFCA28" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Firebase"><span>Firebase</span></div>
       </div>
-      <div class="skill-name">Donnees</div>
+      <div class="skill-name" data-i18n="skill2.name">Donnees</div>
       <div class="skill-items">
         <span class="skill-tag">MySQL</span><span class="skill-tag">PostgreSQL</span>
-        <span class="skill-tag">Firebase</span><span class="skill-tag">Modelisation BDD</span>
-        <span class="skill-tag">SQL avance</span>
+        <span class="skill-tag">Firebase</span><span class="skill-tag" data-i18n="skill2.tag4">Modelisation BDD</span>
+        <span class="skill-tag" data-i18n="skill2.tag5">SQL avance</span>
       </div>
     </div>
     <div class="skill-card reveal">
@@ -172,11 +316,11 @@
         <div class="skill-icon-item"><img data-src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="VS Code"><span>VS Code</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/androidstudio/3DDC84" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Android Studio"><span>Android Studio</span></div>
       </div>
-      <div class="skill-name">Outils &amp; Methodes</div>
+      <div class="skill-name" data-i18n="skill3.name">Outils &amp; Methodes</div>
       <div class="skill-items">
         <span class="skill-tag">Git / GitHub</span><span class="skill-tag">VS Code</span>
-        <span class="skill-tag">Android Studio</span><span class="skill-tag">Methode Agile</span>
-        <span class="skill-tag">Tests &amp; Recette</span>
+        <span class="skill-tag">Android Studio</span><span class="skill-tag" data-i18n="skill3.tag4">Methode Agile</span>
+        <span class="skill-tag" data-i18n="skill3.tag5">Tests &amp; Recette</span>
       </div>
     </div>
     <div class="skill-card reveal">
@@ -184,11 +328,11 @@
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/linux/FCC624" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Linux"><span>Linux</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Windows"><span>Windows</span></div>
       </div>
-      <div class="skill-name">Bloc 1 — Support</div>
+      <div class="skill-name" data-i18n="skill4.name">Bloc 1 — Support</div>
       <div class="skill-items">
-        <span class="skill-tag">Gestion patrimoine</span><span class="skill-tag">Support &amp; incidents</span>
-        <span class="skill-tag">Deploiement service</span><span class="skill-tag">Mode projet</span>
-        <span class="skill-tag">Veille techno</span>
+        <span class="skill-tag" data-i18n="skill4.tag1">Gestion patrimoine</span><span class="skill-tag" data-i18n="skill4.tag2">Support &amp; incidents</span>
+        <span class="skill-tag" data-i18n="skill4.tag3">Deploiement service</span><span class="skill-tag" data-i18n="skill4.tag4">Mode projet</span>
+        <span class="skill-tag" data-i18n="skill4.tag5">Veille techno</span>
       </div>
     </div>
     <div class="skill-card reveal">
@@ -198,11 +342,11 @@
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/mysql/4479A1" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="MySQL"><span>MySQL</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/php/777BB4" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="PHP"><span>PHP</span></div>
       </div>
-      <div class="skill-name">Bloc 2 — SLAM</div>
+      <div class="skill-name" data-i18n="skill5.name">Bloc 2 — SLAM</div>
       <div class="skill-items">
-        <span class="skill-tag">Conception applicative</span><span class="skill-tag">Maintenance corrective</span>
-        <span class="skill-tag">Maintenance evolutive</span><span class="skill-tag">Architecture logicielle</span>
-        <span class="skill-tag">UML / Modelisation</span>
+        <span class="skill-tag" data-i18n="skill5.tag1">Conception applicative</span><span class="skill-tag" data-i18n="skill5.tag2">Maintenance corrective</span>
+        <span class="skill-tag" data-i18n="skill5.tag3">Maintenance evolutive</span><span class="skill-tag" data-i18n="skill5.tag4">Architecture logicielle</span>
+        <span class="skill-tag" data-i18n="skill5.tag5">UML / Modelisation</span>
       </div>
     </div>
     <div class="skill-card reveal">
@@ -211,11 +355,11 @@
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/linux/FCC624" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Linux"><span>Linux</span></div>
         <div class="skill-icon-item"><img data-src="https://cdn.simpleicons.org/nginx/009639" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Nginx"><span>Nginx</span></div>
       </div>
-      <div class="skill-name">Bloc 3 — Cybersecurite</div>
+      <div class="skill-name" data-i18n="skill6.name">Bloc 3 — Cybersecurite</div>
       <div class="skill-items">
-        <span class="skill-tag">RGPD / CNIL</span><span class="skill-tag">Gestion des acces</span>
-        <span class="skill-tag">Securite applicative</span><span class="skill-tag">Analyse logs</span>
-        <span class="skill-tag">Prevention attaques</span>
+        <span class="skill-tag" data-i18n="skill6.tag1">RGPD / CNIL</span><span class="skill-tag" data-i18n="skill6.tag2">Gestion des acces</span>
+        <span class="skill-tag" data-i18n="skill6.tag3">Securite applicative</span><span class="skill-tag" data-i18n="skill6.tag4">Analyse logs</span>
+        <span class="skill-tag" data-i18n="skill6.tag5">Prevention attaques</span>
       </div>
     </div>
   </div>
@@ -227,7 +371,7 @@
 <section id="projects">
   <div class="section-header reveal">
     <span class="section-number">04</span>
-    <h2 class="section-title">Projets</h2>
+    <h2 class="section-title" data-i18n="projects.title">Projets</h2>
     <div class="section-line"></div>
   </div>
 
@@ -238,15 +382,15 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Application Mobile — Chat Temps Reel</div>
+        <div class="project-type" data-i18n="p1.type">Application Mobile — Chat Temps Reel</div>
         <h3 class="project-title">Animal'and Chat</h3>
-        <p class="project-desc">Application de messagerie instantanee Flutter avec chat en temps reel, notifications push et panel administrateur.</p>
+        <p class="project-desc" data-i18n="p1.desc">Application de messagerie instantanee Flutter avec chat en temps reel, notifications push et panel administrateur.</p>
         <div class="project-tags">
           <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
           <span class="project-tag">Firebase</span><span class="project-tag">PostgreSQL</span>
           <span class="project-tag">OVH</span>
         </div>
-        <button class="project-btn" onclick="openModal('animaland')"><span>&#x2756; Ouvrir</span></button>
+        <button class="project-btn" onclick="openModal('animaland')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
     <div class="project-card reveal">
@@ -255,14 +399,14 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Application Mobile</div>
+        <div class="project-type" data-i18n="p2.type">Application Mobile</div>
         <h3 class="project-title">Animal'vest</h3>
-        <p class="project-desc">Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.</p>
+        <p class="project-desc" data-i18n="p2.desc">Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.</p>
         <div class="project-tags">
           <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
           <span class="project-tag">Firebase</span>
         </div>
-        <button class="project-btn" onclick="openModal('animalvest')"><span>&#x2756; Ouvrir</span></button>
+        <button class="project-btn" onclick="openModal('animalvest')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
   </div>
@@ -271,7 +415,7 @@
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
       <span class="perso-teaser-icon">&#x2756;</span>
-      <span>Voir mes projets personnels</span>
+      <span data-i18n="projects.personal">Voir mes projets personnels</span>
       <span class="perso-teaser-arrow">&#x2193;</span>
     </button>
     <div class="perso-teaser-line"></div>
@@ -284,14 +428,14 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Projet Web — Personnel</div>
+        <div class="project-type" data-i18n="p3.type">Projet Web — Personnel</div>
         <h3 class="project-title">League of Legends</h3>
-        <p class="project-desc">Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.</p>
+        <p class="project-desc" data-i18n="p3.desc">Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.</p>
         <div class="project-tags">
           <span class="project-tag">HTML</span><span class="project-tag">CSS</span>
           <span class="project-tag">PHP</span><span class="project-tag">MySQL</span>
         </div>
-        <button class="project-btn" onclick="openModal('lol')"><span>&#x2756; Ouvrir</span></button>
+        <button class="project-btn" onclick="openModal('lol')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
   </div>
@@ -304,24 +448,24 @@
     <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
     <div class="modal-header">
       <div>
-        <div class="modal-type">Application Mobile — Chat Temps Reel</div>
+        <div class="modal-type" data-i18n="p1.type">Application Mobile — Chat Temps Reel</div>
         <div class="modal-title">Animal'and Chat</div>
       </div>
       <button class="modal-close" onclick="closeModalBtn('animaland')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <span class="modal-emoji"><img src="images/lg.png" style="height:80px;width:auto;object-fit:contain;"></span>
-      <p class="modal-desc">Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.</p>
+      <p class="modal-desc" data-i18n="m1.desc">Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.</p>
       <div class="modal-features">
-        <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-inscription')"><div style="flex:1"><span class="feat-title">&#x1F511; Inscription &amp; Acces</span><span class="feat-preview">Validation manuelle des comptes par un administrateur avant acces.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-chat')"><div style="flex:1"><span class="feat-title">&#x1F4AC; Chat en temps reel</span><span class="feat-preview">Messages instantanes dans les salons grace a Socket.io, avec horodatage.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications push</span><span class="feat-preview">Firebase Messaging envoie des alertes meme quand l'app est fermee.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-salons')"><div style="flex:1"><span class="feat-title">&#x1F43E; Conversations &amp; Groupes</span><span class="feat-preview">Les utilisateurs creent des conversations, seuls les admins peuvent creer des groupes.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-sondages')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Sondages</span><span class="feat-preview">Creation de sondages dans les salons, resultats mis a jour en temps reel.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title">&#x1F3A8; Personnalisation</span><span class="feat-preview">Fond d'ecran personnalisable par l'utilisateur selon ses preferences.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview">Gestion complete des comptes : roles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-inscription')"><div style="flex:1"><span class="feat-title" data-i18n="f1.title">&#x1F511; Inscription &amp; Acces</span><span class="feat-preview" data-i18n="f1.preview">Validation manuelle des comptes par un administrateur avant acces.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-chat')"><div style="flex:1"><span class="feat-title" data-i18n="f2.title">&#x1F4AC; Chat en temps reel</span><span class="feat-preview" data-i18n="f2.preview">Messages instantanes dans les salons grace a Socket.io, avec horodatage.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-notif')"><div style="flex:1"><span class="feat-title" data-i18n="f3.title">&#x1F514; Notifications push</span><span class="feat-preview" data-i18n="f3.preview">Firebase Messaging envoie des alertes meme quand l'app est fermee.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-salons')"><div style="flex:1"><span class="feat-title" data-i18n="f4.title">&#x1F43E; Conversations &amp; Groupes</span><span class="feat-preview" data-i18n="f4.preview">Les utilisateurs creent des conversations, seuls les admins peuvent creer des groupes.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-sondages')"><div style="flex:1"><span class="feat-title" data-i18n="f5.title">&#x1F4CA; Sondages</span><span class="feat-preview" data-i18n="f5.preview">Creation de sondages dans les salons, resultats mis a jour en temps reel.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title" data-i18n="f6.title">&#x1F3A8; Personnalisation</span><span class="feat-preview" data-i18n="f6.preview">Fond d'ecran personnalisable par l'utilisateur selon ses preferences.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title" data-i18n="f7.title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview" data-i18n="f7.preview">Gestion complete des comptes : roles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="f8.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="f8.preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Socket.io</span>
@@ -335,15 +479,15 @@
 <!-- SOUS-MODALS ANIMAL'AND -->
 <div class="submodal-overlay" id="feat-inscription" onclick="closeSubModal(event,'feat-inscription')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Inscription &amp; Acces</div><button class="submodal-close" onclick="closeSubModalBtn('feat-inscription')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f1.title">Inscription &amp; Acces</div><button class="submodal-close" onclick="closeSubModalBtn('feat-inscription')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.</p>
+      <p class="submodal-desc" data-i18n="f1.desc">L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/inscription.gif','&#x1F464; POV Membre',500)"><span class="step-num">01</span><span class="step-text">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen-en-attente.png','&#x1F5C4;&#xFE0F; Base de donnees')"><span class="step-num">02</span><span class="step-text">La demande est enregistree en base PostgreSQL avec le statut <strong>&#171; en attente &#187;</strong>. L'acces est bloque jusqu'a validation.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">03</span><span class="step-text">Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_conversation_membre.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text">Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal(['images/screen_admin.png','images/screen_membre.png'],'&#x1F46A; Admin vs Membre')"><span class="step-num">05</span><span class="step-text">La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/inscription.gif','&#x1F464; POV Membre',500)"><span class="step-num">01</span><span class="step-text" data-i18n="f1.s1">L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen-en-attente.png','&#x1F5C4;&#xFE0F; Base de donnees')"><span class="step-num">02</span><span class="step-text" data-i18n="f1.s2">La demande est enregistree en base PostgreSQL avec le statut <strong>&#171; en attente &#187;</strong>. L'acces est bloque jusqu'a validation.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">03</span><span class="step-text" data-i18n="f1.s3">Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_conversation_membre.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text" data-i18n="f1.s4">Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal(['images/screen_admin.png','images/screen_membre.png'],'&#x1F46A; Admin vs Membre')"><span class="step-num">05</span><span class="step-text" data-i18n="f1.s5">La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
@@ -351,16 +495,16 @@
 
 <div class="submodal-overlay" id="feat-chat" onclick="closeSubModal(event,'feat-chat')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4AC;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Chat en temps reel</div><button class="submodal-close" onclick="closeSubModalBtn('feat-chat')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4AC;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f2.title">Chat en temps reel</div><button class="submodal-close" onclick="closeSubModalBtn('feat-chat')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Le coeur de l'application repose sur une messagerie instantanee via <button class="tech-accordion" onclick="toggleAcc('acc-socketio')"><span>Socket.io</span><span class="acc-arrow">&#x203A;</span></button>. Les messages sont persistes en PostgreSQL et distribues en temps reel.<div class="tech-accordion-body" id="acc-socketio"><div class="tech-accordion-inner"><ul><li>Socket.io etablit une <strong>connexion permanente</strong> entre le serveur et l'application (WebSocket).</li><li>Contrairement au HTTP classique, Socket.io permet au serveur de <strong>pousser instantanement</strong> les donnees des qu'un evenement se produit.</li><li>Des qu'un message est envoye, le serveur notifie immediatement tous les clients connectes — <strong>sans rechargement, sans delai</strong>.</li></ul></div></div></p>
+      <p class="submodal-desc" data-i18n="f2.desc">Le coeur de l'application repose sur une messagerie instantanee via <button class="tech-accordion" onclick="toggleAcc('acc-socketio')"><span>Socket.io</span><span class="acc-arrow">&#x203A;</span></button>. Les messages sont persistes en PostgreSQL et distribues en temps reel.<div class="tech-accordion-body" id="acc-socketio"><div class="tech-accordion-inner"><ul><li>Socket.io etablit une <strong>connexion permanente</strong> entre le serveur et l'application (WebSocket).</li><li>Contrairement au HTTP classique, Socket.io permet au serveur de <strong>pousser instantanement</strong> les donnees des qu'un evenement se produit.</li><li>Des qu'un message est envoye, le serveur notifie immediatement tous les clients connectes — <strong>sans rechargement, sans delai</strong>.</li></ul></div></div></p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'utilisateur selectionne une conversation et redige son message.</span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/messages_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text">A l'envoi, le message est <strong>enregistre en base PostgreSQL</strong> pour garantir la persistance.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_message_tempsréel.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text"><strong>Si le destinataire est connecte</strong>, il recoit le message <strong>instantanement via Socket.io</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F514; Notification')"><span class="step-num">04</span><span class="step-text"><strong>Si le destinataire est absent</strong>, une <strong>notification push Firebase Messaging</strong> est declenchee.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_horodatage.png','&#x1F4AC; Chat')"><span class="step-num">05</span><span class="step-text">Chaque message affiche l'auteur, le contenu et <strong>l'horodatage precis</strong> de l'envoi.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_message_accueil.gif','&#x1F464; POV Membre')"><span class="step-num">06</span><span class="step-text"><strong>Indicateur de frappe :</strong> lorsqu'un utilisateur ecrit, un message <em style="color:var(--cyan)">"X est en train d'ecrire..."</em> s'affiche en temps reel.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="f2.s1">L'utilisateur selectionne une conversation et redige son message.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/messages_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text" data-i18n="f2.s2">A l'envoi, le message est <strong>enregistre en base PostgreSQL</strong> pour garantir la persistance.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_message_tempsréel.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text" data-i18n="f2.s3"><strong>Si le destinataire est connecte</strong>, il recoit le message <strong>instantanement via Socket.io</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F514; Notification')"><span class="step-num">04</span><span class="step-text" data-i18n="f2.s4"><strong>Si le destinataire est absent</strong>, une <strong>notification push Firebase Messaging</strong> est declenchee.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_horodatage.png','&#x1F4AC; Chat')"><span class="step-num">05</span><span class="step-text" data-i18n="f2.s5">Chaque message affiche l'auteur, le contenu et <strong>l'horodatage precis</strong> de l'envoi.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_message_accueil.gif','&#x1F464; POV Membre')"><span class="step-num">06</span><span class="step-text" data-i18n="f2.s6"><strong>Indicateur de frappe :</strong> lorsqu'un utilisateur ecrit, un message <em style="color:var(--cyan)">"X est en train d'ecrire..."</em> s'affiche en temps reel.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
@@ -368,14 +512,14 @@
 
 <div class="submodal-overlay" id="feat-notif" onclick="closeSubModal(event,'feat-notif')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('feat-notif')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f3.title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('feat-notif')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Grace a Firebase Cloud Messaging (FCM), les utilisateurs sont alertes des nouveaux messages meme lorsqu'ils n'ont pas l'application ouverte.</p>
+      <p class="submodal-desc" data-i18n="f3.desc">Grace a Firebase Cloud Messaging (FCM), les utilisateurs sont alertes des nouveaux messages meme lorsqu'ils n'ont pas l'application ouverte.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_token.png','&#x1F5C4;&#xFE0F; Base de donnees',1400)"><span class="step-num">01</span><span class="step-text">Lors de la connexion, l'application recupere le <strong>token FCM</strong> de l'appareil et l'enregistre en base.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_log.png','&#x1F5C4;&#xFE0F; Log serveur',1200)"><span class="step-num">02</span><span class="step-text">Quand un message est envoye, le backend <strong>declenche une notification FCM</strong> vers les membres du salon.<br><span class="step-play-hint">Voir le log</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text">La notification apparait meme si l'application est <strong>fermee ou en arriere-plan</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un tap sur la notification <strong>ouvre directement le salon</strong> concerne.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_token.png','&#x1F5C4;&#xFE0F; Base de donnees',1400)"><span class="step-num">01</span><span class="step-text" data-i18n="f3.s1">Lors de la connexion, l'application recupere le <strong>token FCM</strong> de l'appareil et l'enregistre en base.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/fcm_log.png','&#x1F5C4;&#xFE0F; Log serveur',1200)"><span class="step-num">02</span><span class="step-text" data-i18n="f3.s2">Quand un message est envoye, le backend <strong>declenche une notification FCM</strong> vers les membres du salon.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_notif.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text" data-i18n="f3.s3">La notification apparait meme si l'application est <strong>fermee ou en arriere-plan</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="f3.s4">Un tap sur la notification <strong>ouvre directement le salon</strong> concerne.</span></div>
       </div>
     </div>
   </div>
@@ -383,15 +527,15 @@
 
 <div class="submodal-overlay" id="feat-salons" onclick="closeSubModal(event,'feat-salons')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F43E;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Conversations &amp; Groupes</div><button class="submodal-close" onclick="closeSubModalBtn('feat-salons')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F43E;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f4.title">Conversations &amp; Groupes</div><button class="submodal-close" onclick="closeSubModalBtn('feat-salons')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'application distingue deux types d'espaces : les <strong style="color:var(--gold)">conversations</strong> creees librement, et les <strong style="color:var(--cyan)">groupes</strong> reserves aux administrateurs.</p>
+      <p class="submodal-desc" data-i18n="f4.desc">L'application distingue deux types d'espaces : les <strong style="color:var(--gold)">conversations</strong> creees librement, et les <strong style="color:var(--cyan)">groupes</strong> reserves aux administrateurs.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_conversation_membre.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text"><strong>Conversations (utilisateurs) :</strong> chaque utilisateur peut creer une conversation en choisissant un ou plusieurs contacts.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_de_groupe.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">02</span><span class="step-text"><strong>Groupes (admins uniquement) :</strong> seuls les administrateurs peuvent creer des groupes visibles par tous.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_group_et_conversation.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text">L'<strong>historique complet</strong> est charge a l'ouverture et les nouveaux messages arrivent en temps reel via Socket.io.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_presence.png','&#x1F7E2; Presence en ligne')"><span class="step-num">04</span><span class="step-text">Un indicateur de <strong>presence en ligne</strong> permet de savoir quels membres sont connectes.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_suppression.png','&#x1F5C4;&#xFE0F; Base de donnees',900)"><span class="step-num">05</span><span class="step-text"><strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimes de la base PostgreSQL.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_conversation_membre.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text" data-i18n="f4.s1"><strong>Conversations (utilisateurs) :</strong> chaque utilisateur peut creer une conversation en choisissant un ou plusieurs contacts.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/creation_de_groupe.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">02</span><span class="step-text" data-i18n="f4.s2"><strong>Groupes (admins uniquement) :</strong> seuls les administrateurs peuvent creer des groupes visibles par tous.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_group_et_conversation.gif','&#x1F464; POV Membre')"><span class="step-num">03</span><span class="step-text" data-i18n="f4.s3">L'<strong>historique complet</strong> est charge a l'ouverture et les nouveaux messages arrivent en temps reel via Socket.io.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_presence.png','&#x1F7E2; Presence en ligne')"><span class="step-num">04</span><span class="step-text" data-i18n="f4.s4">Un indicateur de <strong>presence en ligne</strong> permet de savoir quels membres sont connectes.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_suppression.png','&#x1F5C4;&#xFE0F; Base de donnees',900)"><span class="step-num">05</span><span class="step-text" data-i18n="f4.s5"><strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimes de la base PostgreSQL.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
@@ -399,14 +543,14 @@
 
 <div class="submodal-overlay" id="feat-sondages" onclick="closeSubModal(event,'feat-sondages')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Sondages</div><button class="submodal-close" onclick="closeSubModalBtn('feat-sondages')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f5.title">Sondages</div><button class="submodal-close" onclick="closeSubModalBtn('feat-sondages')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Les utilisateurs peuvent animer leur salon en creant des sondages interactifs. Les votes et resultats sont visibles en temps reel.</p>
+      <p class="submodal-desc" data-i18n="f5.desc">Les utilisateurs peuvent animer leur salon en creant des sondages interactifs. Les votes et resultats sont visibles en temps reel.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text">N'importe quel membre peut creer un sondage en definissant une <strong>question et plusieurs options</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/polls_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text">Le sondage est enregistre en PostgreSQL et diffuse via <strong>Socket.io</strong> a tous les membres.<br><span class="step-play-hint">Voir le screen</span></span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque membre vote une seule fois. <strong>Un seul vote par utilisateur</strong> est autorise.</span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text">Les <strong>resultats se mettent a jour en direct</strong> avec le pourcentage de votes pour chaque option.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text" data-i18n="f5.s1">N'importe quel membre peut creer un sondage en definissant une <strong>question et plusieurs options</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/polls_bdd.png','&#x1F5C4;&#xFE0F; Base de donnees',1600)"><span class="step-num">02</span><span class="step-text" data-i18n="f5.s2">Le sondage est enregistre en PostgreSQL et diffuse via <strong>Socket.io</strong> a tous les membres.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="f5.s3">Chaque membre vote une seule fois. <strong>Un seul vote par utilisateur</strong> est autorise.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_sondage.gif','&#x1F464; POV Membre')"><span class="step-num">04</span><span class="step-text" data-i18n="f5.s4">Les <strong>resultats se mettent a jour en direct</strong> avec le pourcentage de votes pour chaque option.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
@@ -414,14 +558,14 @@
 
 <div class="submodal-overlay" id="feat-perso" onclick="closeSubModal(event,'feat-perso')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F3A8;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Personnalisation</div><button class="submodal-close" onclick="closeSubModalBtn('feat-perso')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F3A8;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f6.title">Personnalisation</div><button class="submodal-close" onclick="closeSubModalBtn('feat-perso')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Chaque utilisateur peut personnaliser son experience visuelle en choisissant un fond d'ecran selon ses gouts.</p>
+      <p class="submodal-desc" data-i18n="f6.desc">Chaque utilisateur peut personnaliser son experience visuelle en choisissant un fond d'ecran selon ses gouts.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_fond_ecran.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text">Dans les parametres, l'utilisateur accede a une <strong>liste de fonds d'ecran predefinis</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Il peut egalement choisir une <strong>image personnalisee depuis sa galerie locale</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le fond d'ecran est stocke <strong>uniquement en local sur l'appareil</strong> — jamais envoye au serveur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'interface <strong>s'adapte immediatement</strong> avec le fond d'ecran choisi.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_fond_ecran.gif','&#x1F464; POV Membre')"><span class="step-num">01</span><span class="step-text" data-i18n="f6.s1">Dans les parametres, l'utilisateur accede a une <strong>liste de fonds d'ecran predefinis</strong>.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="f6.s2">Il peut egalement choisir une <strong>image personnalisee depuis sa galerie locale</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="f6.s3">Le fond d'ecran est stocke <strong>uniquement en local sur l'appareil</strong> — jamais envoye au serveur.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="f6.s4">L'interface <strong>s'adapte immediatement</strong> avec le fond d'ecran choisi.</span></div>
       </div>
     </div>
   </div>
@@ -429,14 +573,14 @@
 
 <div class="submodal-overlay" id="feat-admin" onclick="closeSubModal(event,'feat-admin')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('feat-admin')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f7.title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('feat-admin')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Un espace dedie aux administrateurs permet de gerer entierement la communaute depuis l'application.</p>
+      <p class="submodal-desc" data-i18n="f7.desc">Un espace dedie aux administrateurs permet de gerer entierement la communaute depuis l'application.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">01</span><span class="step-text"><strong>Validation des inscriptions :</strong> l'admin accepte ou refuse en un tap.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_role_suppresion.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">02</span><span class="step-text"><strong>Modification des roles :</strong> l'admin peut promouvoir un utilisateur en moderateur ou administrateur.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_role_suppresion.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">03</span><span class="step-text"><strong>Bannissement :</strong> l'admin peut bannir un compte. L'utilisateur banni ne peut plus se connecter.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Suppression de compte :</strong> l'admin peut supprimer definitivement un compte et toutes ses donnees.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/accept_inscription.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">01</span><span class="step-text" data-i18n="f7.s1"><strong>Validation des inscriptions :</strong> l'admin accepte ou refuse en un tap.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_role_suppresion.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">02</span><span class="step-text" data-i18n="f7.s2"><strong>Modification des roles :</strong> l'admin peut promouvoir un utilisateur en moderateur ou administrateur.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_role_suppresion.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">03</span><span class="step-text" data-i18n="f7.s3"><strong>Bannissement :</strong> l'admin peut bannir un compte. L'utilisateur banni ne peut plus se connecter.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="f7.s4"><strong>Suppression de compte :</strong> l'admin peut supprimer definitivement un compte et toutes ses donnees.</span></div>
       </div>
     </div>
   </div>
@@ -444,13 +588,13 @@
 
 <div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f8.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'ensemble des donnees est stocke dans une base PostgreSQL hebergee sur un serveur OVH, deploye via Termius SSH.</p>
+      <p class="submodal-desc" data-i18n="f8.desc">L'ensemble des donnees est stocke dans une base PostgreSQL hebergee sur un serveur OVH, deploye via Termius SSH.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="f8.s1"><strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="f8.s2">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="f8.s3"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
       </div>
     </div>
   </div>
@@ -462,29 +606,29 @@
     <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
     <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
     <div class="modal-header">
-      <div><div class="modal-type">Application Mobile — Boutique Privee</div><div class="modal-title">Animal'vest</div></div>
+      <div><div class="modal-type" data-i18n="p2.type2">Application Mobile — Boutique Privee</div><div class="modal-title">Animal'vest</div></div>
       <button class="modal-close" onclick="closeModalBtn('animalvest')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <span class="modal-emoji"><img src="images/logo_animalvest.png" style="height:80px;width:auto;object-fit:contain;"></span>
-      <p class="modal-desc">Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.</p>
+      <p class="modal-desc" data-i18n="m2.desc">Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.</p>
       <div class="modal-features">
-        <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-acces')"><div style="flex:1"><span class="feat-title">&#x1F510; Acces membres uniquement</span><span class="feat-preview">Connexion sans identifiants via un compte temporaire supprime a la deconnexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-catalogue')"><div style="flex:1"><span class="feat-title">&#x1F6CD;&#xFE0F; Catalogue de produits</span><span class="feat-preview">Consultation des articles avec photos, descriptions, prix et selection de taille.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-galerie')"><div style="flex:1"><span class="feat-title">&#x1F5BC;&#xFE0F; Galerie multi-photos</span><span class="feat-preview">Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-categories')"><div style="flex:1"><span class="feat-title">&#x1F4CB; Categories &amp; Unites</span><span class="feat-preview">Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-panier')"><div style="flex:1"><span class="feat-title">&#x1F6D2; Panier &amp; Commandes</span><span class="feat-preview">Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-admin')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview">Gestion des produits, des stocks, des commandes et suivi avec notes internes.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-colis')"><div style="flex:1"><span class="feat-title">&#x1F4E6; Numero de colis obligatoire</span><span class="feat-preview">L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications push</span><span class="feat-preview">L'admin est alerte en temps reel des qu'une nouvelle commande est passee.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-acces')"><div style="flex:1"><span class="feat-title" data-i18n="v1.title">&#x1F510; Acces membres uniquement</span><span class="feat-preview" data-i18n="v1.preview">Connexion sans identifiants via un compte temporaire supprime a la deconnexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-catalogue')"><div style="flex:1"><span class="feat-title" data-i18n="v2.title">&#x1F6CD;&#xFE0F; Catalogue de produits</span><span class="feat-preview" data-i18n="v2.preview">Consultation des articles avec photos, descriptions, prix et selection de taille.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-galerie')"><div style="flex:1"><span class="feat-title" data-i18n="v3.title">&#x1F5BC;&#xFE0F; Galerie multi-photos</span><span class="feat-preview" data-i18n="v3.preview">Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-categories')"><div style="flex:1"><span class="feat-title" data-i18n="v4.title">&#x1F4CB; Categories &amp; Unites</span><span class="feat-preview" data-i18n="v4.preview">Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-panier')"><div style="flex:1"><span class="feat-title" data-i18n="v5.title">&#x1F6D2; Panier &amp; Commandes</span><span class="feat-preview" data-i18n="v5.preview">Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-admin')"><div style="flex:1"><span class="feat-title" data-i18n="v6.title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview" data-i18n="v6.preview">Gestion des produits, des stocks, des commandes et suivi avec notes internes.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-colis')"><div style="flex:1"><span class="feat-title" data-i18n="v7.title">&#x1F4E6; Numero de colis obligatoire</span><span class="feat-preview" data-i18n="v7.preview">L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-notif')"><div style="flex:1"><span class="feat-title" data-i18n="v8.title">&#x1F514; Notifications push</span><span class="feat-preview" data-i18n="v8.preview">L'admin est alerte en temps reel des qu'une nouvelle commande est passee.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title" data-i18n="v9.title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview" data-i18n="v9.preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title" data-i18n="v10.title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview" data-i18n="v10.preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="v11.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="v11.preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span>
-        <span class="modal-tag">MySQL / PostgreSQL</span><span class="modal-tag">Emails automatiques</span>
+        <span class="modal-tag">MySQL / PostgreSQL</span><span class="modal-tag" data-i18n="v9.title">Emails automatiques</span>
         <span class="modal-tag">OVH</span>
       </div>
     </div>
@@ -492,30 +636,17 @@
 </div>
 
 <!-- ═══ SOUS-MODALS ANIMAL'VEST ═══ -->
-
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v1.title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p>
+      <p class="submodal-desc" data-i18n="v1.desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Authentification.gif','&#x1F510; Authentification')">
-          <span class="step-num">01</span>
-          <span class="step-text">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant requis. L'administrateur dispose d'un espace de connexion dedie.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend',900)">
-          <span class="step-num">02</span>
-          <span class="step-text">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.<br><span class="step-play-hint">Voir le log</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend — Suppression 24h',900)">
-          <span class="step-num">03</span>
-          <span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.<br><span class="step-play-hint">Voir le log</span></span>
-        </div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/connexion_admin.gif','&#x1F6E1;&#xFE0F; POV Admin',500)">
-          <span class="step-num">05</span>
-          <span class="step-text"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Authentification.gif','&#x1F510; Authentification')"><span class="step-num">01</span><span class="step-text" data-i18n="v1.s1">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant requis. L'administrateur dispose d'un espace de connexion dedie.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend',900)"><span class="step-num">02</span><span class="step-text" data-i18n="v1.s2">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_guest_log.png','&#x1F5A5;&#xFE0F; Log Backend — Suppression 24h',900)"><span class="step-num">03</span><span class="step-text" data-i18n="v1.s3">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.<br><span class="step-play-hint">Voir le log</span></span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v1.s4">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/connexion_admin.gif','&#x1F6E1;&#xFE0F; POV Admin',500)"><span class="step-num">05</span><span class="step-text" data-i18n="v1.s5"><strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants pour acceder au panel de gestion.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
@@ -523,22 +654,13 @@
 
 <div class="submodal-overlay" id="vest-catalogue" onclick="closeSubModal(event,'vest-catalogue')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6CD;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v2.title">Catalogue de produits</div><button class="submodal-close" onclick="closeSubModalBtn('vest-catalogue')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p>
+      <p class="submodal-desc" data-i18n="v2.desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')">
-          <span class="step-num">01</span>
-          <span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F4CB; Categories')">
-          <span class="step-num">02</span>
-          <span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step">
-          <span class="step-num">03</span>
-          <span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span>
-        </div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')"><span class="step-num">01</span><span class="step-text" data-i18n="v2.s1">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v2.s2">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v2.s3">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div>
       </div>
     </div>
   </div>
@@ -546,13 +668,13 @@
 
 <div class="submodal-overlay" id="vest-galerie" onclick="closeSubModal(event,'vest-galerie')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5BC;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v3.title">Galerie multi-photos</div><button class="submodal-close" onclick="closeSubModalBtn('vest-galerie')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
+      <p class="submodal-desc" data-i18n="v3.desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designee comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.<br><span class="step-play-hint">Voir la demo</span></span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/2_-_Boutique.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">01</span><span class="step-text" data-i18n="v3.s1">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designee comme <strong>image principale</strong> (badge "MAIN").<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/galerie_etape2.gif','&#x1F5BC;&#xFE0F; Galerie')"><span class="step-num">02</span><span class="step-text" data-i18n="v3.s2">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v3.s3">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
       </div>
     </div>
   </div>
@@ -560,22 +682,13 @@
 
 <div class="submodal-overlay" id="vest-categories" onclick="closeSubModal(event,'vest-categories')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v4.title">Categories &amp; Unites</div><button class="submodal-close" onclick="closeSubModalBtn('vest-categories')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p>
+      <p class="submodal-desc" data-i18n="v4.desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Accueil.gif','&#x1F3E0; Accueil')">
-          <span class="step-num">01</span>
-          <span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/category_accueil.gif','&#x1F4CB; Categories')">
-          <span class="step-num">02</span>
-          <span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_cate_accueil.gif','&#x1F6E1;&#xFE0F; POV Admin')">
-          <span class="step-num">03</span>
-          <span class="step-text">Les administrateurs voient un bouton <strong>&#xB7;&#xB7;&#xB7;</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Accueil.gif','&#x1F3E0; Accueil')"><span class="step-num">01</span><span class="step-text" data-i18n="v4.s1">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/category_accueil.gif','&#x1F4CB; Categories')"><span class="step-num">02</span><span class="step-text" data-i18n="v4.s2">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/test_cate_accueil.gif','&#x1F6E1;&#xFE0F; POV Admin')"><span class="step-num">03</span><span class="step-text" data-i18n="v4.s3">Les administrateurs voient un bouton <strong>&#xB7;&#xB7;&#xB7;</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.<br><span class="step-play-hint">Voir la demo</span></span></div>
       </div>
     </div>
   </div>
@@ -583,85 +696,48 @@
 
 <div class="submodal-overlay" id="vest-panier" onclick="closeSubModal(event,'vest-panier')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6D2;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v5.title">Panier &amp; Commandes</div><button class="submodal-close" onclick="closeSubModalBtn('vest-panier')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p>
+      <p class="submodal-desc" data-i18n="v5.desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/Panier.gif','&#x1F6D2; Panier')">
-          <span class="step-num">01</span>
-          <span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span>
-        </div>
-        <div class="submodal-step">
-          <span class="step-num">02</span>
-          <span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)">
-          <span class="step-num">03</span>
-          <span class="step-text">Le membre recoit un <strong>email automatique a chaque changement de statut</strong> de sa commande : confirmation, preparation, expedition (avec numero de colis), livraison et annulation.<br><span class="step-play-hint">Voir les emails</span></span>
-        </div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/Panier.gif','&#x1F6D2; Panier')"><span class="step-num">01</span><span class="step-text" data-i18n="v5.s1">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v5.s2">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)"><span class="step-num">03</span><span class="step-text" data-i18n="v5.s3">Le membre recoit un <strong>email automatique a chaque changement de statut</strong> de sa commande : confirmation, preparation, expedition (avec numero de colis), livraison et annulation.<br><span class="step-play-hint">Voir les emails</span></span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL PANEL ADMIN ANIMAL'VEST ═══ -->
 <div class="submodal-overlay" id="vest-admin" onclick="closeSubModal(event,'vest-admin')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v6.title">Panel administrateur</div><button class="submodal-close" onclick="closeSubModalBtn('vest-admin')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
+      <p class="submodal-desc" data-i18n="v6.desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
       <div class="submodal-steps">
-
-        <!-- ÉTAPE 01 — image panelrh ajoutée -->
-        <div class="submodal-step has-video" onclick="openImageModal('images/panelrh.PNG','&#x1F6E1;&#xFE0F; Panel Admin — Liste des praticiens (RH)')">
-          <span class="step-num">01</span>
-          <span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-
-        <!-- ÉTAPE 02 supprimée — ancienne étape 03 devient 02 -->
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Gestion des commandes — tous les statuts',1400)">
-          <span class="step-num">02</span>
-          <span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut (en attente, confirmee, preparation, expediee, livree, annulee). Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-
-        <!-- Ancienne étape 04 devient 03 — démo retirée -->
-        <div class="submodal-step">
-          <span class="step-num">03</span>
-          <span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong>.</span>
-        </div>
-
-        <!-- Ancienne étape 05 devient 04 -->
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')">
-          <span class="step-num">04</span>
-          <span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-
-        <!-- Ancienne étape 06 devient 05 -->
-        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')">
-          <span class="step-num">05</span>
-          <span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-
+        <div class="submodal-step has-video" onclick="openImageModal('images/panelrh.PNG','&#x1F6E1;&#xFE0F; Panel Admin — Liste des praticiens (RH)')"><span class="step-num">01</span><span class="step-text" data-i18n="v6.s1"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_commandes_fiche.jpg','&#x1F4CB; Gestion des commandes — tous les statuts',1400)"><span class="step-num">02</span><span class="step-text" data-i18n="v6.s2"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v6.s3"><strong>Traitement manuel :</strong> l'admin change le statut de la commande : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong>.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_list.jpg','&#x1F6E1;&#xFE0F; Gestion des admins')"><span class="step-num">04</span><span class="step-text" data-i18n="v6.s4"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/screen_admin_create.jpg','&#x2795; Creation de compte admin')"><span class="step-num">05</span><span class="step-text" data-i18n="v6.s5"><strong>Creation de compte admin :</strong> formulaire avec indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL NUMERO DE COLIS ═══ -->
 <div class="submodal-overlay" id="vest-colis" onclick="closeSubModal(event,'vest-colis')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4E6;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v7.title">Numero de colis obligatoire</div><button class="submodal-close" onclick="closeSubModalBtn('vest-colis')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
+      <p class="submodal-desc" data-i18n="v7.desc">Pour garantir la tracabilite des livraisons, le passage au statut "expediee" est techniquement bloque tant qu'un numero de colis valide n'est pas saisi.</p>
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/montage_commandes.png','&#x1F4E6; Gestion des commandes — statut expedition',1400)">
         <img src="images/montage_commandes.png" alt="Montage gestion des commandes Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie de numero de colis apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression se remplit caractere par caractere et devient <strong>verte</strong> a la validation complete.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel pour guider l'admin pendant la saisie.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et visible dans la fiche commande du panel. Un email de suivi est automatiquement envoye au membre.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v7.s1">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v7.s2">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression devient <strong>verte</strong> a la validation complete.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v7.s3">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v7.s4">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et un email de suivi est automatiquement envoye au membre.</span></div>
       </div>
     </div>
   </div>
@@ -669,13 +745,13 @@
 
 <div class="submodal-overlay" id="vest-notif" onclick="closeSubModal(event,'vest-notif')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v8.title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Firebase Cloud Messaging permet d'alerter l'administrateur en temps reel des qu'une nouvelle commande est passee.</p>
+      <p class="submodal-desc" data-i18n="v8.desc">Firebase Cloud Messaging permet d'alerter l'administrateur en temps reel des qu'une nouvelle commande est passee.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">La notification est recue <strong>meme si l'app est fermee</strong> ou en arriere-plan.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un tap sur la notification <strong>ouvre directement</strong> le detail de la commande concernee dans le panel admin.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v8.s1">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v8.s2">La notification est recue <strong>meme si l'app est fermee</strong> ou en arriere-plan.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v8.s3">Un tap sur la notification <strong>ouvre directement</strong> le detail de la commande concernee dans le panel admin.</span></div>
       </div>
     </div>
   </div>
@@ -683,19 +759,19 @@
 
 <div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v9.title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
+      <p class="submodal-desc" data-i18n="v9.desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p>
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques — toutes les etapes',1400)">
         <img src="images/emails_automatiques_montage.png" alt="Emails automatiques Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye au membre avec le detail des articles commandes.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Quand l'admin passe le statut a <em style="color:var(--cyan)">"traitee"</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">"expediee"</em>, un email avec le <strong>numero de colis</strong> est envoye pour permettre le suivi de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Lors du passage a <em style="color:var(--cyan)">"livree"</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut — aucune action manuelle supplementaire n'est requise.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v9.s1">Des que la commande est <strong>confirmee</strong>, un email de recapitulatif est envoye avec le detail des articles commandes.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v9.s2">Quand l'admin passe le statut a <em style="color:var(--cyan)">"traitee"</em>, un email informe le membre que sa commande est <strong>en cours de preparation</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v9.s3">Lors du passage a <em style="color:var(--cyan)">"expediee"</em>, un email avec le <strong>numero de colis</strong> est envoye pour le suivi.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v9.s4">Lors du passage a <em style="color:var(--cyan)">"livree"</em>, un email de <strong>confirmation de livraison</strong> est automatiquement envoye.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v9.s5">L'envoi est declenche <strong>cote serveur</strong> des que l'administrateur met a jour le statut.</span></div>
       </div>
     </div>
   </div>
@@ -703,15 +779,15 @@
 
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p>
+      <p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> les regles sont centralisees dans un fichier partage. Minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> lors de la saisie d'un mot de passe, une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ dispose d'un formatter qui bloque en temps reel les caracteres dangereux comme &lt; &gt; " ' ; / pour prevenir les injections.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> les formulaires sensibles sont proteges par un limiteur de 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT et les identifiants "se souvenir de moi" sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune de mot de passe :</strong> minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel :</strong> une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie :</strong> chaque champ bloque en temps reel les caracteres dangereux pour prevenir les injections.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter anti-abus :</strong> 5 tentatives maximum en 2 minutes, puis blocage de <strong>10 minutes</strong> avec compte a rebours visible.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>Stockage securise :</strong> les tokens JWT sont stockes dans le <strong>FlutterSecureStorage</strong>, chiffre nativement sur Android et iOS.</span></div>
       </div>
     </div>
   </div>
@@ -719,15 +795,15 @@
 
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p>
+      <p class="submodal-desc" data-i18n="v11.desc">L'application repose sur une architecture Flutter pour le front, une base de donnees relationnelle, et Firebase pour les notifications.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes. Les deux apps coexistent sans partager de donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT, la normalisation des prix et la gestion des erreurs.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT et la gestion des erreurs.</span></div>
       </div>
     </div>
   </div>
@@ -740,21 +816,21 @@
     <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
     <div class="modal-header">
       <div>
-        <div class="modal-type">Application Windows — GSB Mission 1</div>
-        <div class="modal-title">GSB Gestion des Conges</div>
+        <div class="modal-type" data-i18n="gsb1.type">Application Windows — GSB Mission 1</div>
+        <div class="modal-title" data-i18n="gsb1.mTitle">GSB Gestion des Conges</div>
       </div>
       <button class="modal-close" onclick="closeModalBtn('gsb-conges')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4C5;</span>
-      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
+      <p class="modal-desc" data-i18n="gsb1.desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
       <div class="modal-features">
-        <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Comptes</span><span class="feat-preview">Deux comptes distincts : praticien et responsable RH avec acces differencies.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-demande')"><div style="flex:1"><span class="feat-title">&#x1F4C5; Demande de conges</span><span class="feat-preview">Formulaire de saisie avec selection des dates et verification automatique du solde.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-rh')"><div style="flex:1"><span class="feat-title">&#x1F6E1;&#xFE0F; Panel RH</span><span class="feat-preview">Liste des demandes en attente, consultation et decision d'acceptation ou de refus.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-notif')"><div style="flex:1"><span class="feat-title">&#x1F514; Notifications a la connexion</span><span class="feat-preview">Le praticien est notifie de l'etat de ses demandes des la connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-connexion')"><div style="flex:1"><span class="feat-title" data-i18n="g1.title">&#x1F511; Connexion &amp; Comptes</span><span class="feat-preview" data-i18n="g1.preview">Deux comptes distincts : praticien et responsable RH avec acces differencies.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-demande')"><div style="flex:1"><span class="feat-title" data-i18n="g2.title">&#x1F4C5; Demande de conges</span><span class="feat-preview" data-i18n="g2.preview">Formulaire de saisie avec selection des dates et verification automatique du solde.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-rh')"><div style="flex:1"><span class="feat-title" data-i18n="g3.title">&#x1F6E1;&#xFE0F; Panel RH</span><span class="feat-preview" data-i18n="g3.preview">Liste des demandes en attente, consultation et decision d'acceptation ou de refus.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-notif')"><div style="flex:1"><span class="feat-title" data-i18n="g4.title">&#x1F514; Notifications a la connexion</span><span class="feat-preview" data-i18n="g4.preview">Le praticien est notifie de l'etat de ses demandes des la connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="g5.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="g5.preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">C#</span><span class="modal-tag">Windows Forms</span>
@@ -768,16 +844,13 @@
 <!-- SOUS-MODALS GSB -->
 <div class="submodal-overlay" id="gsb-connexion" onclick="closeSubModal(event,'gsb-connexion')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g1.title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role de l'utilisateur.</p>
+      <p class="submodal-desc" data-i18n="g1.desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role de l'utilisateur.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/schema.png','&#x1F4CA; Schema — Connexion &amp; Roles')">
-          <span class="step-num">01</span>
-          <span class="step-text">Deux roles distincts accedent a la meme page de connexion : le <strong>Praticien</strong> (soignant/medecin) et le <strong>Responsable RH</strong>. Selon le role detecte, l'interface personnalisee s'ouvre.<br><span class="step-play-hint">Voir le schema</span></span>
-        </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le <strong>compte praticien</strong> donne acces au formulaire de demande de conges et a l'historique de ses demandes.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le <strong>compte RH</strong> donne acces a la liste complete des demandes de tous les praticiens avec les outils de validation.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/schema.png','&#x1F4CA; Schema — Connexion &amp; Roles')"><span class="step-num">01</span><span class="step-text" data-i18n="g1.s1">Deux roles distincts : le <strong>Praticien</strong> et le <strong>Responsable RH</strong>. Selon le role detecte, l'interface personnalisee s'ouvre.<br><span class="step-play-hint">Voir le schema</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g1.s2">Le <strong>compte praticien</strong> donne acces au formulaire de demande de conges et a l'historique de ses demandes.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g1.s3">Le <strong>compte RH</strong> donne acces a la liste complete des demandes de tous les praticiens avec les outils de validation.</span></div>
       </div>
     </div>
   </div>
@@ -785,26 +858,14 @@
 
 <div class="submodal-overlay" id="gsb-demande" onclick="closeSubModal(event,'gsb-demande')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g2.title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Le praticien peut soumettre une demande de conges en selectionnant ses dates. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
+      <p class="submodal-desc" data-i18n="g2.desc">Le praticien peut soumettre une demande de conges en selectionnant ses dates. L'application verifie automatiquement son solde avant d'autoriser la demande.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien — Formulaire de demande')">
-          <span class="step-num">01</span>
-          <span class="step-text">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong> de conge. L'historique de ses demandes est visible directement sous le formulaire.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges restants')">
-          <span class="step-num">02</span>
-          <span class="step-text">En cliquant sur <strong>"Voir mes jours restants"</strong>, une notification affiche le <strong>nombre de jours de conges disponibles</strong> dans son solde.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande envoyee — En attente de validation')">
-          <span class="step-num">03</span>
-          <span class="step-text">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base. Un popup confirme l'envoi avec le nombre de jours concernes et le solde restant si elle est acceptee.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')">
-          <span class="step-num">04</span>
-          <span class="step-text">Si la demande est <strong>refusee par le RH</strong>, une notification s'affiche a la prochaine connexion du praticien pour l'informer du refus.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien — Formulaire de demande')"><span class="step-num">01</span><span class="step-text" data-i18n="g2.s1">Le praticien selectionne une <strong>date de debut</strong> et une <strong>date de fin</strong> de conge.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges restants')"><span class="step-num">02</span><span class="step-text" data-i18n="g2.s2">En cliquant sur <strong>"Voir mes jours restants"</strong>, le <strong>nombre de jours de conges disponibles</strong> s'affiche.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande envoyee — En attente de validation')"><span class="step-num">03</span><span class="step-text" data-i18n="g2.s3">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base. Un popup confirme l'envoi.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')"><span class="step-num">04</span><span class="step-text" data-i18n="g2.s4">Si la demande est <strong>refusee par le RH</strong>, une notification s'affiche a la prochaine connexion du praticien.<br><span class="step-play-hint">Voir le screen</span></span></div>
       </div>
     </div>
   </div>
@@ -812,44 +873,39 @@
 
 <div class="submodal-overlay" id="gsb-rh" onclick="closeSubModal(event,'gsb-rh')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g3.title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes de conges des praticiens.</p>
+      <p class="submodal-desc" data-i18n="g3.desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes de conges des praticiens.</p>
       <div class="submodal-steps">
-       <div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text">Le RH voit la <strong>liste de toutes les demandes</strong> en attente avec le nom du praticien et les dates demandees.<br><span class="step-play-hint">Voir le screen</span></span></div>
-       <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Le RH peut <strong>accepter ou refuser</strong> la demande en un clic. Le solde du praticien est mis a jour automatiquement.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text" data-i18n="g3.s1">Le RH voit la <strong>liste de toutes les demandes</strong> en attente avec le nom du praticien et les dates demandees.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g3.s2">Le RH peut <strong>accepter ou refuser</strong> la demande en un clic. Le solde du praticien est mis a jour automatiquement.</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL NOTIFICATIONS A LA CONNEXION ═══ -->
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
+      <p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')">
-          <span class="step-num">01</span>
-          <span class="step-text">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir le screen</span></span>
-        </div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir le screen</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SOUS-MODAL BASE DE DONNEES GSB (anciennement "Backend & Base de donnees") ═══ -->
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
   <div class="submodal">
-    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
+      <p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
       </div>
     </div>
   </div>
@@ -861,18 +917,18 @@
     <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
     <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
     <div class="modal-header">
-      <div><div class="modal-type">Projet Web</div><div class="modal-title">League of Legends</div></div>
+      <div><div class="modal-type" data-i18n="p3.type">Projet Web — Personnel</div><div class="modal-title">League of Legends</div></div>
       <button class="modal-close" onclick="closeModalBtn('lol')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x2694;&#xFE0F;</span>
-      <p class="modal-desc">Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.</p>
+      <p class="modal-desc" data-i18n="lol.desc">Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.</p>
       <div class="modal-features">
-        <div class="modal-features-title">Fonctionnalites</div>
-        <div class="modal-feature">Affichage et recherche de champions</div>
-        <div class="modal-feature">Base de donnees MySQL des personnages</div>
-        <div class="modal-feature">Design thematique inspire du jeu</div>
-        <div class="modal-feature">Interface web responsive en PHP/HTML/CSS</div>
+        <div class="modal-features-title" data-i18n="lol.features">Fonctionnalites</div>
+        <div class="modal-feature" data-i18n="lol.f1">Affichage et recherche de champions</div>
+        <div class="modal-feature" data-i18n="lol.f2">Base de donnees MySQL des personnages</div>
+        <div class="modal-feature" data-i18n="lol.f3">Design thematique inspire du jeu</div>
+        <div class="modal-feature" data-i18n="lol.f4">Interface web responsive en PHP/HTML/CSS</div>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">HTML</span><span class="modal-tag">CSS</span>
@@ -888,7 +944,7 @@
 <section id="projet-ap">
   <div class="section-header reveal">
     <span class="section-number">05</span>
-    <h2 class="section-title">Projet AP</h2>
+    <h2 class="section-title" data-i18n="ap.title">Projet AP</h2>
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
@@ -898,16 +954,16 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Application Windows — GSB Mission 1</div>
-        <h3 class="project-title">GSB Gestion des Conges</h3>
-        <p class="project-desc">Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.</p>
+        <div class="project-type" data-i18n="gsb1.type">Application Windows — GSB Mission 1</div>
+        <h3 class="project-title" data-i18n="gsb1.mTitle">GSB Gestion des Conges</h3>
+        <p class="project-desc" data-i18n="ap.gsb1desc">Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.</p>
         <div class="project-tags">
           <span class="project-tag">C#</span>
           <span class="project-tag">Laravel</span>
           <span class="project-tag">MySQL</span>
           <span class="project-tag">Windows Forms</span>
         </div>
-        <button class="project-btn" onclick="openModal('gsb-conges')"><span>&#x2756; Ouvrir</span></button>
+        <button class="project-btn" onclick="openModal('gsb-conges')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
     <div class="project-card reveal">
@@ -916,14 +972,14 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type">Application Mobile — GSB Mission 5</div>
-        <h3 class="project-title">GSB Notes Praticiens</h3>
-        <p class="project-desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
+        <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 5</div>
+        <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
+        <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
         <div class="project-tags">
           <span class="project-tag">Flutter</span>
           <span class="project-tag">Dart</span>
           <span class="project-tag">MySQL</span>
-          <span class="project-tag">&#x23F3; En cours</span>
+          <span class="project-tag" data-i18n="ap.inprogress">&#x23F3; En cours</span>
         </div>
       </div>
     </div>
@@ -935,18 +991,18 @@
 <!-- CONTACT -->
 <div id="contact-section">
   <span class="contact-rune reveal">&#x2756;</span>
-  <h2 class="contact-title reveal">Me contacter</h2>
-  <p class="contact-text reveal">"Chaque grand voyage commence par un premier message."<br>Discutons de ton prochain projet.</p>
+  <h2 class="contact-title reveal" data-i18n="contact.title">Me contacter</h2>
+  <p class="contact-text reveal" data-i18n="contact.text">"Chaque grand voyage commence par un premier message."<br>Discutons de ton prochain projet.</p>
   <div class="contact-links reveal">
-    <a href="https://mail.google.com/mail/?view=cm&to=mesurecorentin59@gmail.com" target="_blank" class="contact-link">&#x2709; Email</a>
-    <a href="https://linkedin.com/" target="_blank" class="contact-link">&#x25C8; LinkedIn</a>
+    <a href="https://mail.google.com/mail/?view=cm&to=mesurecorentin59@gmail.com" target="_blank" class="contact-link" data-i18n="contact.email">&#x2709; Email</a>
+    <a href="https://linkedin.com/" target="_blank" class="contact-link" data-i18n="contact.linkedin">&#x25C8; LinkedIn</a>
     <a href="https://github.com/Corentin-Mesure" target="_blank" class="contact-link">&#x2325; GitHub</a>
-    <a href="cv-corentin-mesure.pdf" download class="contact-link">&#x2B07; CV PDF</a>
+    <a href="cv-corentin-mesure.pdf" download class="contact-link" data-i18n="contact.cv">&#x2B07; CV PDF</a>
   </div>
 </div>
 
 <footer>
-  <p>&#169; 2026 Corentin Mesure — BTS SIO SLAM</p>
+  <p data-i18n="footer.text">&#169; 2026 Corentin Mesure — BTS SIO SLAM</p>
 </footer>
 
 <!-- VIDEO / IMAGE MODAL -->
@@ -954,7 +1010,7 @@
   <div class="video-modal-wrap">
     <div class="video-modal-inner">
       <div id="videoModalErr" class="video-modal-err">
-        &#x26A0; Fichier introuvable :<br>
+        &#x26A0; <span data-i18n="video.notfound">Fichier introuvable :</span><br>
         <span id="videoModalErrPath"></span>
       </div>
       <div id="videoModalPov" class="video-modal-pov"></div>
@@ -965,6 +1021,327 @@
 </div>
 
 <script src="Script.js"></script>
+
+<!-- ═══ I18N + ANIMATION TOGGLE ═══ -->
+<script>
+// ─── Dictionnaire de traductions ───────────────────────────────────────────
+const TRANSLATIONS = {
+  fr: {
+    // Nav
+    "nav.about":    "A propos",
+    "nav.timeline": "Parcours",
+    "nav.skills":   "Competences",
+    "nav.projects": "Projets",
+    "nav.ap":       "Projet AP",
+    "nav.contact":  "Contact",
+
+    // Hero
+    "hero.subtitle": "Etudiant",
+    "hero.cta1":     "Voir mes projets",
+    "hero.cta2":     "&#x2B07; Telecharger CV",
+    "hero.scroll":   "Defiler",
+
+    // Buttons
+    "btn.animOff": "Anims ON",
+    "btn.animOn":  "Anims OFF",
+    "btn.open":    "&#x2756; Ouvrir",
+
+    // About
+    "about.title":    "A propos",
+    "about.flipHint": "&#x2756; Cliquer pour decouvrir &#x2756;",
+    "about.text1":    "Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.",
+    "about.text2":    "J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.",
+    "about.projects": "Projets",
+    "about.apps":     "Apps Play Store",
+
+    // Timeline
+    "timeline.title": "Parcours",
+    "tl1.title": "BTS SIO — 2eme annee", "tl1.sub": "Option SLAM",
+    "tl1.desc": "Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.",
+    "tl1.badge": "&#x2756; En cours",
+    "tl2.title": "BTS SIO — 1ere annee", "tl2.sub": "Option SLAM",
+    "tl2.desc": "Apprentissage des fondamentaux du developpement web et mobile. Premiers projets Flutter, PHP et MySQL.",
+    "tl2.badge": "Valide",
+    "tl3.title": "Lycee", "tl3.sub": "Bac Pro MELEC",
+    "tl3.desc": "Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.",
+    "tl3.badge": "Diplome",
+
+    // Skills
+    "skills.title": "Competences",
+    "skill1.name": "Developpement",
+    "skill2.name": "Donnees", "skill2.tag4": "Modelisation BDD", "skill2.tag5": "SQL avance",
+    "skill3.name": "Outils &amp; Methodes", "skill3.tag4": "Methode Agile", "skill3.tag5": "Tests &amp; Recette",
+    "skill4.name": "Bloc 1 — Support", "skill4.tag1": "Gestion patrimoine", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Deploiement service", "skill4.tag4": "Mode projet", "skill4.tag5": "Veille techno",
+    "skill5.name": "Bloc 2 — SLAM", "skill5.tag1": "Conception applicative", "skill5.tag2": "Maintenance corrective", "skill5.tag3": "Maintenance evolutive", "skill5.tag4": "Architecture logicielle", "skill5.tag5": "UML / Modelisation",
+    "skill6.name": "Bloc 3 — Cybersecurite", "skill6.tag1": "RGPD / CNIL", "skill6.tag2": "Gestion des acces", "skill6.tag3": "Securite applicative", "skill6.tag4": "Analyse logs", "skill6.tag5": "Prevention attaques",
+
+    // Projects
+    "projects.title":    "Projets",
+    "projects.personal": "Voir mes projets personnels",
+    "p1.type": "Application Mobile — Chat Temps Reel",
+    "p1.desc": "Application de messagerie instantanee Flutter avec chat en temps reel, notifications push et panel administrateur.",
+    "p2.type":  "Application Mobile",
+    "p2.type2": "Application Mobile — Boutique Privee",
+    "p2.desc": "Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.",
+    "p3.type": "Projet Web — Personnel",
+    "p3.desc": "Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.",
+
+    // Modal generic
+    "modal.clickHint": "&#x2756; Cliquer sur une fonctionnalite pour en savoir plus",
+    "submodal.feature": "Fonctionnalite",
+
+    // Modal Animal'and
+    "m1.desc": "Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.",
+    "f1.title": "&#x1F511; Inscription &amp; Acces", "f1.preview": "Validation manuelle des comptes par un administrateur avant acces.",
+    "f1.desc": "L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.",
+    "f1.s1": "L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s2": "La demande est enregistree en base PostgreSQL avec le statut <strong>« en attente »</strong>. L'acces est bloque jusqu'a validation.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f1.s3": "Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s4": "Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s5": "La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f2.title": "&#x1F4AC; Chat en temps reel", "f2.preview": "Messages instantanes dans les salons grace a Socket.io, avec horodatage.",
+    "f3.title": "&#x1F514; Notifications push", "f3.preview": "Firebase Messaging envoie des alertes meme quand l'app est fermee.",
+    "f4.title": "&#x1F43E; Conversations &amp; Groupes", "f4.preview": "Les utilisateurs creent des conversations, seuls les admins peuvent creer des groupes.",
+    "f5.title": "&#x1F4CA; Sondages", "f5.preview": "Creation de sondages dans les salons, resultats mis a jour en temps reel.",
+    "f6.title": "&#x1F3A8; Personnalisation", "f6.preview": "Fond d'ecran personnalisable par l'utilisateur selon ses preferences.",
+    "f7.title": "&#x1F6E1;&#xFE0F; Panel administrateur", "f7.preview": "Gestion complete des comptes : roles, bans, suppressions, inscriptions.",
+    "f8.title": "&#x1F5C4;&#xFE0F; Base de donnees", "f8.preview": "PostgreSQL sur OVH, deploye via Termius SSH.",
+
+    // Modal Animal'vest
+    "m2.desc": "Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.",
+    "v1.title": "&#x1F510; Acces membres uniquement", "v1.preview": "Connexion sans identifiants via un compte temporaire supprime a la deconnexion.",
+    "v2.title": "&#x1F6CD;&#xFE0F; Catalogue de produits", "v2.preview": "Consultation des articles avec photos, descriptions, prix et selection de taille.",
+    "v3.title": "&#x1F5BC;&#xFE0F; Galerie multi-photos", "v3.preview": "Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.",
+    "v4.title": "&#x1F4CB; Categories &amp; Unites", "v4.preview": "Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.",
+    "v5.title": "&#x1F6D2; Panier &amp; Commandes", "v5.preview": "Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.",
+    "v6.title": "&#x1F6E1;&#xFE0F; Panel administrateur", "v6.preview": "Gestion des produits, des stocks, des commandes et suivi avec notes internes.",
+    "v7.title": "&#x1F4E6; Numero de colis obligatoire", "v7.preview": "L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.",
+    "v8.title": "&#x1F514; Notifications push", "v8.preview": "L'admin est alerte en temps reel des qu'une nouvelle commande est passee.",
+    "v9.title": "&#x2709;&#xFE0F; Emails automatiques", "v9.preview": "Un email est envoye au membre a chaque changement de statut de sa commande.",
+    "v10.title": "&#x1F512; Securite &amp; Mot de passe", "v10.preview": "Politique commune avec indicateur de force, formatters et rate limiter anti-abus.",
+    "v11.title": "&#x1F5C4;&#xFE0F; Base de donnees", "v11.preview": "Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.",
+
+    // GSB
+    "gsb1.type": "Application Windows — GSB Mission 1",
+    "gsb1.mTitle": "GSB Gestion des Conges",
+    "gsb1.desc": "Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.",
+    "gsb2.type": "Application Mobile — GSB Mission 5",
+    "gsb2.mTitle": "GSB Notes Praticiens",
+    "g1.title": "&#x1F511; Connexion &amp; Comptes", "g1.preview": "Deux comptes distincts : praticien et responsable RH avec acces differencies.",
+    "g2.title": "&#x1F4C5; Demande de conges", "g2.preview": "Formulaire de saisie avec selection des dates et verification automatique du solde.",
+    "g3.title": "&#x1F6E1;&#xFE0F; Panel RH", "g3.preview": "Liste des demandes en attente, consultation et decision d'acceptation ou de refus.",
+    "g4.title": "&#x1F514; Notifications a la connexion", "g4.preview": "Le praticien est notifie de l'etat de ses demandes des la connexion.",
+    "g5.title": "&#x1F5C4;&#xFE0F; Base de donnees", "g5.preview": "API REST Laravel, base MySQL, consommee par l'application C# Windows.",
+
+    // AP
+    "ap.title": "Projet AP",
+    "ap.gsb1desc": "Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.",
+    "ap.gsb2desc": "Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.",
+    "ap.inprogress": "&#x23F3; En cours",
+
+    // LoL
+    "lol.desc": "Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.",
+    "lol.features": "Fonctionnalites",
+    "lol.f1": "Affichage et recherche de champions",
+    "lol.f2": "Base de donnees MySQL des personnages",
+    "lol.f3": "Design thematique inspire du jeu",
+    "lol.f4": "Interface web responsive en PHP/HTML/CSS",
+
+    // Contact
+    "contact.title":   "Me contacter",
+    "contact.text":    "\"Chaque grand voyage commence par un premier message.\"<br>Discutons de ton prochain projet.",
+    "contact.email":   "&#x2709; Email",
+    "contact.linkedin":"&#x25C8; LinkedIn",
+    "contact.cv":      "&#x2B07; CV PDF",
+
+    // Footer
+    "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
+
+    // Video modal
+    "video.notfound": "Fichier introuvable :"
+  },
+
+  en: {
+    // Nav
+    "nav.about":    "About",
+    "nav.timeline": "Journey",
+    "nav.skills":   "Skills",
+    "nav.projects": "Projects",
+    "nav.ap":       "AP Project",
+    "nav.contact":  "Contact",
+
+    // Hero
+    "hero.subtitle": "Student",
+    "hero.cta1":     "View my projects",
+    "hero.cta2":     "&#x2B07; Download CV",
+    "hero.scroll":   "Scroll",
+
+    // Buttons
+    "btn.animOff": "Anims ON",
+    "btn.animOn":  "Anims OFF",
+    "btn.open":    "&#x2756; Open",
+
+    // About
+    "about.title":    "About",
+    "about.flipHint": "&#x2756; Click to discover &#x2756;",
+    "about.text1":    "Hi, my name is Corentin. Let me tell you about my journey and how I ended up studying IT, even though I originally started in an Electrical Engineering vocational program.",
+    "about.text2":    "I completed a vocational Bac Pro in Electrical Engineering and Connected Environments, but after two years I realized it was no longer the right fit for me. So I decided to pivot to IT, enrolled in a BTS SIO with a SLAM specialization, and honestly fell in love with it from day one. Today I build mobile and web applications — I even published an app on the Play Store during my internship.",
+    "about.projects": "Projects",
+    "about.apps":     "Play Store Apps",
+
+    // Timeline
+    "timeline.title": "Journey",
+    "tl1.title": "BTS SIO — 2nd year", "tl1.sub": "SLAM track",
+    "tl1.desc": "Deepened skills and completed real-world projects including Animal'and published on the Play Store.",
+    "tl1.badge": "&#x2756; In progress",
+    "tl2.title": "BTS SIO — 1st year", "tl2.sub": "SLAM track",
+    "tl2.desc": "Learned web and mobile development fundamentals. First Flutter, PHP and MySQL projects.",
+    "tl2.badge": "Validated",
+    "tl3.title": "High School", "tl3.sub": "Vocational Bac — MELEC",
+    "tl3.desc": "Obtained the Vocational Baccalaureate in Electrical Engineering and Connected Environments.",
+    "tl3.badge": "Graduated",
+
+    // Skills
+    "skills.title": "Skills",
+    "skill1.name": "Development",
+    "skill2.name": "Data", "skill2.tag4": "DB Modeling", "skill2.tag5": "Advanced SQL",
+    "skill3.name": "Tools &amp; Methods", "skill3.tag4": "Agile Method", "skill3.tag5": "Testing &amp; QA",
+    "skill4.name": "Block 1 — Support", "skill4.tag1": "Asset management", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Service deployment", "skill4.tag4": "Project mode", "skill4.tag5": "Tech watch",
+    "skill5.name": "Block 2 — SLAM", "skill5.tag1": "App design", "skill5.tag2": "Corrective maintenance", "skill5.tag3": "Evolutive maintenance", "skill5.tag4": "Software architecture", "skill5.tag5": "UML / Modeling",
+    "skill6.name": "Block 3 — Cybersecurity", "skill6.tag1": "GDPR / CNIL", "skill6.tag2": "Access management", "skill6.tag3": "App security", "skill6.tag4": "Log analysis", "skill6.tag5": "Attack prevention",
+
+    // Projects
+    "projects.title":    "Projects",
+    "projects.personal": "View my personal projects",
+    "p1.type": "Mobile App — Real-Time Chat",
+    "p1.desc": "Flutter instant messaging app with real-time chat, push notifications and admin panel.",
+    "p2.type":  "Mobile App",
+    "p2.type2": "Mobile App — Private Shop",
+    "p2.desc": "Companion app to Animal'and dedicated to managing equipment and accessories for animals.",
+    "p3.type": "Web Project — Personal",
+    "p3.desc": "Web project set in the League of Legends universe with data display and immersive design.",
+
+    // Modal generic
+    "modal.clickHint": "&#x2756; Click on a feature to learn more",
+    "submodal.feature": "Feature",
+
+    // Modal Animal'and
+    "m1.desc": "Animal'and Chat is a Flutter mobile messaging application. The backend is deployed on an OVH server via <strong>Termius SSH</strong>, the database is PostgreSQL, and notifications are handled by Firebase Messaging.",
+    "f1.title": "&#x1F511; Registration &amp; Access", "f1.preview": "Manual account validation by an administrator before access is granted.",
+    "f1.desc": "Access to the app is not open to everyone. Every new registration goes through a validation process before the user can log in.",
+    "f1.s1": "The user fills in a registration form with their details (name, email, password).<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s2": "The request is stored in PostgreSQL with status <strong>\"pending\"</strong>. Access is blocked until validation.<br><span class=\"step-play-hint\">View screenshot</span>",
+    "f1.s3": "An admin receives the request in their panel and can <strong>accept or reject</strong> the account.<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s4": "Once accepted, the user can log in and <strong>create conversations</strong> with other members.<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s5": "Creating <strong>groups</strong> is reserved for administrators only.<br><span class=\"step-play-hint\">View screenshot</span>",
+    "f2.title": "&#x1F4AC; Real-time chat", "f2.preview": "Instant messages in channels via Socket.io, with timestamps.",
+    "f3.title": "&#x1F514; Push notifications", "f3.preview": "Firebase Messaging sends alerts even when the app is closed.",
+    "f4.title": "&#x1F43E; Conversations &amp; Groups", "f4.preview": "Users create conversations; only admins can create groups.",
+    "f5.title": "&#x1F4CA; Polls", "f5.preview": "Create polls in channels, results updated in real time.",
+    "f6.title": "&#x1F3A8; Customization", "f6.preview": "Wallpaper customizable by the user according to their preferences.",
+    "f7.title": "&#x1F6E1;&#xFE0F; Admin panel", "f7.preview": "Full account management: roles, bans, deletions, registrations.",
+    "f8.title": "&#x1F5C4;&#xFE0F; Database", "f8.preview": "PostgreSQL on OVH, deployed via Termius SSH.",
+
+    // Modal Animal'vest
+    "m2.desc": "Animal'vest is the association's private shop, reserved for its members. It allows browsing the product catalog (jackets, accessories...), placing orders and tracking them, all managed by a built-in admin panel.",
+    "v1.title": "&#x1F510; Members-only access", "v1.preview": "Login without credentials via a temporary account deleted on logout.",
+    "v2.title": "&#x1F6CD;&#xFE0F; Product catalog", "v2.preview": "Browse items with photos, descriptions, prices and size selection.",
+    "v3.title": "&#x1F5BC;&#xFE0F; Multi-photo gallery", "v3.preview": "Up to 8 photos per product with carousel, fullscreen zoom and viewer.",
+    "v4.title": "&#x1F4CB; Categories &amp; Units", "v4.preview": "Unit grid on the home screen, each linked to shop categories.",
+    "v5.title": "&#x1F6D2; Cart &amp; Orders", "v5.preview": "Add to cart, delivery form and order status tracking.",
+    "v6.title": "&#x1F6E1;&#xFE0F; Admin panel", "v6.preview": "Manage products, stock, orders and tracking with internal notes.",
+    "v7.title": "&#x1F4E6; Mandatory parcel number", "v7.preview": "Shipping is blocked until a valid parcel number (8 digits) is entered.",
+    "v8.title": "&#x1F514; Push notifications", "v8.preview": "Admin is alerted in real time when a new order is placed.",
+    "v9.title": "&#x2709;&#xFE0F; Automatic emails", "v9.preview": "An email is sent to the member at each order status change.",
+    "v10.title": "&#x1F512; Security &amp; Password", "v10.preview": "Shared policy with strength indicator, formatters and anti-abuse rate limiter.",
+    "v11.title": "&#x1F5C4;&#xFE0F; Database", "v11.preview": "Flutter, Firebase for notifications and PostgreSQL/MySQL for data.",
+
+    // GSB
+    "gsb1.type": "Windows App — GSB Mission 1",
+    "gsb1.mTitle": "GSB Leave Management",
+    "gsb1.desc": "C# Windows application developed as part of the GSB AP project (Galaxy Swiss Bourdin). It allows practitioners to submit leave requests and the HR manager to approve or reject them, with automatic balance management and login notifications.",
+    "gsb2.type": "Mobile App — GSB Mission 5",
+    "gsb2.mTitle": "GSB Practitioner Ratings",
+    "g1.title": "&#x1F511; Login &amp; Accounts", "g1.preview": "Two distinct accounts: practitioner and HR manager with differentiated access.",
+    "g2.title": "&#x1F4C5; Leave request", "g2.preview": "Entry form with date selection and automatic balance check.",
+    "g3.title": "&#x1F6E1;&#xFE0F; HR Panel", "g3.preview": "List of pending requests, review and accept/reject decision.",
+    "g4.title": "&#x1F514; Login notifications", "g4.preview": "The practitioner is notified of their request status on login.",
+    "g5.title": "&#x1F5C4;&#xFE0F; Database", "g5.preview": "Laravel REST API, MySQL database, consumed by the C# Windows app.",
+
+    // AP
+    "ap.title": "AP Project",
+    "ap.gsb1desc": "C# Windows application allowing practitioners to submit leave requests and the HR manager to accept or reject them. Balance management, notifications and admin panel.",
+    "ap.gsb2desc": "Flutter application displaying GSB practitioner ratings. Two evaluator types (client and expert), ranking by score, detail view with comments. In development.",
+    "ap.inprogress": "&#x23F3; In progress",
+
+    // LoL
+    "lol.desc": "Immersive web project inspired by the League of Legends universe. Game data display, thematic design and database integration to manage champions and statistics.",
+    "lol.features": "Features",
+    "lol.f1": "Champion display and search",
+    "lol.f2": "MySQL character database",
+    "lol.f3": "Thematic design inspired by the game",
+    "lol.f4": "Responsive PHP/HTML/CSS web interface",
+
+    // Contact
+    "contact.title":    "Get in touch",
+    "contact.text":     "\"Every great journey starts with a first message.\"<br>Let's talk about your next project.",
+    "contact.email":    "&#x2709; Email",
+    "contact.linkedin": "&#x25C8; LinkedIn",
+    "contact.cv":       "&#x2B07; CV PDF",
+
+    // Footer
+    "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
+
+    // Video modal
+    "video.notfound": "File not found:"
+  }
+};
+
+// ─── Langue courante ────────────────────────────────────────────────────────
+let currentLang = localStorage.getItem('portfolio-lang') || 'fr';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  localStorage.setItem('portfolio-lang', lang);
+
+  const dict = TRANSLATIONS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) {
+      el.innerHTML = dict[key];
+    }
+  });
+
+  // Mettre à jour le title de la page
+  document.title = lang === 'en'
+    ? 'Corentin Mesure — Portfolio'
+    : 'Corentin Mesure — Portfolio';
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'fr' ? 'en' : 'fr');
+}
+
+// ─── Animations toggle ──────────────────────────────────────────────────────
+let animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
+
+function applyAnimState(enabled) {
+  animEnabled = enabled;
+  localStorage.setItem('portfolio-anim', enabled ? 'on' : 'off');
+  document.documentElement.classList.toggle('no-anim', !enabled);
+}
+
+function toggleAnimations() {
+  applyAnimState(!animEnabled);
+}
+
+// ─── Init au chargement ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  applyLang(currentLang);
+  applyAnimState(animEnabled);
+});
+</script>
 
 </body>
 </html>
