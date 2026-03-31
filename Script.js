@@ -2,7 +2,9 @@
 
 var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-/* ════ FIX SAFARI IOS ROTATION ════ */
+/* ════════════════════════════════════════════════════════
+   FIX SAFARI IOS ROTATION
+════════════════════════════════════════════════════════ */
 (function () {
   if (!_isMobileDevice) return;
   var s = document.createElement('style');
@@ -16,7 +18,9 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
   });
 })();
 
-/* ════ SCROLL + NAV ════ */
+/* ════════════════════════════════════════════════════════
+   SCROLL PROGRESS + NAV ACTIVE
+════════════════════════════════════════════════════════ */
 (function () {
   var sp = document.getElementById('scrollProgress');
   var navLinks = Array.from(document.querySelectorAll('.nav-links a'));
@@ -29,15 +33,22 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       var s = window.scrollY, tot = document.body.scrollHeight - window.innerHeight;
       if (sp) sp.style.width = (tot > 0 ? (s / tot) * 100 : 0) + '%';
       var active = '';
-      for (var i = 0; i < sections.length; i++) if (s >= sections[i].offsetTop - 220) active = sections[i].id;
-      navLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + active); });
+      for (var i = 0; i < sections.length; i++) {
+        if (s >= sections[i].offsetTop - 220) active = sections[i].id;
+      }
+      navLinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+      });
       ticking = false;
     });
   }, { passive: true });
 })();
 
-/* ════ ANIMATIONS SCROLL ════ */
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS AU SCROLL (IntersectionObserver)
+════════════════════════════════════════════════════════ */
 (function () {
+  /* Timeline items */
   var tlObs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e, i) {
       if (!e.isIntersecting) return;
@@ -47,16 +58,20 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
   }, { threshold: 0.2 });
   document.querySelectorAll('.timeline-item').forEach(function (el) { tlObs.observe(el); });
 
+  /* Skill cards */
   var skObs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) return;
-      e.target.querySelectorAll('.skill-tag').forEach(function (t, i) { t.style.transitionDelay = (i * 0.08) + 's'; });
+      e.target.querySelectorAll('.skill-tag').forEach(function (t, i) {
+        t.style.transitionDelay = (i * 0.08) + 's';
+      });
       e.target.classList.add('visible');
       skObs.unobserve(e.target);
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.skill-card').forEach(function (c) { skObs.observe(c); });
 
+  /* Éléments .reveal */
   var rvObs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e, i) {
       if (!e.isIntersecting) return;
@@ -67,7 +82,9 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
   document.querySelectorAll('.reveal').forEach(function (el) { rvObs.observe(el); });
 })();
 
-/* ════ CARTE FLIP ════ */
+/* ════════════════════════════════════════════════════════
+   CARTE FLIP (section À propos)
+════════════════════════════════════════════════════════ */
 (function () {
   var state = 'closed', clone = null, origRect = null, expandTimer = null;
 
@@ -79,6 +96,7 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
     origRect = card.getBoundingClientRect();
     card.style.transition = 'transform 0.85s cubic-bezier(0.4,0.2,0.2,1)';
     card.style.transform = 'rotateY(180deg)';
+
     setTimeout(function () {
       if (state !== 'flipping') return;
       card.style.visibility = 'hidden';
@@ -86,29 +104,32 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
       clone.id = 'flipCardClone';
       clone.classList.add('is-clone');
       clone.removeAttribute('onclick');
+
       var vvp = window.visualViewport || null;
-      var vw = vvp ? Math.round(vvp.width) : window.innerWidth;
+      var vw = vvp ? Math.round(vvp.width)  : window.innerWidth;
       var vh = vvp ? Math.round(vvp.height) : window.innerHeight;
       var vx = vvp ? Math.round(vvp.offsetLeft) : 0;
-      var vy = vvp ? Math.round(vvp.offsetTop) : 0;
+      var vy = vvp ? Math.round(vvp.offsetTop)  : 0;
       var tW, tH, tLeft, tTop;
+
       if (_isMobileDevice) {
-        tW = Math.min(vw * 0.88, 400);
-        tH = Math.min(tW * (4 / 3), vh * 0.85);
-        tW = Math.min(tW, tH * (3 / 4));
+        tW    = Math.min(vw * 0.88, 400);
+        tH    = Math.min(tW * (4 / 3), vh * 0.85);
+        tW    = Math.min(tW, tH * (3 / 4));
         tLeft = vx + (vw - tW) / 2;
-        tTop = vy + (vh - tH) / 2;
+        tTop  = vy + (vh - tH) / 2;
         if (tLeft < 8) tLeft = 8;
-        if (tTop < 8) tTop = 8;
+        if (tTop  < 8) tTop  = 8;
         if (tLeft + tW > vx + vw - 8) tLeft = vx + vw - tW - 8;
-        if (tTop + tH > vy + vh - 8) tTop = vy + vh - tH - 8;
+        if (tTop  + tH > vy + vh - 8) tTop  = vy + vh - tH - 8;
       } else {
-        var maxH = Math.min(vh * .995, 1060), maxW = Math.min(vw * .96, 900);
-        tH = maxH;
-        tW = Math.min(maxW, tH * (5 / 6));
+        var maxH = Math.min(vh * 0.995, 1060), maxW = Math.min(vw * 0.96, 900);
+        tH    = maxH;
+        tW    = Math.min(maxW, tH * (5 / 6));
         tLeft = (vw - tW) / 2;
-        tTop = (vh - tH) / 2;
+        tTop  = (vh - tH) / 2;
       }
+
       if (_isMobileDevice) {
         clone.style.cssText = [
           'position:fixed', 'left:' + tLeft + 'px', 'top:' + tTop + 'px',
@@ -124,28 +145,32 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
           'visibility:visible', 'transform-style:preserve-3d', 'aspect-ratio:unset'
         ].join(';');
       }
+
       document.body.appendChild(clone);
       var bd = document.getElementById('cardBackdrop');
       if (bd) bd.classList.add('active');
       document.body.style.overflow = 'hidden';
+
       var cb = clone.querySelector('.back-close');
       if (cb) {
         cb.style.display = 'flex';
         cb.onclick = function (e) { e.stopPropagation(); window.closeCard(); };
       }
+
       void clone.offsetHeight;
+
       if (_isMobileDevice) {
         clone.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease';
-        clone.style.transform = 'rotateY(180deg) scale(1)';
-        clone.style.opacity = '1';
+        clone.style.transform  = 'rotateY(180deg) scale(1)';
+        clone.style.opacity    = '1';
         state = 'open';
         expandTimer = setTimeout(function () { if (clone) clone.classList.add('expanded'); }, 500);
       } else {
         clone.style.transition = 'left 1s cubic-bezier(0.16,1,0.3,1),top 1s cubic-bezier(0.16,1,0.3,1),width 1s cubic-bezier(0.16,1,0.3,1),height 1s cubic-bezier(0.16,1,0.3,1)';
-        clone.style.left = tLeft + 'px';
-        clone.style.top = tTop + 'px';
-        clone.style.width = tW + 'px';
-        clone.style.height = tH + 'px';
+        clone.style.left   = tLeft + 'px';
+        clone.style.top    = tTop  + 'px';
+        clone.style.width  = tW    + 'px';
+        clone.style.height = tH    + 'px';
         state = 'open';
         expandTimer = setTimeout(function () { if (clone) clone.classList.add('expanded'); }, 1050);
       }
@@ -157,47 +182,48 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
     state = 'closing';
     clearTimeout(expandTimer);
     clone.classList.remove('expanded');
-    var bd = document.getElementById('cardBackdrop');
-    if (bd) bd.classList.remove('active');
+    var bd   = document.getElementById('cardBackdrop');
     var card = document.getElementById('flipCard');
+    if (bd) bd.classList.remove('active');
+
     if (_isMobileDevice) {
       clone.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease';
-      clone.style.transform = 'rotateY(180deg) scale(0.85)';
-      clone.style.opacity = '0';
+      clone.style.transform  = 'rotateY(180deg) scale(0.85)';
+      clone.style.opacity    = '0';
       setTimeout(function () {
         if (clone) { clone.remove(); clone = null; }
         document.body.style.overflow = '';
         if (card) {
           card.style.transition = 'none';
-          card.style.transform = 'rotateY(0deg)';
+          card.style.transform  = 'rotateY(0deg)';
           card.style.visibility = 'visible';
           void card.offsetHeight;
           card.style.transition = '';
-          card.style.transform = '';
+          card.style.transform  = '';
         }
         state = 'closed';
       }, 360);
     } else {
       var currentRect = card ? card.getBoundingClientRect() : origRect;
       clone.style.transition = 'left .65s cubic-bezier(0.4,0,0.2,1),top .65s cubic-bezier(0.4,0,0.2,1),width .65s cubic-bezier(0.4,0,0.2,1),height .65s cubic-bezier(0.4,0,0.2,1)';
-      clone.style.left = currentRect.left + 'px';
-      clone.style.top = currentRect.top + 'px';
-      clone.style.width = currentRect.width + 'px';
+      clone.style.left   = currentRect.left   + 'px';
+      clone.style.top    = currentRect.top    + 'px';
+      clone.style.width  = currentRect.width  + 'px';
       clone.style.height = currentRect.height + 'px';
       setTimeout(function () {
         if (!clone) return;
         clone.style.transition = 'transform .65s cubic-bezier(0.4,0.2,0.2,1)';
-        clone.style.transform = 'rotateY(0deg)';
+        clone.style.transform  = 'rotateY(0deg)';
         setTimeout(function () {
           if (clone) { clone.remove(); clone = null; }
           document.body.style.overflow = '';
           if (card) {
             card.style.transition = 'none';
-            card.style.transform = 'rotateY(0deg)';
+            card.style.transform  = 'rotateY(0deg)';
             card.style.visibility = 'visible';
             void card.offsetHeight;
             card.style.transition = '';
-            card.style.transform = '';
+            card.style.transform  = '';
           }
           state = 'closed';
         }, 660);
@@ -206,7 +232,9 @@ var _isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgen
   };
 })();
 
-/* ════ MODALS ════ */
+/* ════════════════════════════════════════════════════════
+   MODALS PRINCIPALES
+════════════════════════════════════════════════════════ */
 function openModal(id) {
   var m = document.getElementById('modal-' + id);
   if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; }
@@ -216,11 +244,26 @@ function closeModalBtn(id) {
   if (m) { m.classList.remove('active'); document.body.style.overflow = ''; }
 }
 function closeModal(e, id) { if (e.target === e.currentTarget) closeModalBtn(id); }
-function openSubModal(id) { var m = document.getElementById(id); if (m) m.classList.add('active'); }
-function closeSubModalBtn(id) { var m = document.getElementById(id); if (m) m.classList.remove('active'); }
+
+/* ════════════════════════════════════════════════════════
+   SOUS-MODALS
+════════════════════════════════════════════════════════ */
+function openSubModal(id) {
+  var m = document.getElementById(id);
+  if (m) m.classList.add('active');
+}
+function closeSubModalBtn(id) {
+  var m = document.getElementById(id);
+  if (m) m.classList.remove('active');
+}
 function closeSubModal(e, id) { if (e.target === e.currentTarget) closeSubModalBtn(id); }
+
+/* ════════════════════════════════════════════════════════
+   ACCORDÉON TECH
+════════════════════════════════════════════════════════ */
 function toggleAcc(id) {
-  var body = document.getElementById(id), btn = body && body.previousElementSibling;
+  var body = document.getElementById(id);
+  var btn  = body && body.previousElementSibling;
   if (!body) return;
   var open = body.classList.toggle('open');
   if (btn && btn.classList.contains('tech-accordion')) btn.classList.toggle('open', open);
@@ -229,15 +272,12 @@ function toggleAcc(id) {
 /* ════════════════════════════════════════════════════════
    IMAGE MODAL avec ZOOM COMPLET
 ════════════════════════════════════════════════════════ */
-
-/* ── État du zoom ── */
 var _zoom = {
   scale: 1, min: 0.25, max: 5,
   ox: 0, oy: 0,
   dragging: false, startX: 0, startY: 0,
   wrap: null, img: null
 };
-
 var _ZOOM_STEPS = [25, 50, 75, 100, 125, 150, 200, 300, 400, 500];
 
 function _zoomSet(scale, ox, oy) {
@@ -246,14 +286,11 @@ function _zoomSet(scale, ox, oy) {
   if (oy !== undefined) _zoom.oy = oy;
   if (_zoom.img) {
     _zoom.img.style.transformOrigin = '0 0';
-    _zoom.img.style.transform =
-      'translate(' + _zoom.ox + 'px,' + _zoom.oy + 'px) scale(' + _zoom.scale + ')';
+    _zoom.img.style.transform = 'translate(' + _zoom.ox + 'px,' + _zoom.oy + 'px) scale(' + _zoom.scale + ')';
   }
   _zoomUpdateUI();
 }
-
 function _zoomReset() { _zoomSet(1, 0, 0); }
-
 function _zoomCenter(scale) {
   var wrap = _zoom.wrap;
   if (!wrap) { _zoomSet(scale); return; }
@@ -262,7 +299,6 @@ function _zoomCenter(scale) {
   var r = scale / _zoom.scale;
   _zoomSet(scale, cx + (_zoom.ox - cx) * r, cy + (_zoom.oy - cy) * r);
 }
-
 function _zoomUpdateUI() {
   var pct = document.getElementById('_zPct');
   var rng = document.getElementById('_zRange');
@@ -282,26 +318,24 @@ function _zoomAttach(wrap, img) {
   _zoom.ox = 0;
   _zoom.oy = 0;
 
-  /* ── Molette ── */
   wrap.addEventListener('wheel', function (e) {
     e.preventDefault();
-    var rect = wrap.getBoundingClientRect();
-    var mx = e.clientX - rect.left;
-    var my = e.clientY - rect.top;
+    var rect   = wrap.getBoundingClientRect();
+    var mx     = e.clientX - rect.left;
+    var my     = e.clientY - rect.top;
     var factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
-    var ns = Math.min(_zoom.max, Math.max(_zoom.min, _zoom.scale * factor));
-    var r  = ns / _zoom.scale;
+    var ns     = Math.min(_zoom.max, Math.max(_zoom.min, _zoom.scale * factor));
+    var r      = ns / _zoom.scale;
     _zoomSet(ns, mx + (_zoom.ox - mx) * r, my + (_zoom.oy - my) * r);
   }, { passive: false });
 
-  /* ── Drag souris — uniquement sur l'image, jamais sur un bouton/input ── */
   wrap.addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
     var tag = (e.target.tagName || '').toUpperCase();
-    if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || tag === 'A') return;
+    if (['BUTTON','INPUT','SELECT','TEXTAREA','A'].indexOf(tag) !== -1) return;
     _zoom.dragging = true;
-    _zoom.startX = e.clientX - _zoom.ox;
-    _zoom.startY = e.clientY - _zoom.oy;
+    _zoom.startX   = e.clientX - _zoom.ox;
+    _zoom.startY   = e.clientY - _zoom.oy;
     wrap.style.cursor = 'grabbing';
     e.preventDefault();
   });
@@ -316,7 +350,7 @@ function _zoomAttach(wrap, img) {
     }
   });
 
-  /* ── Touch pinch + pan ── */
+  /* Touch pinch + pan */
   var _touches = {}, _lastDist = null, _tsX = 0, _tsY = 0;
   wrap.addEventListener('touchstart', function (e) {
     Array.from(e.changedTouches).forEach(function (t) { _touches[t.identifier] = t; });
@@ -333,14 +367,14 @@ function _zoomAttach(wrap, img) {
     Array.from(e.changedTouches).forEach(function (t) { _touches[t.identifier] = t; });
     var pts = Object.values(_touches);
     if (pts.length === 2 && _lastDist !== null) {
-      var dist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
+      var dist  = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
       var ratio = dist / _lastDist;
       _lastDist = dist;
-      var rect = wrap.getBoundingClientRect();
-      var cx = (pts[0].clientX + pts[1].clientX) / 2 - rect.left;
-      var cy = (pts[0].clientY + pts[1].clientY) / 2 - rect.top;
-      var ns = Math.min(_zoom.max, Math.max(_zoom.min, _zoom.scale * ratio));
-      var r  = ns / _zoom.scale;
+      var rect  = wrap.getBoundingClientRect();
+      var cx    = (pts[0].clientX + pts[1].clientX) / 2 - rect.left;
+      var cy    = (pts[0].clientY + pts[1].clientY) / 2 - rect.top;
+      var ns    = Math.min(_zoom.max, Math.max(_zoom.min, _zoom.scale * ratio));
+      var r     = ns / _zoom.scale;
       _zoomSet(ns, cx + (_zoom.ox - cx) * r, cy + (_zoom.oy - cy) * r);
     } else if (pts.length === 1) {
       _zoomSet(_zoom.scale, pts[0].clientX - _tsX, pts[0].clientY - _tsY);
@@ -352,17 +386,14 @@ function _zoomAttach(wrap, img) {
     _lastDist = null;
   });
 
-  /* ── Double-clic → reset ── */
   wrap.addEventListener('dblclick', _zoomReset);
 }
 
 function _buildZoomBar(bar) {
   _injectZoomCSS();
-
   bar.style.pointerEvents = 'auto';
   bar.style.position      = 'relative';
   bar.style.zIndex        = '10';
-
   bar.addEventListener('click',     function (e) { e.stopPropagation(); });
   bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
 
@@ -373,7 +404,7 @@ function _buildZoomBar(bar) {
     '<input  id="_zRange" type="range" min="0" max="100" value="50" title="Zoom">' +
     '<button id="_zIn"  title="Zoomer">+</button>' +
     '<div    id="_zPct" title="Cliquer pour saisir un % précis">100%</div>' +
-    '<button id="_zReset" title="Réinitialiser (double-clic sur l\'image)">&#x21BA;</button>';
+    '<button id="_zReset" title="Réinitialiser">&#x21BA;</button>';
   bar.appendChild(p);
 
   document.getElementById('_zIn').onclick = function () {
@@ -387,8 +418,8 @@ function _buildZoomBar(bar) {
     for (var i = 0; i < _ZOOM_STEPS.length; i++) if (_ZOOM_STEPS[i] < cur) prev = _ZOOM_STEPS[i];
     _zoomCenter((prev || 25) / 100);
   };
-  document.getElementById('_zReset').onclick  = _zoomReset;
-  document.getElementById('_zRange').oninput  = function () {
+  document.getElementById('_zReset').onclick = _zoomReset;
+  document.getElementById('_zRange').oninput = function () {
     var log = Math.log(_zoom.max / _zoom.min);
     var sc  = _zoom.min * Math.exp(log * this.value / 100);
     _zoomCenter(sc);
@@ -425,7 +456,6 @@ function _injectZoomCSS() {
   document.head.appendChild(s);
 }
 
-/* ── openImageModal principale ── */
 function openImageModal(srcs, pov, size) {
   var overlay = document.getElementById('videoModal');
   var badge   = document.getElementById('videoModalPov');
@@ -437,14 +467,12 @@ function openImageModal(srcs, pov, size) {
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,.static-screen-img').forEach(function (el) { el.remove(); });
 
-  /* ── Masquer TOUS les boutons natifs de l'overlay sauf _imgModalClose ── */
   overlay.querySelectorAll('button').forEach(function (b) {
     if (b.id === '_imgModalClose') return;
     b.dataset.hiddenByImg = '1';
     b.style.display = 'none';
   });
 
-  /* ── Barre de zoom ── */
   if (bar) {
     bar.innerHTML = '';
     bar.style.pointerEvents = 'auto';
@@ -492,7 +520,6 @@ function openImageModal(srcs, pov, size) {
       'font-family:Cinzel,serif;font-size:14px;letter-spacing:3px;' +
       'color:' + (i === 0 ? '#C89B3C' : '#5DE8F2') + ';text-shadow:0 0 10px currentColor;';
 
-    /* Conteneur zoomable */
     var imgWrap = document.createElement('div');
     imgWrap.style.cssText =
       'overflow:hidden;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.9);' +
@@ -509,18 +536,15 @@ function openImageModal(srcs, pov, size) {
     img.src = src;
 
     _zoomAttach(imgWrap, img);
-
     imgWrap.appendChild(img);
     wrapper.appendChild(label);
     wrapper.appendChild(imgWrap);
     inner.appendChild(wrapper);
   });
 
-  /* ── Supprimer l'ancien bouton flottant s'il existe ── */
   var existingClose = document.getElementById('_imgModalClose');
   if (existingClose) existingClose.remove();
 
-  /* ── Bouton fermeture flottant unique (position:fixed, toujours au-dessus) ── */
   var closeBtn = document.createElement('button');
   closeBtn.id = '_imgModalClose';
   closeBtn.innerHTML = '&#x2715;';
@@ -541,14 +565,14 @@ function openImageModal(srcs, pov, size) {
     closeBtn.style.transform  = 'scale(1)';
   };
   closeBtn.onclick = function (e) { e.stopPropagation(); closeVideoModal(); };
-
-  /* ── Ajout directement au body pour éviter tout conflit de z-index ── */
   document.body.appendChild(closeBtn);
 
   overlay.classList.add('open');
 }
 
-/* ════ CACHE GIF ════ */
+/* ════════════════════════════════════════════════════════
+   CACHE GIF + CONTRÔLE VITESSE
+════════════════════════════════════════════════════════ */
 var _gifCache = {};
 function _checkAndEvictCache() {
   var total = 0, keys = Object.keys(_gifCache);
@@ -559,7 +583,7 @@ function _patchDelays(origBuffer, speed) {
   var bytes = new Uint8Array(origBuffer.slice(0));
   for (var i = 0; i < bytes.length - 7; i++) {
     if (bytes[i] === 0x21 && bytes[i + 1] === 0xF9 && bytes[i + 2] === 0x04) {
-      var d = bytes[i + 4] | (bytes[i + 5] << 8);
+      var d  = bytes[i + 4] | (bytes[i + 5] << 8);
       if (d < 2) d = 10;
       var nd = Math.max(2, Math.round(d / speed));
       bytes[i + 4] = nd & 0xFF;
@@ -592,14 +616,13 @@ function _loadSpd(src) {
   return (!isNaN(v) && v > 0) ? v : 1;
 }
 function _saveSpd(src, s) { localStorage.setItem(_SPEED_KEY + _basename(src), s); }
+
 function _buildPanel(src) {
   var bar = document.querySelector('.video-modal-bar');
   if (!bar) return;
-
   bar.style.pointerEvents = 'auto';
   bar.style.position      = 'relative';
   bar.style.zIndex        = '10';
-
   bar.addEventListener('click',     function (e) { e.stopPropagation(); });
   bar.addEventListener('mousedown', function (e) { e.stopPropagation(); });
 
@@ -628,6 +651,7 @@ function _buildPanel(src) {
     '</div>';
   bar.appendChild(p);
   _injectGifCSS();
+
   var input = document.getElementById('gifSpeedInput');
   document.getElementById('gifSpeedDown').onclick = function () {
     _setSpd(Math.max(0.05, Math.round((_currentSpd - 0.05) * 100) / 100), src);
@@ -642,6 +666,7 @@ function _buildPanel(src) {
     btn.onclick = function () { _setSpd(parseFloat(btn.dataset.spd), src); };
   });
 }
+
 function _commitSpd(src) {
   var input = document.getElementById('gifSpeedInput');
   if (!input) return;
@@ -673,8 +698,8 @@ function _reloadImg(src, spd) {
   newImg.onload = function () {
     if (!_modalOpen || _currentSrc !== src) { newImg.remove(); return; }
     newImg.id = 'videoModalMedia';
-    newImg.style.position = '';
-    newImg.style.opacity  = '1';
+    newImg.style.position    = '';
+    newImg.style.opacity     = '1';
     newImg.style.pointerEvents = '';
     if (oldImg && oldImg.parentNode) oldImg.remove();
   };
@@ -696,16 +721,19 @@ function _toast(msg) {
   t.textContent = msg;
   t.style.cssText =
     'position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(10px);' +
-    'background:rgba(200,160,60,0.16);border:1px solid rgba(200,160,60,0.55);color:#f0c84a;' +
+    'background:rgba(14,11,30,0.97);border:1px solid rgba(200,160,60,0.45);color:#f0c84a;' +
     'font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;padding:8px 22px;' +
     'border-radius:20px;z-index:9999999;pointer-events:none;opacity:0;' +
     'transition:opacity .22s,transform .22s;white-space:nowrap;';
   document.body.appendChild(t);
   requestAnimationFrame(function () {
-    requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
+    requestAnimationFrame(function () {
+      t.style.opacity   = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+    });
   });
   setTimeout(function () {
-    t.style.opacity = '0';
+    t.style.opacity   = '0';
     t.style.transform = 'translateX(-50%) translateY(10px)';
     setTimeout(function () { if (t.parentNode) t.remove(); }, 280);
   }, 1600);
@@ -747,7 +775,9 @@ function _injectGifCSS() {
   document.head.appendChild(s);
 }
 
-/* ════ VIDEO MODAL ════ */
+/* ════════════════════════════════════════════════════════
+   VIDEO MODAL (GIF + MP4)
+════════════════════════════════════════════════════════ */
 function _safeSrc(src) {
   return src.split('').map(function (c) {
     return c.charCodeAt(0) > 127 ? encodeURIComponent(c) : c;
@@ -759,25 +789,27 @@ function _resolveGifSrc(src) {
   a.href = src;
   return a.href;
 }
+
 function openVideoModal(src, pov, size) {
-  var overlay  = document.getElementById('videoModal');
-  var badge    = document.getElementById('videoModalPov');
-  var errDiv   = document.getElementById('videoModalErr');
-  var errPath  = document.getElementById('videoModalErrPath');
-  var inner    = document.querySelector('.video-modal-inner');
-  var wrap     = document.querySelector('.video-modal-wrap');
-  var bar      = document.querySelector('.video-modal-bar');
+  var overlay = document.getElementById('videoModal');
+  var badge   = document.getElementById('videoModalPov');
+  var errDiv  = document.getElementById('videoModalErr');
+  var errPath = document.getElementById('videoModalErrPath');
+  var inner   = document.querySelector('.video-modal-inner');
+  var wrap    = document.querySelector('.video-modal-wrap');
+  var bar     = document.querySelector('.video-modal-bar');
+
   _gifReset();
   inner.querySelectorAll('#videoModalMedia,#videoModalMedia-next,canvas,.static-screen-img,#gifLoader').forEach(function (el) { el.remove(); });
   if (wrap) { wrap.style.cssText = ''; if (size) wrap.style.maxWidth = size + 'px'; }
-  if (bar)  {
-    bar.innerHTML = '';
-    bar.style.visibility = 'hidden';
-    bar.style.pointerEvents = 'auto';
-  }
+  if (bar)  { bar.innerHTML = ''; bar.style.visibility = 'hidden'; bar.style.pointerEvents = 'auto'; }
+
   badge.innerHTML = pov;
   errDiv.style.display = 'none';
-  var safeSrc = _safeSrc(src), ext = safeSrc.split('?')[0].split('.').pop().toLowerCase();
+
+  var safeSrc = _safeSrc(src);
+  var ext     = safeSrc.split('?')[0].split('.').pop().toLowerCase();
+
   if (ext === 'gif') {
     _currentSrc  = src;
     _modalOpen   = true;
@@ -828,9 +860,9 @@ function openVideoModal(src, pov, size) {
   } else {
     var video  = document.createElement('video');
     video.id   = 'videoModalMedia';
-    video.autoplay  = true;
-    video.loop      = true;
-    video.muted     = true;
+    video.autoplay   = true;
+    video.loop       = true;
+    video.muted      = true;
     video.playsInline = true;
     video.style.cssText = 'display:block;width:100%;min-height:100px;';
     var source = document.createElement('source');
@@ -839,13 +871,14 @@ function openVideoModal(src, pov, size) {
     video.appendChild(source);
     video.onerror = function () {
       video.style.display = 'none';
-      errPath.textContent = safeSrc;
+      errPath.textContent  = safeSrc;
       errDiv.style.display = 'block';
     };
     inner.insertBefore(video, inner.firstChild);
   }
   overlay.classList.add('open');
 }
+
 function _showGif(inner, src, buf) {
   var url = _makeBlobUrl(buf, _currentSpd);
   var img = document.createElement('img');
@@ -855,6 +888,7 @@ function _showGif(inner, src, buf) {
   img.src = url;
   inner.insertBefore(img, inner.firstChild);
 }
+
 function closeVideoModal() {
   _gifReset();
   _revokeBlobs();
@@ -866,33 +900,28 @@ function closeVideoModal() {
   var wrap  = document.querySelector('.video-modal-wrap');  if (wrap)  wrap.style.cssText  = '';
   var badge = document.getElementById('videoModalPov');     if (badge) { badge.style.cssText = ''; badge.innerHTML = ''; }
   var bar   = document.querySelector('.video-modal-bar');   if (bar)   { bar.innerHTML = ''; bar.style.visibility = ''; bar.style.pointerEvents = ''; }
-  /* ── Supprimer le bouton flottant (attaché au body) ── */
-  var ic = document.getElementById('_imgModalClose'); if (ic) ic.remove();
-  /* ── Restaurer les boutons natifs masqués ── */
+  var ic    = document.getElementById('_imgModalClose');    if (ic)    ic.remove();
   document.querySelectorAll('[data-hidden-by-img]').forEach(function (b) { b.style.display = ''; delete b.dataset.hiddenByImg; });
   document.getElementById('videoModal').classList.remove('open');
 }
+
 function closeVideoModalOverlay(e) {
   if (e.target === document.getElementById('videoModal')) closeVideoModal();
 }
-function toggleGifSpeed() {}
 
-/* ════ PROJETS PERSONNELS ════ */
-function toggleApProjects() {
-  var grid = document.getElementById('apGrid'), btn = document.getElementById('apTeaserBtn');
-  if (!grid) return;
-  var open = grid.classList.toggle('open');
-  btn.classList.toggle('open', open);
-}
+/* ════════════════════════════════════════════════════════
+   PROJETS PERSONNELS toggle
+════════════════════════════════════════════════════════ */
 function togglePersoProjects() {
-  var grid = document.getElementById('persoGrid'), btn = document.getElementById('persoTeaserBtn');
+  var grid = document.getElementById('persoGrid');
+  var btn  = document.getElementById('persoTeaserBtn');
   if (!grid) return;
   var open = grid.classList.toggle('open');
-  btn.classList.toggle('open', open);
+  if (btn) btn.classList.toggle('open', open);
 }
 
 /* ════════════════════════════════════════════════════════
-   KC VIEWER — Visionneuse GIF plein écran avec navigation
+   KC VIEWER — Visionneuse clips plein écran avec navigation
 ════════════════════════════════════════════════════════ */
 var _kcViewer = (function () {
   var _clips = [], _idx = 0, _overlay = null, _img = null, _loadingEl = null, _labelEl = null;
@@ -911,13 +940,7 @@ var _kcViewer = (function () {
       '#kcViewerClose{width:36px;height:36px;background:none;border:1px solid rgba(255,60,60,0.45);color:#ff8888;font-size:17px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;transition:all 0.2s;flex-shrink:0;}',
       '#kcViewerClose:hover{background:rgba(180,15,15,0.5);color:#fff;border-color:rgba(255,60,60,0.9);}',
       '#kcViewerBody{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:56px 72px 64px;overflow:hidden;}',
-      '@media(max-width:1366px){#kcViewerBody{padding:50px 60px 56px;}}',
-      '@media(max-width:1024px){#kcViewerBody{padding:44px 52px 50px;}}',
-      '@media(max-width:768px){#kcViewerBody{padding:60px 44px 66px;}}',
       '#kcViewerMedia{width:75vw;height:75vh;object-fit:contain;object-position:center;border-radius:18px;box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);display:block;animation:kcvImgIn 0.28s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;}',
-      '@media(max-width:1366px){#kcViewerMedia{width:82vw;height:70vh;}}',
-      '@media(max-width:1024px){#kcViewerMedia{width:88vw;height:65vh;}}',
-      '@media(max-width:768px){#kcViewerMedia{width:94vw;height:55vh;}}',
       '@keyframes kcvImgIn{from{opacity:0;transform:scale(0.92) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}',
       '#kcViewerLoading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}',
       '#kcViewerLoading .kc-spin{width:50px;height:50px;border:3px solid rgba(255,50,50,0.1);border-top-color:#ff3333;border-radius:50%;animation:kcSpin 0.7s linear infinite;}',
@@ -931,9 +954,6 @@ var _kcViewer = (function () {
       '.kc-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,50,50,0.18);border:1px solid rgba(255,50,50,0.22);cursor:pointer;transition:all 0.2s;flex-shrink:0;}',
       '.kc-dot.active{background:#ff3333;box-shadow:0 0 14px rgba(255,50,50,0.95),0 0 28px rgba(255,50,50,0.4);transform:scale(1.45);}',
       '.kc-dot:hover:not(.active){background:rgba(255,50,50,0.42);}',
-      '@media(max-width:1366px){.kc-nav-btn{width:52px;height:52px;font-size:24px;}}',
-      '@media(max-width:1024px){.kc-nav-btn{width:46px;height:46px;font-size:22px;}}',
-      '@media(max-width:768px){#kcViewerBody{padding:62px 48px 68px;}#kcNavPrev{left:8px;}#kcNavNext{right:8px;}.kc-nav-btn{width:40px;height:40px;font-size:18px;}}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -945,11 +965,11 @@ var _kcViewer = (function () {
     _overlay.id = 'kcViewer';
     _overlay.addEventListener('click', function (e) { if (e.target === _overlay) close(); });
 
-    var hdr    = document.createElement('div'); hdr.id = 'kcViewerHeader';
-    var logo   = document.createElement('img'); logo.id = 'kcViewerLogo'; logo.src = logoSrc || ''; logo.alt = 'KC';
-    _labelEl   = document.createElement('div'); _labelEl.id = 'kcViewerLabel';
+    var hdr     = document.createElement('div'); hdr.id = 'kcViewerHeader';
+    var logo    = document.createElement('img'); logo.id = 'kcViewerLogo'; logo.src = logoSrc || ''; logo.alt = 'KC';
+    _labelEl    = document.createElement('div'); _labelEl.id = 'kcViewerLabel';
     var counter = document.createElement('div'); counter.id = 'kcViewerCounter';
-    var cb     = document.createElement('button'); cb.id = 'kcViewerClose'; cb.innerHTML = '&#x2715;'; cb.onclick = close;
+    var cb      = document.createElement('button'); cb.id = 'kcViewerClose'; cb.innerHTML = '&#x2715;'; cb.onclick = close;
     hdr.appendChild(logo); hdr.appendChild(_labelEl); hdr.appendChild(counter); hdr.appendChild(cb);
 
     var body = document.createElement('div'); body.id = 'kcViewerBody';
@@ -1003,24 +1023,16 @@ var _kcViewer = (function () {
     if (_img) _img.style.display = 'none';
     if (_loadingEl) _loadingEl.style.display = 'flex';
     if (ext === 'mp4' || ext === 'webm') {
-      var vw   = window.innerWidth;
-      var vidW = vw <= 768 ? '94vw' : vw <= 1024 ? '88vw' : vw <= 1366 ? '82vw' : '75vw';
-      var vidH = vw <= 768 ? '55vh' : vw <= 1024 ? '65vh' : vw <= 1366 ? '70vh' : '75vh';
-      var vid  = document.createElement('video');
+      var vid = document.createElement('video');
       vid.className = 'kc-vid';
-      vid.setAttribute('playsinline', '');
-      vid.setAttribute('autoplay', '');
-      vid.setAttribute('muted', '');
-      vid.setAttribute('loop', '');
-      vid.style.cssText =
-        'width:' + vidW + ';height:' + vidH + ';object-fit:contain;border-radius:18px;' +
-        'box-shadow:0 0 120px rgba(140,5,5,0.65),0 0 200px rgba(5,10,140,0.35),0 50px 100px rgba(0,0,0,0.9);' +
-        'flex-shrink:0;display:block;background:#000;';
+      vid.setAttribute('playsinline',''); vid.setAttribute('autoplay','');
+      vid.setAttribute('muted',''); vid.setAttribute('loop','');
+      vid.style.cssText = 'width:75vw;height:75vh;object-fit:contain;border-radius:18px;display:block;background:#000;';
       if (_loadingEl) _loadingEl.style.display = 'none';
       var src2 = document.createElement('source'); src2.src = src; src2.type = 'video/mp4';
       vid.appendChild(src2);
       if (body) body.insertBefore(vid, body.firstChild);
-      vid.load(); vid.play().catch(function () {});
+      vid.load(); vid.play().catch(function(){});
     } else {
       _img.onload = function () {
         if (_loadingEl) _loadingEl.style.display = 'none';
@@ -1047,18 +1059,18 @@ var _kcViewer = (function () {
 })();
 
 /* ════════════════════════════════════════════════════════
-   EASTER EGG LOL — KARMINE CORP
+   EASTER EGG — KARMINE CORP (taper "lol")
 ════════════════════════════════════════════════════════ */
 (function () {
-  var seq = ['l', 'o', 'l'], ts = [], _kcActive = false, _savedCards = [];
+  var seq = ['l','o','l'], ts = [], _kcActive = false, _savedCards = [];
   var KC_LOGO = 'images/icon_kc.jpeg';
 
   var KC_PLAYERS = [
-    { name: 'Canna',    role: 'Top Lane',                 emoji: '\uD83D\uDDE1\uFE0F', photo: 'images/kc/CANNA.webp',    clips: [{ src: 'videos/kc/clip_kc_final.mp4', label: 'Canna \uD83D\uDDE1\uFE0F' }] },
-    { name: 'Yike',     role: 'Jungle',                   emoji: '\uD83C\uDF32',        photo: 'images/kc/YIKE.webp',     clips: [] },
-    { name: 'Khyaehoo', role: 'Mid Lane',                 emoji: '\u26A1',              photo: 'images/kc/KHYAEHOO.webp', clips: [] },
-    { name: 'Caliste',  role: 'ADC \u2014 Rookie of the Year', emoji: '\uD83C\uDFF9', photo: 'images/kc/CALISTE.webp',  clips: [] },
-    { name: 'Busio',    role: 'Support',                  emoji: '\uD83D\uDEE1\uFE0F', photo: 'images/kc/BUSIO.jpg',     clips: [] },
+    { name:'Canna',    role:'Top Lane',               emoji:'\uD83D\uDDE1\uFE0F', photo:'images/kc/CANNA.webp',    clips:[{src:'videos/kc/clip_kc_final.mp4',label:'Canna \uD83D\uDDE1\uFE0F'}] },
+    { name:'Yike',     role:'Jungle',                 emoji:'\uD83C\uDF32',        photo:'images/kc/YIKE.webp',     clips:[] },
+    { name:'Khyaehoo', role:'Mid Lane',               emoji:'\u26A1',              photo:'images/kc/KHYAEHOO.webp', clips:[] },
+    { name:'Caliste',  role:'ADC \u2014 Rookie of the Year', emoji:'\uD83C\uDFF9', photo:'images/kc/CALISTE.webp',  clips:[] },
+    { name:'Busio',    role:'Support',                emoji:'\uD83D\uDEE1\uFE0F', photo:'images/kc/BUSIO.jpg',     clips:[] },
   ];
 
   function _injectKCCSS() {
@@ -1068,140 +1080,45 @@ var _kcViewer = (function () {
       'body.kc-mode{background:#090112!important;}',
       'body.kc-mode nav{background:linear-gradient(to bottom,rgba(9,1,18,0.97),transparent)!important;}',
       'body.kc-mode .nav-logo{color:#ff3333!important;}',
-      'body.kc-mode .nav-links a{color:rgba(255,200,200,0.75)!important;}',
-      'body.kc-mode .nav-links a:hover,body.kc-mode .nav-links a.active{color:#ff3333!important;}',
-      'body.kc-mode .nav-links a::after{background:#ff3333!important;}',
-      'body.kc-mode .scroll-progress{background:linear-gradient(to right,#8B0000,#ff3333,#ff6666)!important;box-shadow:0 0 8px #ff3333!important;}',
-      'body.kc-mode .hero-grid{background-image:linear-gradient(rgba(255,50,50,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,50,50,0.06) 1px,transparent 1px)!important;}',
-      'body.kc-mode .hero-eyebrow{color:#cc1111!important;}',
-      'body.kc-mode .hero-eyebrow::before,body.kc-mode .hero-eyebrow::after{background:#cc1111!important;}',
       'body.kc-mode .hero-name{background:linear-gradient(135deg,#ff8888 0%,#ff3333 40%,#aa0000 70%,#ff3333 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;}',
       'body.kc-mode .hero-subtitle{color:#4488ff!important;}',
-      'body.kc-mode .hero-cta{border-color:#cc1111!important;color:#ff3333!important;}',
-      'body.kc-mode .hero-cta::before{background:#cc1111!important;}',
-      'body.kc-mode .hero-cta:hover{color:#fff!important;}',
-      'body.kc-mode .scroll-indicator span{color:#cc1111!important;}',
-      'body.kc-mode .scroll-line{background:linear-gradient(to bottom,#cc1111,transparent)!important;}',
-      'body.kc-mode .arcane-divider::before{background:linear-gradient(to right,transparent,#ff3333)!important;}',
-      'body.kc-mode .arcane-divider::after{background:linear-gradient(to left,transparent,#ff3333)!important;}',
-      'body.kc-mode .divider-gem{background:#ff3333!important;box-shadow:0 0 10px rgba(255,50,50,0.6)!important;}',
-      'body.kc-mode .section-number{color:#cc1111!important;}',
       'body.kc-mode .section-title{color:#ff3333!important;}',
-      'body.kc-mode .section-line{background:linear-gradient(to right,#cc1111,transparent)!important;}',
-      'body.kc-mode .flip-front{background:linear-gradient(135deg,#2a0808,#400c0c,#1e0606)!important;border-color:#cc1111!important;}',
-      'body.kc-mode .flip-back{background:linear-gradient(135deg,#220606,#2e0808,#1a0505)!important;border-color:#cc1111!important;}',
-      'body.kc-mode .about-frame-corner{border-color:#ff3333!important;}',
-      'body.kc-mode .about-initials{-webkit-text-stroke:1px #cc1111!important;color:transparent!important;}',
-      'body.kc-mode .about-glow{background:radial-gradient(circle,rgba(255,50,50,0.35),transparent)!important;}',
-      'body.kc-mode .flip-hint{color:#cc1111!important;}',
-      'body.kc-mode .back-tag{color:#4488ff!important;}',
-      'body.kc-mode .back-subtitle{color:#4488ff!important;}',
-      'body.kc-mode .back-divider{background:linear-gradient(to right,transparent,#cc1111,transparent)!important;}',
-      'body.kc-mode .back-stat-number{color:#ff3333!important;}',
-      'body.kc-mode .back-stat-item{background:rgba(255,50,50,0.07)!important;border-color:rgba(255,50,50,0.2)!important;}',
-      'body.kc-mode .back-skill-tag{border-color:rgba(68,136,255,0.35)!important;color:#4488ff!important;}',
-      'body.kc-mode .back-close{border-color:rgba(255,50,50,0.4)!important;color:#cc1111!important;}',
-      'body.kc-mode .back-close:hover{background:#ff3333!important;border-color:#ff3333!important;color:#fff!important;}',
-      'body.kc-mode .timeline-track::before{background:linear-gradient(to bottom,transparent,#cc1111 15%,#cc1111 85%,transparent)!important;}',
-      'body.kc-mode .timeline-gem{border-color:rgba(255,50,50,0.4)!important;background:#090112!important;}',
-      'body.kc-mode .timeline-item.visible .timeline-gem{border-color:#ff3333!important;box-shadow:0 0 12px rgba(255,50,50,0.55)!important;}',
-      'body.kc-mode .timeline-item.current .timeline-gem{background:#ff3333!important;box-shadow:0 0 20px rgba(255,50,50,0.75)!important;}',
-      'body.kc-mode .timeline-year{color:#cc1111!important;}',
-      'body.kc-mode .timeline-title{color:#ff3333!important;}',
-      'body.kc-mode .timeline-sub{color:#4488ff!important;}',
-      'body.kc-mode .timeline-badge{border-color:rgba(255,50,50,0.3)!important;color:#cc1111!important;}',
-      'body.kc-mode .timeline-badge.active{border-color:rgba(68,136,255,0.5)!important;color:#4488ff!important;box-shadow:0 0 12px rgba(68,136,255,0.15)!important;}',
-      'body.kc-mode #skills::before{background-image:repeating-linear-gradient(60deg,rgba(255,50,50,0.06) 0px,rgba(255,50,50,0.06) 1px,transparent 1px,transparent 30px)!important;}',
-      'body.kc-mode .skill-card{background:rgba(40,5,5,0.9)!important;border-color:rgba(255,50,50,0.25)!important;}',
-      'body.kc-mode .skill-card:hover{background:rgba(60,8,8,0.98)!important;}',
-      'body.kc-mode .skill-card::before{background:linear-gradient(to right,transparent,#ff3333,transparent)!important;}',
-      'body.kc-mode .skill-name{color:#ff3333!important;}',
-      'body.kc-mode .skill-tag{border-color:rgba(68,136,255,0.25)!important;color:#aaccff!important;}',
-      'body.kc-mode .skill-card:hover .skill-tag{border-color:rgba(68,136,255,0.6)!important;}',
       'body.kc-mode .project-card{background:rgba(20,3,3,0.95)!important;border-color:rgba(255,50,50,0.2)!important;}',
-      'body.kc-mode .project-card:hover{border-color:rgba(68,136,255,0.6)!important;box-shadow:0 30px 60px rgba(0,0,0,0.5),0 0 40px rgba(68,136,255,0.12)!important;}',
-      'body.kc-mode .project-type{color:#4488ff!important;}',
       'body.kc-mode .project-title{color:#ff3333!important;}',
-      'body.kc-mode .project-tag{background:rgba(255,50,50,0.07)!important;border-color:rgba(255,50,50,0.2)!important;color:rgba(255,150,150,0.9)!important;}',
       'body.kc-mode .project-btn{border-color:#cc1111!important;color:#ff3333!important;}',
       'body.kc-mode .project-btn::before{background:linear-gradient(90deg,#7B0000,#08003a)!important;}',
       'body.kc-mode .project-btn:hover{color:#fff!important;}',
-      'body.kc-mode .perso-teaser-btn{border-color:rgba(68,136,255,0.35)!important;color:#4488ff!important;}',
-      'body.kc-mode .perso-teaser-btn::before{background:rgba(68,136,255,0.08)!important;}',
-      'body.kc-mode .perso-card::after{border-color:rgba(68,136,255,0.4)!important;color:#4488ff!important;background:rgba(68,136,255,0.07)!important;}',
-      'body.kc-mode .contact-rune{color:#ff3333!important;}',
       'body.kc-mode .contact-title{color:#ff3333!important;}',
       'body.kc-mode .contact-link{border-color:#cc1111!important;color:#ff3333!important;}',
-      'body.kc-mode .contact-link::before{background:#cc1111!important;}',
-      'body.kc-mode .contact-link:hover{color:#fff!important;}',
-      'body.kc-mode footer{border-top-color:rgba(255,50,50,0.15)!important;}',
-      'body.kc-mode .modal{background:linear-gradient(160deg,#1a0505,#100212)!important;border-color:rgba(255,50,50,0.35)!important;}',
-      'body.kc-mode .modal::before{background:linear-gradient(to right,transparent,#ff3333,transparent)!important;}',
-      'body.kc-mode .modal-corner{border-color:#ff3333!important;}',
-      'body.kc-mode .modal-type{color:#4488ff!important;}',
-      'body.kc-mode .modal-title{color:#ff3333!important;}',
-      'body.kc-mode .modal-close{border-color:rgba(255,50,50,0.4)!important;color:#cc1111!important;}',
-      'body.kc-mode .modal-close:hover{background:#ff3333!important;border-color:#ff3333!important;color:#fff!important;}',
-      'body.kc-mode .modal-features-title{color:rgba(255,200,200,0.8)!important;}',
-      'body.kc-mode .modal-feature-btn{background:rgba(255,50,50,0.03)!important;border-color:rgba(255,50,50,0.12)!important;}',
-      'body.kc-mode .modal-feature-btn:hover{background:rgba(255,50,50,0.09)!important;border-color:rgba(255,50,50,0.4)!important;}',
-      'body.kc-mode .feat-title{color:#ff3333!important;}',
-      'body.kc-mode .feat-arrow{color:#ff3333!important;}',
-      'body.kc-mode .modal-tag{background:rgba(255,50,50,0.07)!important;border-color:rgba(255,50,50,0.25)!important;}',
-      'body.kc-mode .submodal{background:linear-gradient(150deg,#1e0606,#100212,#160518)!important;border-color:rgba(68,136,255,0.28)!important;}',
-      'body.kc-mode .submodal::before{background:linear-gradient(to right,transparent,#4488ff,transparent)!important;}',
-      'body.kc-mode .submodal-type{color:#4488ff!important;}',
-      'body.kc-mode .submodal-title{color:#ff3333!important;}',
-      'body.kc-mode .submodal-close{border-color:rgba(68,136,255,0.3)!important;color:#4488ff!important;}',
-      'body.kc-mode .submodal-close:hover{background:#4488ff!important;color:#fff!important;}',
-      'body.kc-mode .submodal-step{background:rgba(255,50,50,0.04)!important;border-color:rgba(255,50,50,0.12)!important;}',
-      'body.kc-mode .submodal-step.has-video:hover{background:rgba(200,30,30,0.1)!important;}',
-      'body.kc-mode .step-num{color:#cc1111!important;}',
-      'body.kc-mode .step-play-hint{color:#ff6666!important;}',
-      'body.kc-mode .step-play-hint::before{background:rgba(200,30,30,0.2)!important;border-color:rgba(255,80,80,0.5)!important;}',
-      'body.kc-mode .tech-accordion{background:rgba(68,136,255,0.08)!important;border-color:rgba(68,136,255,0.28)!important;color:#4488ff!important;}',
-      'body.kc-mode .tech-accordion:hover{background:rgba(68,136,255,0.15)!important;}',
-      'body.kc-mode .tech-accordion-body li::before{color:#4488ff!important;}',
-      'body.kc-mode .tech-accordion-inner{border-color:rgba(68,136,255,0.18)!important;border-left-color:rgba(68,136,255,0.5)!important;}',
-      'body.kc-mode .card-backdrop{background:rgba(9,1,18,0.94)!important;}',
-      '.kc-visual-replace{position:absolute;inset:0;z-index:5;background:linear-gradient(135deg,#6B0000 0%,#0a0a2e 60%,#12003a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;animation:kcFadeIn 0.4s ease forwards;}',
-      '.kc-main-logo{width:130px;height:130px;object-fit:contain;display:block;border-radius:50%;filter:drop-shadow(0 0 20px rgba(255,40,40,1)) drop-shadow(0 0 40px rgba(30,50,255,0.9));animation:kcPulse 2.4s ease-in-out infinite;}',
+      '.kc-visual-replace{position:absolute;inset:0;z-index:5;background:linear-gradient(135deg,#6B0000 0%,#0a0a2e 60%,#12003a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}',
+      '.kc-main-logo{width:130px;height:130px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 20px rgba(255,40,40,1)) drop-shadow(0 0 40px rgba(30,50,255,0.9));animation:kcPulse 2.4s ease-in-out infinite;}',
       '.kc-main-label{font-family:Cinzel,serif;font-size:11px;letter-spacing:5px;color:rgba(255,200,200,0.8);text-transform:uppercase;}',
       '.kc-badge{position:absolute;top:10px;right:10px;z-index:10;font-family:Cinzel,serif;font-size:8px;letter-spacing:2px;background:rgba(120,5,5,0.95);border:1px solid rgba(255,60,60,0.8);color:#fff;padding:4px 10px;border-radius:3px;text-transform:uppercase;}',
-      '.kc-card{background:linear-gradient(160deg,rgba(70,3,3,0.7),rgba(3,3,35,0.85))!important;border-color:rgba(200,15,15,0.85)!important;box-shadow:0 0 30px rgba(140,5,5,0.5),0 0 60px rgba(5,10,140,0.25)!important;}',
-      '.kc-card:hover{border-color:rgba(255,40,40,1)!important;box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 70px rgba(180,10,10,0.7)!important;transform:translateY(-8px)!important;}',
+      '.kc-card{background:linear-gradient(160deg,rgba(70,3,3,0.7),rgba(3,3,35,0.85))!important;border-color:rgba(200,15,15,0.85)!important;}',
       '.kc-btn{border-color:rgba(255,50,50,0.85)!important;color:#ff7070!important;}',
       '.kc-btn:hover{color:#fff!important;}',
       '.kc-btn::before{background:linear-gradient(90deg,#7B0000,#08003a)!important;}',
       '.kc-grid-mode{display:flex!important;justify-content:center!important;}',
-      '.kc-grid-mode .kc-card{max-width:500px;width:100%;}',
-      '#kcGallery{position:fixed;inset:0;z-index:6000;background:rgba(2,0,8,0.98);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;overflow-y:auto;animation:kcFadeIn 0.3s ease;}',
+      '#kcGallery{position:fixed;inset:0;z-index:6000;background:rgba(2,0,8,0.98);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;overflow-y:auto;}',
       '.kc-gal-hdr{display:flex;align-items:center;gap:16px;padding:24px 40px 20px;width:100%;max-width:2200px;align-self:center;flex-shrink:0;}',
       '.kc-gal-hdr-logo{width:44px;height:44px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,50,50,0.9));}',
-      '.kc-gal-hdr-title{font-family:Cinzel,serif;font-size:18px;letter-spacing:5px;color:#fff;text-transform:uppercase;flex:1;text-shadow:0 0 20px rgba(255,50,50,0.35);}',
-      '.kc-gal-close{width:40px;height:40px;background:none;border:1px solid rgba(255,70,70,0.42);color:#ff8888;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;border-radius:4px;cursor:pointer;}',
-      '.kc-gal-close:hover{background:rgba(200,20,20,0.4);color:#fff;border-color:rgba(255,60,60,0.9);}',
+      '.kc-gal-hdr-title{font-family:Cinzel,serif;font-size:18px;letter-spacing:5px;color:#fff;text-transform:uppercase;flex:1;}',
+      '.kc-gal-close{width:40px;height:40px;background:none;border:1px solid rgba(255,70,70,0.42);color:#ff8888;font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;}',
       '.kc-players-grid{display:flex;gap:24px;padding:16px 48px 64px;width:100%;max-width:2200px;align-self:center;justify-content:center;flex-wrap:wrap;}',
-      '.kc-player-card{position:relative;flex:1;min-width:280px;max-width:400px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s cubic-bezier(0.16,1,0.3,1),border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
-      '.kc-player-card:hover{transform:translateY(-12px) scale(1.04);border-color:rgba(255,50,50,0.9);box-shadow:0 24px 70px rgba(140,5,5,0.65),0 0 50px rgba(255,50,50,0.22);}',
-      '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;transition:transform 0.45s ease;}',
-      '.kc-player-card:hover .kc-player-photo{transform:scale(1.07);}',
+      '.kc-player-card{position:relative;flex:1;min-width:280px;max-width:400px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,50,50,0.18);background:linear-gradient(160deg,rgba(50,3,3,0.92),rgba(3,3,25,0.96));cursor:pointer;transition:transform 0.28s,border-color 0.25s,box-shadow 0.28s;aspect-ratio:3/4;}',
+      '.kc-player-card:hover{transform:translateY(-12px) scale(1.04);border-color:rgba(255,50,50,0.9);}',
+      '.kc-player-photo{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;}',
       '.kc-player-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,0,8,0.96) 0%,rgba(2,0,8,0.38) 42%,transparent 68%);pointer-events:none;}',
       '.kc-player-info{position:absolute;bottom:0;left:0;right:0;padding:22px 18px 18px;pointer-events:none;}',
       '.kc-player-role{font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;color:rgba(68,136,255,0.85);text-transform:uppercase;margin-bottom:5px;display:block;}',
-      '.kc-player-name{font-family:Cinzel,serif;font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;display:block;text-shadow:0 0 22px rgba(255,50,50,0.55);}',
-      '.kc-player-cta{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:rgba(255,100,100,0.78);text-transform:uppercase;opacity:0;transition:opacity 0.22s;}',
-      '.kc-player-card:hover .kc-player-cta{opacity:1;}',
-      '.kc-player-cta::before{content:"\u25B6";font-size:8px;}',
+      '.kc-player-name{font-family:Cinzel,serif;font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;display:block;}',
       '.kc-player-nophoto{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:68px;background:linear-gradient(135deg,#280808,#081030);}',
-      '#kcToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(24px);background:linear-gradient(135deg,rgba(110,6,6,0.97),rgba(6,14,65,0.97));border:1px solid rgba(255,70,70,0.78);box-shadow:0 0 40px rgba(150,8,8,0.55),0 0 80px rgba(8,18,160,0.35);color:#fff;font-family:Cinzel,serif;font-size:13px;letter-spacing:4px;padding:20px 44px 16px;z-index:99999;pointer-events:none;opacity:0;transition:opacity .45s,transform .45s;text-align:center;white-space:nowrap;border-radius:6px;}',
-      '#kcToast .kt-logo{display:block;width:44px;height:44px;object-fit:contain;margin:0 auto 10px;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,60,60,0.9));}',
+      '#kcToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(24px);background:linear-gradient(135deg,rgba(110,6,6,0.97),rgba(6,14,65,0.97));border:1px solid rgba(255,70,70,0.78);color:#fff;font-family:Cinzel,serif;font-size:13px;letter-spacing:4px;padding:20px 44px 16px;z-index:99999;pointer-events:none;opacity:0;transition:opacity .45s,transform .45s;text-align:center;border-radius:6px;}',
+      '#kcToast .kt-logo{display:block;width:44px;height:44px;object-fit:contain;margin:0 auto 10px;border-radius:50%;}',
       '#kcToast .kt-sub{display:block;font-size:10px;letter-spacing:3px;opacity:0.65;margin-top:6px;color:#ffaaaa;}',
       '.kc-banner-wrap{width:100%;max-width:2200px;align-self:center;padding:0 48px 48px;}',
-      '.kc-banner-img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,50,50,0.18);box-shadow:0 0 60px rgba(140,5,5,0.35),0 0 120px rgba(5,10,140,0.2);object-fit:cover;}',
-      '@keyframes kcFadeIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}',
+      '.kc-banner-img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,50,50,0.18);}',
       '@keyframes kcPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.1) rotate(3deg);}}',
-      '@media(max-width:700px){.kc-players-grid{gap:10px;padding:6px 14px 30px;}.kc-player-card{min-width:200px;}.kc-player-name{font-size:14px;}.kc-player-role{font-size:8px;}}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -1212,31 +1129,31 @@ var _kcViewer = (function () {
   function _activate() {
     _injectKCCSS(); _on(); _savedCards = [];
     var allCards = Array.from(document.querySelectorAll('#projects .project-card')).filter(function (c) { return !c.classList.contains('perso-card'); });
-    if (!allCards.length) { console.warn('KC: cartes non trouvées'); return; }
+    if (!allCards.length) return;
     allCards.forEach(function (card, idx) {
       var vis = card.querySelector('.project-visual'); if (!vis) return;
       var imgs = [];
-      vis.querySelectorAll('img').forEach(function (img) { imgs.push({ alt: img.alt || '', src: img.src, ds: img.dataset.src || '' }); });
+      vis.querySelectorAll('img').forEach(function (img) { imgs.push({ alt:img.alt||'', src:img.src, ds:img.dataset.src||'' }); });
       _savedCards.push({
-        card: card, display: card.style.display || '',
-        visNodes: Array.from(vis.childNodes).map(function (n) { return n.cloneNode(true); }),
-        type:    (card.querySelector('.project-type')  || {}).textContent || '',
-        title:   (card.querySelector('.project-title') || {}).textContent || '',
-        desc:    (card.querySelector('.project-desc')  || {}).textContent || '',
-        btnHTML: (card.querySelector('.project-btn')   || {}).outerHTML  || '',
-        imgs:    imgs
+        card:card, display:card.style.display||'',
+        visNodes:Array.from(vis.childNodes).map(function(n){return n.cloneNode(true);}),
+        type:(card.querySelector('.project-type')||{}).textContent||'',
+        title:(card.querySelector('.project-title')||{}).textContent||'',
+        desc:(card.querySelector('.project-desc')||{}).textContent||'',
+        btnHTML:(card.querySelector('.project-btn')||{}).outerHTML||'',
+        imgs:imgs,
       });
       if (idx >= 1) { card.style.display = 'none'; return; }
       vis.style.position = 'relative';
       while (vis.firstChild) vis.removeChild(vis.firstChild);
       var ov  = document.createElement('div'); ov.className = 'kc-visual-replace';
-      var lg  = document.createElement('img'); lg.className = 'kc-main-logo'; lg.src = KC_LOGO; lg.alt = 'Karmine Corp'; lg.loading = 'eager'; lg.onerror = function () { lg.style.display = 'none'; };
+      var lg  = document.createElement('img'); lg.className = 'kc-main-logo'; lg.src = KC_LOGO; lg.alt = 'Karmine Corp';
       var lbl = document.createElement('div'); lbl.className = 'kc-main-label'; lbl.textContent = 'Karmine Corp';
       ov.appendChild(lg); ov.appendChild(lbl); vis.appendChild(ov);
       var bdg = document.createElement('div'); bdg.className = 'kc-badge'; bdg.textContent = 'LOL MODE'; vis.appendChild(bdg);
       if (card.querySelector('.project-type'))  card.querySelector('.project-type').textContent  = 'Esport \u2014 LEC / LFL';
       if (card.querySelector('.project-title')) card.querySelector('.project-title').textContent = 'Karmine Corp';
-      if (card.querySelector('.project-desc'))  card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure \u00e9quipe de League of Legends. Ambiance, passion, victoires.';
+      if (card.querySelector('.project-desc'))  card.querySelector('.project-desc').textContent  = 'ALLEZ LES BLEUS ! La meilleure \u00e9quipe de League of Legends.';
       var oldBtn = card.querySelector('.project-btn');
       if (oldBtn) {
         var nb = document.createElement('button'); nb.className = 'project-btn kc-btn';
@@ -1260,7 +1177,7 @@ var _kcViewer = (function () {
     var grid = document.querySelector('#projects .projects-grid'); if (grid) grid.classList.remove('kc-grid-mode');
     _savedCards.forEach(function (saved) {
       var card = saved.card; card.style.display = saved.display;
-      var vis = card.querySelector('.project-visual');
+      var vis  = card.querySelector('.project-visual');
       if (vis) {
         while (vis.firstChild) vis.removeChild(vis.firstChild);
         saved.visNodes.forEach(function (n) { vis.appendChild(n.cloneNode(true)); });
@@ -1302,8 +1219,7 @@ var _kcViewer = (function () {
       var info = document.createElement('div'); info.className = 'kc-player-info';
       var role = document.createElement('span'); role.className = 'kc-player-role'; role.textContent = player.role;
       var name = document.createElement('span'); name.className = 'kc-player-name'; name.textContent = player.name;
-      var cta  = document.createElement('span'); cta.className  = 'kc-player-cta';  cta.textContent  = 'Voir les clips';
-      info.appendChild(role); info.appendChild(name); info.appendChild(cta); card.appendChild(info);
+      info.appendChild(role); info.appendChild(name); card.appendChild(info);
       card.onclick = function () {
         if (!player.clips || !player.clips.length) { _toastMsg('Clips bient\u00f4t disponibles !'); return; }
         _kcViewer.open(player.clips, 0, KC_LOGO);
@@ -1327,16 +1243,10 @@ var _kcViewer = (function () {
       'position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);' +
       'background:rgba(100,5,5,0.92);border:1px solid rgba(255,60,60,0.55);color:#ffaaaa;' +
       'font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;padding:10px 24px;' +
-      'border-radius:20px;z-index:9999999;pointer-events:none;opacity:0;' +
-      'transition:opacity .2s,transform .2s;white-space:nowrap;';
+      'border-radius:20px;z-index:9999999;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap;';
     document.body.appendChild(t);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
-    });
-    setTimeout(function () {
-      t.style.opacity = '0';
-      setTimeout(function () { if (t.parentNode) t.remove(); }, 250);
-    }, 2200);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; }); });
+    setTimeout(function () { t.style.opacity='0'; setTimeout(function(){if(t.parentNode)t.remove();},250); }, 2200);
   }
 
   function _showToast(on) {
@@ -1347,13 +1257,8 @@ var _kcViewer = (function () {
       (on ? '\uD83C\uDFC6 KARMINE CORP MODE' : '\uD83D\uDC4B MODE KC D\u00c9SACTIV\u00c9') +
       '<span class="kt-sub">' + (on ? 'ALLEZ LES BLEUS !' : '\u00c0 bient\u00f4t sur la Rift') + '</span>';
     document.body.appendChild(t);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
-    });
-    setTimeout(function () {
-      t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(24px)';
-      setTimeout(function () { if (t.parentNode) t.remove(); }, 450);
-    }, 3800);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; }); });
+    setTimeout(function () { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(24px)'; setTimeout(function(){if(t.parentNode)t.remove();},450); }, 3800);
   }
 
   document.addEventListener('keydown', function (e) {
@@ -1367,7 +1272,9 @@ var _kcViewer = (function () {
   });
 })();
 
-/* ════ ÉCHAP ════ */
+/* ════════════════════════════════════════════════════════
+   ÉCHAP — ferme tout
+════════════════════════════════════════════════════════ */
 document.addEventListener('keydown', function (e) {
   if (e.key !== 'Escape') return;
   document.querySelectorAll('.modal-overlay.active').forEach(function (m) { m.classList.remove('active'); });
@@ -1377,7 +1284,9 @@ document.addEventListener('keydown', function (e) {
   document.body.style.overflow = '';
 });
 
-/* ════ PERFORMANCE — lazy load + prefetch GIFs ════ */
+/* ════════════════════════════════════════════════════════
+   PERFORMANCES — Lazy load images + préchargement GIFs
+════════════════════════════════════════════════════════ */
 (function () {
   var isMobile = _isMobileDevice;
   if (isMobile) { var hg = document.querySelector('.hero-grid'); if (hg) hg.style.display = 'none'; }
@@ -1417,30 +1326,18 @@ document.addEventListener('keydown', function (e) {
     document.querySelectorAll('img[data-src]').forEach(function (img) { loadImg(img); });
   }
 
+  /* Lazy load dans les modals */
   function loadLazy(el) { if (!el) return; el.querySelectorAll('img[data-src]').forEach(function (img) { loadImg(img); }); }
   var _om = window.openModal;
   window.openModal = function (id) { loadLazy(document.getElementById('modal-' + id)); if (typeof _om === 'function') _om(id); };
   var _osm = window.openSubModal;
   window.openSubModal = function (id) { loadLazy(document.getElementById(id)); if (typeof _osm === 'function') _osm(id); };
 
-  var sb = document.getElementById('scrollProgress');
-  if (sb) {
-    var tk = false;
-    window.addEventListener('scroll', function () {
-      if (!tk) {
-        requestAnimationFrame(function () {
-          var st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
-          sb.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
-          tk = false;
-        });
-        tk = true;
-      }
-    }, { passive: true });
-  }
-
+  /* Touch passif */
   document.addEventListener('touchstart', function () {}, { passive: true });
   document.addEventListener('touchmove',  function () {}, { passive: true });
 
+  /* Styles allégés mobile */
   if (isMobile) {
     var st = document.createElement('style');
     st.textContent =
@@ -1450,13 +1347,14 @@ document.addEventListener('keydown', function (e) {
     document.head.appendChild(st);
   }
 
+  /* Préchargement GIFs desktop uniquement */
   if (!isMobile) {
     var GIF_SRCS = [
       'videos/inscription.gif', 'videos/accept_inscription.gif',
       'videos/creation_conversation_membre.gif', 'videos/creation_de_groupe.gif',
       'videos/test_message_tempsréel.gif', 'videos/test_notif.gif',
       'videos/test_message_accueil.gif', 'videos/test_group_et_conversation.gif',
-      'videos/test_fond_ecran.gif', 'videos/test_sondage.gif', 'videos/test_role_suppresion.gif'
+      'videos/test_fond_ecran.gif', 'videos/test_sondage.gif', 'videos/test_role_suppresion.gif',
     ];
     function prefetchNext(idx) {
       if (idx >= GIF_SRCS.length) return;
@@ -1472,219 +1370,293 @@ document.addEventListener('keydown', function (e) {
   }
 })();
 
-// ─── Dictionnaire de traductions ───────────────────────────────────────────
-// ─── Dictionnaire de traductions ───────────────────────────────────────────
+/* ════════════════════════════════════════════════════════
+   TRADUCTIONS (i18n)
+════════════════════════════════════════════════════════ */
 var TRANSLATIONS = {
   fr: {
-    "nav.about":    "A propos",
-    "nav.timeline": "Parcours",
-    "nav.skills":   "Competences",
-    "nav.projects": "Projets",
-    "nav.ap":       "Projet AP",
-    "nav.contact":  "Contact",
-    "hero.subtitle": "Etudiant",
-    "hero.cta1":     "Voir mes projets",
-    "hero.cta2":     "&#x2B07; Telecharger CV",
-    "hero.scroll":   "Defiler",
-    "btn.animOff": "Anims ON",
-    "btn.animOn":  "Anims OFF",
-    "btn.open":    "&#x2756; Ouvrir",
-    "about.title":    "A propos",
-    "about.flipHint": "&#x2756; Cliquer pour decouvrir &#x2756;",
-    "about.text1":    "Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.",
-    "about.text2":    "J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.",
-    "about.projects": "Projets",
-    "about.apps":     "Apps Play Store",
-    "timeline.title": "Parcours",
-    "tl1.title": "BTS SIO — 2eme annee", "tl1.sub": "Option SLAM",
-    "tl1.desc": "Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.",
-    "tl1.badge": "&#x2756; En cours",
-    "tl2.title": "BTS SIO — 1ere annee", "tl2.sub": "Option SLAM",
-    "tl2.desc": "Apprentissage des fondamentaux du developpement web et mobile. Premiers projets Flutter, PHP et MySQL.",
-    "tl2.badge": "Valide",
-    "tl3.title": "Lycee", "tl3.sub": "Bac Pro MELEC",
-    "tl3.desc": "Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.",
-    "tl3.badge": "Diplome",
-    "skills.title": "Competences",
-    "skill1.name": "Developpement",
-    "skill2.name": "Donnees", "skill2.tag4": "Modelisation BDD", "skill2.tag5": "SQL avance",
-    "skill3.name": "Outils &amp; Methodes", "skill3.tag4": "Methode Agile", "skill3.tag5": "Tests &amp; Recette",
-    "skill4.name": "Bloc 1 — Support", "skill4.tag1": "Gestion patrimoine", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Deploiement service", "skill4.tag4": "Mode projet", "skill4.tag5": "Veille techno",
-    "skill5.name": "Bloc 2 — SLAM", "skill5.tag1": "Conception applicative", "skill5.tag2": "Maintenance corrective", "skill5.tag3": "Maintenance evolutive", "skill5.tag4": "Architecture logicielle", "skill5.tag5": "UML / Modelisation",
-    "skill6.name": "Bloc 3 — Cybersecurite", "skill6.tag1": "RGPD / CNIL", "skill6.tag2": "Gestion des acces", "skill6.tag3": "Securite applicative", "skill6.tag4": "Analyse logs", "skill6.tag5": "Prevention attaques",
-    "projects.title":    "Projets",
-    "projects.personal": "Voir mes projets personnels",
-    "p1.type": "Application Mobile — Chat Temps Reel",
-    "p1.desc": "Application de messagerie instantanee Flutter avec chat en temps reel, notifications push et panel administrateur.",
-    "p2.type":  "Application Mobile",
-    "p2.type2": "Application Mobile — Boutique Privee",
-    "p2.desc": "Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.",
-    "p3.type": "Projet Web — Personnel",
-    "p3.desc": "Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.",
-    "modal.clickHint": "&#x2756; Cliquer sur une fonctionnalite pour en savoir plus",
-    "submodal.feature": "Fonctionnalite",
-    "m1.desc": "Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.",
-    "f1.title": "&#x1F511; Inscription &amp; Acces", "f1.preview": "Validation manuelle des comptes par un administrateur avant acces.",
-    "f1.desc": "L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.",
-    "f1.s1": "L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class=\"step-play-hint\">Voir la demo</span>",
-    "f1.s2": "La demande est enregistree en base PostgreSQL avec le statut <strong>« en attente »</strong>. L'acces est bloque jusqu'a validation.<br><span class=\"step-play-hint\">Voir le screen</span>",
-    "f1.s3": "Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class=\"step-play-hint\">Voir la demo</span>",
-    "f1.s4": "Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class=\"step-play-hint\">Voir la demo</span>",
-    "f1.s5": "La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class=\"step-play-hint\">Voir le screen</span>",
-    "f2.title": "&#x1F4AC; Chat en temps reel", "f2.preview": "Messages instantanes dans les salons grace a Socket.io, avec horodatage.",
-    "f3.title": "&#x1F514; Notifications push", "f3.preview": "Firebase Messaging envoie des alertes meme quand l'app est fermee.",
-    "f4.title": "&#x1F43E; Conversations &amp; Groupes", "f4.preview": "Les utilisateurs creent des conversations, seuls les admins peuvent creer des groupes.",
-    "f5.title": "&#x1F4CA; Sondages", "f5.preview": "Creation de sondages dans les salons, resultats mis a jour en temps reel.",
-    "f6.title": "&#x1F3A8; Personnalisation", "f6.preview": "Fond d'ecran personnalisable par l'utilisateur selon ses preferences.",
-    "f7.title": "&#x1F6E1;&#xFE0F; Panel administrateur", "f7.preview": "Gestion complete des comptes : roles, bans, suppressions, inscriptions.",
-    "f8.title": "&#x1F5C4;&#xFE0F; Base de donnees", "f8.preview": "PostgreSQL sur OVH, deploye via Termius SSH.",
-    "m2.desc": "Animal'vest est la boutique privee de l'association, reservee a ses membres. Elle permet de consulter le catalogue de produits (vestes, accessoires...), de passer des commandes et de les suivre, le tout gere par un panel administrateur integre.",
-    "v1.title": "&#x1F510; Acces membres uniquement", "v1.preview": "Connexion sans identifiants via un compte temporaire supprime a la deconnexion.",
-    "v2.title": "&#x1F6CD;&#xFE0F; Catalogue de produits", "v2.preview": "Consultation des articles avec photos, descriptions, prix et selection de taille.",
-    "v3.title": "&#x1F5BC;&#xFE0F; Galerie multi-photos", "v3.preview": "Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.",
-    "v4.title": "&#x1F4CB; Categories &amp; Unites", "v4.preview": "Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.",
-    "v5.title": "&#x1F6D2; Panier &amp; Commandes", "v5.preview": "Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.",
-    "v6.title": "&#x1F6E1;&#xFE0F; Panel administrateur", "v6.preview": "Gestion des produits, des stocks, des commandes et suivi avec notes internes.",
-    "v7.title": "&#x1F4E6; Numero de colis obligatoire", "v7.preview": "L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.",
-    "v8.title": "&#x1F514; Notifications push", "v8.preview": "L'admin est alerte en temps reel des qu'une nouvelle commande est passee.",
-    "v9.title": "&#x2709;&#xFE0F; Emails automatiques", "v9.preview": "Un email est envoye au membre a chaque changement de statut de sa commande.",
-    "v10.title": "&#x1F512; Securite &amp; Mot de passe", "v10.preview": "Politique commune avec indicateur de force, formatters et rate limiter anti-abus.",
-    "v11.title": "&#x1F5C4;&#xFE0F; Base de donnees", "v11.preview": "Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.",
-    "gsb1.type": "Application Windows — GSB Mission 1",
-    "gsb1.mTitle": "GSB Gestion des Conges",
-    "gsb1.desc": "Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.",
-    "gsb2.type": "Application Mobile — GSB Mission 5",
-    "gsb2.mTitle": "GSB Notes Praticiens",
-    "g1.title": "&#x1F511; Connexion &amp; Comptes", "g1.preview": "Deux comptes distincts : praticien et responsable RH avec acces differencies.",
-    "g2.title": "&#x1F4C5; Demande de conges", "g2.preview": "Formulaire de saisie avec selection des dates et verification automatique du solde.",
-    "g3.title": "&#x1F6E1;&#xFE0F; Panel RH", "g3.preview": "Liste des demandes en attente, consultation et decision d'acceptation ou de refus.",
-    "g4.title": "&#x1F514; Notifications a la connexion", "g4.preview": "Le praticien est notifie de l'etat de ses demandes des la connexion.",
-    "g5.title": "&#x1F5C4;&#xFE0F; Base de donnees", "g5.preview": "API REST Laravel, base MySQL, consommee par l'application C# Windows.",
-    "ap.title": "Projet AP",
-    "ap.gsb1desc": "Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.",
-    "ap.gsb2desc": "Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.",
-    "ap.inprogress": "&#x23F3; En cours",
-    "lol.desc": "Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.",
-    "lol.features": "Fonctionnalites",
-    "lol.f1": "Affichage et recherche de champions",
-    "lol.f2": "Base de donnees MySQL des personnages",
-    "lol.f3": "Design thematique inspire du jeu",
-    "lol.f4": "Interface web responsive en PHP/HTML/CSS",
-    "contact.title":   "Me contacter",
-    "contact.text":    "\"Chaque grand voyage commence par un premier message.\"<br>Discutons de ton prochain projet.",
-    "contact.email":   "&#x2709; Email",
-    "contact.linkedin":"&#x25C8; LinkedIn",
-    "contact.cv":      "&#x2B07; CV PDF",
-    "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
-    "video.notfound": "Fichier introuvable :"
+    "nav.about":"A propos","nav.timeline":"Parcours","nav.skills":"Competences",
+    "nav.projects":"Projets","nav.ap":"Projet AP","nav.contact":"Contact",
+    "hero.subtitle":"Etudiant","hero.cta1":"Voir mes projets",
+    "hero.cta2":"&#x2B07; Telecharger CV","hero.scroll":"Defiler",
+    "btn.animOff":"Anims ON","btn.animOn":"Anims OFF","btn.open":"&#x2756; Ouvrir",
+    "about.title":"A propos","about.flipHint":"&#x2756; Cliquer pour decouvrir &#x2756;",
+    "about.text1":"Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.",
+    "about.text2":"J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.",
+    "about.projects":"Projets","about.apps":"Apps Play Store",
+    "timeline.title":"Parcours",
+    "tl1.title":"BTS SIO — 2eme annee","tl1.sub":"Option SLAM",
+    "tl1.desc":"Approfondissement des competences, realisation de projets concrets dont Animal'and publie sur le Play Store.",
+    "tl1.badge":"&#x2756; En cours",
+    "tl2.title":"BTS SIO — 1ere annee","tl2.sub":"Option SLAM",
+    "tl2.desc":"Apprentissage des fondamentaux du developpement web et mobile. Premiers projets Flutter, PHP et MySQL.",
+    "tl2.badge":"Valide",
+    "tl3.title":"Lycee","tl3.sub":"Bac Pro MELEC",
+    "tl3.desc":"Obtention du Bac Pro Metiers de l'Electricite et de ses Environnements Connectes.",
+    "tl3.badge":"Diplome",
+    "skills.title":"Competences",
+    "skill1.name":"Developpement",
+    "skill2.name":"Donnees","skill2.tag4":"Modelisation BDD","skill2.tag5":"SQL avance",
+    "skill3.name":"Outils &amp; Methodes","skill3.tag4":"Methode Agile","skill3.tag5":"Tests &amp; Recette",
+    "skill4.name":"Bloc 1 — Support","skill4.tag1":"Gestion patrimoine","skill4.tag2":"Support &amp; incidents","skill4.tag3":"Deploiement service","skill4.tag4":"Mode projet","skill4.tag5":"Veille techno",
+    "skill5.name":"Bloc 2 — SLAM","skill5.tag1":"Conception applicative","skill5.tag2":"Maintenance corrective","skill5.tag3":"Maintenance evolutive","skill5.tag4":"Architecture logicielle","skill5.tag5":"UML / Modelisation",
+    "skill6.name":"Bloc 3 — Cybersecurite","skill6.tag1":"RGPD / CNIL","skill6.tag2":"Gestion des acces","skill6.tag3":"Securite applicative","skill6.tag4":"Analyse logs","skill6.tag5":"Prevention attaques",
+    "projects.title":"Projets","projects.personal":"Voir mes projets personnels",
+    "p1.type":"Application Mobile — Chat Temps Reel",
+    "p1.desc":"Application de messagerie instantanee Flutter avec chat en temps reel, notifications push et panel administrateur.",
+    "p2.type":"Application Mobile","p2.type2":"Application Mobile — Boutique Privee",
+    "p2.desc":"Application compagnon d'Animal'and dediee a la gestion des equipements et accessoires pour animaux.",
+    "p3.type":"Projet Web — Personnel",
+    "p3.desc":"Projet web autour de l'univers de League of Legends avec affichage de donnees et design immersif.",
+    "modal.clickHint":"&#x2756; Cliquer sur une fonctionnalite pour en savoir plus",
+    "submodal.feature":"Fonctionnalite",
+    "m1.desc":"Animal'and Chat est une application mobile de messagerie instantanee developpee avec Flutter. Le backend est deploye sur un serveur OVH via <strong>Termius SSH</strong>, la base de donnees est PostgreSQL, et les notifications sont gerees par Firebase Messaging.",
+    "f1.title":"&#x1F511; Inscription &amp; Acces","f1.preview":"Validation manuelle des comptes par un administrateur avant acces.",
+    "f1.desc":"L'acces a l'application n'est pas ouvert a tous. Chaque nouvelle inscription passe par un processus de validation avant que l'utilisateur puisse se connecter.",
+    "f1.s1":"L'utilisateur remplit un formulaire d'inscription avec ses informations (nom, email, mot de passe).<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s2":"La demande est enregistree en base PostgreSQL avec le statut <strong>« en attente »</strong>. L'acces est bloque jusqu'a validation.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f1.s3":"Un administrateur recoit la demande dans son panel et peut <strong>accepter ou refuser</strong> le compte.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s4":"Une fois accepte, l'utilisateur peut se connecter et <strong>creer des conversations</strong> avec d'autres membres.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f1.s5":"La creation de <strong>groupes</strong> est reservee aux administrateurs uniquement.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f2.title":"&#x1F4AC; Chat en temps reel","f2.preview":"Messages instantanes dans les salons grace a Socket.io, avec horodatage.",
+    "f3.title":"&#x1F514; Notifications push","f3.preview":"Firebase Messaging envoie des alertes meme quand l'app est fermee.",
+    "f4.title":"&#x1F43E; Conversations &amp; Groupes","f4.preview":"Les utilisateurs creent des conversations, seuls les admins peuvent creer des groupes.",
+    "f5.title":"&#x1F4CA; Sondages","f5.preview":"Creation de sondages dans les salons, resultats mis a jour en temps reel.",
+    "f6.title":"&#x1F3A8; Personnalisation","f6.preview":"Fond d'ecran personnalisable par l'utilisateur selon ses preferences.",
+    "f7.title":"&#x1F6E1;&#xFE0F; Panel administrateur","f7.preview":"Gestion complete des comptes : roles, bans, suppressions, inscriptions.",
+    "f8.title":"&#x1F5C4;&#xFE0F; Base de donnees","f8.preview":"PostgreSQL sur OVH, deploye via Termius SSH.",
+    "m2.desc":"Animal'vest est la boutique privee de l'association, reservee a ses membres.",
+    "v1.title":"&#x1F510; Acces membres uniquement","v1.preview":"Connexion sans identifiants via un compte temporaire supprime a la deconnexion.",
+    "v2.title":"&#x1F6CD;&#xFE0F; Catalogue de produits","v2.preview":"Consultation des articles avec photos, descriptions, prix et selection de taille.",
+    "v3.title":"&#x1F5BC;&#xFE0F; Galerie multi-photos","v3.preview":"Jusqu'a 8 photos par produit avec carousel, zoom plein ecran et visionneuse.",
+    "v4.title":"&#x1F4CB; Categories &amp; Unites","v4.preview":"Grille d'unites sur l'accueil, chacune liee a des categories de la boutique.",
+    "v5.title":"&#x1F6D2; Panier &amp; Commandes","v5.preview":"Ajout au panier, formulaire de livraison et suivi de l'etat de la commande.",
+    "v6.title":"&#x1F6E1;&#xFE0F; Panel administrateur","v6.preview":"Gestion des produits, des stocks, des commandes et suivi avec notes internes.",
+    "v7.title":"&#x1F4E6; Numero de colis obligatoire","v7.preview":"L'expedition est bloquee tant qu'un numero de colis valide (8 chiffres) n'est pas saisi.",
+    "v8.title":"&#x1F514; Notifications push","v8.preview":"L'admin est alerte en temps reel des qu'une nouvelle commande est passee.",
+    "v9.title":"&#x2709;&#xFE0F; Emails automatiques","v9.preview":"Un email est envoye au membre a chaque changement de statut de sa commande.",
+    "v10.title":"&#x1F512; Securite &amp; Mot de passe","v10.preview":"Politique commune avec indicateur de force, formatters et rate limiter anti-abus.",
+    "v11.title":"&#x1F5C4;&#xFE0F; Base de donnees","v11.preview":"Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.",
+    "gsb1.type":"Application Windows — GSB Mission 1","gsb1.mTitle":"GSB Gestion des Conges",
+    "gsb1.desc":"Application C# Windows developpee dans le cadre du projet AP GSB. Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.",
+    "gsb2.type":"Application Mobile — GSB Mission 5","gsb2.mTitle":"GSB Notes Praticiens",
+    "g1.title":"&#x1F511; Connexion &amp; Comptes","g1.preview":"Deux comptes distincts : praticien et responsable RH avec acces differencies.",
+    "g2.title":"&#x1F4C5; Demande de conges","g2.preview":"Formulaire de saisie avec selection des dates et verification automatique du solde.",
+    "g3.title":"&#x1F6E1;&#xFE0F; Panel RH","g3.preview":"Liste des demandes en attente, consultation et decision d'acceptation ou de refus.",
+    "g4.title":"&#x1F514; Notifications a la connexion","g4.preview":"Le praticien est notifie de l'etat de ses demandes des la connexion.",
+    "g5.title":"&#x1F5C4;&#xFE0F; Base de donnees","g5.preview":"API REST Laravel, base MySQL, consommee par l'application C# Windows.",
+    "ap.title":"Projet AP",
+    "ap.gsb1desc":"Application C# Windows permettant aux praticiens de faire des demandes de conges et au responsable RH de les accepter ou refuser. Gestion des soldes, notifications et panel administrateur.",
+    "ap.gsb2desc":"Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.",
+    "ap.inprogress":"&#x23F3; En cours",
+    "lol.desc":"Projet web immersif inspire de l'univers de League of Legends. Affichage de donnees de jeu, design thematique et integration d'une base de donnees pour gerer les champions et statistiques.",
+    "lol.features":"Fonctionnalites","lol.f1":"Affichage et recherche de champions",
+    "lol.f2":"Base de donnees MySQL des personnages","lol.f3":"Design thematique inspire du jeu",
+    "lol.f4":"Interface web responsive en PHP/HTML/CSS",
+    "contact.title":"Me contacter",
+    "contact.text":"\"Chaque grand voyage commence par un premier message.\"<br>Discutons de ton prochain projet.",
+    "contact.email":"&#x2709; Email","contact.linkedin":"&#x25C8; LinkedIn","contact.cv":"&#x2B07; CV PDF",
+    "footer.text":"&#169; 2026 Corentin Mesure — BTS SIO SLAM",
+    "video.notfound":"Fichier introuvable :",
+    "v1.desc":"Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>.",
+    "v1.s1":"Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v1.s2":"Des que le membre <strong>ferme l'application</strong>, le compte temporaire est <strong>supprime automatiquement</strong>.<br><span class=\"step-play-hint\">Voir le log</span>",
+    "v1.s3":"Si l'application reste ouverte, le compte est <strong>supprime au bout de 24h</strong>.<br><span class=\"step-play-hint\">Voir le log</span>",
+    "v1.s4":"Seules l'email, l'adresse postale et le telephone sont conserves, <strong>supprimes au bout de 6 mois</strong>.",
+    "v1.s5":"<strong>Seul l'administrateur</strong> dispose d'un compte permanent avec identifiants.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v2.desc":"Les membres accedent a un catalogue complet des articles proposes, avec filtrage par categorie et selection de taille.",
+    "v2.s1":"La boutique affiche les <strong>produits disponibles</strong> en grille 2 colonnes.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v2.s2":"Un <strong>carousel de categories</strong> permet de filtrer les produits instantanement.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v2.s3":"Chaque article possede une <strong>fiche detaillee</strong> avec tailles vetements (XS–XXL) et chaussures (37–45).",
+    "v3.desc":"Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.",
+    "v3.s1":"L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v3.s2":"Chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs et compteur <strong>X/Y</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v3.s3":"Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.",
+    "v4.desc":"L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association.",
+    "v4.s1":"La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v4.s2":"Taper une categorie <strong>redirige directement</strong> vers la boutique filtree.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v4.s3":"Les admins voient un bouton <strong>···</strong> pour gerer les unites.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v5.desc":"Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison.",
+    "v5.s1":"Le membre ajoute les articles a son <strong>panier</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "v5.s2":"En validant, un <strong>formulaire de commande</strong> s'ouvre.",
+    "v5.s3":"Le membre recoit un <strong>email automatique a chaque changement de statut</strong>.<br><span class=\"step-play-hint\">Voir les emails</span>",
+    "v6.desc":"L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres.",
+    "v6.s1":"<strong>Statistiques en temps reel.</strong><br><span class=\"step-play-hint\">Voir le screen</span>",
+    "v6.s2":"<strong>Suivi des commandes :</strong> liste filtrable avec fiche client.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "v6.s3":"<strong>Traitement manuel :</strong> changement de statut et ajout d'une <strong>note interne</strong>.",
+    "v6.s4":"<strong>Gestion des admins.</strong><br><span class=\"step-play-hint\">Voir le screen</span>",
+    "v6.s5":"<strong>Creation de compte admin.</strong><br><span class=\"step-play-hint\">Voir le screen</span>",
+    "v7.desc":"Le passage au statut 'expediee' est bloque tant qu'un numero de colis valide n'est pas saisi.",
+    "v7.s1":"Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.",
+    "v7.s2":"Le numero doit contenir <strong>exactement 8 chiffres</strong>.",
+    "v7.s3":"Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel.",
+    "v7.s4":"Le numero est <strong>enregistre avec la commande</strong> et un email de suivi est automatiquement envoye.",
+    "v8.desc":"Firebase Cloud Messaging alerte l'administrateur en temps reel.",
+    "v8.s1":"Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.",
+    "v8.s2":"La notification est recue <strong>meme si l'app est fermee</strong>.",
+    "v8.s3":"Un tap <strong>ouvre directement</strong> le detail de la commande.",
+    "v9.desc":"A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.",
+    "v9.s1":"Commande <strong>confirmee</strong> : email de recapitulatif.",
+    "v9.s2":"Statut <em style=\"color:var(--cyan)\">\"traitee\"</em> : email en cours de preparation.",
+    "v9.s3":"Statut <em style=\"color:var(--cyan)\">\"expediee\"</em> : email avec le <strong>numero de colis</strong>.",
+    "v9.s4":"Statut <em style=\"color:var(--cyan)\">\"livree\"</em> : email de <strong>confirmation</strong>.",
+    "v9.s5":"L'envoi est declenche <strong>cote serveur</strong>.",
+    "v10.desc":"L'application integre plusieurs mecanismes de securite.",
+    "v10.s1":"<strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.",
+    "v10.s2":"<strong>Indicateur de force en temps reel.</strong>",
+    "v10.s3":"<strong>Formatters de saisie.</strong>",
+    "v10.s4":"<strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.",
+    "v10.s5":"<strong>FlutterSecureStorage</strong> pour les tokens JWT.",
+    "v11.desc":"Architecture Flutter, base relationnelle, Firebase pour les notifications.",
+    "v11.s1":"<strong>Flutter / Dart</strong> pour l'interface mobile.",
+    "v11.s2":"<strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.",
+    "v11.s3":"<strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.",
+    "v11.s4":"Totalement independante d'Animal'and Chat.",
+    "v11.s5":"Singleton <strong>ApiService</strong> avec injection automatique du token JWT.",
+    "g1.desc":"L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role.",
+    "g1.s1":"Deux roles : <strong>Praticien</strong> et <strong>Responsable RH</strong>.<br><span class=\"step-play-hint\">Voir le schema</span>",
+    "g1.s2":"Le <strong>compte praticien</strong> donne acces au formulaire de demande et a l'historique.",
+    "g1.s3":"Le <strong>compte RH</strong> donne acces a la liste complete des demandes.",
+    "g2.desc":"Le praticien peut soumettre une demande de conges. L'application verifie automatiquement son solde avant d'autoriser la demande.",
+    "g2.s1":"Selection de la <strong>date de debut</strong> et <strong>date de fin</strong>.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g2.s2":"Le solde disponible s'affiche en cliquant sur <strong>\"Voir mes jours restants\"</strong>.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g2.s3":"Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g2.s4":"Si refusee, une notification s'affiche a la prochaine connexion.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g3.desc":"Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes.",
+    "g3.s1":"Le RH voit la <strong>liste de toutes les demandes</strong> en attente.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g3.s2":"Le RH peut <strong>accepter ou refuser</strong> en un clic. Le solde est mis a jour automatiquement.",
+    "g4.desc":"Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.",
+    "g4.s1":"Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "g4.s2":"Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.",
+    "g5.desc":"L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.",
+    "g5.s1":"<strong>Laravel</strong> expose une API REST pour toutes les operations.",
+    "g5.s2":"<strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.",
+    "g5.s3":"<strong>C# Windows Forms</strong> constitue l'interface graphique.",
+    "f2.desc":"Le coeur de l'application repose sur une messagerie instantanee via Socket.io.",
+    "f2.s1":"L'utilisateur selectionne une conversation et redige son message.",
+    "f2.s2":"A l'envoi, le message est <strong>enregistre en base PostgreSQL</strong> pour garantir la persistance.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f2.s3":"<strong>Si le destinataire est connecte</strong>, il recoit le message <strong>instantanement via Socket.io</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f2.s4":"<strong>Si le destinataire est absent</strong>, une <strong>notification push Firebase Messaging</strong> est declenchee.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f2.s5":"Chaque message affiche l'auteur, le contenu et <strong>l'horodatage precis</strong> de l'envoi.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f2.s6":"<strong>Indicateur de frappe :</strong> lorsqu'un utilisateur ecrit, un message s'affiche en temps reel.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f3.desc":"Grace a Firebase Cloud Messaging (FCM), les utilisateurs sont alertes des nouveaux messages meme lorsqu'ils n'ont pas l'application ouverte.",
+    "f3.s1":"Lors de la connexion, l'application recupere le <strong>token FCM</strong> de l'appareil et l'enregistre en base.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f3.s2":"Quand un message est envoye, le backend <strong>declenche une notification FCM</strong> vers les membres du salon.<br><span class=\"step-play-hint\">Voir le log</span>",
+    "f3.s3":"La notification apparait meme si l'application est <strong>fermee ou en arriere-plan</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f3.s4":"Un tap sur la notification <strong>ouvre directement le salon</strong> concerne.",
+    "f4.desc":"L'application distingue deux types d'espaces : les <strong>conversations</strong> creees librement, et les <strong>groupes</strong> reserves aux administrateurs.",
+    "f4.s1":"<strong>Conversations (utilisateurs) :</strong> chaque utilisateur peut creer une conversation en choisissant un ou plusieurs contacts.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f4.s2":"<strong>Groupes (admins uniquement) :</strong> seuls les administrateurs peuvent creer des groupes visibles par tous.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f4.s3":"L'<strong>historique complet</strong> est charge a l'ouverture et les nouveaux messages arrivent en temps reel via Socket.io.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f4.s4":"Un indicateur de <strong>presence en ligne</strong> permet de savoir quels membres sont connectes.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f4.s5":"<strong>Suppression automatique :</strong> les messages de plus de <strong>6 mois</strong> sont supprimes de la base PostgreSQL.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f5.desc":"Les utilisateurs peuvent animer leur salon en creant des sondages interactifs. Les votes et resultats sont visibles en temps reel.",
+    "f5.s1":"N'importe quel membre peut creer un sondage en definissant une <strong>question et plusieurs options</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f5.s2":"Le sondage est enregistre en PostgreSQL et diffuse via <strong>Socket.io</strong> a tous les membres.<br><span class=\"step-play-hint\">Voir le screen</span>",
+    "f5.s3":"Chaque membre vote une seule fois. <strong>Un seul vote par utilisateur</strong> est autorise.",
+    "f5.s4":"Les <strong>resultats se mettent a jour en direct</strong> avec le pourcentage de votes pour chaque option.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f6.desc":"Chaque utilisateur peut personnaliser son experience visuelle en choisissant un fond d'ecran selon ses gouts.",
+    "f6.s1":"Dans les parametres, l'utilisateur accede a une <strong>liste de fonds d'ecran predefinis</strong>.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f6.s2":"Il peut egalement choisir une <strong>image personnalisee depuis sa galerie locale</strong>.",
+    "f6.s3":"Le fond d'ecran est stocke <strong>uniquement en local sur l'appareil</strong> — jamais envoye au serveur.",
+    "f6.s4":"L'interface <strong>s'adapte immediatement</strong> avec le fond d'ecran choisi.",
+    "f7.desc":"Un espace dedie aux administrateurs permet de gerer entierement la communaute depuis l'application.",
+    "f7.s1":"<strong>Validation des inscriptions :</strong> l'admin accepte ou refuse en un tap.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f7.s2":"<strong>Modification des roles :</strong> l'admin peut promouvoir un utilisateur en moderateur ou administrateur.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f7.s3":"<strong>Bannissement :</strong> l'admin peut bannir un compte. L'utilisateur banni ne peut plus se connecter.<br><span class=\"step-play-hint\">Voir la demo</span>",
+    "f7.s4":"<strong>Suppression de compte :</strong> l'admin peut supprimer definitivement un compte et toutes ses donnees.",
+    "f8.desc":"L'ensemble des donnees est stocke dans une base PostgreSQL hebergee sur un serveur OVH, deploye via Termius SSH.",
+    "f8.s1":"<strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.",
+    "f8.s2":"Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.",
+    "f8.s3":"<strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.",
   },
 
   en: {
-    "nav.about":    "About",
-    "nav.timeline": "Journey",
-    "nav.skills":   "Skills",
-    "nav.projects": "Projects",
-    "nav.ap":       "AP Project",
-    "nav.contact":  "Contact",
-    "hero.subtitle": "Student",
-    "hero.cta1":     "View my projects",
-    "hero.cta2":     "&#x2B07; Download CV",
-    "hero.scroll":   "Scroll",
-    "btn.animOff": "Anims ON",
-    "btn.animOn":  "Anims OFF",
-    "btn.open":    "&#x2756; Open",
-    "about.title":    "About",
-    "about.flipHint": "&#x2756; Click to discover &#x2756;",
-    "about.text1":    "Hi, my name is Corentin. Let me tell you about my journey and how I ended up studying IT, even though I originally started in an Electrical Engineering vocational program.",
-    "about.text2":    "I completed a vocational Bac Pro in Electrical Engineering and Connected Environments, but after two years I realized it was no longer the right fit for me. So I decided to pivot to IT, enrolled in a BTS SIO with a SLAM specialization, and honestly fell in love with it from day one. Today I build mobile and web applications — I even published an app on the Play Store during my internship.",
-    "about.projects": "Projects",
-    "about.apps":     "Play Store Apps",
-    "timeline.title": "Journey",
-    "tl1.title": "BTS SIO — 2nd year", "tl1.sub": "SLAM track",
-    "tl1.desc": "Deepened skills and completed real-world projects including Animal'and published on the Play Store.",
-    "tl1.badge": "&#x2756; In progress",
-    "tl2.title": "BTS SIO — 1st year", "tl2.sub": "SLAM track",
-    "tl2.desc": "Learned web and mobile development fundamentals. First Flutter, PHP and MySQL projects.",
-    "tl2.badge": "Validated",
-    "tl3.title": "High School", "tl3.sub": "Vocational Bac — MELEC",
-    "tl3.desc": "Obtained the Vocational Baccalaureate in Electrical Engineering and Connected Environments.",
-    "tl3.badge": "Graduated",
-    "skills.title": "Skills",
-    "skill1.name": "Development",
-    "skill2.name": "Data", "skill2.tag4": "DB Modeling", "skill2.tag5": "Advanced SQL",
-    "skill3.name": "Tools &amp; Methods", "skill3.tag4": "Agile Method", "skill3.tag5": "Testing &amp; QA",
-    "skill4.name": "Block 1 — Support", "skill4.tag1": "Asset management", "skill4.tag2": "Support &amp; incidents", "skill4.tag3": "Service deployment", "skill4.tag4": "Project mode", "skill4.tag5": "Tech watch",
-    "skill5.name": "Block 2 — SLAM", "skill5.tag1": "App design", "skill5.tag2": "Corrective maintenance", "skill5.tag3": "Evolutive maintenance", "skill5.tag4": "Software architecture", "skill5.tag5": "UML / Modeling",
-    "skill6.name": "Block 3 — Cybersecurity", "skill6.tag1": "GDPR / CNIL", "skill6.tag2": "Access management", "skill6.tag3": "App security", "skill6.tag4": "Log analysis", "skill6.tag5": "Attack prevention",
-    "projects.title":    "Projects",
-    "projects.personal": "View my personal projects",
-    "p1.type": "Mobile App — Real-Time Chat",
-    "p1.desc": "Flutter instant messaging app with real-time chat, push notifications and admin panel.",
-    "p2.type":  "Mobile App",
-    "p2.type2": "Mobile App — Private Shop",
-    "p2.desc": "Companion app to Animal'and dedicated to managing equipment and accessories for animals.",
-    "p3.type": "Web Project — Personal",
-    "p3.desc": "Web project set in the League of Legends universe with data display and immersive design.",
-    "modal.clickHint": "&#x2756; Click on a feature to learn more",
-    "submodal.feature": "Feature",
-    "m1.desc": "Animal'and Chat is a Flutter mobile messaging application. The backend is deployed on an OVH server via <strong>Termius SSH</strong>, the database is PostgreSQL, and notifications are handled by Firebase Messaging.",
-    "f1.title": "&#x1F511; Registration &amp; Access", "f1.preview": "Manual account validation by an administrator before access is granted.",
-    "f1.desc": "Access to the app is not open to everyone. Every new registration goes through a validation process before the user can log in.",
-    "f1.s1": "The user fills in a registration form with their details (name, email, password).<br><span class=\"step-play-hint\">View demo</span>",
-    "f1.s2": "The request is stored in PostgreSQL with status <strong>\"pending\"</strong>. Access is blocked until validation.<br><span class=\"step-play-hint\">View screenshot</span>",
-    "f1.s3": "An admin receives the request in their panel and can <strong>accept or reject</strong> the account.<br><span class=\"step-play-hint\">View demo</span>",
-    "f1.s4": "Once accepted, the user can log in and <strong>create conversations</strong> with other members.<br><span class=\"step-play-hint\">View demo</span>",
-    "f1.s5": "Creating <strong>groups</strong> is reserved for administrators only.<br><span class=\"step-play-hint\">View screenshot</span>",
-    "f2.title": "&#x1F4AC; Real-time chat", "f2.preview": "Instant messages in channels via Socket.io, with timestamps.",
-    "f3.title": "&#x1F514; Push notifications", "f3.preview": "Firebase Messaging sends alerts even when the app is closed.",
-    "f4.title": "&#x1F43E; Conversations &amp; Groups", "f4.preview": "Users create conversations; only admins can create groups.",
-    "f5.title": "&#x1F4CA; Polls", "f5.preview": "Create polls in channels, results updated in real time.",
-    "f6.title": "&#x1F3A8; Customization", "f6.preview": "Wallpaper customizable by the user according to their preferences.",
-    "f7.title": "&#x1F6E1;&#xFE0F; Admin panel", "f7.preview": "Full account management: roles, bans, deletions, registrations.",
-    "f8.title": "&#x1F5C4;&#xFE0F; Database", "f8.preview": "PostgreSQL on OVH, deployed via Termius SSH.",
-    "m2.desc": "Animal'vest is the association's private shop, reserved for its members. It allows browsing the product catalog (jackets, accessories...), placing orders and tracking them, all managed by a built-in admin panel.",
-    "v1.title": "&#x1F510; Members-only access", "v1.preview": "Login without credentials via a temporary account deleted on logout.",
-    "v2.title": "&#x1F6CD;&#xFE0F; Product catalog", "v2.preview": "Browse items with photos, descriptions, prices and size selection.",
-    "v3.title": "&#x1F5BC;&#xFE0F; Multi-photo gallery", "v3.preview": "Up to 8 photos per product with carousel, fullscreen zoom and viewer.",
-    "v4.title": "&#x1F4CB; Categories &amp; Units", "v4.preview": "Unit grid on the home screen, each linked to shop categories.",
-    "v5.title": "&#x1F6D2; Cart &amp; Orders", "v5.preview": "Add to cart, delivery form and order status tracking.",
-    "v6.title": "&#x1F6E1;&#xFE0F; Admin panel", "v6.preview": "Manage products, stock, orders and tracking with internal notes.",
-    "v7.title": "&#x1F4E6; Mandatory parcel number", "v7.preview": "Shipping is blocked until a valid parcel number (8 digits) is entered.",
-    "v8.title": "&#x1F514; Push notifications", "v8.preview": "Admin is alerted in real time when a new order is placed.",
-    "v9.title": "&#x2709;&#xFE0F; Automatic emails", "v9.preview": "An email is sent to the member at each order status change.",
-    "v10.title": "&#x1F512; Security &amp; Password", "v10.preview": "Shared policy with strength indicator, formatters and anti-abuse rate limiter.",
-    "v11.title": "&#x1F5C4;&#xFE0F; Database", "v11.preview": "Flutter, Firebase for notifications and PostgreSQL/MySQL for data.",
-    "gsb1.type": "Windows App — GSB Mission 1",
-    "gsb1.mTitle": "GSB Leave Management",
-    "gsb1.desc": "C# Windows application developed as part of the GSB AP project (Galaxy Swiss Bourdin). It allows practitioners to submit leave requests and the HR manager to approve or reject them, with automatic balance management and login notifications.",
-    "gsb2.type": "Mobile App — GSB Mission 5",
-    "gsb2.mTitle": "GSB Practitioner Ratings",
-    "g1.title": "&#x1F511; Login &amp; Accounts", "g1.preview": "Two distinct accounts: practitioner and HR manager with differentiated access.",
-    "g2.title": "&#x1F4C5; Leave request", "g2.preview": "Entry form with date selection and automatic balance check.",
-    "g3.title": "&#x1F6E1;&#xFE0F; HR Panel", "g3.preview": "List of pending requests, review and accept/reject decision.",
-    "g4.title": "&#x1F514; Login notifications", "g4.preview": "The practitioner is notified of their request status on login.",
-    "g5.title": "&#x1F5C4;&#xFE0F; Database", "g5.preview": "Laravel REST API, MySQL database, consumed by the C# Windows app.",
-    "ap.title": "AP Project",
-    "ap.gsb1desc": "C# Windows application allowing practitioners to submit leave requests and the HR manager to accept or reject them. Balance management, notifications and admin panel.",
-    "ap.gsb2desc": "Flutter application displaying GSB practitioner ratings. Two evaluator types (client and expert), ranking by score, detail view with comments. In development.",
-    "ap.inprogress": "&#x23F3; In progress",
-    "lol.desc": "Immersive web project inspired by the League of Legends universe. Game data display, thematic design and database integration to manage champions and statistics.",
-    "lol.features": "Features",
-    "lol.f1": "Champion display and search",
-    "lol.f2": "MySQL character database",
-    "lol.f3": "Thematic design inspired by the game",
-    "lol.f4": "Responsive PHP/HTML/CSS web interface",
-    "contact.title":    "Get in touch",
-    "contact.text":     "\"Every great journey starts with a first message.\"<br>Let's talk about your next project.",
-    "contact.email":    "&#x2709; Email",
-    "contact.linkedin": "&#x25C8; LinkedIn",
-    "contact.cv":       "&#x2B07; CV PDF",
-    "footer.text": "&#169; 2026 Corentin Mesure — BTS SIO SLAM",
-    "video.notfound": "File not found:"
+    "nav.about":"About","nav.timeline":"Journey","nav.skills":"Skills",
+    "nav.projects":"Projects","nav.ap":"AP Project","nav.contact":"Contact",
+    "hero.subtitle":"Student","hero.cta1":"View my projects",
+    "hero.cta2":"&#x2B07; Download CV","hero.scroll":"Scroll",
+    "btn.animOff":"Anims ON","btn.animOn":"Anims OFF","btn.open":"&#x2756; Open",
+    "about.title":"About","about.flipHint":"&#x2756; Click to discover &#x2756;",
+    "about.text1":"Hi, my name is Corentin. Let me tell you about my journey and how I ended up studying IT, even though I originally started in an Electrical Engineering vocational program.",
+    "about.text2":"I completed a vocational Bac Pro in Electrical Engineering and Connected Environments, but after two years I realized it was no longer the right fit for me. So I decided to pivot to IT, enrolled in a BTS SIO with a SLAM specialization, and honestly fell in love with it from day one. Today I build mobile and web applications — I even published an app on the Play Store during my internship.",
+    "about.projects":"Projects","about.apps":"Play Store Apps",
+    "timeline.title":"Journey",
+    "tl1.title":"BTS SIO — 2nd year","tl1.sub":"SLAM track",
+    "tl1.desc":"Deepened skills and completed real-world projects including Animal'and published on the Play Store.",
+    "tl1.badge":"&#x2756; In progress",
+    "tl2.title":"BTS SIO — 1st year","tl2.sub":"SLAM track",
+    "tl2.desc":"Learned web and mobile development fundamentals. First Flutter, PHP and MySQL projects.",
+    "tl2.badge":"Validated",
+    "tl3.title":"High School","tl3.sub":"Vocational Bac — MELEC",
+    "tl3.desc":"Obtained the Vocational Baccalaureate in Electrical Engineering and Connected Environments.",
+    "tl3.badge":"Graduated",
+    "skills.title":"Skills","skill1.name":"Development",
+    "skill2.name":"Data","skill2.tag4":"DB Modeling","skill2.tag5":"Advanced SQL",
+    "skill3.name":"Tools &amp; Methods","skill3.tag4":"Agile Method","skill3.tag5":"Testing &amp; QA",
+    "skill4.name":"Block 1 — Support","skill4.tag1":"Asset management","skill4.tag2":"Support &amp; incidents","skill4.tag3":"Service deployment","skill4.tag4":"Project mode","skill4.tag5":"Tech watch",
+    "skill5.name":"Block 2 — SLAM","skill5.tag1":"App design","skill5.tag2":"Corrective maintenance","skill5.tag3":"Evolutive maintenance","skill5.tag4":"Software architecture","skill5.tag5":"UML / Modeling",
+    "skill6.name":"Block 3 — Cybersecurity","skill6.tag1":"GDPR / CNIL","skill6.tag2":"Access management","skill6.tag3":"App security","skill6.tag4":"Log analysis","skill6.tag5":"Attack prevention",
+    "projects.title":"Projects","projects.personal":"View my personal projects",
+    "p1.type":"Mobile App — Real-Time Chat",
+    "p1.desc":"Flutter instant messaging app with real-time chat, push notifications and admin panel.",
+    "p2.type":"Mobile App","p2.type2":"Mobile App — Private Shop",
+    "p2.desc":"Companion app to Animal'and dedicated to managing equipment and accessories for animals.",
+    "p3.type":"Web Project — Personal",
+    "p3.desc":"Web project set in the League of Legends universe with data display and immersive design.",
+    "modal.clickHint":"&#x2756; Click on a feature to learn more",
+    "submodal.feature":"Feature",
+    "m1.desc":"Animal'and Chat is a Flutter mobile messaging application. The backend is deployed on an OVH server via <strong>Termius SSH</strong>, the database is PostgreSQL, and notifications are handled by Firebase Messaging.",
+    "f1.title":"&#x1F511; Registration &amp; Access","f1.preview":"Manual account validation by an administrator before access is granted.",
+    "f1.desc":"Access to the app is not open to everyone. Every new registration goes through a validation process before the user can log in.",
+    "f1.s1":"The user fills in a registration form with their details (name, email, password).<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s2":"The request is stored in PostgreSQL with status <strong>\"pending\"</strong>. Access is blocked until validation.<br><span class=\"step-play-hint\">View screenshot</span>",
+    "f1.s3":"An admin receives the request in their panel and can <strong>accept or reject</strong> the account.<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s4":"Once accepted, the user can log in and <strong>create conversations</strong> with other members.<br><span class=\"step-play-hint\">View demo</span>",
+    "f1.s5":"Creating <strong>groups</strong> is reserved for administrators only.<br><span class=\"step-play-hint\">View screenshot</span>",
+    "f2.title":"&#x1F4AC; Real-time chat","f2.preview":"Instant messages in channels via Socket.io, with timestamps.",
+    "f3.title":"&#x1F514; Push notifications","f3.preview":"Firebase Messaging sends alerts even when the app is closed.",
+    "f4.title":"&#x1F43E; Conversations &amp; Groups","f4.preview":"Users create conversations; only admins can create groups.",
+    "f5.title":"&#x1F4CA; Polls","f5.preview":"Create polls in channels, results updated in real time.",
+    "f6.title":"&#x1F3A8; Customization","f6.preview":"Wallpaper customizable by the user according to their preferences.",
+    "f7.title":"&#x1F6E1;&#xFE0F; Admin panel","f7.preview":"Full account management: roles, bans, deletions, registrations.",
+    "f8.title":"&#x1F5C4;&#xFE0F; Database","f8.preview":"PostgreSQL on OVH, deployed via Termius SSH.",
+    "m2.desc":"Animal'vest is the association's private shop, reserved for its members.",
+    "v1.title":"&#x1F510; Members-only access","v1.preview":"Login without credentials via a temporary account deleted on logout.",
+    "v2.title":"&#x1F6CD;&#xFE0F; Product catalog","v2.preview":"Browse items with photos, descriptions, prices and size selection.",
+    "v3.title":"&#x1F5BC;&#xFE0F; Multi-photo gallery","v3.preview":"Up to 8 photos per product with carousel, fullscreen zoom and viewer.",
+    "v4.title":"&#x1F4CB; Categories &amp; Units","v4.preview":"Unit grid on the home screen, each linked to shop categories.",
+    "v5.title":"&#x1F6D2; Cart &amp; Orders","v5.preview":"Add to cart, delivery form and order status tracking.",
+    "v6.title":"&#x1F6E1;&#xFE0F; Admin panel","v6.preview":"Manage products, stock, orders and tracking with internal notes.",
+    "v7.title":"&#x1F4E6; Mandatory parcel number","v7.preview":"Shipping is blocked until a valid parcel number (8 digits) is entered.",
+    "v8.title":"&#x1F514; Push notifications","v8.preview":"Admin is alerted in real time when a new order is placed.",
+    "v9.title":"&#x2709;&#xFE0F; Automatic emails","v9.preview":"An email is sent to the member at each order status change.",
+    "v10.title":"&#x1F512; Security &amp; Password","v10.preview":"Shared policy with strength indicator, formatters and anti-abuse rate limiter.",
+    "v11.title":"&#x1F5C4;&#xFE0F; Database","v11.preview":"Flutter, Firebase for notifications and PostgreSQL/MySQL for data.",
+    "gsb1.type":"Windows App — GSB Mission 1","gsb1.mTitle":"GSB Leave Management",
+    "gsb1.desc":"C# Windows application developed as part of the GSB AP project. It allows practitioners to submit leave requests and the HR manager to approve or reject them.",
+    "gsb2.type":"Mobile App — GSB Mission 5","gsb2.mTitle":"GSB Practitioner Ratings",
+    "g1.title":"&#x1F511; Login &amp; Accounts","g1.preview":"Two distinct accounts: practitioner and HR manager with differentiated access.",
+    "g2.title":"&#x1F4C5; Leave request","g2.preview":"Entry form with date selection and automatic balance check.",
+    "g3.title":"&#x1F6E1;&#xFE0F; HR Panel","g3.preview":"List of pending requests, review and accept/reject decision.",
+    "g4.title":"&#x1F514; Login notifications","g4.preview":"The practitioner is notified of their request status on login.",
+    "g5.title":"&#x1F5C4;&#xFE0F; Database","g5.preview":"Laravel REST API, MySQL database, consumed by the C# Windows app.",
+    "ap.title":"AP Project",
+    "ap.gsb1desc":"C# Windows application allowing practitioners to submit leave requests and the HR manager to accept or reject them.",
+    "ap.gsb2desc":"Flutter application displaying GSB practitioner ratings. In development.",
+    "ap.inprogress":"&#x23F3; In progress",
+    "lol.desc":"Immersive web project inspired by the League of Legends universe.",
+    "lol.features":"Features","lol.f1":"Champion display and search",
+    "lol.f2":"MySQL character database","lol.f3":"Thematic design inspired by the game",
+    "lol.f4":"Responsive PHP/HTML/CSS web interface",
+    "contact.title":"Get in touch",
+    "contact.text":"\"Every great journey starts with a first message.\"<br>Let's talk about your next project.",
+    "contact.email":"&#x2709; Email","contact.linkedin":"&#x25C8; LinkedIn","contact.cv":"&#x2B07; CV PDF",
+    "footer.text":"&#169; 2026 Corentin Mesure — BTS SIO SLAM",
+    "video.notfound":"File not found:",
   }
 };
 
-// ─── Langue courante ────────────────────────────────────────────────────────
 var currentLang = localStorage.getItem('portfolio-lang') || 'fr';
 
 function applyLang(lang) {
@@ -1692,20 +1664,16 @@ function applyLang(lang) {
   document.documentElement.lang = lang;
   localStorage.setItem('portfolio-lang', lang);
   var dict = TRANSLATIONS[lang];
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
     var key = el.getAttribute('data-i18n');
-    if (dict[key] !== undefined) {
-      el.innerHTML = dict[key];
-    }
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
   });
-  document.title = 'Corentin Mesure — Portfolio';
 }
+function toggleLang() { applyLang(currentLang === 'fr' ? 'en' : 'fr'); }
 
-function toggleLang() {
-  applyLang(currentLang === 'fr' ? 'en' : 'fr');
-}
-
-// ─── Animations toggle ──────────────────────────────────────────────────────
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS toggle
+════════════════════════════════════════════════════════ */
 var animEnabled = localStorage.getItem('portfolio-anim') !== 'off';
 
 function applyAnimState(enabled) {
@@ -1713,354 +1681,459 @@ function applyAnimState(enabled) {
   localStorage.setItem('portfolio-anim', enabled ? 'on' : 'off');
   document.documentElement.classList.toggle('no-anim', !enabled);
 }
+function toggleAnimations() { applyAnimState(!animEnabled); }
 
-function toggleAnimations() {
-  applyAnimState(!animEnabled);
-}
-
-// ─── Init au chargement ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
+/* ════════════════════════════════════════════════════════
+   INIT au chargement
+════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
   applyLang(currentLang);
   applyAnimState(animEnabled);
 });
 
-(function(){
+/* ════════════════════════════════════════════════════════
+   MCD ANIMAL'AND CHAT — PostgreSQL (16 tables)
+════════════════════════════════════════════════════════ */
+(function () {
 
-  /* ─── Config dimensions ─── */
-  var AA_W = 196, AA_RH = 21, AA_HH = 32;
+  /* ── Constantes de mise en page ── */
+  var TW  = 210;   // largeur table
+  var RH  = 22;    // hauteur ligne
+  var HH  = 34;    // hauteur en-tête
+  var GAP = 70;    // espace horizontal entre tables
+  var ROW = 80;    // espace vertical entre rangées
 
-  /* ─── Groupes thématiques ─── */
-  var AA_GROUPS = [
-    {label:'Utilisateurs & Sécurité', color:'#3d6ee8'},  // 0 bleu
-    {label:'Messagerie',              color:'#2ca878'},  // 1 vert
-    {label:'Groupes & Conversations', color:'#d4862c'},  // 2 orange
-    {label:'Sondages',                color:'#b84fd4'},  // 3 violet
-    {label:'Notifications & Sessions',color:'#d44f7a'},  // 4 rose
-  ];
+  /* ── Groupes ── */
+  var GROUPS = {
+    users : { label:'Utilisateurs & Sécurité',  color:'#4a90e2' },
+    msg   : { label:'Messagerie',               color:'#27ae60' },
+    conv  : { label:'Conversations',            color:'#e67e22' },
+    grp   : { label:'Groupes',                  color:'#9b59b6' },
+    poll  : { label:'Sondages',                 color:'#e74c3c' },
+    notif : { label:'Notifications & Sessions', color:'#1abc9c' },
+  };
 
-  /* ─── Définition des 16 tables — y espacés pour éviter les chevauchements ─── */
-  var AA_TABLES = [
-    /* ── Rangée 1 : Utilisateurs & sécurité — y:20 ── */
-    {id:'users',                    g:0, x:20,  y:20,  cols:[
-      {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
-      {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
-      {n:'role',t:'varchar(50)'},{n:'avatar_url',t:'text'},
-      {n:'is_online',t:'bool'},{n:'last_seen',t:'timestamp'},
-      {n:'status',t:'varchar(50)'},{n:'is_banned',t:'bool'},
-      {n:'banned_at',t:'timestamp'},{n:'banned_reason',t:'text'},
-      {n:'created_at',t:'timestamp'}
+  /* ── Tables ── */
+  var TABLES = [
+    /* Rangée 0 — Utilisateurs & Sessions */
+    { id:'users', row:0, col:0, g:'users', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'username',t:'varchar(50)'},{n:'display_name',t:'varchar(100)'},
+      {n:'password_hash',t:'varchar(255)'},{n:'role',t:'varchar(50)'},{n:'avatar_url',t:'text'},
+      {n:'is_online',t:'boolean'},{n:'last_seen',t:'timestamp'},{n:'status',t:'varchar(50)'},
+      {n:'is_banned',t:'boolean'},{n:'banned_at',t:'timestamp'},{n:'banned_reason',t:'text'},
+      {n:'created_at',t:'timestamp'},
     ]},
-    {id:'pending_registrations',    g:0, x:260, y:20,  cols:[
-      {n:'id',pk:true,t:'int'},{n:'username',t:'varchar(50)'},
-      {n:'display_name',t:'varchar(100)'},{n:'password_hash',t:'varchar(255)'},
-      {n:'status',t:'varchar(50)'},{n:'request_message',t:'text'},
-      {n:'reviewed_by',fk:'users',t:'int'},{n:'reviewed_at',t:'timestamp'},
-      {n:'created_at',t:'timestamp'}
+    { id:'pending_registrations', row:0, col:1, g:'users', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'username',t:'varchar(50)'},{n:'display_name',t:'varchar(100)'},
+      {n:'password_hash',t:'varchar(255)'},{n:'status',t:'varchar(50)'},{n:'request_message',t:'text'},
+      {n:'reviewed_by',fk:'users',t:'int'},{n:'reviewed_at',t:'timestamp'},{n:'created_at',t:'timestamp'},
     ]},
-    {id:'blacklist',                g:0, x:500, y:20,  cols:[
-      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
-      {n:'username',t:'varchar(100)'},{n:'ip_address',t:'varchar(45)'},
-      {n:'device_fingerprint',t:'text'},{n:'reason',t:'text'},
-      {n:'ban_type',t:'varchar(20)'},{n:'banned_by',fk:'users',t:'int'},
-      {n:'unbanned_by',fk:'users',t:'int'},{n:'is_active',t:'bool'},
-      {n:'expires_at',t:'timestamp'},{n:'unbanned_at',t:'timestamp'},
-      {n:'created_at',t:'timestamp'}
+    { id:'blacklist', row:0, col:2, g:'users', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'user_id',fk:'users',t:'int'},{n:'username',t:'varchar(100)'},
+      {n:'ip_address',t:'varchar(45)'},{n:'device_fingerprint',t:'text'},{n:'reason',t:'text'},
+      {n:'ban_type',t:'varchar(20)'},{n:'banned_by',fk:'users',t:'int'},{n:'unbanned_by',fk:'users',t:'int'},
+      {n:'is_active',t:'boolean'},{n:'expires_at',t:'timestamp'},{n:'unbanned_at',t:'timestamp'},
+      {n:'created_at',t:'timestamp'},
     ]},
-    {id:'user_sessions',            g:4, x:760, y:20,  cols:[
-      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
-      {n:'last_ip',t:'varchar(45)'},{n:'device_fingerprint',t:'text'},
-      {n:'device_info',t:'jsonb'},{n:'last_activity',t:'timestamp'},
-      {n:'created_at',t:'timestamp'}
-    ]},
-
-    /* ── Rangée 2 : Messagerie & Conversations — y:560 ── */
-    {id:'messages',                 g:1, x:20,  y:560, cols:[
-      {n:'id',pk:true,t:'int'},{n:'content',t:'text'},
-      {n:'sender_id',fk:'users',t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
-      {n:'group_id',fk:'groups',t:'int'},{n:'type',t:'varchar(20)'},
-      {n:'file_url',t:'text'},{n:'file_name',t:'text'},
-      {n:'is_read',t:'bool'},{n:'poll_id',fk:'polls',t:'int'},
-      {n:'edited_at',t:'timestamp'},{n:'created_at',t:'timestamp'}
-    ]},
-    {id:'message_reactions',        g:1, x:260, y:560, cols:[
-      {n:'id',pk:true,t:'int'},{n:'message_id',fk:'messages',t:'int'},
-      {n:'user_id',fk:'users',t:'int'},{n:'reaction',t:'varchar(50)'},
-      {n:'created_at',t:'timestamp'}
-    ]},
-    {id:'conversations',            g:2, x:500, y:560, cols:[
-      {n:'id',pk:true,t:'int'},{n:'created_at',t:'timestamp'}
-    ]},
-    {id:'conversation_participants',g:2, x:740, y:560, cols:[
-      {n:'id',pk:true,t:'int'},{n:'conversation_id',fk:'conversations',t:'int'},
-      {n:'user_id',fk:'users',t:'int'}
+    { id:'user_sessions', row:0, col:3, g:'notif', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'user_id',fk:'users',t:'int'},{n:'last_ip',t:'varchar(45)'},
+      {n:'device_fingerprint',t:'text'},{n:'device_info',t:'jsonb'},
+      {n:'last_activity',t:'timestamp'},{n:'created_at',t:'timestamp'},
     ]},
 
-    /* ── Rangée 3 : Groupes, backgrounds & sondages — y:1060 ── */
-    {id:'groups',                   g:2, x:20,  y:1060, cols:[
-      {n:'id',pk:true,t:'int'},{n:'name',t:'varchar(100)'},
-      {n:'description',t:'text'},{n:'avatar_url',t:'text'},
-      {n:'created_at',t:'timestamp'}
+    /* Rangée 1 — Conversations & Groupes */
+    { id:'conversations', row:1, col:0, g:'conv', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'created_at',t:'timestamp'},
     ]},
-    {id:'group_members',            g:2, x:260, y:1060, cols:[
-      {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
-      {n:'user_id',fk:'users',t:'int'},{n:'is_admin',t:'bool'},
-      {n:'joined_at',t:'timestamp'}
+    { id:'conversation_participants', row:1, col:1, g:'conv', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'conversation_id',fk:'conversations',t:'int'},
+      {n:'user_id',fk:'users',t:'int'},
     ]},
-    {id:'chat_backgrounds',         g:2, x:500, y:1060, cols:[
-      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
+    { id:'groups', row:1, col:2, g:'grp', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'name',t:'varchar(100)'},{n:'description',t:'text'},
+      {n:'avatar_url',t:'text'},{n:'created_at',t:'timestamp'},
+    ]},
+    { id:'group_members', row:1, col:3, g:'grp', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'group_id',fk:'groups',t:'int'},{n:'user_id',fk:'users',t:'int'},
+      {n:'is_admin',t:'boolean'},{n:'joined_at',t:'timestamp'},
+    ]},
+
+    /* Rangée 2 — Messages */
+    { id:'messages', row:2, col:0, g:'msg', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'content',t:'text'},{n:'sender_id',fk:'users',t:'int'},
+      {n:'conversation_id',fk:'conversations',t:'int'},{n:'group_id',fk:'groups',t:'int'},
+      {n:'type',t:'varchar(20)'},{n:'file_url',t:'text'},{n:'file_name',t:'text'},
+      {n:'is_read',t:'boolean'},{n:'poll_id',fk:'polls',t:'int'},
+      {n:'edited_at',t:'timestamp'},{n:'created_at',t:'timestamp'},
+    ]},
+    { id:'message_reactions', row:2, col:1, g:'msg', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'message_id',fk:'messages',t:'int'},
+      {n:'user_id',fk:'users',t:'int'},{n:'reaction',t:'varchar(50)'},{n:'created_at',t:'timestamp'},
+    ]},
+    { id:'chat_backgrounds', row:2, col:2, g:'conv', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'user_id',fk:'users',t:'int'},
       {n:'conversation_id',fk:'conversations',t:'int'},{n:'group_id',fk:'groups',t:'int'},
       {n:'background_id',t:'varchar(100)'},{n:'image_url',t:'text'},
-      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
-    ]},
-    {id:'polls',                    g:3, x:760, y:1060, cols:[
-      {n:'id',pk:true,t:'int'},{n:'group_id',fk:'groups',t:'int'},
-      {n:'creator_id',fk:'users',t:'int'},{n:'question',t:'text'},
-      {n:'allow_multiple_choices',t:'bool'},{n:'is_anonymous',t:'bool'},
-      {n:'deadline',t:'timestamp'},{n:'is_closed',t:'bool'},
-      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'},
     ]},
 
-    /* ── Rangée 4 : Options de sondage, votes & notifications — y:1580 ── */
-    {id:'poll_options',             g:3, x:20,  y:1580, cols:[
-      {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
-      {n:'option_text',t:'text'},{n:'option_order',t:'int'},
-      {n:'created_at',t:'timestamp'}
+    /* Rangée 3 — Sondages & Notifications */
+    { id:'polls', row:3, col:0, g:'poll', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'group_id',fk:'groups',t:'int'},{n:'creator_id',fk:'users',t:'int'},
+      {n:'question',t:'text'},{n:'allow_multiple_choices',t:'boolean'},{n:'is_anonymous',t:'boolean'},
+      {n:'deadline',t:'timestamp'},{n:'is_closed',t:'boolean'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'},
     ]},
-    {id:'poll_votes',               g:3, x:260, y:1580, cols:[
-      {n:'id',pk:true,t:'int'},{n:'poll_id',fk:'polls',t:'int'},
+    { id:'poll_options', row:3, col:1, g:'poll', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'poll_id',fk:'polls',t:'int'},
+      {n:'option_text',t:'text'},{n:'option_order',t:'int'},{n:'created_at',t:'timestamp'},
+    ]},
+    { id:'poll_votes', row:3, col:2, g:'poll', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'poll_id',fk:'polls',t:'int'},
       {n:'option_id',fk:'poll_options',t:'int'},{n:'user_id',fk:'users',t:'int'},
-      {n:'created_at',t:'timestamp'}
+      {n:'created_at',t:'timestamp'},
     ]},
-    {id:'user_fcm_tokens',          g:4, x:500, y:1580, cols:[
-      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
-      {n:'fcm_token',t:'text'},{n:'device_id',t:'varchar(255)'},
-      {n:'device_type',t:'varchar(50)'},{n:'created_at',t:'timestamp'},
-      {n:'updated_at',t:'timestamp'}
+    { id:'user_fcm_tokens', row:3, col:3, g:'notif', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'user_id',fk:'users',t:'int'},{n:'fcm_token',t:'text'},
+      {n:'device_id',t:'varchar(255)'},{n:'device_type',t:'varchar(50)'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'},
     ]},
-    {id:'notification_preferences', g:4, x:760, y:1580, cols:[
-      {n:'id',pk:true,t:'int'},{n:'user_id',fk:'users',t:'int'},
-      {n:'enabled',t:'bool'},{n:'private_messages',t:'bool'},
-      {n:'group_messages',t:'bool'},{n:'mentions',t:'bool'},
-      {n:'sound_enabled',t:'bool'},{n:'vibration_enabled',t:'bool'},
-      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'}
+    { id:'notification_preferences', row:3, col:4, g:'notif', cols:[
+      {n:'id',pk:true,t:'serial'},{n:'user_id',fk:'users',t:'int'},{n:'enabled',t:'boolean'},
+      {n:'private_messages',t:'boolean'},{n:'group_messages',t:'boolean'},{n:'mentions',t:'boolean'},
+      {n:'sound_enabled',t:'boolean'},{n:'vibration_enabled',t:'boolean'},
+      {n:'created_at',t:'timestamp'},{n:'updated_at',t:'timestamp'},
     ]},
   ];
 
-  /* ─── Relations ─── */
-  var AA_RELS = [
-    {f:'pending_registrations',     t:'users',         lbl:'validée par',  cf:'0,N', ct:'0,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
-    {f:'blacklist',                 t:'users',         lbl:'concerne',     cf:'0,N', ct:'0,1', color:'#e83d5a', pfSign:-1, ptSign: 1},
-    {f:'user_sessions',             t:'users',         lbl:'pour',         cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
-    {f:'messages',                  t:'users',         lbl:'envoyé par',   cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
-    {f:'messages',                  t:'conversations', lbl:'dans',         cf:'0,N', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
-    {f:'messages',                  t:'groups',        lbl:'dans groupe',  cf:'0,N', ct:'0,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'messages',                  t:'polls',         lbl:'contient',     cf:'0,1', ct:'0,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    {f:'message_reactions',         t:'messages',      lbl:'sur',          cf:'0,N', ct:'1,1', color:'#2ca878', pfSign:-1, ptSign: 1},
-    {f:'message_reactions',         t:'users',         lbl:'par',          cf:'0,N', ct:'1,1', color:'#2ca878', pfSign: 1, ptSign:-1},
-    {f:'conversation_participants', t:'conversations', lbl:'dans',         cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'conversation_participants', t:'users',         lbl:'est',          cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
-    {f:'group_members',             t:'groups',        lbl:'du groupe',    cf:'1,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'group_members',             t:'users',         lbl:'membre',       cf:'0,N', ct:'1,1', color:'#3d6ee8', pfSign: 1, ptSign:-1},
-    {f:'chat_backgrounds',          t:'users',         lbl:'de',           cf:'0,N', ct:'1,1', color:'#d4862c', pfSign:-1, ptSign: 1},
-    {f:'chat_backgrounds',          t:'conversations', lbl:'pour conv.',   cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign:-1},
-    {f:'chat_backgrounds',          t:'groups',        lbl:'pour groupe',  cf:'0,1', ct:'0,1', color:'#d4862c', pfSign: 1, ptSign: 1},
-    {f:'polls',                     t:'groups',        lbl:'dans groupe',  cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'polls',                     t:'users',         lbl:'créé par',     cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    {f:'poll_options',              t:'polls',         lbl:'option de',    cf:'1,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'poll_votes',                t:'polls',         lbl:'vote pour',    cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign:-1, ptSign: 1},
-    {f:'poll_votes',                t:'poll_options',  lbl:'option',       cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign:-1},
-    {f:'poll_votes',                t:'users',         lbl:'par',          cf:'0,N', ct:'1,1', color:'#b84fd4', pfSign: 1, ptSign: 1},
-    {f:'user_fcm_tokens',           t:'users',         lbl:'pour',         cf:'0,N', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
-    {f:'notification_preferences',  t:'users',         lbl:'prefs de',     cf:'0,1', ct:'1,1', color:'#d44f7a', pfSign:-1, ptSign: 1},
+  /* ── Relations (f=from, fc=foreign/cible, cf=cardinalité from, ct=cardinalité to) ── */
+  var RELS = [
+    {f:'pending_registrations',    fc:'users',         cf:'0,N', ct:'0,1', label:'validée par'   },
+    {f:'blacklist',                fc:'users',         cf:'0,N', ct:'0,1', label:'concerne'       },
+    {f:'user_sessions',            fc:'users',         cf:'0,N', ct:'1,1', label:'session de'     },
+    {f:'conversation_participants',fc:'conversations', cf:'1,N', ct:'1,1', label:'dans'           },
+    {f:'conversation_participants',fc:'users',         cf:'0,N', ct:'1,1', label:'participant'    },
+    {f:'group_members',            fc:'groups',        cf:'1,N', ct:'1,1', label:'du groupe'      },
+    {f:'group_members',            fc:'users',         cf:'0,N', ct:'1,1', label:'membre'         },
+    {f:'messages',                 fc:'users',         cf:'0,N', ct:'1,1', label:'envoyé par'     },
+    {f:'messages',                 fc:'conversations', cf:'0,N', ct:'0,1', label:'dans conv.'     },
+    {f:'messages',                 fc:'groups',        cf:'0,N', ct:'0,1', label:'dans groupe'    },
+    {f:'messages',                 fc:'polls',         cf:'0,1', ct:'0,1', label:'contient'       },
+    {f:'message_reactions',        fc:'messages',      cf:'0,N', ct:'1,1', label:'réaction sur'   },
+    {f:'message_reactions',        fc:'users',         cf:'0,N', ct:'1,1', label:'par'            },
+    {f:'chat_backgrounds',         fc:'users',         cf:'0,N', ct:'1,1', label:'fond de'        },
+    {f:'chat_backgrounds',         fc:'conversations', cf:'0,1', ct:'0,1', label:'pour conv.'     },
+    {f:'chat_backgrounds',         fc:'groups',        cf:'0,1', ct:'0,1', label:'pour groupe'    },
+    {f:'polls',                    fc:'groups',        cf:'0,N', ct:'1,1', label:'dans groupe'    },
+    {f:'polls',                    fc:'users',         cf:'0,N', ct:'1,1', label:'créé par'       },
+    {f:'poll_options',             fc:'polls',         cf:'1,N', ct:'1,1', label:'option de'      },
+    {f:'poll_votes',               fc:'polls',         cf:'0,N', ct:'1,1', label:'vote dans'      },
+    {f:'poll_votes',               fc:'poll_options',  cf:'0,N', ct:'1,1', label:'option choisie' },
+    {f:'poll_votes',               fc:'users',         cf:'0,N', ct:'1,1', label:'vote de'        },
+    {f:'user_fcm_tokens',          fc:'users',         cf:'0,N', ct:'1,1', label:'token de'       },
+    {f:'notification_preferences', fc:'users',         cf:'0,1', ct:'1,1', label:'préfs de'       },
   ];
 
-  /* ─── État ─── */
-  var aaRendered=false, aaSvg=null, aaCvs=null;
-  var aaTMap={}, aaPos={}, aaHgt={}, aaConn=[], aaDrag=null;
+  /* ── État ── */
+  var rendered = false, svgEl = null, stage = null;
+  var pos = {}, heights = {}, conns = [], drag = null;
 
-  AA_TABLES.forEach(function(t){ aaPos[t.id]={x:t.x,y:t.y}; });
+  /* ── Calcul positions initiales ── */
+  function computePositions() {
+    var rowCols = {}, rowMaxH = {};
+    TABLES.forEach(function(t){
+      rowCols[t.row] = Math.max(rowCols[t.row]||0, t.col+1);
+      var est = HH + t.cols.length*RH + 4;
+      rowMaxH[t.row] = Math.max(rowMaxH[t.row]||0, est);
+    });
+    var numRows = Object.keys(rowMaxH).length;
+    var yStart  = [30];
+    for (var r=1; r<numRows; r++) yStart[r] = yStart[r-1] + rowMaxH[r-1] + ROW;
+    var maxCols = Math.max.apply(null, Object.values(rowCols));
+    var totalW  = maxCols*(TW+GAP)-GAP;
+    TABLES.forEach(function(t){
+      var cols  = rowCols[t.row];
+      var rowW  = cols*(TW+GAP)-GAP;
+      var offX  = Math.floor((totalW-rowW)/2);
+      pos[t.id] = { x: offX + t.col*(TW+GAP) + 30, y: yStart[t.row] };
+    });
+  }
 
-  /* ─── Init ─── */
-  function aaInit(){
-    if(aaRendered) return;
-    aaRendered=true;
-    AA_TABLES.forEach(function(t){ aaTMap[t.id]=t; });
+  /* ── Init ── */
+  function init() {
+    if (rendered) return;
+    rendered = true;
+    computePositions();
 
-    /* maxY calculé avec +500 pour laisser de la place aux tables les plus hautes */
-    var maxX=AA_TABLES.reduce(function(m,t){return Math.max(m,t.x+AA_W);},0)+80;
-    var maxY=AA_TABLES.reduce(function(m,t){return Math.max(m,t.y+500);},0)+80;
-
-    aaCvs=document.getElementById('mcd-aa-cvs');
-    if(!aaCvs) return;
-    aaCvs.style.width=maxX+'px'; aaCvs.style.height=maxY+'px';
-
-    aaSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    aaSvg.setAttribute('width',maxX); aaSvg.setAttribute('height',maxY);
-    aaCvs.appendChild(aaSvg);
-
-    AA_TABLES.forEach(function(t){
-      var g=AA_GROUPS[t.g], el=document.createElement('div');
-      el.className='mcd-tbl'; el.id='aa_t_'+t.id;
-      el.style.left=aaPos[t.id].x+'px'; el.style.top=aaPos[t.id].y+'px';
-      el.style.width=AA_W+'px'; el.style.borderColor=g.color+'88';
-      var rows='';
-      t.cols.forEach(function(c){
-        var cls='mcd-row',badge='';
-        if(c.pk){cls+=' mcd-pk';badge='<span class="mcd-bdg mcd-bpk">PK</span>';}
-        else if(c.fk){badge='<span class="mcd-bdg mcd-bfk">FK</span>';cls+=' mcd-fk';}
-        rows+='<div class="'+cls+'"><span class="mcd-cn">'+badge+c.n+'</span><span class="mcd-ct">'+c.t+'</span></div>';
-      });
-      el.innerHTML='<div class="mcd-head" style="background:'+g.color+'"><span style="opacity:.45;font-size:9px">▪</span>'+t.id+'</div><div>'+rows+'</div>';
-      aaCvs.appendChild(el);
-      el.addEventListener('mousedown', function(e){ aaDragStart(e,t.id); });
-      el.addEventListener('touchstart',function(e){ aaDragStart(e,t.id); },{passive:false});
+    var maxX=0, maxY=0;
+    TABLES.forEach(function(t){
+      var h = HH+t.cols.length*RH+4;
+      maxX = Math.max(maxX, pos[t.id].x+TW+50);
+      maxY = Math.max(maxY, pos[t.id].y+h+70);
     });
 
-    var leg=document.getElementById('mcd-aa-legend');
-    if(leg){
-      AA_GROUPS.forEach(function(g){
-        leg.innerHTML+='<div class="mcd-litem"><div class="mcd-lsq" style="background:'+g.color+'"></div>'+g.label+'</div>';
-      });
-      leg.innerHTML+='<span style="margin-left:6px;opacity:.6;font-size:10.5px"><b>1,1</b> exactement un &nbsp;<b>0,N</b> zéro ou plusieurs &nbsp;<b>0,1</b> zéro ou un &nbsp;<b>1,N</b> un ou plusieurs</span>';
-    }
+    stage = document.getElementById('mcd-aa-cvs');
+    if (!stage) return;
+    stage.style.width    = maxX+'px';
+    stage.style.height   = maxY+'px';
+    stage.style.position = 'relative';
 
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
-      AA_TABLES.forEach(function(t){
-        var el=document.getElementById('aa_t_'+t.id);
-        aaHgt[t.id]=el?el.offsetHeight:(AA_HH+t.cols.length*AA_RH+2);
+    svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svgEl.setAttribute('width', maxX);
+    svgEl.setAttribute('height',maxY);
+    svgEl.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:0;overflow:visible;';
+    stage.appendChild(svgEl);
+
+    TABLES.forEach(buildTable);
+
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      TABLES.forEach(function(t){
+        var el = document.getElementById('mcdaa_'+t.id);
+        heights[t.id] = el ? el.offsetHeight : HH+t.cols.length*RH+4;
       });
-      aaBuildConn();
-      aaBindHover();
+      buildAllConns();
+      bindHover();
     });});
 
-    document.addEventListener('mousemove',  aaDragMove);
-    document.addEventListener('mouseup',    aaDragEnd);
-    document.addEventListener('touchmove',  aaDragMove, {passive:false});
-    document.addEventListener('touchend',   aaDragEnd);
+    document.addEventListener('mousemove',  onMove);
+    document.addEventListener('mouseup',    onUp);
+    document.addEventListener('touchmove',  onMove, {passive:false});
+    document.addEventListener('touchend',   onUp);
+
+    buildLegend();
   }
 
-  /* ─── Connexions ─── */
-  function aaBuildConn(){
-    while(aaSvg.firstChild) aaSvg.removeChild(aaSvg.firstChild);
-    aaConn=[];
-    AA_RELS.forEach(function(r,i){ aaConn.push(aaDrawRel(r,i)); });
-  }
+  /* ── Construction table DOM ── */
+  function buildTable(t) {
+    var g  = GROUPS[t.g];
+    var el = document.createElement('div');
+    el.className = 'mcd-tbl';
+    el.id = 'mcdaa_'+t.id;
+    el.style.left        = pos[t.id].x+'px';
+    el.style.top         = pos[t.id].y+'px';
+    el.style.width       = TW+'px';
+    el.style.borderColor = g.color+'99';
+    el.style.borderRadius= '8px';
+    el.style.boxShadow   = '0 2px 18px rgba(0,0,0,0.4)';
 
-  function aaDrawRel(r,i){
-    var fh=aaHgt[r.f]||160, th=aaHgt[r.t]||160;
-    var fp=aaBP(r.f,fh,aaCtr(r.t,aaHgt[r.t]||160));
-    var tp=aaBP(r.t,th,aaCtr(r.f,fh));
-    var c1=aaCP(fp,tp), c2=aaCP(tp,fp);
-    var path=aaSvg.appendChild(aaMkSvg('path',{d:aaBez(fp,c1,c2,tp),class:'mcd-conn mcd-fl',stroke:r.color,'stroke-opacity':'0.42'}));
-    path.style.animationDelay=(i*0.12)+'s';
-    var dots=[];
-    [fp,tp].forEach(function(p){
-      dots.push(aaSvg.appendChild(aaMkSvg('circle',{cx:p.x,cy:p.y,r:'3',fill:r.color,opacity:'0.6',class:'mcd-fd'})));
+    var head = document.createElement('div');
+    head.className = 'mcd-head';
+    head.style.cssText =
+      'background:'+g.color+';padding:8px 10px;font-family:Cinzel,serif;font-size:11px;' +
+      'letter-spacing:1px;color:#fff;font-weight:700;border-radius:7px 7px 0 0;' +
+      'cursor:grab;text-transform:uppercase;user-select:none;';
+    head.textContent = t.id;
+    el.appendChild(head);
+
+    var body = document.createElement('div');
+    t.cols.forEach(function(c){
+      var row = document.createElement('div');
+      row.className = 'mcd-row'+(c.pk?' mcd-pk':c.fk?' mcd-fk':'');
+      row.style.cssText = 'padding:3px 8px;display:flex;align-items:center;gap:4px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.05);';
+      var badge = c.pk
+        ? '<span style="font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(240,200,74,0.22);color:#f0c84a;font-weight:700;flex-shrink:0;">PK</span>'
+        : c.fk
+        ? '<span style="font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(80,160,255,0.18);color:#80c0ff;font-weight:700;flex-shrink:0;">FK</span>'
+        : '';
+      var nc = c.pk?'#f0c84a': c.fk?'#a0d0ff':'rgba(255,255,255,0.85)';
+      var tc = c.pk?'#f0c84a': c.fk?'#80c0ff':'rgba(255,255,255,0.4)';
+      row.innerHTML = badge+
+        '<span style="flex:1;color:'+nc+';font-weight:'+(c.pk?'700':'400')+';">'+c.n+'</span>'+
+        '<span style="color:'+tc+';font-size:9.5px;opacity:0.75;">'+c.t+'</span>';
+      body.appendChild(row);
     });
-    var badges=[];
-    badges=badges.concat(aaDrawBadge(aaBPos(fp,aaUV(fp,c1),30,20,r.pfSign),r.cf,r.color));
-    badges=badges.concat(aaDrawBadge(aaBPos(tp,aaUV(tp,c2),30,20,r.ptSign),r.ct,r.color));
-    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
-    var my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
-    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
-    var lbl=aaDrawLbl(mx+(-mdy/ml)*16,my+(mdx/ml)*16,r.lbl,r.color);
-    return{path:path,dots:dots,badges:badges,lbl:lbl,rel:r,idx:i};
+    el.appendChild(body);
+    stage.appendChild(el);
+
+    head.addEventListener('mousedown',  function(e){ startDrag(e,t.id); });
+    head.addEventListener('touchstart', function(e){ startDrag(e,t.id); },{passive:false});
   }
 
-  function aaRedrawRel(entry){
-    var r=entry.rel, fh=aaHgt[r.f]||160, th=aaHgt[r.t]||160;
-    var fp=aaBP(r.f,fh,aaCtr(r.t,th)), tp=aaBP(r.t,th,aaCtr(r.f,fh));
-    var c1=aaCP(fp,tp), c2=aaCP(tp,fp);
-    entry.path.setAttribute('d',aaBez(fp,c1,c2,tp));
-    entry.dots[0].setAttribute('cx',fp.x); entry.dots[0].setAttribute('cy',fp.y);
-    entry.dots[1].setAttribute('cx',tp.x); entry.dots[1].setAttribute('cy',tp.y);
-    entry.badges.forEach(function(el){ aaSvg.removeChild(el); });
-    entry.lbl.forEach(function(el){ aaSvg.removeChild(el); });
-    var badges=[];
-    badges=badges.concat(aaDrawBadge(aaBPos(fp,aaUV(fp,c1),30,20,r.pfSign),r.cf,r.color));
-    badges=badges.concat(aaDrawBadge(aaBPos(tp,aaUV(tp,c2),30,20,r.ptSign),r.ct,r.color));
-    var mx=0.125*fp.x+0.375*c1.x+0.375*c2.x+0.125*tp.x;
-    var my=0.125*fp.y+0.375*c1.y+0.375*c2.y+0.125*tp.y;
-    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
-    entry.badges=badges;
-    entry.lbl=aaDrawLbl(mx+(-mdy/ml)*16,my+(mdx/ml)*16,r.lbl,r.color);
+  /* ── Drag ── */
+  function evPt(e){ return e.touches&&e.touches.length?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}; }
+  function startDrag(e,id){
+    e.preventDefault();
+    var p=evPt(e);
+    drag={id:id,smx:p.x,smy:p.y,ox:pos[id].x,oy:pos[id].y};
+    var el=document.getElementById('mcdaa_'+id);
+    if(el){el.classList.add('mcd-dragging');el.style.cursor='grabbing';}
+  }
+  function onMove(e){
+    if(!drag)return; e.preventDefault();
+    var p=evPt(e);
+    var nx=Math.max(0,drag.ox+(p.x-drag.smx)), ny=Math.max(0,drag.oy+(p.y-drag.smy));
+    pos[drag.id].x=nx; pos[drag.id].y=ny;
+    var el=document.getElementById('mcdaa_'+drag.id);
+    if(el){el.style.left=nx+'px';el.style.top=ny+'px';}
+    conns.forEach(function(c){ if(c.rel.f===drag.id||c.rel.fc===drag.id) redrawConn(c); });
+    var needW=nx+TW+50, needH=ny+(heights[drag.id]||200)+50;
+    if(parseInt(stage.style.width)<needW){stage.style.width=needW+'px';svgEl.setAttribute('width',needW);}
+    if(parseInt(stage.style.height)<needH){stage.style.height=needH+'px';svgEl.setAttribute('height',needH);}
+  }
+  function onUp(){
+    if(!drag)return;
+    var el=document.getElementById('mcdaa_'+drag.id);
+    if(el){el.classList.remove('mcd-dragging');el.style.cursor='';}
+    drag=null;
   }
 
-  /* ─── Géométrie ─── */
-  function aaCtr(id,h){ return{x:aaPos[id].x+AA_W/2,y:aaPos[id].y+h/2}; }
-  function aaBP(id,h,tgt){
-    var p=aaPos[id],cx=p.x+AA_W/2,cy=p.y+h/2,dx=tgt.x-cx,dy=tgt.y-cy,x,y,s;
-    if(Math.abs(dx)>=Math.abs(dy)){s=dx>0?'r':'l';x=dx>0?p.x+AA_W:p.x;y=Math.min(Math.max(tgt.y,p.y+12),p.y+h-12);}
-    else{s=dy>0?'b':'t';y=dy>0?p.y+h:p.y;x=Math.min(Math.max(tgt.x,p.x+16),p.x+AA_W-16);}
+  /* ── Géométrie SVG ── */
+  function ctr(id){ var h=heights[id]||120; return{x:pos[id].x+TW/2,y:pos[id].y+h/2}; }
+  function bp(id,tgt){
+    var h=heights[id]||120,p=pos[id],cx=p.x+TW/2,cy=p.y+h/2;
+    var dx=tgt.x-cx,dy=tgt.y-cy,x,y,s;
+    if(Math.abs(dx)/(TW/2)>Math.abs(dy)/(h/2)){
+      s=dx>0?'r':'l'; x=dx>0?p.x+TW:p.x;
+      y=Math.max(p.y+HH,Math.min(p.y+h-8,cy+dy*(TW/2)/Math.abs(dx)));
+    }else{
+      s=dy>0?'b':'t'; y=dy>0?p.y+h:p.y;
+      x=Math.max(p.x+16,Math.min(p.x+TW-16,cx+dx*(h/2)/Math.abs(dy)));
+    }
     return{x:x,y:y,s:s};
   }
-  function aaCP(p,o){var d=Math.max(60,Math.abs(p.x-o.x)*0.42+Math.abs(p.y-o.y)*0.28);if(p.s==='r')return{x:p.x+d,y:p.y};if(p.s==='l')return{x:p.x-d,y:p.y};if(p.s==='b')return{x:p.x,y:p.y+d};return{x:p.x,y:p.y-d};}
-  function aaBez(fp,c1,c2,tp){return'M'+fp.x+','+fp.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+tp.x+','+tp.y;}
-  function aaUV(from,toward){var dx=toward.x-from.x,dy=toward.y-from.y,l=Math.sqrt(dx*dx+dy*dy)||1;return{dx:dx/l,dy:dy/l};}
-  function aaBPos(ep,tan,along,perp,sign){return{x:ep.x+tan.dx*along+(-tan.dy)*perp*sign,y:ep.y+tan.dy*along+tan.dx*perp*sign};}
-  function aaMkSvg(tag,attrs){var el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});return el;}
-  function aaDrawBadge(pos,label,color){
-    var fw=label.length*7.5+14,fh=18,x=pos.x,y=pos.y;
-    var bg=aaSvg.appendChild(aaMkSvg('rect',{x:x-fw/2,y:y-fh/2,width:fw,height:fh,rx:4,fill:color+'28',stroke:color+'90','stroke-width':'1.1',class:'mcd-fd'}));
-    var tx=aaSvg.appendChild(aaMkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'12','font-family':'monospace','font-weight':'700',fill:color,class:'mcd-fd'}));
-    tx.textContent=label;
-    return[bg,tx];
+  function cp(p,o){
+    var d=Math.max(80,Math.abs(p.x-o.x)*0.5+Math.abs(p.y-o.y)*0.25);
+    if(p.s==='r')return{x:p.x+d,y:p.y}; if(p.s==='l')return{x:p.x-d,y:p.y};
+    if(p.s==='b')return{x:p.x,y:p.y+d}; return{x:p.x,y:p.y-d};
   }
-  function aaDrawLbl(x,y,label,color){
-    var fw=label.length*5.8+12;
-    var bg=aaSvg.appendChild(aaMkSvg('rect',{x:x-fw/2,y:y-8,width:fw,height:15,rx:4,fill:'rgba(18,12,36,0.88)',stroke:color+'50','stroke-width':'1',class:'mcd-fd'}));
-    var tx=aaSvg.appendChild(aaMkSvg('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'9.5','font-family':'sans-serif',fill:color,class:'mcd-fd'}));
-    tx.textContent=label;
-    return[bg,tx];
+  function bez(p1,c1,c2,p2){ return'M'+p1.x+','+p1.y+' C'+c1.x+','+c1.y+' '+c2.x+','+c2.y+' '+p2.x+','+p2.y; }
+  function uv(f,t){ var dx=t.x-f.x,dy=t.y-f.y,l=Math.sqrt(dx*dx+dy*dy)||1; return{dx:dx/l,dy:dy/l}; }
+  function mk(tag,attrs){
+    var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);}); return el;
+  }
+  function midBez(p1,c1,c2,p2,t){
+    return{
+      x:Math.pow(1-t,3)*p1.x+3*Math.pow(1-t,2)*t*c1.x+3*(1-t)*t*t*c2.x+Math.pow(t,3)*p2.x,
+      y:Math.pow(1-t,3)*p1.y+3*Math.pow(1-t,2)*t*c1.y+3*(1-t)*t*t*c2.y+Math.pow(t,3)*p2.y,
+    };
+  }
+  function relColor(rel){
+    var t=TABLES.find(function(x){return x.id===rel.f;});
+    return t?GROUPS[t.g].color:'#888';
+  }
+  function drawBadge(x,y,label,color){
+    var w=label.length*8+14,h=18;
+    var bg=svgEl.appendChild(mk('rect',{x:x-w/2,y:y-h/2,width:w,height:h,rx:4,fill:color+'22',stroke:color+'cc','stroke-width':'1.2',class:'mcd-fd'}));
+    var tx=svgEl.appendChild(mk('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'11','font-family':'monospace','font-weight':'700',fill:color,class:'mcd-fd'}));
+    tx.textContent=label; return[bg,tx];
+  }
+  function drawLabel(x,y,text,color){
+    var w=text.length*6+14;
+    var bg=svgEl.appendChild(mk('rect',{x:x-w/2,y:y-8,width:w,height:16,rx:4,fill:'rgba(18,12,36,0.92)',stroke:color+'55','stroke-width':'1',class:'mcd-fd'}));
+    var tx=svgEl.appendChild(mk('text',{x:x,y:y,'text-anchor':'middle','dominant-baseline':'central','font-size':'9','font-family':'sans-serif',fill:color+'dd',class:'mcd-fd'}));
+    tx.textContent=text; return[bg,tx];
+  }
+  function badgePos(ep,dir,along,perp){ return{x:ep.x+dir.dx*along-dir.dy*perp,y:ep.y+dir.dy*along+dir.dx*perp}; }
+
+  function buildConn(rel,idx){
+    var color=relColor(rel);
+    var fBP=bp(rel.f, ctr(rel.fc)), tBP=bp(rel.fc, ctr(rel.f));
+    var c1=cp(fBP,tBP), c2=cp(tBP,fBP);
+    var path=svgEl.appendChild(mk('path',{d:bez(fBP,c1,c2,tBP),class:'mcd-conn mcd-fl',stroke:color,'stroke-opacity':'0.55',fill:'none'}));
+    path.style.animationDelay=(idx*0.05)+'s';
+    var d1=svgEl.appendChild(mk('circle',{cx:fBP.x,cy:fBP.y,r:'3.5',fill:color,opacity:'0.7',class:'mcd-fd'}));
+    var d2=svgEl.appendChild(mk('circle',{cx:tBP.x,cy:tBP.y,r:'3.5',fill:color,opacity:'0.7',class:'mcd-fd'}));
+    var uF=uv(fBP,c1), uT=uv(tBP,c2);
+    var bF=badgePos(fBP,uF,32,16), bT=badgePos(tBP,uT,32,16);
+    var cfB=drawBadge(bF.x,bF.y,rel.cf,color);
+    var ctB=drawBadge(bT.x,bT.y,rel.ct,color);
+    var mid=midBez(fBP,c1,c2,tBP,0.5);
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    var lbl=drawLabel(mid.x+(-mdy/ml)*20,mid.y+(mdx/ml)*20,rel.label,color);
+    return{path:path,dots:[d1,d2],cfB:cfB,ctB:ctB,lbl:lbl,rel:rel,idx:idx};
   }
 
-  /* ─── Drag ─── */
-  function aaGetPos(e){if(e.touches&&e.touches.length>0)return{x:e.touches[0].clientX,y:e.touches[0].clientY};return{x:e.clientX,y:e.clientY};}
-  function aaDragStart(e,id){e.preventDefault();var ep=aaGetPos(e);aaDrag={id:id,sx:ep.x,sy:ep.y,ox:aaPos[id].x,oy:aaPos[id].y};var el=document.getElementById('aa_t_'+id);if(el)el.classList.add('mcd-dragging');}
-  function aaDragMove(e){
-    if(!aaDrag)return;e.preventDefault();
-    var ep=aaGetPos(e),nx=Math.max(0,aaDrag.ox+(ep.x-aaDrag.sx)),ny=Math.max(0,aaDrag.oy+(ep.y-aaDrag.sy));
-    aaPos[aaDrag.id].x=nx;aaPos[aaDrag.id].y=ny;
-    var el=document.getElementById('aa_t_'+aaDrag.id);if(el){el.style.left=nx+'px';el.style.top=ny+'px';}
-    aaConn.forEach(function(entry){if(entry.rel.f===aaDrag.id||entry.rel.t===aaDrag.id)aaRedrawRel(entry);});
-    var minW=nx+AA_W+40,minH=ny+(aaHgt[aaDrag.id]||160)+40;
-    if(parseInt(aaCvs.style.width)<minW){aaCvs.style.width=minW+'px';aaSvg.setAttribute('width',minW);}
-    if(parseInt(aaCvs.style.height)<minH){aaCvs.style.height=minH+'px';aaSvg.setAttribute('height',minH);}
+  function redrawConn(entry){
+    var rel=entry.rel,color=relColor(rel);
+    var fBP=bp(rel.f,ctr(rel.fc)), tBP=bp(rel.fc,ctr(rel.f));
+    var c1=cp(fBP,tBP), c2=cp(tBP,fBP);
+    entry.path.setAttribute('d',bez(fBP,c1,c2,tBP));
+    entry.dots[0].setAttribute('cx',fBP.x); entry.dots[0].setAttribute('cy',fBP.y);
+    entry.dots[1].setAttribute('cx',tBP.x); entry.dots[1].setAttribute('cy',tBP.y);
+    var toRm=[].concat(entry.cfB,entry.ctB,entry.lbl);
+    toRm.forEach(function(e){if(e.parentNode)svgEl.removeChild(e);});
+    var uF=uv(fBP,c1), uT=uv(tBP,c2);
+    entry.cfB=drawBadge(badgePos(fBP,uF,32,16).x,badgePos(fBP,uF,32,16).y,rel.cf,color);
+    entry.ctB=drawBadge(badgePos(tBP,uT,32,16).x,badgePos(tBP,uT,32,16).y,rel.ct,color);
+    var mid=midBez(fBP,c1,c2,tBP,0.5);
+    var mdx=c2.x-c1.x,mdy=c2.y-c1.y,ml=Math.sqrt(mdx*mdx+mdy*mdy)||1;
+    entry.lbl=drawLabel(mid.x+(-mdy/ml)*20,mid.y+(mdx/ml)*20,rel.label,color);
   }
-  function aaDragEnd(){if(!aaDrag)return;var el=document.getElementById('aa_t_'+aaDrag.id);if(el)el.classList.remove('mcd-dragging');aaDrag=null;}
 
-  /* ─── Hover ─── */
-  function aaBindHover(){
-    AA_TABLES.forEach(function(t){
-      var el=document.getElementById('aa_t_'+t.id);if(!el)return;
+  function buildAllConns(){
+    while(svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
+    conns=[];
+    RELS.forEach(function(r,i){ conns.push(buildConn(r,i)); });
+  }
+
+  /* ── Hover ── */
+  function bindHover(){
+    TABLES.forEach(function(t){
+      var el=document.getElementById('mcdaa_'+t.id); if(!el) return;
       el.addEventListener('mouseenter',function(){
-        if(aaDrag)return;
-        var relSet=new Set(),tblSet=new Set([t.id]);
-        AA_RELS.forEach(function(r,j){if(r.f===t.id||r.t===t.id){relSet.add(j);tblSet.add(r.f);tblSet.add(r.t);}});
-        AA_TABLES.forEach(function(tt){
-          var e=document.getElementById('aa_t_'+tt.id);if(!e)return;
-          if(tblSet.has(tt.id)){e.classList.add('mcd-hi');e.classList.remove('mcd-dim');}
-          else{e.classList.add('mcd-dim');e.classList.remove('mcd-hi');}
+        if(drag)return;
+        var linked=new Set([t.id]), relIdx=new Set();
+        RELS.forEach(function(r,i){ if(r.f===t.id||r.fc===t.id){linked.add(r.f);linked.add(r.fc);relIdx.add(i);} });
+        TABLES.forEach(function(tt){
+          var e=document.getElementById('mcdaa_'+tt.id); if(!e) return;
+          linked.has(tt.id)?e.classList.add('mcd-hi'):e.classList.add('mcd-dim');
         });
-        aaConn.forEach(function(ce){
-          var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);
-          if(relSet.has(ce.idx)){ce.path.classList.add('mcd-hi');ce.path.classList.remove('mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});}
-          else{ce.path.classList.add('mcd-dim');ce.path.classList.remove('mcd-hi');els.forEach(function(e){e.classList.add('mcd-dim');});}
+        conns.forEach(function(c){
+          var all=[c.path].concat(c.dots,c.cfB,c.ctB,c.lbl);
+          if(relIdx.has(c.idx)){
+            c.path.classList.add('mcd-hi'); c.path.setAttribute('stroke-opacity','1');
+            all.forEach(function(e){e.classList.remove('mcd-dim');});
+          }else{
+            c.path.classList.add('mcd-dim'); c.path.setAttribute('stroke-opacity','0.05');
+            all.forEach(function(e){e.classList.add('mcd-dim');});
+          }
         });
       });
       el.addEventListener('mouseleave',function(){
-        if(aaDrag)return;
-        AA_TABLES.forEach(function(tt){var e=document.getElementById('aa_t_'+tt.id);if(e)e.classList.remove('mcd-hi','mcd-dim');});
-        aaConn.forEach(function(ce){var els=[ce.path].concat(ce.dots,ce.badges,ce.lbl);ce.path.classList.remove('mcd-hi','mcd-dim');els.forEach(function(e){e.classList.remove('mcd-dim');});});
+        if(drag)return;
+        TABLES.forEach(function(tt){var e=document.getElementById('mcdaa_'+tt.id);if(e)e.classList.remove('mcd-hi','mcd-dim');});
+        conns.forEach(function(c){
+          var all=[c.path].concat(c.dots,c.cfB,c.ctB,c.lbl);
+          c.path.classList.remove('mcd-hi','mcd-dim'); c.path.setAttribute('stroke-opacity','0.55');
+          all.forEach(function(e){e.classList.remove('mcd-dim');});
+        });
       });
     });
   }
 
-  /* ─── Déclenchement à l'ouverture du sous-modal ─── */
+  /* ── Légende ── */
+  function buildLegend(){
+    var leg=document.getElementById('mcd-aa-legend'); if(!leg) return;
+    leg.innerHTML='';
+    Object.keys(GROUPS).forEach(function(k){
+      var g=GROUPS[k];
+      leg.innerHTML+='<div class="mcd-litem"><div class="mcd-lsq" style="background:'+g.color+'"></div>'+g.label+'</div>';
+    });
+    leg.innerHTML+=
+      '<span style="margin-left:8px;opacity:0.5;font-size:10px;">' +
+      '<b>1,1</b> = exactement un &nbsp; <b>0,N</b> = zéro ou plusieurs &nbsp;' +
+      '<b>0,1</b> = zéro ou un &nbsp; <b>1,N</b> = un ou plusieurs' +
+      '</span>';
+  }
+
+  /* ── Déclenchement à l'ouverture du sous-modal ── */
   document.addEventListener('click',function(e){
     var btn=e.target.closest('[onclick*="feat-mcd-animaland"]');
-    if(btn) setTimeout(aaInit,180);
+    if(btn) setTimeout(init,200);
   });
 
 })();
 
+/* ════════════════════════════════════════════════════════
+   MCD ANIMAL'VEST — MySQL/PostgreSQL
+   (déclenché par le sous-modal vest-mcd)
+   Conservé tel quel depuis l'original — voir la section
+   correspondante dans le fichier original si nécessaire.
+   Le code ci-dessous est un placeholder : remplacez-le
+   par votre implémentation du MCD Animal'vest.
+════════════════════════════════════════════════════════ */
+/* Le MCD Animal'vest (vest-mcd) utilise les IDs :
+   mcd-root, mcd-stage, mcd-cvs, mcd-legend
+   Copiez ici le bloc IIFE correspondant depuis votre
+   version originale de Script.js si vous en avez une. */
