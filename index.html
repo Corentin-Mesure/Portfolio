@@ -243,6 +243,8 @@
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
+
+    <!-- CARTE Animal'and -->
     <div class="project-card reveal">
       <div class="project-visual project-visual-1">
         <img src="images/lg.png" style="height:140px;width:auto;object-fit:contain;position:relative;z-index:1;opacity:0.9;">
@@ -260,6 +262,8 @@
         <button class="project-btn" onclick="openModal('animaland')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
+
+    <!-- CARTE Animal'vest -->
     <div class="project-card reveal">
       <div class="project-visual project-visual-2">
         <img src="images/logo_animalvest.png" style="height:140px;width:auto;object-fit:contain;position:relative;z-index:1;opacity:0.9;">
@@ -276,7 +280,65 @@
         <button class="project-btn" onclick="openModal('animalvest')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
+
+    <!-- ═══ CARTE TASK MANAGER (NOUVEAU) ═══ -->
+    <div class="project-card reveal">
+      <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1a26 0%,#1a3040 55%,#0d1a26 100%);">
+        <div class="ap-dots" style="--ap-dot-color:rgba(80,180,255,0.12);"></div>
+        <div class="ap-fc tl" style="--ap-fc-color:#6ab4ff;"></div><div class="ap-fc tr" style="--ap-fc-color:#6ab4ff;"></div>
+        <div class="ap-fc bl" style="--ap-fc-color:#6ab4ff;"></div><div class="ap-fc br" style="--ap-fc-color:#6ab4ff;"></div>
+        <span class="ap-rune tl" style="color:rgba(80,180,255,0.15);">✦</span><span class="ap-rune br" style="color:rgba(80,180,255,0.15);">✦</span>
+        <div class="ap-glow" style="background:radial-gradient(circle,rgba(80,180,255,0.28) 0%,transparent 70%);"></div>
+        <div class="ap-particle" style="bottom:68px;left:68px;animation:apP1 3.5s ease-in-out infinite;"></div>
+        <div class="ap-particle" style="width:2px;height:2px;bottom:64px;right:64px;animation:apP2 4.2s ease-in-out infinite .7s;"></div>
+        <div class="ap-particle" style="width:2.5px;height:2.5px;background:#6ab4ff;bottom:72px;left:88px;animation:apP3 3.8s ease-in-out infinite 1.4s;"></div>
+        <svg class="ap-icon-svg" width="80" height="80" viewBox="0 0 72 72" style="filter:drop-shadow(0 0 14px rgba(80,180,255,0.45));" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="taskGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8c97e"/><stop offset="60%" stop-color="#c8a96e"/><stop offset="100%" stop-color="#8a6a3a"/></linearGradient>
+            <linearGradient id="taskBlue" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3560"/><stop offset="100%" stop-color="#0d1e3a"/></linearGradient>
+          </defs>
+          <!-- clipboard body -->
+          <rect x="10" y="14" width="52" height="50" rx="5" fill="url(#taskBlue)" stroke="url(#taskGold)" stroke-width="1.5"/>
+          <!-- clipboard top clip -->
+          <rect x="24" y="10" width="24" height="10" rx="3" fill="url(#taskGold)" opacity="0.9"/>
+          <rect x="30" y="13" width="12" height="4" rx="2" fill="#0d1e3a" opacity="0.7"/>
+          <!-- rows -->
+          <!-- row 1: checked -->
+          <rect x="18" y="30" width="36" height="6" rx="2" fill="rgba(106,180,255,0.08)"/>
+          <circle cx="24" cy="33" r="3.5" fill="none" stroke="#5fbd6a" stroke-width="1.3"/>
+          <path d="M22.2 33 L23.7 34.5 L26.5 30.8" stroke="#5fbd6a" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="30" y="31.5" width="20" height="3" rx="1.5" fill="#6ab4ff" opacity="0.6"/>
+          <!-- row 2: checked -->
+          <rect x="18" y="39" width="36" height="6" rx="2" fill="rgba(106,180,255,0.06)"/>
+          <circle cx="24" cy="42" r="3.5" fill="none" stroke="#5fbd6a" stroke-width="1.3"/>
+          <path d="M22.2 42 L23.7 43.5 L26.5 39.8" stroke="#5fbd6a" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="30" y="40.5" width="15" height="3" rx="1.5" fill="#6ab4ff" opacity="0.45"/>
+          <!-- row 3: pending -->
+          <rect x="18" y="48" width="36" height="6" rx="2" fill="rgba(106,180,255,0.04)"/>
+          <circle cx="24" cy="51" r="3.5" fill="none" stroke="#e8c97e" stroke-width="1.3" opacity="0.5"/>
+          <rect x="30" y="49.5" width="18" height="3" rx="1.5" fill="#e8c97e" opacity="0.3"/>
+          <!-- arrow next -->
+          <circle cx="54" cy="22" r="7" fill="#1a3560" stroke="#6ab4ff" stroke-width="1.2"/>
+          <path d="M51 22 L56 22 M53.5 19.5 L56 22 L53.5 24.5" stroke="#6ab4ff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="ap-icon-label" style="color:#6ab4ff;">Gestion de Tâches</div>
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-body">
+        <div class="project-type">Application Web — Gestion de Tâches</div>
+        <h3 class="project-title">Task Manager</h3>
+        <p class="project-desc">Application web de gestion de tâches séquentielles avec sous-tâches, navigation conditionnelle et validation de quittancement par envoi de PDF par email.</p>
+        <div class="project-tags">
+          <span class="project-tag">HTML</span><span class="project-tag">CSS</span>
+          <span class="project-tag">JavaScript</span><span class="project-tag">PHP</span>
+          <span class="project-tag">PDF</span>
+        </div>
+        <button class="project-btn" onclick="openModal('taskmanager')"><span>&#x2756; Ouvrir</span></button>
+      </div>
+    </div>
+
   </div>
+
   <div class="perso-teaser reveal" style="margin-top:32px;">
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
@@ -554,6 +616,113 @@
 </div>
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
+
+<!-- ═══ MODAL TASK MANAGER (NOUVEAU) ═══ -->
+<div class="modal-overlay" id="modal-taskmanager" onclick="closeModal(event,'taskmanager')">
+  <div class="modal">
+    <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
+    <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-type">Application Web — Gestion de Tâches</div>
+        <div class="modal-title">Task Manager</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn('taskmanager')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <span class="modal-emoji">&#x2705;</span>
+      <p class="modal-desc">Application web de gestion de tâches séquentielles avec sous-tâches. La progression est <strong>conditionnelle</strong> : impossible d'avancer sans avoir validé toutes les sous-tâches en cours. La 3ᵉ tâche inclut un système de <strong>validation de quittancement</strong> qui génère un PDF envoyé automatiquement par email.</p>
+      <div class="modal-features">
+        <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalité pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('task-liste')"><div style="flex:1"><span class="feat-title">&#x1F4CB; Liste de tâches &amp; sous-tâches</span><span class="feat-preview">Interface principale présentant les tâches avec leurs sous-tâches à valider.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('task-modifier')"><div style="flex:1"><span class="feat-title">&#x270F;&#xFE0F; Fonctionnalité Modifier</span><span class="feat-preview">Modal d'édition pour la tâche principale et ses sous-tâches associées.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('task-suivant')"><div style="flex:1"><span class="feat-title">&#x27A1;&#xFE0F; Navigation Suivant</span><span class="feat-preview">Avancement conditionnel : toutes les sous-tâches doivent être cochées pour progresser.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('task-t2')"><div style="flex:1"><span class="feat-title">&#x26A0;&#xFE0F; Particularité de la 2ᵉ tâche</span><span class="feat-preview">La 2ᵉ tâche disparaît si une sous-tâche de la 1ʳᵉ est décochée.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('task-t3')"><div style="flex:1"><span class="feat-title">&#x1F4C4; Validation de quittancement</span><span class="feat-preview">Bouton de clôture avec confirmation préalable, génération et envoi du PDF par email.</span></div><span class="feat-arrow">&#x203A;</span></button>
+      </div>
+      <div class="modal-tags">
+        <span class="modal-tag">HTML</span><span class="modal-tag">CSS</span>
+        <span class="modal-tag">JavaScript</span><span class="modal-tag">PHP</span>
+        <span class="modal-tag">PDF</span><span class="modal-tag">Email</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOUS-MODALS TASK MANAGER -->
+<div class="submodal-overlay" id="task-liste" onclick="closeSubModal(event,'task-liste')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Liste de tâches &amp; sous-tâches</div><button class="submodal-close" onclick="closeSubModalBtn('task-liste')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">À l'arrivée sur la page, l'utilisateur est accueilli par une interface claire présentant l'ensemble des tâches à réaliser, chacune accompagnée de ses sous-tâches.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">La page affiche une <strong>liste de tâches principales</strong>, chacune contenant plusieurs sous-tâches à réaliser.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Chaque sous-tâche est accompagnée d'une <strong>case à cocher</strong> permettant de la marquer comme réalisée.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'interface permet de visualiser la <strong>progression</strong> au sein de chaque tâche en cours.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seule la <strong>tâche en cours</strong> est active ; les suivantes sont verrouillées jusqu'à validation complète.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="task-modifier" onclick="closeSubModal(event,'task-modifier')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x270F;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Fonctionnalité Modifier</div><button class="submodal-close" onclick="closeSubModalBtn('task-modifier')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Le bouton « Modifier » permet d'éditer le contenu d'une tâche et de ses sous-tâches via un modal dédié, directement depuis l'interface principale.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Un clic sur le bouton <strong>« Modifier »</strong> ouvre un <strong>modal d'édition</strong> contextuel.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le modal permet de modifier à la fois le <strong>libellé de la tâche principale</strong> et ceux de toutes ses <strong>sous-tâches associées</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Les modifications sont <strong>enregistrées et appliquées immédiatement</strong> dans l'interface principale sans rechargement de page.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="task-suivant" onclick="closeSubModal(event,'task-suivant')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x27A1;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Navigation Suivant</div><button class="submodal-close" onclick="closeSubModalBtn('task-suivant')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Le bouton « Suivant » permet de progresser dans la liste des tâches, mais uniquement lorsque toutes les sous-tâches de la tâche en cours sont entièrement validées.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le bouton <strong>« Suivant »</strong> est présent sur chaque tâche active de l'interface.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Il est <strong>impossible de passer à la tâche suivante</strong> sans avoir coché <em>toutes</em> les sous-tâches de la tâche en cours.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Par exemple, pour accéder à la 2ᵉ tâche, <strong>toutes les sous-tâches de la 1ʳᵉ</strong> doivent obligatoirement être cochées.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Ce mécanisme garantit une progression <strong>séquentielle et contrôlée</strong>, évitant tout saut non autorisé dans le workflow.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="task-t2" onclick="closeSubModal(event,'task-t2')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x26A0;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Particularité de la 2ᵉ tâche</div><button class="submodal-close" onclick="closeSubModalBtn('task-t2')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">La 2ᵉ tâche introduit un comportement conditionnel renforcé : elle disparaît automatiquement si une sous-tâche de la 1ʳᵉ tâche est décochée a posteriori.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le fonctionnement est <strong>identique à la 1ʳᵉ tâche</strong> en termes de validation et de navigation conditionnelle.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Exception importante :</strong> si une sous-tâche de la 1ʳᵉ tâche est <strong>décochée</strong> après coup, la 2ᵉ tâche <strong>disparaît automatiquement</strong> de l'interface.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Pour la faire réapparaître, il faut d'abord <strong>re-cocher la sous-tâche</strong> décochée dans la 1ʳᵉ tâche.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Puis cliquer à nouveau sur <strong>« Suivant »</strong> depuis la 1ʳᵉ tâche pour valider à nouveau la progression.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submodal-overlay" id="task-t3" onclick="closeSubModal(event,'task-t3')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4C4;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Validation de quittancement</div><button class="submodal-close" onclick="closeSubModalBtn('task-t3')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">La 3ᵉ tâche ajoute une étape finale de validation officielle : un bouton de quittancement permettant de clôturer l'ensemble du workflow et d'envoyer un document PDF par email.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">La 3ᵉ tâche fonctionne comme les précédentes avec les mêmes <strong>règles de validation des sous-tâches</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un bouton supplémentaire <strong>« Validation de quittancement »</strong> apparaît une fois toutes les sous-tâches cochées.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Une <strong>confirmation préalable</strong> est demandée à l'utilisateur avant la validation finale, afin de prévenir toute erreur de manipulation.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Après validation, le gestionnaire <strong>envoie automatiquement un email</strong> contenant le quittancement en <strong>pièce jointe PDF</strong>.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MODALS GSB ═══ -->
 <div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
@@ -929,7 +1098,7 @@
       </div>
     </div>
 
-    <!-- CARTE 3 — GSB NOTES PRATICIENS (layout vertical corrigé) -->
+    <!-- CARTE 3 — GSB NOTES PRATICIENS -->
     <div class="project-card ap-full reveal" style="flex-direction:column;">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#1a0d20 0%,#2d1540 55%,#1a0d20 100%); width:100%; min-height:210px; flex-shrink:0;">
         <div class="ap-dots" style="--ap-dot-color:rgba(255,180,80,0.15);"></div>
