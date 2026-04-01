@@ -458,8 +458,6 @@
   </div>
 </div>
 
-
-
 <!-- ═══ MODAL ANIMAL'VEST ═══ -->
 <div class="modal-overlay" id="modal-animalvest" onclick="closeModal(event,'animalvest')">
   <div class="modal">
@@ -557,7 +555,6 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-
 <!-- ═══ MODALS GSB ═══ -->
 <div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
   <div class="modal">
@@ -594,6 +591,7 @@
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique.</span></div></div></div></div></div>
 
+<!-- ═══ MODAL GSB SALAIRES ═══ -->
 <div class="modal-overlay" id="modal-gsb-salaires" onclick="closeModal(event,'gsb-salaires')">
   <div class="modal">
     <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
@@ -625,11 +623,53 @@
     </div>
   </div>
 </div>
-<div class="submodal-overlay" id="sal-connexion" onclick="closeSubModal(event,'sal-connexion')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Droits RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-connexion')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'acces est restreint au service RH avec authentification Laravel.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Page de connexion dediee avec identifiant et mot de passe.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Authentification par <strong>Laravel Auth</strong> avec sessions securisees.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Tableau de bord listant tous les praticiens avec informations salariales.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Middleware Laravel</strong> protege toutes les routes sensibles.</span></div></div></div></div></div>
+
+<!-- SOUS-MODALS GSB SALAIRES -->
+<div class="submodal-overlay" id="sal-connexion" onclick="closeSubModal(event,'sal-connexion')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Connexion &amp; Droits RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-connexion')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">L'acces est restreint au service RH avec authentification Laravel.</p>
+      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/inter.PNG','&#x1F511; Connexion RH')">
+        <img src="images/gsb/inter.PNG" alt="Connexion RH" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
+      </div>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Page de connexion dediee avec identifiant et mot de passe.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Authentification par <strong>Laravel Auth</strong> avec sessions securisees.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Tableau de bord listant tous les praticiens avec informations salariales.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Middleware Laravel</strong> protege toutes les routes sensibles.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="submodal-overlay" id="sal-grille" onclick="closeSubModal(event,'sal-grille')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Grille tarifaire &amp; Echelons</div><button class="submodal-close" onclick="closeSubModalBtn('sal-grille')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">La remuneration suit une grille officielle de 13 echelons.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 echelons</strong>. Echelons 1-8 : 2 ans chacun, 9-12 : 4 ans, 13 : palier maximum (32+ ans).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires de <strong>4 633,98 €</strong> a <strong>9 368,05 €</strong> brut mensuel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>echelons</strong> reliee aux praticiens par une <strong>cle etrangere</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Modification de la grille = recalcul automatique de tous les salaires.</span></div></div></div></div></div>
+
 <div class="submodal-overlay" id="sal-anciennete" onclick="closeSubModal(event,'sal-anciennete')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x23F3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Calcul automatique de l'anciennete</div><button class="submodal-close" onclick="closeSubModalBtn('sal-anciennete')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'echelon est determine automatiquement a partir de l'anciennete en jours.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Anciennete stockee en <strong>nombre de jours</strong>, mappee sur 13 echelons.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Algorithme de correspondance</strong> attribue automatiquement l'echelon.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Modification de l'anciennete = <strong>recalcul instantane</strong> de l'echelon et du salaire.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Coherence totale</strong> entre anciennete, echelon et salaire.</span></div></div></div></div></div>
-<div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Interface web complete pour consulter, filtrer et mettre a jour les informations salariales.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complete des praticiens : nom, anciennete, echelon et salaire brut.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Filtres</strong> par nom, echelon ou tranche de salaire.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Fiche detaillee par praticien.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Formulaire de <strong>mise a jour de l'anciennete</strong> avec recalcul automatique.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique.</span></div></div></div></div></div>
+
+<div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc">Interface web complete pour consulter, filtrer et mettre a jour les informations salariales.</p>
+      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/Inter2.PNG','&#x1F5A5;&#xFE0F; Liste des praticiens')">
+        <img src="images/gsb/Inter2.PNG" alt="Liste des praticiens" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
+      </div>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complete des praticiens : nom, anciennete, echelon et salaire brut.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Filtres</strong> par nom, echelon ou tranche de salaire.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Fiche detaillee par praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Formulaire de <strong>mise a jour de l'anciennete</strong> avec recalcul automatique.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">API REST Laravel pour exposer les donnees en vue d'un portage mobile futur.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Endpoint GET</strong> exposant la liste des praticiens au format <strong>JSON</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Routes definies dans <strong>routes/api.php</strong> de Laravel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Donnees serialisees via des <strong>API Resources Laravel</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Prete a etre consommee par une <strong>application Flutter</strong> (GSB Mission 3).</span></div></div></div></div></div>
+
 <div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetes, echelons et salaires.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>echelons</strong> avec 13 niveaux et salaires associes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticiens</strong> enrichie avec anciennete et cle etrangere vers echelons.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Migrations Laravel</strong> pour versionner les modifications de schema.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Seeder</strong> pour la grille tarifaire et les anciennetes initiales.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Modeles Eloquent</strong> pour les relations praticiens-echelons.</span></div></div></div></div></div>
 
 <!-- ═══ MODAL LOL ═══ -->
@@ -755,35 +795,36 @@
         <button class="project-btn" onclick="openModal('gsb-salaires')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
-<div class="project-card ap-full reveal">
-  <div class="ap-project-visual" style="background:linear-gradient(135deg,#1a0d20 0%,#2d1540 55%,#1a0d20 100%); width:100%;">
-    <div class="ap-dots" style="--ap-dot-color:rgba(255,180,80,0.15);"></div>
-    <div class="ap-fc tl" style="--ap-fc-color:#ffd080;"></div><div class="ap-fc tr" style="--ap-fc-color:#ffd080;"></div>
-    <div class="ap-fc bl" style="--ap-fc-color:#ffd080;"></div><div class="ap-fc br" style="--ap-fc-color:#ffd080;"></div>
-    <span class="ap-rune tl" style="color:rgba(255,210,100,0.15);">✦</span><span class="ap-rune br" style="color:rgba(255,210,100,0.15);">✦</span>
-    <div class="ap-glow" style="background:radial-gradient(circle,rgba(200,140,30,0.35) 0%,transparent 70%);"></div>
-    <svg class="ap-icon-svg" width="80" height="80" viewBox="0 0 72 72" style="animation-delay:1.6s;filter:drop-shadow(0 0 14px rgba(200,140,30,0.55));" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="apStarGoldb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffeaa0"/><stop offset="50%" stop-color="#e8c97e"/><stop offset="100%" stop-color="#8a6a3a"/></linearGradient>
-        <radialGradient id="apStarGlowb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd966" stop-opacity="0.65"/><stop offset="100%" stop-color="#ffd966" stop-opacity="0"/></radialGradient>
-      </defs>
-      <circle cx="36" cy="27" r="22" fill="url(#apStarGlowb)"/>
-      <polygon points="36,6 41,21.6 57.4,21.6 44.2,31.4 49.2,47 36,37.4 22.8,47 27.8,31.4 14.6,21.6 31,21.6" fill="url(#apStarGoldb)" stroke="#c8a96e" stroke-width="0.8" stroke-linejoin="round"/>
-    </svg>
-    <div class="ap-icon-label" style="color:#ffd080;">Notes &amp; Evaluations</div>
-    <div class="project-overlay"></div>
-  </div>
-  <div class="project-body">
-    <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 3</div>
-    <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
-    <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
-    <div class="project-tags">
-      <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
-      <span class="project-tag">MySQL</span>
-      <span class="project-tag" data-i18n="ap.inprogress">&#x23F3; En cours</span>
+    <div class="project-card ap-full reveal">
+      <div class="ap-project-visual" style="background:linear-gradient(135deg,#1a0d20 0%,#2d1540 55%,#1a0d20 100%); width:100%;">
+        <div class="ap-dots" style="--ap-dot-color:rgba(255,180,80,0.15);"></div>
+        <div class="ap-fc tl" style="--ap-fc-color:#ffd080;"></div><div class="ap-fc tr" style="--ap-fc-color:#ffd080;"></div>
+        <div class="ap-fc bl" style="--ap-fc-color:#ffd080;"></div><div class="ap-fc br" style="--ap-fc-color:#ffd080;"></div>
+        <span class="ap-rune tl" style="color:rgba(255,210,100,0.15);">✦</span><span class="ap-rune br" style="color:rgba(255,210,100,0.15);">✦</span>
+        <div class="ap-glow" style="background:radial-gradient(circle,rgba(200,140,30,0.35) 0%,transparent 70%);"></div>
+        <svg class="ap-icon-svg" width="80" height="80" viewBox="0 0 72 72" style="animation-delay:1.6s;filter:drop-shadow(0 0 14px rgba(200,140,30,0.55));" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="apStarGoldb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffeaa0"/><stop offset="50%" stop-color="#e8c97e"/><stop offset="100%" stop-color="#8a6a3a"/></linearGradient>
+            <radialGradient id="apStarGlowb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd966" stop-opacity="0.65"/><stop offset="100%" stop-color="#ffd966" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="36" cy="27" r="22" fill="url(#apStarGlowb)"/>
+          <polygon points="36,6 41,21.6 57.4,21.6 44.2,31.4 49.2,47 36,37.4 22.8,47 27.8,31.4 14.6,21.6 31,21.6" fill="url(#apStarGoldb)" stroke="#c8a96e" stroke-width="0.8" stroke-linejoin="round"/>
+        </svg>
+        <div class="ap-icon-label" style="color:#ffd080;">Notes &amp; Evaluations</div>
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-body">
+        <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 3</div>
+        <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
+        <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
+        <div class="project-tags">
+          <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
+          <span class="project-tag">MySQL</span>
+          <span class="project-tag" data-i18n="ap.inprogress">&#x23F3; En cours</span>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 </section>
 
 <div class="arcane-divider"><div class="divider-gem"></div></div>
