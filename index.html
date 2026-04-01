@@ -331,7 +331,6 @@
         <button class="modal-feature-btn" onclick="openSubModal('feat-perso')"><div style="flex:1"><span class="feat-title" data-i18n="f6.title">&#x1F3A8; Personnalisation</span><span class="feat-preview" data-i18n="f6.preview">Fond d'ecran personnalisable par l'utilisateur selon ses preferences.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-admin')"><div style="flex:1"><span class="feat-title" data-i18n="f7.title">&#x1F6E1;&#xFE0F; Panel administrateur</span><span class="feat-preview" data-i18n="f7.preview">Gestion complete des comptes : roles, bans, suppressions, inscriptions.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('feat-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="f8.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="f8.preview">PostgreSQL sur OVH, deploye via Termius SSH.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('feat-mcd-animaland')"><div style="flex:1"><span class="feat-title">&#x1F5C2;&#xFE0F; MCD de la base de donnees</span><span class="feat-preview">Schema complet des 16 tables PostgreSQL — relations, cles, contraintes.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Socket.io</span>
@@ -459,26 +458,7 @@
   </div>
 </div>
 
-<!-- ══ SOUS-MODAL MCD ANIMAL'AND — DRAGGABLE ══ -->
-<div class="submodal-overlay" id="feat-mcd-animaland" onclick="closeSubModal(event,'feat-mcd-animaland')">
-  <div class="submodal" style="max-width:1880px;width:96vw;">
-    <div class="submodal-header">
-      <span class="submodal-icon">&#x1F5C2;&#xFE0F;</span>
-      <div class="submodal-type">Base de donnees</div>
-      <div class="submodal-title">MCD Animal'and Chat — PostgreSQL</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('feat-mcd-animaland')">&#x2715;</button>
-    </div>
-    <div class="submodal-body" style="padding:0;">
-      <div id="mcd-aa-root" style="padding:12px 16px 20px;font-family:var(--font-mono,monospace);">
-        <div class="mcd-drag-hint">&#x2725; Glisser les tables pour reorganiser — 16 tables PostgreSQL</div>
-        <div id="mcd-aa-stage" style="width:100%;overflow:auto;">
-          <div id="mcd-aa-cvs" style="position:relative;margin:0 auto;"></div>
-        </div>
-        <div id="mcd-aa-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0 4px;font-size:11px;color:#888;align-items:center;"></div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ═══ MODAL ANIMAL'VEST ═══ -->
 <div class="modal-overlay" id="modal-animalvest" onclick="closeModal(event,'animalvest')">
@@ -505,7 +485,6 @@
         <button class="modal-feature-btn" onclick="openSubModal('vest-mail')"><div style="flex:1"><span class="feat-title" data-i18n="v9.title">&#x2709;&#xFE0F; Emails automatiques</span><span class="feat-preview" data-i18n="v9.preview">Un email est envoye au membre a chaque changement de statut de sa commande.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-securite')"><div style="flex:1"><span class="feat-title" data-i18n="v10.title">&#x1F512; Securite &amp; Mot de passe</span><span class="feat-preview" data-i18n="v10.preview">Politique commune avec indicateur de force, formatters et rate limiter anti-abus.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('vest-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="v11.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="v11.preview">Flutter, Firebase pour les notifs et PostgreSQL/MySQL pour les donnees.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('vest-mcd')"><div style="flex:1"><span class="feat-title">&#x1F5C2;&#xFE0F; MCD du projet</span><span class="feat-preview">Modele Conceptuel de Donnees — structure et relations de la base PostgreSQL.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span><span class="modal-tag">Firebase</span>
@@ -578,26 +557,6 @@
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
 
-<!-- ══ SOUS-MODAL MCD ANIMAL'VEST — DRAGGABLE ══ -->
-<div class="submodal-overlay" id="vest-mcd" onclick="closeSubModal(event,'vest-mcd')">
-  <div class="submodal" style="max-width:960px;width:95vw;">
-    <div class="submodal-header">
-      <span class="submodal-icon">&#x1F5C2;&#xFE0F;</span>
-      <div class="submodal-type">Fonctionnalite</div>
-      <div class="submodal-title">MCD du projet</div>
-      <button class="submodal-close" onclick="closeSubModalBtn('vest-mcd')">&#x2715;</button>
-    </div>
-    <div class="submodal-body" style="padding:0;">
-      <div id="mcd-root" style="padding:12px 16px 20px;font-family:var(--font-mono,monospace);">
-        <div class="mcd-drag-hint">&#x2725; Glisser les tables pour reorganiser le schema</div>
-        <div id="mcd-stage" style="width:100%;overflow:auto;">
-          <div id="mcd-cvs" style="position:relative;margin:0 auto;"></div>
-        </div>
-        <div id="mcd-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0 4px;font-size:11px;color:#888;align-items:center;"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══ MODALS GSB ═══ -->
 <div class="modal-overlay" id="modal-gsb-conges" onclick="closeModal(event,'gsb-conges')">
