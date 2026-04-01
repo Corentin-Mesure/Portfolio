@@ -230,6 +230,7 @@
     <h2 class="section-title">Projets</h2>
     <div class="section-line"></div>
   </div>
+
   <div class="projects-grid">
     <div class="project-card reveal">
       <div class="project-visual project-visual-1">
@@ -265,6 +266,7 @@
       </div>
     </div>
   </div>
+
   <div class="perso-teaser reveal" style="margin-top:32px;">
     <div class="perso-teaser-line"></div>
     <button class="perso-teaser-btn" id="persoTeaserBtn" onclick="togglePersoProjects()">
@@ -274,6 +276,7 @@
     </button>
     <div class="perso-teaser-line"></div>
   </div>
+
   <div class="perso-grid" id="persoGrid">
     <div class="project-card perso-card">
       <div class="project-visual project-visual-3">
@@ -445,9 +448,10 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'ensemble des donnees est stocke dans une base PostgreSQL hebergee sur un serveur OVH, deploye via Termius SSH.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise uniquement pour les <strong>notifications push via FCM</strong>. Toute la couche temps reel est geree par <strong>Socket.io</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Firebase</strong> est utilise uniquement pour les <strong>notifications push via FCM</strong>. Toute la couche temps reel est geree par <strong>Socket.io</strong>.</span></div>
       </div>
     </div>
   </div>
@@ -489,14 +493,18 @@
   </div>
 </div>
 
-<!-- SOUS-MODALS ANIMAL'VEST -->
+<!-- ═══ SOUS-MODALS ANIMAL'VEST avec GIFs intégrés ═══ -->
+
 <div class="submodal-overlay" id="vest-acces" onclick="closeSubModal(event,'vest-acces')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F510;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Acces membres uniquement</div><button class="submodal-close" onclick="closeSubModalBtn('vest-acces')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">Animal'vest utilise un systeme d'acces unique : les membres se connectent sans identifiants grace a un <strong>compte temporaire genere automatiquement</strong>. Seul l'administrateur possede un compte permanent.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/5_-_Authentification.gif','&#x1F510; Authentification')"><span class="step-num">01</span><span class="step-text">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant requis. L'administrateur dispose d'un espace de connexion dedie.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/5_-_Authentification.gif','&#x1F510; Authentification')">
+          <span class="step-num">01</span>
+          <span class="step-text">Quand un membre ouvre l'application, un <strong>compte temporaire est genere automatiquement</strong> — aucun identifiant requis. L'administrateur dispose d'un espace de connexion dedie.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Des que le membre <strong>ferme l'application ou se deconnecte</strong>, le compte temporaire est <strong>supprime automatiquement</strong> de la base de donnees.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si l'application reste ouverte et connectee, le compte est <strong>automatiquement supprime au bout de 24h</strong>, meme sans action de l'utilisateur.</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Seules l'<strong>adresse email, l'adresse postale et le numero de telephone</strong> sont conserves — uniquement pour le traitement et la livraison. Ces donnees sont <strong>automatiquement supprimees au bout de 6 mois</strong>.</span></div>
@@ -512,7 +520,10 @@
     <div class="submodal-body">
       <p class="submodal-desc">Les membres accedent a un catalogue complet des articles proposes par l'association, avec filtrage par categorie et selection de taille.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/2_-_Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')"><span class="step-num">01</span><span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/2_-_Boutique.gif','&#x1F6CD;&#xFE0F; Boutique')">
+          <span class="step-num">01</span>
+          <span class="step-text">La boutique affiche l'ensemble des <strong>produits disponibles</strong> dans une grille 2 colonnes avec photo, nom et prix. Un badge <strong>NEW</strong> apparait automatiquement sur les deux derniers articles ajoutes.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Un <strong>carousel de categories</strong> en haut permet de filtrer les produits instantanement. Chaque categorie est gerable par l'administrateur depuis l'application.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Chaque article possede une <strong>fiche detaillee</strong> avec description complete et selection de taille. Deux grilles de tailles sont disponibles : <strong>vetements</strong> (XS a XXL) et <strong>chaussures</strong> (37 a 45).</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Les articles <strong>en rupture de stock</strong> sont automatiquement signales ou masques selon le stock disponible.</span></div>
@@ -527,9 +538,9 @@
     <div class="submodal-body">
       <p class="submodal-desc">Chaque produit peut disposer de plusieurs photos pour mieux presenter l'article sous tous ses angles.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designee comme <strong>image principale</strong> (badge "MAIN").</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">L'administrateur peut ajouter <strong>jusqu'a 8 photos</strong> par produit depuis sa galerie. La premiere photo uploadee est automatiquement designe comme <strong>image principale</strong> (badge "MAIN").</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Dans la grille de la boutique, chaque carte produit affiche un <strong>mini-carousel</strong> avec indicateurs de pagination, fleches de navigation et un compteur <strong>X/Y</strong> en haut a droite.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail, toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Dans la fiche detail (hauteur 420px), toutes les photos sont navigables avec un carousel pleine largeur. Un tap sur l'image ouvre une <strong>visionneuse plein ecran</strong>.</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La visionneuse plein ecran supporte le <strong>zoom et le pinch</strong> (InteractiveViewer), l'interface se masque au tap pour profiter de l'image sans distraction.</span></div>
       </div>
     </div>
@@ -542,7 +553,10 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'ecran d'accueil affiche une grille d'unites representant les differents groupes de l'association. Chaque unite peut etre liee a des categories de la boutique pour faciliter la navigation.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/1_-_Accueil.gif','&#x1F3E0; Accueil')"><span class="step-num">01</span><span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/1_-_Accueil.gif','&#x1F3E0; Accueil')">
+          <span class="step-num">01</span>
+          <span class="step-text">La page d'accueil presente une <strong>grille d'unites en 2 colonnes</strong>. En tapant sur une unite, un <strong>dropdown anime</strong> se deploie et revele les categories associees.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Taper une categorie dans ce dropdown <strong>redirige directement</strong> vers la boutique filtree sur cette categorie.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Les administrateurs voient un bouton <strong>···</strong> pour ajouter, modifier ou supprimer des unites. Le formulaire propose un <strong>selecteur d'icones Material</strong> classe en 10 categories avec une barre de recherche.</span></div>
       </div>
@@ -556,7 +570,10 @@
     <div class="submodal-body">
       <p class="submodal-desc">Les membres peuvent composer leur panier et passer commande en renseignant leurs informations de livraison directement depuis l'application.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/3_-_Panier.gif','&#x1F6D2; Panier')"><span class="step-num">01</span><span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/3_-_Panier.gif','&#x1F6D2; Panier')">
+          <span class="step-num">01</span>
+          <span class="step-text">Le membre ajoute les articles souhaites a son <strong>panier</strong> avec la quantite desiree. Il peut modifier les quantites ou retirer des articles avant validation.<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">En validant, un <strong>formulaire de commande</strong> s'ouvre pour saisir : prenom, nom, adresse e-mail, telephone (optionnel), adresse de livraison et notes eventuelles.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Ces informations sont <strong>encodees dans le champ notes</strong> de la commande et accessibles par l'admin via une fiche client dediee avec option copier.</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">La commande est <strong>enregistree en base de donnees</strong> avec le statut <em style="color:var(--cyan)">&#171; en attente &#187;</em>. L'administrateur recoit une notification push.</span></div>
@@ -587,12 +604,15 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'administrateur dispose d'un espace complet pour gerer la boutique, les commandes et les membres depuis l'application, avec des statistiques en temps reel.</p>
       <div class="submodal-steps">
-        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/7_-_Panel_Admin.gif','&#x1F6E1;&#xFE0F; Panel Admin')"><span class="step-num">01</span><span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step has-video" onclick="openVideoModal('videos/animalvest/7_-_Panel_Admin.gif','&#x1F6E1;&#xFE0F; Panel Admin')">
+          <span class="step-num">01</span>
+          <span class="step-text"><strong>Statistiques en temps reel :</strong> une barre de cartes affiche le nombre de produits et le decompte par statut de commande (en attente, confirmee, preparation, expediee, livree, annulee).<br><span class="step-play-hint">Voir la demo</span></span>
+        </div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Gestion du catalogue :</strong> ajout de produits avec nom, description, prix, categorie, tailles et jusqu'a 8 photos. Suppression avec confirmation.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> avec option copier.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande et peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse et indicateur de force du mot de passe en temps reel.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Suivi des commandes :</strong> liste filtrable par statut. Chaque commande affiche les articles, le total, et un acces a la <strong>fiche client</strong> (nom, email, telephone, adresse) avec option copier.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Traitement manuel :</strong> l'admin change le statut de la commande selon une machine d'etats : en attente &#x2192; confirmee &#x2192; preparation &#x2192; expediee &#x2192; livree. Il peut ajouter une <strong>note interne</strong> visible uniquement dans le panel.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Gestion des admins :</strong> liste des comptes avec possibilite de retirer les droits ou supprimer definitivement un compte et toutes ses donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Creation de compte admin :</strong> formulaire complet avec validation rigoureuse, indicateur de force du mot de passe en temps reel et dialog de succes avec bouton copier.</span></div>
       </div>
     </div>
   </div>
@@ -607,7 +627,7 @@
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Lors du changement de statut vers <strong>&#171; expediee &#187;</strong>, un champ de saisie de numero de colis apparait. Le bouton reste <strong>grise et bloque</strong> tant que le numero n'est pas valide.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le numero doit contenir <strong>exactement 8 chiffres</strong>. Une barre de progression se remplit caractere par caractere et devient <strong>verte</strong> a la validation complete.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Un indicateur affiche le <strong>nombre de chiffres restants</strong> en temps reel pour guider l'admin pendant la saisie.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et un email de suivi est automatiquement envoye au membre.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois valide, le numero de colis est <strong>enregistre avec la commande</strong> et visible dans la fiche commande du panel. Un email de suivi est automatiquement envoye au membre.</span></div>
       </div>
     </div>
   </div>
@@ -649,11 +669,11 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'application integre plusieurs mecanismes de securite pour proteger les comptes administrateurs et prevenir les abus.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ dispose d'un formatter qui bloque en temps reel les caracteres dangereux pour prevenir les injections.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Politique commune de mot de passe :</strong> les regles sont centralisees dans un fichier partage. Minimum 8 caracteres, majuscule, minuscule, chiffre, caractere special, aucun espace autorise.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Indicateur de force en temps reel :</strong> lors de la saisie d'un mot de passe, une barre de progression et 4 criteres visuels animes indiquent la robustesse (Tres faible a Tres fort).</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Formatters de saisie :</strong> chaque champ dispose d'un formatter qui bloque en temps reel les caracteres dangereux comme &lt; &gt; " ' ; / pour prevenir les injections.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Rate limiter anti-abus :</strong> les formulaires sensibles sont proteges par un limiteur de 5 tentatives maximum en 2 minutes. En cas de depassement, un blocage de <strong>10 minutes</strong> est applique avec un compte a rebours visible.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Stockage securise :</strong> les tokens JWT et les identifiants "se souvenir de moi" sont stockes dans le <strong>FlutterSecureStorage</strong>, un stockage chiffre nativement sur Android et iOS.</span></div>
       </div>
     </div>
   </div>
@@ -668,8 +688,8 @@
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Flutter / Dart</strong> pour l'interface mobile, multiplateforme (Android).</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL / PostgreSQL</strong> stocke les produits, les membres, les commandes, les unites, les categories et les statuts de livraison.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Firebase</strong> est utilise exclusivement pour les <strong>notifications push (FCM)</strong> vers l'administrateur.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT et la gestion des erreurs.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'application est <strong>totalement independante</strong> d'Animal'and Chat — base de donnees et comptes separes. Les deux apps coexistent sans partager de donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tous les appels HTTP sont centralises dans un <strong>singleton ApiService</strong> qui gere l'injection automatique du token JWT, la normalisation des prix et la gestion des erreurs.</span></div>
       </div>
     </div>
   </div>
@@ -689,7 +709,7 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4C5;</span>
-      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB. Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
+      <p class="modal-desc">Application C# Windows developpee dans le cadre du projet AP GSB (Galaxy Swiss Bourdin). Elle permet aux praticiens de soumettre des demandes de conges et au responsable RH de les valider ou refuser, avec gestion automatique des soldes et notifications a la connexion.</p>
       <div class="modal-features">
         <div class="modal-features-title">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
         <button class="modal-feature-btn" onclick="openSubModal('gsb-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Comptes</span><span class="feat-preview">Deux comptes distincts : praticien et responsable RH avec acces differencies.</span></div><span class="feat-arrow">&#x203A;</span></button>
@@ -751,7 +771,6 @@
   </div>
 </div>
 
-<!-- gsb-notif : étape 02 supprimée -->
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div>
@@ -759,21 +778,22 @@
       <p class="submodal-desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes de conges en cours.</p>
       <div class="submodal-steps">
         <div class="submodal-step has-video" onclick="openVideoModal('videos/gsb/gsb_notif.gif','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text">Des la connexion, une <strong>notification s'affiche</strong> indiquant si des demandes ont ete acceptees ou refusees depuis la derniere visite.<br><span class="step-play-hint">Voir la demo</span></span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut (en attente, acceptee, refusee).</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- gsb-bdd : étape 01 supprimée, renumérotation -->
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Backend &amp; Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div>
     <div class="submodal-body">
       <p class="submodal-desc">L'application C# communique avec un backend Laravel via une API REST. Toutes les donnees sont stockees dans une base MySQL.</p>
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'architecture respecte la separation des couches : l'interface graphique ne manipule que des <strong>objets C#</strong>, jamais directement la base.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Laravel</strong> expose une API REST consommee par l'application C# pour toutes les operations (connexion, demandes, validation).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>MySQL</strong> stocke les praticiens, leurs soldes de conges, les demandes et leur statut.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>C# Windows Forms</strong> constitue l'interface graphique, avec des objets metier mappes sur les entites de la base de donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">L'architecture respecte la separation des couches : l'interface graphique ne manipule que des <strong>objets C#</strong>, jamais directement la base.</span></div>
       </div>
     </div>
   </div>
@@ -889,5 +909,6 @@
 </div>
 
 <script src="Script.js"></script>
+
 </body>
 </html>
