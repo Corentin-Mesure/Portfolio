@@ -643,11 +643,8 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="sal-grille" onclick="closeSubModal(event,'sal-grille')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4CA;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Grille tarifaire &amp; Echelons</div><button class="submodal-close" onclick="closeSubModalBtn('sal-grille')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">La remuneration suit une grille officielle de 13 echelons.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 echelons</strong>. Echelons 1-8 : 2 ans chacun, 9-12 : 4 ans, 13 : palier maximum (32+ ans).</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires de <strong>4 633,98 €</strong> a <strong>9 368,05 €</strong> brut mensuel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>echelons</strong> reliee aux praticiens par une <strong>cle etrangere</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Modification de la grille = recalcul automatique de tous les salaires.</span></div></div></div></div></div>
-
 <div class="submodal-overlay" id="sal-anciennete" onclick="closeSubModal(event,'sal-anciennete')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x23F3;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Calcul automatique de l'anciennete</div><button class="submodal-close" onclick="closeSubModalBtn('sal-anciennete')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">L'echelon est determine automatiquement a partir de l'anciennete en jours.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Anciennete stockee en <strong>nombre de jours</strong>, mappee sur 13 echelons.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Algorithme de correspondance</strong> attribue automatiquement l'echelon.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Modification de l'anciennete = <strong>recalcul instantane</strong> de l'echelon et du salaire.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Coherence totale</strong> entre anciennete, echelon et salaire.</span></div></div></div></div></div>
-
 <div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div>
@@ -667,9 +664,7 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">API REST Laravel pour exposer les donnees en vue d'un portage mobile futur.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>Endpoint GET</strong> exposant la liste des praticiens au format <strong>JSON</strong>.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Routes definies dans <strong>routes/api.php</strong> de Laravel.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Donnees serialisees via des <strong>API Resources Laravel</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Prete a etre consommee par une <strong>application Flutter</strong> (GSB Mission 3).</span></div></div></div></div></div>
-
 <div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetes, echelons et salaires.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>echelons</strong> avec 13 niveaux et salaires associes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticiens</strong> enrichie avec anciennete et cle etrangere vers echelons.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text"><strong>Migrations Laravel</strong> pour versionner les modifications de schema.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text"><strong>Seeder</strong> pour la grille tarifaire et les anciennetes initiales.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Modeles Eloquent</strong> pour les relations praticiens-echelons.</span></div></div></div></div></div>
 
 <!-- ═══ MODAL LOL ═══ -->
@@ -699,6 +694,141 @@
   </div>
 </div>
 
+<!-- ═══ MODAL GSB NOTES PRATICIENS ═══ -->
+<div class="modal-overlay" id="modal-gsb-notes" onclick="closeModal(event,'gsb-notes')">
+  <div class="modal">
+    <div class="modal-corner tl"></div><div class="modal-corner tr"></div>
+    <div class="modal-corners-wrapper"><div class="modal-corner bl"></div><div class="modal-corner br"></div></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-type" data-i18n="gsb3.type">Application Mobile — GSB Mission 3</div>
+        <div class="modal-title" data-i18n="gsb3.mTitle">GSB Notes Praticiens</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn('gsb-notes')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <span class="modal-emoji">&#x2B50;</span>
+      <p class="modal-desc" data-i18n="gsbnotes.desc">Application mobile Flutter developpee dans le cadre de la <strong>Mission 5 AP3-4</strong>. Elle permet aux clients de consulter la liste des praticiens GSB de la region, d'afficher leurs deux notes (clientele et expert sur 5), de trier le classement et de consulter le detail des avis avec commentaires. Le backend repose sur l'<strong>API REST Laravel</strong> deja mise en place lors de la Mission 2.</p>
+      <div class="modal-features">
+        <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalite pour en savoir plus</div>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-liste')"><div style="flex:1"><span class="feat-title" data-i18n="n1.title">&#x1F4CB; Liste des praticiens</span><span class="feat-preview" data-i18n="n1.preview">Affichage de l'ensemble des praticiens de la region avec leurs deux notes sur 5.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-notes')"><div style="flex:1"><span class="feat-title" data-i18n="n2.title">&#x2B50; Deux types de notes</span><span class="feat-preview" data-i18n="n2.preview">Note clientele et note expert, toutes deux affichees sur 5 pour chaque praticien.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-tri')"><div style="flex:1"><span class="feat-title" data-i18n="n3.title">&#x1F504; Classement &amp; Tri</span><span class="feat-preview" data-i18n="n3.preview">Possibilite de trier les praticiens selon la note client ou la note expert.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-detail')"><div style="flex:1"><span class="feat-title" data-i18n="n4.title">&#x1F50D; Fiche detail praticien</span><span class="feat-preview" data-i18n="n4.preview">Informations completes du praticien, note expert et liste des commentaires clients.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-commentaires')"><div style="flex:1"><span class="feat-title" data-i18n="n5.title">&#x1F4AC; Commentaires clients</span><span class="feat-preview" data-i18n="n5.preview">Liste scrollable des avis clients avec note individuelle et commentaire detaille.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-api')"><div style="flex:1"><span class="feat-title" data-i18n="n6.title">&#x1F4F1; API REST Laravel</span><span class="feat-preview" data-i18n="n6.preview">Donnees fournies par l'API REST de la Mission 2, consommee par Flutter via HTTP.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('notes-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="n7.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="n7.preview">Base MySQL GSB enrichie avec les tables notes clients et notes experts.</span></div><span class="feat-arrow">&#x203A;</span></button>
+      </div>
+      <div class="modal-tags">
+        <span class="modal-tag">Flutter</span><span class="modal-tag">Dart</span>
+        <span class="modal-tag">Laravel</span><span class="modal-tag">MySQL</span>
+        <span class="modal-tag">API REST</span><span class="modal-tag">JSON</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOUS-MODALS GSB NOTES PRATICIENS -->
+<div class="submodal-overlay" id="notes-liste" onclick="closeSubModal(event,'notes-liste')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4CB;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n1.title">Liste des praticiens</div><button class="submodal-close" onclick="closeSubModalBtn('notes-liste')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n1.desc">L'ecran principal de l'application affiche l'ensemble des praticiens GSB de la region. Pour chaque praticien, la liste presente directement les deux notes sur 5 ainsi qu'un bouton pour acceder au detail.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n1.s1">Au lancement, l'application <strong>charge la liste complete</strong> des praticiens depuis l'API REST Laravel.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n1.s2">Chaque ligne affiche le <strong>nom du praticien</strong>, sa <strong>note clientele</strong> (etoiles /5) et sa <strong>note expert</strong> (etoiles /5).</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n1.s3">Un bouton <strong>« Detail »</strong> est present sur chaque ligne pour acceder a la fiche complete du praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n1.s4">La liste est <strong>scrollable verticalement</strong> pour parcourir l'ensemble des praticiens disponibles dans la region.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-notes" onclick="closeSubModal(event,'notes-notes')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x2B50;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n2.title">Deux types de notes</div><button class="submodal-close" onclick="closeSubModalBtn('notes-notes')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n2.desc">Chaque praticien dispose de deux notes distinctes sur 5, correspondant a deux types d'evaluateurs. Ce double systeme permet une vision plus complete et objective de chaque praticien.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n2.s1"><strong>Note clientele :</strong> note moyenne calculee a partir de l'ensemble des avis laisses par les clients ayant consulte le praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n2.s2"><strong>Note expert :</strong> note unique attribuee par une equipe d'experts mandatee par GSB pour evaluer chaque praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n2.s3">Les deux notes sont affichees <strong>sur 5</strong>, representees sous forme d'etoiles pour une lecture intuitive.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n2.s4">Elles sont visibles directement dans la <strong>liste principale</strong> et reprises en detail dans la fiche praticien.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-tri" onclick="closeSubModal(event,'notes-tri')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F504;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n3.title">Classement &amp; Tri</div><button class="submodal-close" onclick="closeSubModalBtn('notes-tri')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n3.desc">L'application propose de trier la liste des praticiens selon les notes afin de faciliter le choix du meilleur praticien selon les criteres de l'utilisateur.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n3.s1">L'utilisateur peut <strong>trier par note clientele</strong> pour afficher en premier les praticiens les mieux notes par leurs patients.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n3.s2">Il peut egalement <strong>trier par note expert</strong> pour prioriser l'evaluation professionnelle de l'equipe GSB.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n3.s3">Le tri est <strong>decroissant</strong> : les meilleures notes apparaissent toujours en tete de liste.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n3.s4">Le <strong>classement se met a jour instantanement</strong> lors du changement de critere, sans rechargement des donnees depuis le serveur.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-detail" onclick="closeSubModal(event,'notes-detail')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F50D;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n4.title">Fiche detail praticien</div><button class="submodal-close" onclick="closeSubModalBtn('notes-detail')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n4.desc">En appuyant sur le bouton « Detail » d'un praticien, l'utilisateur accede a une fiche complete regroupant ses informations personnelles, sa note expert et l'ensemble des commentaires clients avec leurs notes individuelles.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n4.s1">La fiche affiche les <strong>informations du praticien</strong> : nom, prenom, adresse, ville et code postal.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n4.s2">La <strong>note expert sur 5</strong> est affichee avec ses etoiles, accompagnee des commentaires de l'equipe d'experts.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n4.s3">La <strong>note clientele globale sur 5</strong> est affichee avec ses etoiles, suivie de la liste detaillee des avis clients.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n4.s4">La section commentaires est <strong>scrollable independamment</strong> dans sa propre zone, conformement a la maquette fournie dans la note de service.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-commentaires" onclick="closeSubModal(event,'notes-commentaires')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4AC;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n5.title">Commentaires clients</div><button class="submodal-close" onclick="closeSubModalBtn('notes-commentaires')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n5.desc">Dans la fiche detail, l'utilisateur consulte la liste complete des avis laisses par les clients. Chaque avis contient une note individuelle sur 5 et un commentaire ecrit.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n5.s1">Chaque avis affiche une <strong>note individuelle sur 5</strong> sous forme d'etoiles.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n5.s2">Le <strong>texte du commentaire</strong> est affiche sous la note pour chaque avis client.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n5.s3">La liste est <strong>scrollable verticalement</strong> dans une zone dediee de la fiche detail, sans affecter le defilement de la page.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n5.s4">Les commentaires sont charges via l'API REST et <strong>filtres par identifiant praticien</strong> pour n'afficher que les avis du praticien consulte.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-api" onclick="closeSubModal(event,'notes-api')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n6.title">API REST Laravel</div><button class="submodal-close" onclick="closeSubModalBtn('notes-api')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n6.desc">L'application Flutter consomme l'API REST Laravel mise en place lors de la Mission 2. De nouveaux endpoints ont ete ajoutes pour exposer les notes et commentaires des praticiens.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n6.s1"><strong>GET /praticiens</strong> : retourne la liste complete des praticiens avec leurs notes clientele et expert au format JSON.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n6.s2"><strong>GET /praticiens/{id}/commentaires</strong> : retourne la liste des commentaires clients lies a un praticien precis.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n6.s3">Flutter utilise le package <strong>http</strong> pour les requetes et <strong>dart:convert</strong> pour parser les reponses JSON.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n6.s4">Les routes sont definies dans <strong>routes/api.php</strong> de Laravel et serialisees via des <strong>API Resources</strong> dediees.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="submodal-overlay" id="notes-bdd" onclick="closeSubModal(event,'notes-bdd')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="n7.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('notes-bdd')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="n7.desc">La base MySQL GSB existante a ete enrichie pour stocker les notes et commentaires. Les nouvelles tables s'appuient sur les praticiens deja presents en base depuis la Mission 2.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="n7.s1">Table <strong>notes_clients</strong> : stocke la note individuelle sur 5 et le commentaire de chaque client pour chaque praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="n7.s2">Table <strong>notes_experts</strong> : stocke la note sur 5 attribuee par l'equipe d'experts pour chaque praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="n7.s3">Les deux tables utilisent une <strong>cle etrangere</strong> vers la table praticiens pour garantir l'integrite des donnees.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="n7.s4"><strong>Migrations Laravel</strong> utilisees pour ajouter les nouvelles tables sans modifier le schema existant de la Mission 2.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="n7.s5"><strong>Seeders</strong> fournis pour injecter des donnees de test correspondant a la maquette de la note de service.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="arcane-divider"><div class="divider-gem"></div></div>
 
 <!-- PROJET AP -->
@@ -709,6 +839,8 @@
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
+
+    <!-- CARTE 1 — GSB CONGES -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1526 0%,#1a2d55 55%,#0d1526 100%);">
         <div class="ap-dots"></div>
@@ -761,6 +893,8 @@
         <button class="project-btn" onclick="openModal('gsb-conges')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
+
+    <!-- CARTE 2 — GSB SALAIRES -->
     <div class="project-card reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#0d1a0d 0%,#193519 55%,#0d1a0d 100%);">
         <div class="ap-dots" style="--ap-dot-color:rgba(80,200,100,0.16);"></div>
@@ -795,6 +929,8 @@
         <button class="project-btn" onclick="openModal('gsb-salaires')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
+
+    <!-- CARTE 3 — GSB NOTES PRATICIENS -->
     <div class="project-card ap-full reveal">
       <div class="ap-project-visual" style="background:linear-gradient(135deg,#1a0d20 0%,#2d1540 55%,#1a0d20 100%); width:100%;">
         <div class="ap-dots" style="--ap-dot-color:rgba(255,180,80,0.15);"></div>
@@ -814,16 +950,18 @@
         <div class="project-overlay"></div>
       </div>
       <div class="project-body">
-        <div class="project-type" data-i18n="gsb2.type">Application Mobile — GSB Mission 3</div>
-        <h3 class="project-title" data-i18n="gsb2.mTitle">GSB Notes Praticiens</h3>
-        <p class="project-desc" data-i18n="ap.gsb2desc">Application Flutter affichant les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, detail avec commentaires. En cours de developpement.</p>
+        <div class="project-type" data-i18n="gsb3.type">Application Mobile — GSB Mission 3</div>
+        <h3 class="project-title" data-i18n="gsb3.mTitle">GSB Notes Praticiens</h3>
+        <p class="project-desc" data-i18n="ap.gsb3desc">Application Flutter permettant aux clients de consulter les notes des praticiens GSB. Deux types d'evaluateurs (client et expert), classement par note, fiche detail avec commentaires. Developpee dans le cadre de la Mission 5 AP3-4.</p>
         <div class="project-tags">
           <span class="project-tag">Flutter</span><span class="project-tag">Dart</span>
-          <span class="project-tag">MySQL</span>
-          <span class="project-tag" data-i18n="ap.inprogress">&#x23F3; En cours</span>
+          <span class="project-tag">MySQL</span><span class="project-tag">API REST</span>
+          <span class="project-tag">Laravel</span>
         </div>
+        <button class="project-btn" onclick="openModal('gsb-notes')"><span data-i18n="btn.open">&#x2756; Ouvrir</span></button>
       </div>
     </div>
+
   </div>
 </section>
 
