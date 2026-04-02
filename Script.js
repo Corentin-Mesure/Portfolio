@@ -1692,87 +1692,23 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ════════════════════════════════════════════════════════
-   ZOOM — CTRL + MOLETTE  (appliqué sur body, pas html)
+   MODE GRANDE TAILLE — toggle normal / XXL
 ════════════════════════════════════════════════════════ */
 (function () {
-  var zoom = parseFloat(localStorage.getItem('portfolio-zoom') || '1');
-  var MIN  = 0.7;
-  var MAX  = 1.5;
-  var STEP = 0.05;
+  var BIG = 1.85;
+  var active = localStorage.getItem('portfolio-bigmode') === '1';
 
-  /* ── CSS indicateur ── */
-  var s = document.createElement('style');
-  s.textContent =
-    '#zi{position:fixed;bottom:28px;right:28px;z-index:2147483647;pointer-events:none;' +
-      'background:rgba(8,8,16,0.92);border:1px solid rgba(200,169,110,0.45);' +
-      'border-radius:12px;padding:12px 16px;width:210px;' +
-      'opacity:0;transform:translateY(10px);' +
-      'transition:opacity .25s ease,transform .25s ease;' +
-      'font-family:Cinzel,serif;backdrop-filter:blur(12px);}' +
-    '#zi.show{opacity:1;transform:translateY(0);}' +
-    '#zi-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}' +
-    '#zi-label{font-size:10px;letter-spacing:2.5px;color:rgba(200,169,110,0.6);}' +
-    '#zi-value{font-size:18px;font-weight:600;color:#c8a96e;font-family:monospace;min-width:58px;text-align:right;}' +
-    '#zi-track{background:rgba(255,255,255,0.1);border-radius:4px;height:4px;overflow:hidden;}' +
-    '#zi-fill{height:100%;background:linear-gradient(90deg,#c8a96e,#f0dc9a);border-radius:4px;transition:width .15s ease;}' +
-    '#zi-ticks{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;' +
-      'color:rgba(200,169,110,0.35);font-family:monospace;}' +
-    '#zi-hint{margin-top:8px;font-size:9px;letter-spacing:1.5px;color:rgba(200,169,110,0.3);text-align:center;}';
-  document.head.appendChild(s);
-
-  /* ── DOM indicateur ── */
-  var ind = document.createElement('div');
-  ind.id = 'zi';
-  ind.innerHTML =
-    '<div id="zi-header">' +
-      '<span id="zi-label">TAILLE</span>' +
-      '<span id="zi-value">100%</span>' +
-    '</div>' +
-    '<div id="zi-track"><div id="zi-fill"></div></div>' +
-    '<div id="zi-ticks"><span>70%</span><span>100%</span><span>150%</span></div>' +
-    '<div id="zi-hint">Ctrl+0 pour réinitialiser</div>';
-  document.body.appendChild(ind);
-
-  var fill  = document.getElementById('zi-fill');
-  var value = document.getElementById('zi-value');
-  var timer;
-
-  function showInd() {
-    var pct    = Math.round(zoom * 100);
-    var barPct = ((zoom - MIN) / (MAX - MIN)) * 100;
-    value.textContent = pct + '%';
-    fill.style.width  = barPct + '%';
-    ind.classList.add('show');
-    clearTimeout(timer);
-    timer = setTimeout(function () { ind.classList.remove('show'); }, 1600);
+  function apply(on) {
+    active = on;
+    localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
+    document.body.style.zoom = on ? BIG : '';
+    var btn = document.getElementById('bigModeBtn');
+    if (btn) btn.classList.toggle('active', on);
   }
 
-  function applyZoom() {
-    localStorage.setItem('portfolio-zoom', zoom);
-    /* zoom sur body : position:fixed reste ancré au viewport,
-       getBoundingClientRect() retourne des valeurs en px CSS réels */
-    document.body.style.zoom = zoom;
-    showInd();
-  }
+  window.toggleBigMode = function () { apply(!active); };
 
-  /* ── Applique le zoom sauvegardé au chargement ── */
-  if (zoom !== 1) applyZoom();
-
-  /* ── Ctrl + molette ── */
-  window.addEventListener('wheel', function (e) {
-    if (!e.ctrlKey) return;
-    e.preventDefault();
-    zoom += e.deltaY < 0 ? STEP : -STEP;
-    zoom  = parseFloat(Math.min(MAX, Math.max(MIN, zoom)).toFixed(2));
-    applyZoom();
-  }, { passive: false });
-
-  /* ── Ctrl + 0 : réinitialiser ── */
-  window.addEventListener('keydown', function (e) {
-    if (e.ctrlKey && (e.key === '0' || e.code === 'Digit0')) {
-      e.preventDefault();
-      zoom = 1;
-      applyZoom();
-    }
+  document.addEventListener('DOMContentLoaded', function () {
+    if (active) apply(true);
   });
 })();
