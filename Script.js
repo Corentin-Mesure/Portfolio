@@ -1692,67 +1692,71 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ════════════════════════════════════════════════════════
-   ZOOM CTRL + MOLETTE
+   ZOOM — CTRL + MOLETTE  (appliqué sur body, pas html)
 ════════════════════════════════════════════════════════ */
 (function () {
-  var zoom = 1;
-  var MIN  = 0.5;
-  var MAX  = 2;
-  var STEP = 0.1;
+  var zoom = parseFloat(localStorage.getItem('portfolio-zoom') || '1');
+  var MIN  = 0.7;
+  var MAX  = 1.5;
+  var STEP = 0.05;
 
-  /* ── Injection du CSS ── */
+  /* ── CSS indicateur ── */
   var s = document.createElement('style');
   s.textContent =
-    '#zoom-indicator{' +
-      'position:fixed;bottom:28px;right:28px;' +
-      'background:rgba(8,8,16,0.92);' +
-      'border:1px solid rgba(200,169,110,0.45);' +
-      'border-radius:12px;padding:12px 16px;width:200px;' +
+    '#zi{position:fixed;bottom:28px;right:28px;z-index:2147483647;pointer-events:none;' +
+      'background:rgba(8,8,16,0.92);border:1px solid rgba(200,169,110,0.45);' +
+      'border-radius:12px;padding:12px 16px;width:210px;' +
       'opacity:0;transform:translateY(10px);' +
       'transition:opacity .25s ease,transform .25s ease;' +
-      'pointer-events:none;z-index:99999;' +
-      'backdrop-filter:blur(12px);font-family:Cinzel,serif;}' +
-    '#zoom-indicator.zi-visible{opacity:1;transform:translateY(0);}' +
-    '.zi-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}' +
-    '.zi-label{font-size:10px;letter-spacing:2.5px;color:rgba(200,169,110,0.6);}' +
-    '.zi-value{font-size:18px;font-weight:600;color:#c8a96e;font-family:monospace;min-width:52px;text-align:right;}' +
-    '.zi-track{background:rgba(255,255,255,0.1);border-radius:4px;height:4px;overflow:hidden;}' +
-    '.zi-fill{height:100%;background:linear-gradient(90deg,#c8a96e,#f0dc9a);border-radius:4px;transition:width .15s ease;}' +
-    '.zi-ticks{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:rgba(200,169,110,0.35);font-family:monospace;}';
+      'font-family:Cinzel,serif;backdrop-filter:blur(12px);}' +
+    '#zi.show{opacity:1;transform:translateY(0);}' +
+    '#zi-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}' +
+    '#zi-label{font-size:10px;letter-spacing:2.5px;color:rgba(200,169,110,0.6);}' +
+    '#zi-value{font-size:18px;font-weight:600;color:#c8a96e;font-family:monospace;min-width:58px;text-align:right;}' +
+    '#zi-track{background:rgba(255,255,255,0.1);border-radius:4px;height:4px;overflow:hidden;}' +
+    '#zi-fill{height:100%;background:linear-gradient(90deg,#c8a96e,#f0dc9a);border-radius:4px;transition:width .15s ease;}' +
+    '#zi-ticks{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;' +
+      'color:rgba(200,169,110,0.35);font-family:monospace;}' +
+    '#zi-hint{margin-top:8px;font-size:9px;letter-spacing:1.5px;color:rgba(200,169,110,0.3);text-align:center;}';
   document.head.appendChild(s);
 
-  /* ── Création de l'indicateur ── */
+  /* ── DOM indicateur ── */
   var ind = document.createElement('div');
-  ind.id = 'zoom-indicator';
+  ind.id = 'zi';
   ind.innerHTML =
-    '<div class="zi-header">' +
-      '<span class="zi-label">ZOOM</span>' +
-      '<span class="zi-value" id="ziValue">100%</span>' +
+    '<div id="zi-header">' +
+      '<span id="zi-label">TAILLE</span>' +
+      '<span id="zi-value">100%</span>' +
     '</div>' +
-    '<div class="zi-track"><div class="zi-fill" id="ziFill"></div></div>' +
-    '<div class="zi-ticks"><span>50%</span><span>100%</span><span>200%</span></div>';
+    '<div id="zi-track"><div id="zi-fill"></div></div>' +
+    '<div id="zi-ticks"><span>70%</span><span>100%</span><span>150%</span></div>' +
+    '<div id="zi-hint">Ctrl+0 pour réinitialiser</div>';
   document.body.appendChild(ind);
 
-  var ziFill  = document.getElementById('ziFill');
-  var ziValue = document.getElementById('ziValue');
-  var hideTimer;
+  var fill  = document.getElementById('zi-fill');
+  var value = document.getElementById('zi-value');
+  var timer;
 
-  function showIndicator() {
+  function showInd() {
     var pct    = Math.round(zoom * 100);
     var barPct = ((zoom - MIN) / (MAX - MIN)) * 100;
-    ziValue.textContent  = pct + '%';
-    ziFill.style.width   = barPct + '%';
-    ind.classList.add('zi-visible');
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(function () {
-      ind.classList.remove('zi-visible');
-    }, 1500);
+    value.textContent = pct + '%';
+    fill.style.width  = barPct + '%';
+    ind.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function () { ind.classList.remove('show'); }, 1600);
   }
 
   function applyZoom() {
-    document.documentElement.style.zoom = zoom;
-    showIndicator();
+    localStorage.setItem('portfolio-zoom', zoom);
+    /* zoom sur body : position:fixed reste ancré au viewport,
+       getBoundingClientRect() retourne des valeurs en px CSS réels */
+    document.body.style.zoom = zoom;
+    showInd();
   }
+
+  /* ── Applique le zoom sauvegardé au chargement ── */
+  if (zoom !== 1) applyZoom();
 
   /* ── Ctrl + molette ── */
   window.addEventListener('wheel', function (e) {
