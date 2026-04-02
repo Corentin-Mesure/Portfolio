@@ -1691,3 +1691,761 @@ document.addEventListener('DOMContentLoaded', function () {
   applyAnimState(animEnabled);
 });
 
+/* ════════════════════════════════════════════════════════
+   CODE CAROUSEL — Données et moteur
+   Ajouter à la fin de Script.js ou inclure séparément
+════════════════════════════════════════════════════════ */
+
+/* ── Données des slides par projet ── */
+var CODE_SLIDES_DATA = {
+
+  'animaland': [
+    {
+      filename: 'chat_server.js',
+      lang: 'Node.js / Socket.io',
+      title: 'Chat en temps réel — Socket.io',
+      explanation: 'Le <strong>serveur Node.js</strong> écoute les connexions Socket.io. Quand un utilisateur envoie un message (<code>sendMessage</code>), il est enregistré en base PostgreSQL puis diffusé instantanément à tous les membres du salon via <code>io.to(roomId).emit()</code>. La persistance et le temps réel sont ainsi combinés.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// server.js — Serveur Socket.io + Express</span>' },
+        { hl: false, html: '<span class="tk-kw">const</span> <span class="tk-var">io</span> <span class="tk-op">=</span> <span class="tk-fn">require</span>(<span class="tk-str">\'socket.io\'</span>)(server, { cors: { origin: <span class="tk-str">\'*\'</span> } });' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-var">io</span>.<span class="tk-fn">on</span>(<span class="tk-str">\'connection\'</span>, (<span class="tk-var">socket</span>) <span class="tk-op">=&gt;</span> {' },
+        { hl: true,  html: '  <span class="tk-var">socket</span>.<span class="tk-fn">on</span>(<span class="tk-str">\'sendMessage\'</span>, <span class="tk-kw">async</span> ({ roomId, userId, content }) <span class="tk-op">=&gt;</span> {' },
+        { hl: false, html: '    <span class="tk-cmt">// 1. Persister en PostgreSQL</span>' },
+        { hl: false, html: '    <span class="tk-kw">const</span> <span class="tk-var">saved</span> <span class="tk-op">=</span> <span class="tk-kw">await</span> <span class="tk-fn">saveMessage</span>({ roomId, userId, content });' },
+        { hl: false, html: '' },
+        { hl: false, html: '    <span class="tk-cmt">// 2. Diffuser à tous les membres du salon</span>' },
+        { hl: true,  html: '    <span class="tk-var">io</span>.<span class="tk-fn">to</span>(roomId).<span class="tk-fn">emit</span>(<span class="tk-str">\'newMessage\'</span>, {' },
+        { hl: false, html: '      id: saved.<span class="tk-prop">id</span>, content: saved.<span class="tk-prop">content</span>,' },
+        { hl: false, html: '      author: saved.<span class="tk-prop">username</span>, timestamp: saved.<span class="tk-prop">created_at</span>' },
+        { hl: false, html: '    });' },
+        { hl: false, html: '' },
+        { hl: false, html: '    <span class="tk-cmt">// 3. Notification FCM si destinataire absent</span>' },
+        { hl: false, html: '    <span class="tk-kw">await</span> <span class="tk-fn">sendFCMIfOffline</span>(roomId, userId, content);' },
+        { hl: false, html: '  });' },
+        { hl: false, html: '' },
+        { hl: false, html: '  socket.<span class="tk-fn">on</span>(<span class="tk-str">\'typing\'</span>, ({ roomId, username }) <span class="tk-op">=&gt;</span> {' },
+        { hl: false, html: '    socket.<span class="tk-fn">to</span>(roomId).<span class="tk-fn">emit</span>(<span class="tk-str">\'userTyping\'</span>, { username });' },
+        { hl: false, html: '  });' },
+        { hl: false, html: '});' },
+      ]
+    },
+    {
+      filename: 'auth_service.js',
+      lang: 'Node.js / JWT',
+      title: 'Inscription & Validation admin',
+      explanation: 'Lors de l\'inscription, le compte est créé avec le statut <code>"pending"</code>. Le login vérifie ce statut : si le compte n\'est pas encore validé, une erreur <code>403</code> est retournée. Seul l\'admin peut faire passer le statut à <code>"approved"</code>.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// auth.js — Inscription avec validation manuelle</span>' },
+        { hl: false, html: '<span class="tk-var">router</span>.<span class="tk-fn">post</span>(<span class="tk-str">\'/register\'</span>, <span class="tk-kw">async</span> (req, res) <span class="tk-op">=&gt;</span> {' },
+        { hl: false, html: '  <span class="tk-kw">const</span> { name, email, password } <span class="tk-op">=</span> req.<span class="tk-prop">body</span>;' },
+        { hl: false, html: '  <span class="tk-kw">const</span> hashed <span class="tk-op">=</span> <span class="tk-kw">await</span> bcrypt.<span class="tk-fn">hash</span>(password, <span class="tk-num">12</span>);' },
+        { hl: false, html: '' },
+        { hl: true,  html: '  <span class="tk-kw">await</span> db.<span class="tk-fn">query</span>(' },
+        { hl: false, html: '    <span class="tk-str">`INSERT INTO users (name, email, password, status)</span>' },
+        { hl: false, html: '     <span class="tk-str">VALUES ($1, $2, $3, \'pending\')`</span>,' },
+        { hl: false, html: '    [name, email, hashed]' },
+        { hl: false, html: '  );' },
+        { hl: false, html: '  res.<span class="tk-fn">json</span>({ message: <span class="tk-str">\'En attente de validation\'</span> });' },
+        { hl: false, html: '});' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-cmt">// Connexion — vérifie le statut</span>' },
+        { hl: false, html: '<span class="tk-var">router</span>.<span class="tk-fn">post</span>(<span class="tk-str">\'/login\'</span>, <span class="tk-kw">async</span> (req, res) <span class="tk-op">=&gt;</span> {' },
+        { hl: false, html: '  <span class="tk-kw">const</span> user <span class="tk-op">=</span> <span class="tk-kw">await</span> <span class="tk-fn">findUserByEmail</span>(req.<span class="tk-prop">body</span>.email);' },
+        { hl: true,  html: '  <span class="tk-kw">if</span> (user.status <span class="tk-op">!==</span> <span class="tk-str">\'approved\'</span>) {' },
+        { hl: false, html: '    <span class="tk-kw">return</span> res.<span class="tk-fn">status</span>(<span class="tk-num">403</span>).<span class="tk-fn">json</span>({ error: <span class="tk-str">\'Compte non validé\'</span> });' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '  <span class="tk-kw">const</span> token <span class="tk-op">=</span> jwt.<span class="tk-fn">sign</span>({ userId: user.id }, JWT_SECRET);' },
+        { hl: false, html: '  res.<span class="tk-fn">json</span>({ token });' },
+        { hl: false, html: '});' },
+      ]
+    },
+    {
+      filename: 'fcm_service.js',
+      lang: 'Firebase Admin SDK',
+      title: 'Notifications Push FCM',
+      explanation: 'Le token FCM de chaque appareil est stocké en base à la connexion. Quand un message est envoyé, <code>sendFCMIfOffline()</code> récupère les tokens des membres absents et appelle l\'API Firebase pour envoyer une notification push, même si l\'app est fermée.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// fcm.js — Envoi notification Firebase Cloud Messaging</span>' },
+        { hl: false, html: '<span class="tk-kw">const</span> admin <span class="tk-op">=</span> <span class="tk-fn">require</span>(<span class="tk-str">\'firebase-admin\'</span>);' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">async function</span> <span class="tk-fn">sendFCMIfOffline</span>(roomId, senderId, content) {' },
+        { hl: false, html: '  <span class="tk-cmt">// Récupérer les tokens des membres hors-ligne</span>' },
+        { hl: true,  html: '  <span class="tk-kw">const</span> offlineTokens <span class="tk-op">=</span> <span class="tk-kw">await</span> db.<span class="tk-fn">query</span>(`' },
+        { hl: false, html: '    <span class="tk-str">SELECT fcm_token FROM room_members rm</span>' },
+        { hl: false, html: '    <span class="tk-str">JOIN users u ON u.id = rm.user_id</span>' },
+        { hl: false, html: '    <span class="tk-str">WHERE rm.room_id = $1 AND rm.user_id != $2</span>' },
+        { hl: false, html: '    <span class="tk-str">  AND u.is_online = false AND u.fcm_token IS NOT NULL</span>' },
+        { hl: false, html: '  `, [roomId, senderId]);' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">for</span> (<span class="tk-kw">const</span> { fcm_token } <span class="tk-kw">of</span> offlineTokens.rows) {' },
+        { hl: true,  html: '    <span class="tk-kw">await</span> admin.<span class="tk-fn">messaging</span>().<span class="tk-fn">send</span>({' },
+        { hl: false, html: '      token: fcm_token,' },
+        { hl: false, html: '      notification: { title: <span class="tk-str">\'Nouveau message\'</span>, body: content.<span class="tk-fn">slice</span>(<span class="tk-num">0</span>, <span class="tk-num">80</span>) },' },
+        { hl: false, html: '      data: { roomId: String(roomId) }' },
+        { hl: false, html: '    });' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'schema.sql',
+      lang: 'PostgreSQL',
+      title: 'Structure de la base de données',
+      explanation: 'La base PostgreSQL sur OVH comprend : <code>users</code> (avec statut et token FCM), <code>rooms</code> (conversations et groupes), <code>messages</code> supprimés automatiquement après 6 mois, et <code>polls</code> / <code>poll_votes</code> pour les sondages.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">-- schema.sql — Base PostgreSQL Animal\'and</span>' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">CREATE TABLE</span> users (' },
+        { hl: false, html: '  id         <span class="tk-cls">SERIAL PRIMARY KEY</span>,' },
+        { hl: false, html: '  name       <span class="tk-cls">VARCHAR</span>(<span class="tk-num">100</span>) <span class="tk-kw">NOT NULL</span>,' },
+        { hl: false, html: '  email      <span class="tk-cls">VARCHAR</span>(<span class="tk-num">255</span>) <span class="tk-kw">UNIQUE NOT NULL</span>,' },
+        { hl: false, html: '  password   <span class="tk-cls">TEXT</span> <span class="tk-kw">NOT NULL</span>,' },
+        { hl: true,  html: '  status     <span class="tk-cls">VARCHAR</span>(<span class="tk-num">20</span>) <span class="tk-kw">DEFAULT</span> <span class="tk-str">\'pending\'</span>,  <span class="tk-cmt">-- pending/approved/banned</span>' },
+        { hl: false, html: '  role       <span class="tk-cls">VARCHAR</span>(<span class="tk-num">20</span>) <span class="tk-kw">DEFAULT</span> <span class="tk-str">\'user\'</span>,' },
+        { hl: false, html: '  fcm_token  <span class="tk-cls">TEXT</span>,' },
+        { hl: false, html: '  is_online  <span class="tk-cls">BOOLEAN DEFAULT false</span>' },
+        { hl: false, html: ');' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">CREATE TABLE</span> messages (' },
+        { hl: false, html: '  id         <span class="tk-cls">SERIAL PRIMARY KEY</span>,' },
+        { hl: false, html: '  room_id    <span class="tk-cls">INT REFERENCES</span> rooms(id) <span class="tk-kw">ON DELETE CASCADE</span>,' },
+        { hl: false, html: '  user_id    <span class="tk-cls">INT REFERENCES</span> users(id),' },
+        { hl: false, html: '  content    <span class="tk-cls">TEXT</span>,' },
+        { hl: true,  html: '  created_at <span class="tk-cls">TIMESTAMP DEFAULT NOW</span>()  <span class="tk-cmt">-- Supprimé après 6 mois</span>' },
+        { hl: false, html: ');' },
+        { hl: false, html: '' },
+        { hl: true,  html: '<span class="tk-kw">DELETE FROM</span> messages <span class="tk-kw">WHERE</span> created_at &lt; <span class="tk-fn">NOW</span>() - <span class="tk-str">INTERVAL \'6 months\'</span>;' },
+      ]
+    },
+  ],
+
+  'animalvest': [
+    {
+      filename: 'guest_auth.dart',
+      lang: 'Flutter / Dart',
+      title: 'Authentification — Compte temporaire auto',
+      explanation: 'À l\'ouverture de l\'app, un compte invité est créé automatiquement via <code>POST /guest</code>. L\'UUID généré sert de token temporaire stocké dans <code>FlutterSecureStorage</code>. À la fermeture, <code>deleteGuestAccount()</code> est appelé — aucune donnée personnelle ne persiste.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// guest_auth.dart — Compte temporaire auto-généré</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">GuestAuthService</span> {' },
+        { hl: false, html: '  <span class="tk-kw">static</span> <span class="tk-kw">Future</span>&lt;<span class="tk-cls">String</span>&gt; <span class="tk-fn">createGuestSession</span>() <span class="tk-kw">async</span> {' },
+        { hl: true,  html: '    <span class="tk-kw">final</span> response <span class="tk-op">=</span> <span class="tk-kw">await</span> ApiService.instance.<span class="tk-fn">post</span>(<span class="tk-str">\'/guest\'</span>, {' },
+        { hl: false, html: '      <span class="tk-str">\'device_id\'</span>: <span class="tk-kw">await</span> DeviceInfo.<span class="tk-fn">getDeviceId</span>(),' },
+        { hl: false, html: '      <span class="tk-str">\'created_at\'</span>: DateTime.now().<span class="tk-fn">toIso8601String</span>(),' },
+        { hl: false, html: '    });' },
+        { hl: false, html: '    <span class="tk-kw">final</span> token <span class="tk-op">=</span> response[<span class="tk-str">\'guest_token\'</span>];' },
+        { hl: false, html: '    <span class="tk-kw">await</span> SecureStorage.<span class="tk-fn">write</span>(<span class="tk-str">\'guest_token\'</span>, token);' },
+        { hl: false, html: '    <span class="tk-kw">return</span> token;' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-cmt">// Appelé à la fermeture — supprime le compte</span>' },
+        { hl: true,  html: '  <span class="tk-kw">static</span> <span class="tk-kw">Future</span>&lt;<span class="tk-cls">void</span>&gt; <span class="tk-fn">deleteGuestAccount</span>() <span class="tk-kw">async</span> {' },
+        { hl: false, html: '    <span class="tk-kw">final</span> token <span class="tk-op">=</span> <span class="tk-kw">await</span> SecureStorage.<span class="tk-fn">read</span>(<span class="tk-str">\'guest_token\'</span>);' },
+        { hl: false, html: '    <span class="tk-kw">if</span> (token <span class="tk-op">!=</span> <span class="tk-kw">null</span>) {' },
+        { hl: false, html: '      <span class="tk-kw">await</span> ApiService.instance.<span class="tk-fn">delete</span>(<span class="tk-str">\'/guest/$token\'</span>);' },
+        { hl: false, html: '      <span class="tk-kw">await</span> SecureStorage.<span class="tk-fn">delete</span>(<span class="tk-str">\'guest_token\'</span>);' },
+        { hl: false, html: '    }' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'order_service.php',
+      lang: 'PHP / PHPMailer',
+      title: 'Commandes — Emails automatiques par statut',
+      explanation: 'Quand l\'admin change le statut d\'une commande, <code>updateOrderStatus()</code> met à jour la base puis appelle <code>sendStatusEmail()</code>. PHPMailer envoie un template HTML différent pour chaque statut : confirmée, traitée, expédiée (avec numéro de colis), livrée.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">&lt;?php // order_service.php — Statut + email auto</span>' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">updateOrderStatus</span>(<span class="tk-var">$orderId</span>, <span class="tk-var">$status</span>, <span class="tk-var">$tracking</span> = <span class="tk-kw">null</span>) {' },
+        { hl: true,  html: '  <span class="tk-var">$stmt</span> <span class="tk-op">=</span> <span class="tk-var">$pdo</span>-&gt;<span class="tk-fn">prepare</span>(' },
+        { hl: false, html: '    <span class="tk-str">"UPDATE orders SET status=?, tracking_number=? WHERE id=?"</span>' },
+        { hl: false, html: '  );' },
+        { hl: false, html: '  <span class="tk-var">$stmt</span>-&gt;<span class="tk-fn">execute</span>([<span class="tk-var">$status</span>, <span class="tk-var">$tracking</span>, <span class="tk-var">$orderId</span>]);' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-var">$order</span> <span class="tk-op">=</span> <span class="tk-fn">getOrderById</span>(<span class="tk-var">$orderId</span>);' },
+        { hl: true,  html: '  <span class="tk-fn">sendStatusEmail</span>(<span class="tk-var">$order</span>[<span class="tk-str">\'member_email\'</span>], <span class="tk-var">$status</span>, <span class="tk-var">$order</span>);' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">sendStatusEmail</span>(<span class="tk-var">$email</span>, <span class="tk-var">$status</span>, <span class="tk-var">$order</span>) {' },
+        { hl: false, html: '  <span class="tk-var">$templates</span> <span class="tk-op">=</span> [' },
+        { hl: false, html: '    <span class="tk-str">\'confirmed\'</span> =&gt; <span class="tk-fn">getConfirmedTemplate</span>(<span class="tk-var">$order</span>),' },
+        { hl: true,  html: '    <span class="tk-str">\'shipped\'</span>   =&gt; <span class="tk-fn">getShippedTemplate</span>(<span class="tk-var">$order</span>, <span class="tk-var">$order</span>[<span class="tk-str">\'tracking_number\'</span>]),' },
+        { hl: false, html: '    <span class="tk-str">\'delivered\'</span> =&gt; <span class="tk-fn">getDeliveredTemplate</span>(<span class="tk-var">$order</span>),' },
+        { hl: false, html: '  ];' },
+        { hl: false, html: '  PHPMailer::<span class="tk-fn">send</span>(<span class="tk-var">$email</span>, <span class="tk-var">$templates</span>[<span class="tk-var">$status</span>]);' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'password_policy.dart',
+      lang: 'Flutter / Dart',
+      title: 'Sécurité — Indicateur force du mot de passe',
+      explanation: 'La politique vérifie en temps réel : longueur ≥ 8, majuscule, chiffre, caractère spécial. Le score 0→4 détermine la couleur de l\'indicateur. Le <code>RateLimiter</code> bloque les tentatives après 5 échecs en 2 minutes via <code>FlutterSecureStorage</code>.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// password_policy.dart — Validation force</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">PasswordStrength</span> {' },
+        { hl: false, html: '  <span class="tk-kw">static</span> <span class="tk-kw">int</span> <span class="tk-fn">score</span>(<span class="tk-cls">String</span> pwd) {' },
+        { hl: false, html: '    <span class="tk-kw">int</span> score <span class="tk-op">=</span> <span class="tk-num">0</span>;' },
+        { hl: true,  html: '    <span class="tk-kw">if</span> (pwd.length <span class="tk-op">&gt;=</span> <span class="tk-num">8</span>) score++;' },
+        { hl: true,  html: '    <span class="tk-kw">if</span> (pwd.<span class="tk-fn">contains</span>(RegExp(<span class="tk-str">r\'[A-Z]\'</span>))) score++;' },
+        { hl: true,  html: '    <span class="tk-kw">if</span> (pwd.<span class="tk-fn">contains</span>(RegExp(<span class="tk-str">r\'[0-9]\'</span>))) score++;' },
+        { hl: true,  html: '    <span class="tk-kw">if</span> (pwd.<span class="tk-fn">contains</span>(RegExp(<span class="tk-str">r\'[!@#\\$%^&*]\'</span>))) score++;' },
+        { hl: false, html: '    <span class="tk-kw">return</span> score; <span class="tk-cmt">// 0=faible ... 4=fort</span>' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-cmt">// Rate limiter — 5 essais max / 2 min</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">RateLimiter</span> {' },
+        { hl: false, html: '  <span class="tk-kw">static</span> <span class="tk-kw">Future</span>&lt;<span class="tk-kw">bool</span>&gt; <span class="tk-fn">isBlocked</span>(<span class="tk-cls">String</span> email) <span class="tk-kw">async</span> {' },
+        { hl: false, html: '    <span class="tk-kw">final</span> data <span class="tk-op">=</span> <span class="tk-kw">await</span> SecureStorage.<span class="tk-fn">read</span>(<span class="tk-str">\'login_attempts_$email\'</span>);' },
+        { hl: false, html: '    <span class="tk-kw">if</span> (data <span class="tk-op">==</span> <span class="tk-kw">null</span>) <span class="tk-kw">return false</span>;' },
+        { hl: false, html: '    <span class="tk-kw">final</span> attempts <span class="tk-op">=</span> jsonDecode(data);' },
+        { hl: true,  html: '    <span class="tk-kw">return</span> attempts[<span class="tk-str">\'count\'</span>] <span class="tk-op">&gt;=</span> <span class="tk-num">5</span> &amp;&amp;' },
+        { hl: false, html: '      DateTime.<span class="tk-fn">now</span>().<span class="tk-fn">difference</span>(DateTime.<span class="tk-fn">parse</span>(attempts[<span class="tk-str">\'since\'</span>])).inMinutes &lt; <span class="tk-num">2</span>;' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+  ],
+
+  'taskmanager': [
+    {
+      filename: 'tasks.js',
+      lang: 'JavaScript',
+      title: 'Navigation conditionnelle — Bouton Suivant',
+      explanation: 'La fonction <code>tryAdvance()</code> vérifie que toutes les checkboxes sont cochées avant d\'avancer. Si une sous-tâche de la tâche 1 est décochée après coup, <code>conditionalHide()</code> masque automatiquement la tâche 2 — forçant une revalidation.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// tasks.js — Navigation séquentielle conditionnelle</span>' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">tryAdvance</span>(taskIndex) {' },
+        { hl: true,  html: '  <span class="tk-kw">const</span> boxes <span class="tk-op">=</span> document.<span class="tk-fn">querySelectorAll</span>(<span class="tk-str">`#task-${taskIndex} .subtask-check`</span>);' },
+        { hl: false, html: '  <span class="tk-kw">const</span> allChecked <span class="tk-op">=</span> [...boxes].<span class="tk-fn">every</span>(b <span class="tk-op">=&gt;</span> b.checked);' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">if</span> (!allChecked) {' },
+        { hl: false, html: '    <span class="tk-fn">showError</span>(<span class="tk-str">\'Veuillez cocher toutes les sous-tâches\'</span>);' },
+        { hl: false, html: '    <span class="tk-kw">return</span>;' },
+        { hl: false, html: '  }' },
+        { hl: true,  html: '  <span class="tk-fn">unlockTask</span>(taskIndex <span class="tk-op">+</span> <span class="tk-num">1</span>);' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-cmt">// Tâche 2 disparaît si tâche 1 décochée a posteriori</span>' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">conditionalHide</span>() {' },
+        { hl: false, html: '  <span class="tk-kw">const</span> task1Boxes <span class="tk-op">=</span> document.<span class="tk-fn">querySelectorAll</span>(<span class="tk-str">\'#task-1 .subtask-check\'</span>);' },
+        { hl: false, html: '  <span class="tk-kw">const</span> task2 <span class="tk-op">=</span> document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'task-2\'</span>);' },
+        { hl: true,  html: '  <span class="tk-kw">const</span> allChecked <span class="tk-op">=</span> [...task1Boxes].<span class="tk-fn">every</span>(b <span class="tk-op">=&gt;</span> b.checked);' },
+        { hl: true,  html: '  task2.style.display <span class="tk-op">=</span> allChecked <span class="tk-op">?</span> <span class="tk-str">\'block\'</span> <span class="tk-op">:</span> <span class="tk-str">\'none\'</span>;' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: 'document.<span class="tk-fn">querySelectorAll</span>(<span class="tk-str">\'#task-1 .subtask-check\'</span>)' },
+        { hl: false, html: '  .<span class="tk-fn">forEach</span>(box <span class="tk-op">=&gt;</span> box.<span class="tk-fn">addEventListener</span>(<span class="tk-str">\'change\'</span>, conditionalHide));' },
+      ]
+    },
+    {
+      filename: 'quittancement.php',
+      lang: 'PHP / FPDF',
+      title: 'Génération PDF & envoi email automatique',
+      explanation: 'Quand toutes les tâches sont validées et l\'utilisateur confirme, <code>generateQuittancement()</code> crée un PDF via <strong>FPDF</strong> avec le récapitulatif du projet, puis PHPMailer l\'envoie automatiquement en pièce jointe.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">&lt;?php // quittancement.php — Génération PDF + email</span>' },
+        { hl: false, html: '<span class="tk-fn">require_once</span>(<span class="tk-str">\'fpdf/fpdf.php\'</span>);' },
+        { hl: false, html: '<span class="tk-fn">require_once</span>(<span class="tk-str">\'phpmailer/PHPMailer.php\'</span>);' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">generateQuittancement</span>(<span class="tk-var">$data</span>) {' },
+        { hl: false, html: '  <span class="tk-var">$pdf</span> <span class="tk-op">=</span> <span class="tk-kw">new</span> <span class="tk-cls">FPDF</span>();' },
+        { hl: false, html: '  <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">AddPage</span>();' },
+        { hl: false, html: '  <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">SetFont</span>(<span class="tk-str">\'Arial\'</span>, <span class="tk-str">\'B\'</span>, <span class="tk-num">16</span>);' },
+        { hl: true,  html: '  <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">Cell</span>(<span class="tk-num">0</span>, <span class="tk-num">10</span>, <span class="tk-str">\'Quittancement — \'</span> . <span class="tk-var">$data</span>[<span class="tk-str">\'project\'</span>], <span class="tk-str">\'B\'</span>, <span class="tk-num">1</span>, <span class="tk-str">\'C\'</span>);' },
+        { hl: false, html: '  <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">SetFont</span>(<span class="tk-str">\'Arial\'</span>, <span class="tk-str">\'\'</span>, <span class="tk-num">12</span>);' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">foreach</span> (<span class="tk-var">$data</span>[<span class="tk-str">\'tasks\'</span>] <span class="tk-kw">as</span> <span class="tk-var">$task</span>) {' },
+        { hl: false, html: '    <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">Cell</span>(<span class="tk-num">0</span>, <span class="tk-num">8</span>, <span class="tk-str">\'✓ \'</span> . <span class="tk-var">$task</span>[<span class="tk-str">\'title\'</span>], <span class="tk-str">\'\'</span>, <span class="tk-num">1</span>);' },
+        { hl: false, html: '  }' },
+        { hl: true,  html: '  <span class="tk-var">$pdf</span>-&gt;<span class="tk-fn">Output</span>(<span class="tk-str">\'F\'</span>, <span class="tk-str">\'/tmp/quittancement.pdf\'</span>);' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-var">$mail</span> <span class="tk-op">=</span> <span class="tk-kw">new</span> <span class="tk-cls">PHPMailer</span>();' },
+        { hl: false, html: '  <span class="tk-var">$mail</span>-&gt;<span class="tk-fn">addAddress</span>(<span class="tk-var">$data</span>[<span class="tk-str">\'recipient\'</span>]);' },
+        { hl: false, html: '  <span class="tk-var">$mail</span>-&gt;<span class="tk-fn">Subject</span> <span class="tk-op">=</span> <span class="tk-str">\'Validation de quittancement\'</span>;' },
+        { hl: true,  html: '  <span class="tk-var">$mail</span>-&gt;<span class="tk-fn">addAttachment</span>(<span class="tk-str">\'/tmp/quittancement.pdf\'</span>);' },
+        { hl: false, html: '  <span class="tk-var">$mail</span>-&gt;<span class="tk-fn">send</span>();' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'edit_modal.js',
+      lang: 'JavaScript',
+      title: 'Édition tâche — Mise à jour dynamique du DOM',
+      explanation: 'Le modal d\'édition pré-remplit les champs avec les données actuelles. À la soumission, <code>updateTaskDOM()</code> modifie le DOM immédiatement sans rechargement — le titre et les sous-tâches sont mis à jour en place.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// edit_modal.js — Édition sans rechargement de page</span>' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">openEditModal</span>(taskId) {' },
+        { hl: false, html: '  <span class="tk-kw">const</span> task <span class="tk-op">=</span> tasks[taskId];' },
+        { hl: true,  html: '  document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'edit-title\'</span>).value <span class="tk-op">=</span> task.title;' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">const</span> container <span class="tk-op">=</span> document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'edit-subtasks\'</span>);' },
+        { hl: false, html: '  container.innerHTML <span class="tk-op">=</span> task.subtasks.<span class="tk-fn">map</span>((sub, i) <span class="tk-op">=&gt;</span>' },
+        { hl: false, html: '    <span class="tk-str">`&lt;input type="text" id="sub-${i}" value="${sub.label}"&gt;`</span>' },
+        { hl: false, html: '  ).<span class="tk-fn">join</span>(<span class="tk-str">\'\'</span>);' },
+        { hl: false, html: '  document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'edit-modal\'</span>).style.display <span class="tk-op">=</span> <span class="tk-str">\'flex\'</span>;' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">function</span> <span class="tk-fn">saveEdit</span>(taskId) {' },
+        { hl: false, html: '  <span class="tk-kw">const</span> newTitle <span class="tk-op">=</span> document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'edit-title\'</span>).value;' },
+        { hl: true,  html: '  tasks[taskId].title <span class="tk-op">=</span> newTitle;' },
+        { hl: false, html: '  tasks[taskId].subtasks.<span class="tk-fn">forEach</span>((sub, i) <span class="tk-op">=&gt;</span> {' },
+        { hl: false, html: '    sub.label <span class="tk-op">=</span> document.<span class="tk-fn">getElementById</span>(<span class="tk-str">`sub-${i}`</span>).value;' },
+        { hl: false, html: '  });' },
+        { hl: true,  html: '  <span class="tk-fn">updateTaskDOM</span>(taskId);  <span class="tk-cmt">// Màj sans rechargement</span>' },
+        { hl: false, html: '  document.<span class="tk-fn">getElementById</span>(<span class="tk-str">\'edit-modal\'</span>).style.display <span class="tk-op">=</span> <span class="tk-str">\'none\'</span>;' },
+        { hl: false, html: '}' },
+      ]
+    },
+  ],
+
+  'lol': [
+    {
+      filename: 'champions.php',
+      lang: 'PHP / MySQL',
+      title: 'Recherche de champions — PDO',
+      explanation: 'La page récupère les champions depuis MySQL avec une requête PDO préparée filtrée par le paramètre GET <code>q</code>. Le wildcard <code>%$search%</code> permet une recherche partielle sur le nom ou le rôle, protégée contre les injections SQL.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">&lt;?php // champions.php — Recherche sécurisée PDO</span>' },
+        { hl: false, html: '<span class="tk-fn">require_once</span>(<span class="tk-str">\'db.php\'</span>);' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-var">$search</span> <span class="tk-op">=</span> <span class="tk-fn">isset</span>(<span class="tk-var">$_GET</span>[<span class="tk-str">\'q\'</span>]) ? <span class="tk-fn">trim</span>(<span class="tk-var">$_GET</span>[<span class="tk-str">\'q\'</span>]) : <span class="tk-str">\'\'</span>;' },
+        { hl: false, html: '' },
+        { hl: true,  html: '<span class="tk-var">$stmt</span> <span class="tk-op">=</span> <span class="tk-var">$pdo</span>-&gt;<span class="tk-fn">prepare</span>(<span class="tk-str">"' },
+        { hl: false, html: '  SELECT * FROM champions' },
+        { hl: false, html: '  WHERE name LIKE :search OR role LIKE :search' },
+        { hl: false, html: '  ORDER BY name ASC' },
+        { hl: false, html: '<span class="tk-str">"</span>);' },
+        { hl: false, html: '<span class="tk-var">$stmt</span>-&gt;<span class="tk-fn">execute</span>([<span class="tk-str">\'search\'</span> <span class="tk-op">=&gt;</span> <span class="tk-str">"%<span class="tk-var">$search</span>%"</span>]);' },
+        { hl: false, html: '<span class="tk-var">$champions</span> <span class="tk-op">=</span> <span class="tk-var">$stmt</span>-&gt;<span class="tk-fn">fetchAll</span>(<span class="tk-cls">PDO</span>::<span class="tk-prop">FETCH_ASSOC</span>);' },
+        { hl: false, html: '<span class="tk-op">?&gt;</span>' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-tag">&lt;div</span> <span class="tk-attr">class</span>=<span class="tk-val">"champions-grid"</span><span class="tk-tag">&gt;</span>' },
+        { hl: true,  html: '<span class="tk-op">&lt;?php</span> <span class="tk-kw">foreach</span> (<span class="tk-var">$champions</span> <span class="tk-kw">as</span> <span class="tk-var">$c</span>): <span class="tk-op">?&gt;</span>' },
+        { hl: false, html: '  <span class="tk-tag">&lt;div</span> <span class="tk-attr">class</span>=<span class="tk-val">"card"</span><span class="tk-tag">&gt;</span>' },
+        { hl: false, html: '    <span class="tk-tag">&lt;img</span> <span class="tk-attr">src</span>=<span class="tk-val">"images/&lt;?= $c[\'image\'] ?&gt;"</span><span class="tk-tag">&gt;</span>' },
+        { hl: false, html: '    <span class="tk-tag">&lt;h3&gt;</span><span class="tk-op">&lt;?=</span> <span class="tk-fn">htmlspecialchars</span>(<span class="tk-var">$c</span>[<span class="tk-str">\'name\'</span>]) <span class="tk-op">?&gt;</span><span class="tk-tag">&lt;/h3&gt;</span>' },
+        { hl: false, html: '  <span class="tk-tag">&lt;/div&gt;</span>' },
+        { hl: false, html: '<span class="tk-op">&lt;?php</span> <span class="tk-kw">endforeach</span>; <span class="tk-op">?&gt;</span>' },
+      ]
+    },
+    {
+      filename: 'schema.sql',
+      lang: 'MySQL',
+      title: 'Base de données MySQL — Champions & Capacités',
+      explanation: 'La base contient <code>champions</code> avec les stats (PV, armure, attaque), leur rôle et leur image, et <code>abilities</code> avec les 4 compétences par champion (Q, W, E, R). Un <code>INDEX</code> sur le nom accélère les recherches.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">-- schema.sql — League of Legends DB</span>' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">CREATE TABLE</span> champions (' },
+        { hl: false, html: '  id          <span class="tk-cls">INT AUTO_INCREMENT PRIMARY KEY</span>,' },
+        { hl: false, html: '  name        <span class="tk-cls">VARCHAR</span>(<span class="tk-num">100</span>) <span class="tk-kw">NOT NULL</span>,' },
+        { hl: false, html: '  role        <span class="tk-cls">VARCHAR</span>(<span class="tk-num">50</span>),   <span class="tk-cmt">-- Mage, Tank, ADC...</span>' },
+        { hl: false, html: '  hp          <span class="tk-cls">INT DEFAULT</span> <span class="tk-num">550</span>,' },
+        { hl: false, html: '  armor       <span class="tk-cls">INT DEFAULT</span> <span class="tk-num">28</span>,' },
+        { hl: false, html: '  attack      <span class="tk-cls">INT DEFAULT</span> <span class="tk-num">55</span>,' },
+        { hl: false, html: '  image       <span class="tk-cls">VARCHAR</span>(<span class="tk-num">255</span>),' },
+        { hl: false, html: '  description <span class="tk-cls">TEXT</span>' },
+        { hl: false, html: ');' },
+        { hl: false, html: '' },
+        { hl: true,  html: '<span class="tk-kw">CREATE INDEX</span> idx_champion_name <span class="tk-kw">ON</span> champions(name);' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">CREATE TABLE</span> abilities (' },
+        { hl: false, html: '  id           <span class="tk-cls">INT AUTO_INCREMENT PRIMARY KEY</span>,' },
+        { hl: false, html: '  champion_id  <span class="tk-cls">INT REFERENCES</span> champions(id),' },
+        { hl: false, html: '  ability_key  <span class="tk-cls">CHAR</span>(<span class="tk-num">1</span>),  <span class="tk-cmt">-- Q, W, E, R</span>' },
+        { hl: false, html: '  name         <span class="tk-cls">VARCHAR</span>(<span class="tk-num">100</span>),' },
+        { hl: false, html: '  description  <span class="tk-cls">TEXT</span>' },
+        { hl: false, html: ');' },
+        { hl: false, html: '' },
+        { hl: true,  html: '<span class="tk-kw">INSERT INTO</span> champions (name, role, hp, attack, image)' },
+        { hl: false, html: '<span class="tk-kw">VALUES</span> (<span class="tk-str">\'Ahri\'</span>, <span class="tk-str">\'Mage\'</span>, <span class="tk-num">590</span>, <span class="tk-num">53</span>, <span class="tk-str">\'ahri.jpg\'</span>);' },
+      ]
+    },
+  ],
+
+  'gsb-conges': [
+    {
+      filename: 'LeaveRequestForm.cs',
+      lang: 'C# / Windows Forms',
+      title: 'Demande de congés — Formulaire C#',
+      explanation: 'Le formulaire Windows Forms récupère les dates sélectionnées et calcule le nombre de jours. Avant de soumettre, il vérifie via <code>ApiClient.GetLeaveBalance()</code> que le solde est suffisant. La requête est envoyée à l\'API Laravel en JSON via <code>HttpClient</code>.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// LeaveRequestForm.cs — Windows Forms C#</span>' },
+        { hl: false, html: '<span class="tk-kw">private async void</span> <span class="tk-fn">BtnSubmit_Click</span>(<span class="tk-kw">object</span> sender, <span class="tk-cls">EventArgs</span> e) {' },
+        { hl: true,  html: '  <span class="tk-kw">var</span> startDate <span class="tk-op">=</span> datePickerStart.Value;' },
+        { hl: true,  html: '  <span class="tk-kw">var</span> endDate   <span class="tk-op">=</span> datePickerEnd.Value;' },
+        { hl: false, html: '  <span class="tk-kw">int</span> days <span class="tk-op">=</span> (<span class="tk-kw">int</span>)(endDate <span class="tk-op">-</span> startDate).TotalDays <span class="tk-op">+</span> <span class="tk-num">1</span>;' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-cmt">// Vérifier le solde via API Laravel</span>' },
+        { hl: false, html: '  <span class="tk-kw">int</span> balance <span class="tk-op">=</span> <span class="tk-kw">await</span> ApiClient.<span class="tk-fn">GetLeaveBalance</span>(currentUser.Id);' },
+        { hl: false, html: '  <span class="tk-kw">if</span> (days <span class="tk-op">&gt;</span> balance) {' },
+        { hl: false, html: '    <span class="tk-cls">MessageBox</span>.<span class="tk-fn">Show</span>(<span class="tk-str">"Solde insuffisant"</span>, <span class="tk-str">"Erreur"</span>);' },
+        { hl: false, html: '    <span class="tk-kw">return</span>;' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '' },
+        { hl: true,  html: '  <span class="tk-kw">var</span> result <span class="tk-op">=</span> <span class="tk-kw">await</span> ApiClient.<span class="tk-fn">PostLeaveRequest</span>(<span class="tk-kw">new</span> {' },
+        { hl: false, html: '    userId    <span class="tk-op">=</span> currentUser.Id,' },
+        { hl: false, html: '    startDate <span class="tk-op">=</span> startDate.<span class="tk-fn">ToString</span>(<span class="tk-str">"yyyy-MM-dd"</span>),' },
+        { hl: false, html: '    endDate   <span class="tk-op">=</span> endDate.<span class="tk-fn">ToString</span>(<span class="tk-str">"yyyy-MM-dd"</span>),' },
+        { hl: false, html: '    days      <span class="tk-op">=</span> days' },
+        { hl: false, html: '  });' },
+        { hl: false, html: '  <span class="tk-cls">MessageBox</span>.<span class="tk-fn">Show</span>(<span class="tk-str">"Demande envoyée !"</span>);' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'LeaveController.php',
+      lang: 'Laravel / PHP',
+      title: 'API REST Laravel — Panel RH',
+      explanation: 'L\'API expose <code>POST /api/leaves</code> pour créer une demande et <code>PATCH /api/leaves/{id}</code> pour l\'accepter ou la refuser. Lors d\'une validation, le solde est automatiquement décrémenté dans <code>leave_balances</code> via <code>decrement()</code>.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// LeaveController.php — API REST Laravel</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">LeaveController</span> <span class="tk-kw">extends</span> <span class="tk-cls">Controller</span> {' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">public function</span> <span class="tk-fn">store</span>(<span class="tk-cls">Request</span> <span class="tk-var">$request</span>) {' },
+        { hl: false, html: '    <span class="tk-var">$request</span>-&gt;<span class="tk-fn">validate</span>([' },
+        { hl: false, html: '      <span class="tk-str">\'user_id\'</span>    =&gt; <span class="tk-str">\'required|exists:users,id\'</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'start_date\'</span> =&gt; <span class="tk-str">\'required|date\'</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'end_date\'</span>   =&gt; <span class="tk-str">\'required|date|after:start_date\'</span>,' },
+        { hl: false, html: '    ]);' },
+        { hl: true,  html: '    <span class="tk-kw">return</span> <span class="tk-cls">LeaveRequest</span>::<span class="tk-fn">create</span>([' },
+        { hl: false, html: '      ...<span class="tk-var">$request</span>-&gt;<span class="tk-fn">all</span>(),' },
+        { hl: false, html: '      <span class="tk-str">\'status\'</span> =&gt; <span class="tk-str">\'pending\'</span>' },
+        { hl: false, html: '    ]);' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-kw">public function</span> <span class="tk-fn">updateStatus</span>(<span class="tk-cls">LeaveRequest</span> <span class="tk-var">$leave</span>, <span class="tk-cls">Request</span> <span class="tk-var">$req</span>) {' },
+        { hl: false, html: '    <span class="tk-var">$leave</span>-&gt;<span class="tk-fn">update</span>([<span class="tk-str">\'status\'</span> =&gt; <span class="tk-var">$req</span>-&gt;<span class="tk-prop">status</span>]);' },
+        { hl: true,  html: '    <span class="tk-kw">if</span> (<span class="tk-var">$req</span>-&gt;<span class="tk-prop">status</span> <span class="tk-op">===</span> <span class="tk-str">\'approved\'</span>) {' },
+        { hl: false, html: '      <span class="tk-cls">LeaveBalance</span>::<span class="tk-fn">where</span>(<span class="tk-str">\'user_id\'</span>, <span class="tk-var">$leave</span>-&gt;<span class="tk-prop">user_id</span>)' },
+        { hl: false, html: '        -&gt;<span class="tk-fn">decrement</span>(<span class="tk-str">\'days\'</span>, <span class="tk-var">$leave</span>-&gt;<span class="tk-prop">days</span>);' },
+        { hl: false, html: '    }' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+  ],
+
+  'gsb-salaires': [
+    {
+      filename: 'SalaireController.php',
+      lang: 'Laravel / PHP',
+      title: 'Calcul automatique de l\'échelon',
+      explanation: 'La méthode <code>getEchelon()</code> convertit les jours d\'ancienneté en l\'un des 13 échelons via un <code>match</code>. Dès qu\'une ancienneté est modifiée, <code>updateSalary()</code> recalcule l\'échelon et récupère le salaire brut depuis la table <code>echelons</code>.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// SalaireController.php — Calcul échelon</span>' },
+        { hl: false, html: '<span class="tk-kw">private function</span> <span class="tk-fn">getEchelon</span>(<span class="tk-kw">int</span> <span class="tk-var">$jours</span>): <span class="tk-kw">int</span> {' },
+        { hl: false, html: '  <span class="tk-var">$annees</span> <span class="tk-op">=</span> <span class="tk-var">$jours</span> <span class="tk-op">/</span> <span class="tk-num">365</span>;' },
+        { hl: false, html: '' },
+        { hl: true,  html: '  <span class="tk-kw">return match</span>(<span class="tk-kw">true</span>) {' },
+        { hl: false, html: '    <span class="tk-var">$annees</span> <span class="tk-op">&lt;</span>  <span class="tk-num">2</span>  =&gt; <span class="tk-num">1</span>,' },
+        { hl: false, html: '    <span class="tk-var">$annees</span> <span class="tk-op">&lt;</span>  <span class="tk-num">4</span>  =&gt; <span class="tk-num">2</span>,' },
+        { hl: false, html: '    <span class="tk-var">$annees</span> <span class="tk-op">&lt;</span>  <span class="tk-num">6</span>  =&gt; <span class="tk-num">3</span>,' },
+        { hl: false, html: '    <span class="tk-cmt">    // ... 4→8 (par pas de 2 ans)</span>' },
+        { hl: false, html: '    <span class="tk-var">$annees</span> <span class="tk-op">&lt;</span> <span class="tk-num">20</span>  =&gt; <span class="tk-num">10</span>,' },
+        { hl: false, html: '    <span class="tk-var">$annees</span> <span class="tk-op">&lt;</span> <span class="tk-num">28</span>  =&gt; <span class="tk-num">12</span>,' },
+        { hl: false, html: '    <span class="tk-kw">default</span>         =&gt; <span class="tk-num">13</span>,  <span class="tk-cmt">// 32+ ans</span>' },
+        { hl: false, html: '  };' },
+        { hl: false, html: '}' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-kw">public function</span> <span class="tk-fn">updateSalary</span>(<span class="tk-cls">Request</span> <span class="tk-var">$req</span>, <span class="tk-kw">int</span> <span class="tk-var">$id</span>) {' },
+        { hl: false, html: '  <span class="tk-var">$praticien</span> <span class="tk-op">=</span> <span class="tk-cls">Praticien</span>::<span class="tk-fn">findOrFail</span>(<span class="tk-var">$id</span>);' },
+        { hl: false, html: '  <span class="tk-var">$praticien</span>-&gt;<span class="tk-fn">update</span>([<span class="tk-str">\'anciennete\'</span> =&gt; <span class="tk-var">$req</span>-&gt;<span class="tk-prop">anciennete</span>]);' },
+        { hl: true,  html: '  <span class="tk-var">$echelon</span> <span class="tk-op">=</span> <span class="tk-var">$this</span>-&gt;<span class="tk-fn">getEchelon</span>(<span class="tk-var">$req</span>-&gt;<span class="tk-prop">anciennete</span>);' },
+        { hl: true,  html: '  <span class="tk-var">$salaire</span> <span class="tk-op">=</span> <span class="tk-cls">Echelon</span>::<span class="tk-fn">find</span>(<span class="tk-var">$echelon</span>)-&gt;<span class="tk-prop">salaire_brut</span>;' },
+        { hl: false, html: '  <span class="tk-var">$praticien</span>-&gt;<span class="tk-fn">update</span>(compact(<span class="tk-str">\'echelon\'</span>, <span class="tk-str">\'salaire\'</span>));' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'api.php',
+      lang: 'Laravel / API REST',
+      title: 'API REST — Endpoint praticiens JSON',
+      explanation: 'Les routes <code>routes/api.php</code> exposent les données pour le futur portage Flutter (Mission 3). L\'<code>ApiResource</code> sérialise chaque praticien avec son ancienneté, son échelon et son salaire brut au format JSON propre.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// routes/api.php — Endpoints REST Laravel</span>' },
+        { hl: false, html: '<span class="tk-cls">Route</span>::<span class="tk-fn">prefix</span>(<span class="tk-str">\'v1\'</span>)-&gt;<span class="tk-fn">group</span>(<span class="tk-kw">function</span> () {' },
+        { hl: true,  html: '  <span class="tk-cls">Route</span>::<span class="tk-fn">get</span>(<span class="tk-str">\'/praticiens\'</span>, [<span class="tk-cls">PraticienController</span>::<span class="tk-kw">class</span>, <span class="tk-str">\'index\'</span>]);' },
+        { hl: false, html: '  <span class="tk-cls">Route</span>::<span class="tk-fn">get</span>(<span class="tk-str">\'/praticiens/{id}\'</span>, [<span class="tk-cls">PraticienController</span>::<span class="tk-kw">class</span>, <span class="tk-str">\'show\'</span>]);' },
+        { hl: true,  html: '  <span class="tk-cls">Route</span>::<span class="tk-fn">patch</span>(<span class="tk-str">\'/praticiens/{id}/anciennete\'</span>,' },
+        { hl: false, html: '    [<span class="tk-cls">SalaireController</span>::<span class="tk-kw">class</span>, <span class="tk-str">\'updateSalary\'</span>]);' },
+        { hl: false, html: '  <span class="tk-cls">Route</span>::<span class="tk-fn">get</span>(<span class="tk-str">\'/praticiens/{id}/commentaires\'</span>,' },
+        { hl: false, html: '    [<span class="tk-cls">CommentaireController</span>::<span class="tk-kw">class</span>, <span class="tk-str">\'forPraticien\'</span>]);' },
+        { hl: false, html: '});' },
+        { hl: false, html: '' },
+        { hl: false, html: '<span class="tk-cmt">// PraticienResource.php — Sérialisation JSON</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">PraticienResource</span> <span class="tk-kw">extends</span> <span class="tk-cls">JsonResource</span> {' },
+        { hl: false, html: '  <span class="tk-kw">public function</span> <span class="tk-fn">toArray</span>(<span class="tk-var">$request</span>) {' },
+        { hl: true,  html: '    <span class="tk-kw">return</span> [' },
+        { hl: false, html: '      <span class="tk-str">\'id\'</span>         =&gt; <span class="tk-var">$this</span>-&gt;<span class="tk-prop">id</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'nom\'</span>        =&gt; <span class="tk-var">$this</span>-&gt;<span class="tk-prop">nom</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'anciennete\'</span> =&gt; <span class="tk-var">$this</span>-&gt;<span class="tk-prop">anciennete</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'echelon\'</span>    =&gt; <span class="tk-var">$this</span>-&gt;<span class="tk-prop">echelon</span>,' },
+        { hl: false, html: '      <span class="tk-str">\'salaire\'</span>    =&gt; <span class="tk-var">$this</span>-&gt;<span class="tk-prop">salaire_brut</span>,' },
+        { hl: false, html: '    ];' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+  ],
+
+  'gsb-notes': [
+    {
+      filename: 'praticien_service.dart',
+      lang: 'Flutter / Dart',
+      title: 'Fetch API & Tri côté client',
+      explanation: 'Le service effectue <code>GET /v1/praticiens</code> et parse le JSON en objets <code>Praticien</code>. La méthode <code>sortBy()</code> trie la liste localement selon la note choisie (clientèle ou expert) — instantané, sans nouveau call API.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// praticien_service.dart — API + Tri local</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">PraticienService</span> {' },
+        { hl: false, html: '  <span class="tk-kw">static</span> <span class="tk-kw">const</span> baseUrl <span class="tk-op">=</span> <span class="tk-str">\'https://api.gsb.local/v1\'</span>;' },
+        { hl: false, html: '' },
+        { hl: true,  html: '  <span class="tk-kw">static</span> <span class="tk-kw">Future</span>&lt;<span class="tk-cls">List</span>&lt;<span class="tk-cls">Praticien</span>&gt;&gt; <span class="tk-fn">fetchAll</span>() <span class="tk-kw">async</span> {' },
+        { hl: false, html: '    <span class="tk-kw">final</span> res <span class="tk-op">=</span> <span class="tk-kw">await</span> http.<span class="tk-fn">get</span>(<span class="tk-cls">Uri</span>.<span class="tk-fn">parse</span>(<span class="tk-str">\'$baseUrl/praticiens\'</span>));' },
+        { hl: false, html: '    <span class="tk-kw">if</span> (res.statusCode <span class="tk-op">!=</span> <span class="tk-num">200</span>) <span class="tk-kw">throw</span> <span class="tk-cls">Exception</span>(<span class="tk-str">\'Erreur API\'</span>);' },
+        { hl: false, html: '    <span class="tk-kw">final</span> List data <span class="tk-op">=</span> jsonDecode(res.body);' },
+        { hl: true,  html: '    <span class="tk-kw">return</span> data.<span class="tk-fn">map</span>((j) =&gt; <span class="tk-cls">Praticien</span>.<span class="tk-fn">fromJson</span>(j)).<span class="tk-fn">toList</span>();' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-cmt">// Tri côté client — sans appel serveur</span>' },
+        { hl: false, html: '  <span class="tk-kw">static</span> <span class="tk-cls">List</span>&lt;<span class="tk-cls">Praticien</span>&gt; <span class="tk-fn">sortBy</span>(' },
+        { hl: false, html: '    <span class="tk-cls">List</span>&lt;<span class="tk-cls">Praticien</span>&gt; list, <span class="tk-cls">String</span> criterion' },
+        { hl: false, html: '  ) {' },
+        { hl: false, html: '    <span class="tk-kw">final</span> sorted <span class="tk-op">=</span> [...list];' },
+        { hl: true,  html: '    sorted.<span class="tk-fn">sort</span>((a, b) =&gt; criterion <span class="tk-op">==</span> <span class="tk-str">\'client\'</span>' },
+        { hl: false, html: '      ? b.noteClient.<span class="tk-fn">compareTo</span>(a.noteClient)' },
+        { hl: false, html: '      : b.noteExpert.<span class="tk-fn">compareTo</span>(a.noteExpert)' },
+        { hl: false, html: '    );' },
+        { hl: false, html: '    <span class="tk-kw">return</span> sorted;' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+    {
+      filename: 'praticien_detail.dart',
+      lang: 'Flutter / Dart',
+      title: 'Fiche détail — Notes étoiles & Commentaires',
+      explanation: 'L\'écran de détail affiche les deux notes en étoiles via le widget <code>StarRating</code>. Les commentaires sont chargés via <code>fetchCommentaires(id)</code> (<code>GET /praticiens/{id}/commentaires</code>) et affichés dans un <code>ListView</code> scrollable indépendant.',
+      code: [
+        { hl: false, html: '<span class="tk-cmt">// praticien_detail.dart — Fiche complète</span>' },
+        { hl: false, html: '<span class="tk-kw">class</span> <span class="tk-cls">PraticienDetailScreen</span> <span class="tk-kw">extends</span> <span class="tk-cls">StatefulWidget</span> {' },
+        { hl: false, html: '  <span class="tk-kw">final</span> <span class="tk-cls">Praticien</span> praticien;' },
+        { hl: false, html: '' },
+        { hl: false, html: '  <span class="tk-ann">@override</span>' },
+        { hl: false, html: '  <span class="tk-cls">Widget</span> <span class="tk-fn">build</span>(<span class="tk-cls">BuildContext</span> context) {' },
+        { hl: false, html: '    <span class="tk-kw">return</span> <span class="tk-cls">Scaffold</span>(' },
+        { hl: false, html: '      body: <span class="tk-cls">Column</span>(children: [' },
+        { hl: true,  html: '        <span class="tk-cls">StarRating</span>(note: praticien.noteExpert, label: <span class="tk-str">\'Note Expert\'</span>),' },
+        { hl: true,  html: '        <span class="tk-cls">StarRating</span>(note: praticien.noteClient, label: <span class="tk-str">\'Note Clientèle\'</span>),' },
+        { hl: false, html: '' },
+        { hl: false, html: '        <span class="tk-cmt">// Commentaires — ListView scrollable</span>' },
+        { hl: false, html: '        <span class="tk-cls">Expanded</span>(' },
+        { hl: false, html: '          child: <span class="tk-cls">FutureBuilder</span>&lt;<span class="tk-cls">List</span>&lt;<span class="tk-cls">Commentaire</span>&gt;&gt;(' },
+        { hl: true,  html: '            future: <span class="tk-cls">PraticienService</span>.<span class="tk-fn">fetchCommentaires</span>(praticien.id),' },
+        { hl: false, html: '            builder: (ctx, snap) =&gt; <span class="tk-cls">ListView</span>.<span class="tk-fn">builder</span>(' },
+        { hl: false, html: '              itemCount: snap.data?.length <span class="tk-op">??</span> <span class="tk-num">0</span>,' },
+        { hl: false, html: '              itemBuilder: (_, i) =&gt; <span class="tk-cls">CommentaireTile</span>(' },
+        { hl: false, html: '                commentaire: snap.data![i]' },
+        { hl: false, html: '              ),' },
+        { hl: false, html: '            ),' },
+        { hl: false, html: '          ),' },
+        { hl: false, html: '        ),' },
+        { hl: false, html: '      ]),' },
+        { hl: false, html: '    );' },
+        { hl: false, html: '  }' },
+        { hl: false, html: '}' },
+      ]
+    },
+  ],
+
+};
+
+/* ════════════════════════════════════════════════════════
+   MOTEUR DE RENDU — Génère le HTML du carrousel
+════════════════════════════════════════════════════════ */
+
+function buildCodeCarousel(modalId) {
+  var slides = CODE_SLIDES_DATA[modalId];
+  if (!slides || !slides.length) return '';
+  var carouselId = 'codeCarousel_' + modalId;
+
+  var slidesHTML = slides.map(function(slide, i) {
+    var linesHTML = slide.code.map(function(line) {
+      if (line.hl) {
+        return '<span class="code-line hl">' + line.html + '</span>';
+      }
+      return '<span class="code-line">' + line.html + '</span>';
+    }).join('\n');
+
+    return '<div class="code-slide' + (i === 0 ? ' active' : '') + '">' +
+      '<div class="code-window">' +
+        '<div class="code-window-bar">' +
+          '<div class="code-window-dots">' +
+            '<div class="code-dot red"></div>' +
+            '<div class="code-dot yellow"></div>' +
+            '<div class="code-dot green"></div>' +
+          '</div>' +
+          '<div class="code-window-filename">' + slide.filename + '</div>' +
+          '<div class="code-window-lang">' + slide.lang + '</div>' +
+        '</div>' +
+        '<div class="code-window-content">' +
+          '<pre class="code-block">' + linesHTML + '</pre>' +
+        '</div>' +
+      '</div>' +
+      '<div class="code-explanation">' +
+        '<div class="code-explanation-title">' + slide.title + '</div>' +
+        '<div class="code-explanation-text">' + slide.explanation + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  var dotsHTML = slides.map(function(_, i) {
+    return '<div class="code-carousel-dot' + (i === 0 ? ' active' : '') + '" ' +
+      'onclick="goCodeSlideIndex(\'' + carouselId + '\',' + i + ')"></div>';
+  }).join('');
+
+  return '<div class="code-carousel">' +
+    '<div class="code-carousel-header">' +
+      '<div class="code-carousel-title">&#x1F4BB; Extraits de code</div>' +
+      '<div class="code-carousel-sub">Cliquer sur les lignes surlignées pour les points clés</div>' +
+    '</div>' +
+    '<div id="' + carouselId + '" class="code-slide-wrap">' +
+      slidesHTML +
+      '<div class="code-carousel-nav">' +
+        '<button class="code-nav-btn code-nav-prev" onclick="goCodeSlide(\'' + carouselId + '\',-1)" disabled>&#x2039; Préc.</button>' +
+        '<span class="code-carousel-counter">1 / ' + slides.length + '</span>' +
+        '<button class="code-nav-btn code-nav-next" onclick="goCodeSlide(\'' + carouselId + '\',1)"' + (slides.length <= 1 ? ' disabled' : '') + '>Suiv. &#x203A;</button>' +
+      '</div>' +
+      '<div class="code-carousel-dots">' + dotsHTML + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ════════════════════════════════════════════════════════
+   INITIALISATION — Injecter les onglets dans les modals
+════════════════════════════════════════════════════════ */
+
+function injectCodeTabsIntoModals() {
+  var modals = [
+    'animaland', 'animalvest', 'taskmanager', 'lol',
+    'gsb-conges', 'gsb-salaires', 'gsb-notes'
+  ];
+
+  modals.forEach(function(modalId) {
+    var modal = document.getElementById('modal-' + modalId);
+    if (!modal) return;
+
+    var body = modal.querySelector('.modal-body');
+    if (!body) return;
+
+    // Ajouter les onglets après le modal-header
+    var header = modal.querySelector('.modal-header');
+    if (!header) return;
+
+    // Créer la barre d'onglets
+    var tabsBar = document.createElement('div');
+    tabsBar.className = 'modal-tabs';
+    tabsBar.innerHTML =
+      '<button class="modal-tab-btn active" data-tab="features" ' +
+        'onclick="switchModalTab(\'' + modalId + '\',\'features\')">' +
+        '<span class="tab-icon">&#x2756;</span> Fonctionnalités' +
+      '</button>' +
+      '<button class="modal-tab-btn" data-tab="code" ' +
+        'onclick="switchModalTab(\'' + modalId + '\',\'code\')">' +
+        '<span class="tab-icon">&#x1F4BB;</span> Voir les codes' +
+      '</button>';
+
+    // Wraper le contenu du body dans un panel "features"
+    var featuresPanel = document.createElement('div');
+    featuresPanel.className = 'modal-tab-panel active';
+    featuresPanel.dataset.panel = 'features';
+    while (body.firstChild) {
+      featuresPanel.appendChild(body.firstChild);
+    }
+
+    // Créer le panel "code"
+    var codePanel = document.createElement('div');
+    codePanel.className = 'modal-tab-panel';
+    codePanel.dataset.panel = 'code';
+    codePanel.innerHTML = buildCodeCarousel(modalId);
+
+    body.appendChild(featuresPanel);
+    body.appendChild(codePanel);
+
+    // Insérer la barre d'onglets entre header et body
+    modal.insertBefore(tabsBar, body);
+  });
+}
+
+// Lancer après le chargement du DOM
+document.addEventListener('DOMContentLoaded', function() {
+  injectCodeTabsIntoModals();
+});
+
+/* ════════════════════════════════════════════════════════
+   SYSTÈME D'ONGLETS — switchModalTab
+════════════════════════════════════════════════════════ */
+function switchModalTab(modalId, tabName) {
+  var modal = document.getElementById('modal-' + modalId);
+  if (!modal) return;
+
+  modal.querySelectorAll('.modal-tab-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.tab === tabName);
+  });
+
+  modal.querySelectorAll('.modal-tab-panel').forEach(function(panel) {
+    panel.classList.toggle('active', panel.dataset.panel === tabName);
+  });
+
+  // Init le carrousel si premier affichage
+  if (tabName === 'code') {
+    var carouselId = 'codeCarousel_' + modalId;
+    if (_codeCarousels[carouselId] === undefined) {
+      _codeCarousels[carouselId] = 0;
+      _updateCodeCarousel(carouselId);
+    }
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   CARROUSEL — Navigation
+════════════════════════════════════════════════════════ */
+var _codeCarousels = {};
+
+function goCodeSlide(carouselId, dir) {
+  var slides = document.querySelectorAll('#' + carouselId + ' .code-slide');
+  if (!slides.length) return;
+  var current = _codeCarousels[carouselId] || 0;
+  var next = current + dir;
+  if (next < 0 || next >= slides.length) return;
+  _codeCarousels[carouselId] = next;
+  _updateCodeCarousel(carouselId);
+}
+
+function goCodeSlideIndex(carouselId, idx) {
+  var slides = document.querySelectorAll('#' + carouselId + ' .code-slide');
+  if (idx < 0 || idx >= slides.length) return;
+  _codeCarousels[carouselId] = idx;
+  _updateCodeCarousel(carouselId);
+}
+
+function _updateCodeCarousel(carouselId) {
+  var container = document.getElementById(carouselId);
+  if (!container) return;
+  var slides  = container.querySelectorAll('.code-slide');
+  var dots    = container.querySelectorAll('.code-carousel-dot');
+  var counter = container.querySelector('.code-carousel-counter');
+  var prevBtn = container.querySelector('.code-nav-prev');
+  var nextBtn = container.querySelector('.code-nav-next');
+  var current = _codeCarousels[carouselId] || 0;
+
+  slides.forEach(function(s, i) { s.classList.toggle('active', i === current); });
+  dots.forEach(function(d, i)   { d.classList.toggle('active', i === current); });
+  if (counter) counter.textContent = (current + 1) + ' / ' + slides.length;
+  if (prevBtn) prevBtn.disabled = current === 0;
+  if (nextBtn) nextBtn.disabled = current === slides.length - 1;
+}
+
