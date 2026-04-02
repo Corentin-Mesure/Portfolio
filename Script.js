@@ -1691,122 +1691,80 @@ document.addEventListener('DOMContentLoaded', function () {
   applyAnimState(animEnabled);
 });
 
-// ═══ ZOOM CTRL + MOLETTE ═══
+/* ════════════════════════════════════════════════════════
+   ZOOM CTRL + MOLETTE
+════════════════════════════════════════════════════════ */
 (function () {
-  let zoom = 1;
-  const MIN = 0.5;
-  const MAX = 2;
-  const STEP = 0.1;
+  var zoom = 1;
+  var MIN  = 0.5;
+  var MAX  = 2;
+  var STEP = 0.1;
 
-  const ind = document.createElement('div');
+  /* ── Injection du CSS ── */
+  var s = document.createElement('style');
+  s.textContent =
+    '#zoom-indicator{' +
+      'position:fixed;bottom:28px;right:28px;' +
+      'background:rgba(8,8,16,0.92);' +
+      'border:1px solid rgba(200,169,110,0.45);' +
+      'border-radius:12px;padding:12px 16px;width:200px;' +
+      'opacity:0;transform:translateY(10px);' +
+      'transition:opacity .25s ease,transform .25s ease;' +
+      'pointer-events:none;z-index:99999;' +
+      'backdrop-filter:blur(12px);font-family:Cinzel,serif;}' +
+    '#zoom-indicator.zi-visible{opacity:1;transform:translateY(0);}' +
+    '.zi-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}' +
+    '.zi-label{font-size:10px;letter-spacing:2.5px;color:rgba(200,169,110,0.6);}' +
+    '.zi-value{font-size:18px;font-weight:600;color:#c8a96e;font-family:monospace;min-width:52px;text-align:right;}' +
+    '.zi-track{background:rgba(255,255,255,0.1);border-radius:4px;height:4px;overflow:hidden;}' +
+    '.zi-fill{height:100%;background:linear-gradient(90deg,#c8a96e,#f0dc9a);border-radius:4px;transition:width .15s ease;}' +
+    '.zi-ticks{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:rgba(200,169,110,0.35);font-family:monospace;}';
+  document.head.appendChild(s);
+
+  /* ── Création de l'indicateur ── */
+  var ind = document.createElement('div');
   ind.id = 'zoom-indicator';
-  ind.innerHTML = `
-    <div class="zi-header">
-      <span class="zi-label">ZOOM</span>
-      <span class="zi-value">100%</span>
-    </div>
-    <div class="zi-track">
-      <div class="zi-fill" id="ziFill"></div>
-    </div>
-    <div class="zi-ticks">
-      <span>50%</span><span>100%</span><span>200%</span>
-    </div>`;
-
-  const style = document.createElement('style');
-  style.textContent = `
-    #zoom-indicator {
-      position: fixed;
-      bottom: 28px; right: 28px;
-      background: rgba(8, 8, 16, 0.92);
-      border: 1px solid rgba(200,169,110,0.45);
-      border-radius: 12px;
-      padding: 12px 16px;
-      width: 200px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      pointer-events: none;
-      z-index: 99999;
-      backdrop-filter: blur(12px);
-      font-family: 'Cinzel', serif;
-    }
-    #zoom-indicator.zi-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .zi-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 9px;
-    }
-    .zi-label {
-      font-size: 10px;
-      letter-spacing: 2.5px;
-      color: rgba(200,169,110,0.6);
-    }
-    .zi-value {
-      font-size: 18px;
-      font-weight: 600;
-      color: #c8a96e;
-      font-family: monospace;
-      min-width: 52px;
-      text-align: right;
-    }
-    .zi-track {
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px;
-      height: 4px;
-      overflow: hidden;
-    }
-    .zi-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #c8a96e, #f0dc9a);
-      border-radius: 4px;
-      transition: width 0.15s ease;
-    }
-    .zi-ticks {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 6px;
-      font-size: 10px;
-      color: rgba(200,169,110,0.35);
-      font-family: monospace;
-    }`;
-
-  document.head.appendChild(style);
+  ind.innerHTML =
+    '<div class="zi-header">' +
+      '<span class="zi-label">ZOOM</span>' +
+      '<span class="zi-value" id="ziValue">100%</span>' +
+    '</div>' +
+    '<div class="zi-track"><div class="zi-fill" id="ziFill"></div></div>' +
+    '<div class="zi-ticks"><span>50%</span><span>100%</span><span>200%</span></div>';
   document.body.appendChild(ind);
 
-  const ziFill  = ind.querySelector('#ziFill');
-  const ziValue = ind.querySelector('.zi-value');
+  var ziFill  = document.getElementById('ziFill');
+  var ziValue = document.getElementById('ziValue');
+  var hideTimer;
 
-  let hideTimer;
   function showIndicator() {
-    const pct = Math.round(zoom * 100);
-    ziValue.textContent = pct + '%';
-    const barPct = ((zoom - MIN) / (MAX - MIN)) * 100;
-    ziFill.style.width = barPct + '%';
+    var pct    = Math.round(zoom * 100);
+    var barPct = ((zoom - MIN) / (MAX - MIN)) * 100;
+    ziValue.textContent  = pct + '%';
+    ziFill.style.width   = barPct + '%';
     ind.classList.add('zi-visible');
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => ind.classList.remove('zi-visible'), 1500);
+    hideTimer = setTimeout(function () {
+      ind.classList.remove('zi-visible');
+    }, 1500);
   }
 
   function applyZoom() {
-    document.documentElement.style.transform       = `scale(${zoom})`;
-    document.documentElement.style.transformOrigin = 'top center';
-    document.documentElement.style.height          = `${100 / zoom}%`;
+    document.documentElement.style.zoom = zoom;
     showIndicator();
   }
 
-  window.addEventListener('wheel', (e) => {
+  /* ── Ctrl + molette ── */
+  window.addEventListener('wheel', function (e) {
     if (!e.ctrlKey) return;
     e.preventDefault();
     zoom += e.deltaY < 0 ? STEP : -STEP;
-    zoom = Math.min(MAX, Math.max(MIN, parseFloat(zoom.toFixed(2))));
+    zoom  = parseFloat(Math.min(MAX, Math.max(MIN, zoom)).toFixed(2));
     applyZoom();
   }, { passive: false });
 
-  window.addEventListener('keydown', (e) => {
+  /* ── Ctrl + 0 : réinitialiser ── */
+  window.addEventListener('keydown', function (e) {
     if (e.ctrlKey && (e.key === '0' || e.code === 'Digit0')) {
       e.preventDefault();
       zoom = 1;
