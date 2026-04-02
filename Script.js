@@ -2449,3 +2449,57 @@ function _updateCodeCarousel(carouselId) {
   if (nextBtn) nextBtn.disabled = current === slides.length - 1;
 }
 
+// ═══ ZOOM CTRL + MOLETTE ═══
+(function () {
+  let zoom = 1;
+  const MIN = 0.5;
+  const MAX = 2;
+  const STEP = 0.1;
+
+  // Indicateur visuel
+  const indicator = document.createElement('div');
+  indicator.id = 'zoom-indicator';
+  Object.assign(indicator.style, {
+    position: 'fixed', bottom: '24px', right: '24px',
+    background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(200,169,110,0.4)',
+    color: '#c8a96e', fontFamily: 'Cinzel, serif', fontSize: '13px',
+    padding: '6px 14px', borderRadius: '20px', letterSpacing: '1px',
+    opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none',
+    zIndex: '99999', backdropFilter: 'blur(8px)'
+  });
+  document.body.appendChild(indicator);
+
+  let hideTimer;
+  function showIndicator() {
+    indicator.textContent = `zoom  ${Math.round(zoom * 100)} %`;
+    indicator.style.opacity = '1';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { indicator.style.opacity = '0'; }, 1200);
+  }
+
+  function applyZoom() {
+    document.documentElement.style.transform       = `scale(${zoom})`;
+    document.documentElement.style.transformOrigin = 'top center';
+    // Compense la hauteur perçue pour éviter le scroll blanc en bas
+    document.documentElement.style.height = `${100 / zoom}%`;
+    showIndicator();
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    zoom += e.deltaY < 0 ? STEP : -STEP;
+    zoom = Math.min(MAX, Math.max(MIN, parseFloat(zoom.toFixed(2))));
+    applyZoom();
+  }, { passive: false });
+
+  // Ctrl + 0 pour réinitialiser
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === '0' || e.code === 'Digit0')) {
+      e.preventDefault();
+      zoom = 1;
+      applyZoom();
+    }
+  });
+})();
+
