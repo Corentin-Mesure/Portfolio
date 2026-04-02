@@ -34,15 +34,12 @@
       <span class="btn-label anim-off" data-i18n="btn.animOff">Anims ON</span>
       <span class="btn-label anim-on"  data-i18n="btn.animOn">Anims OFF</span>
     </button>
-
-<button class="toolbar-btn" id="bigModeBtn" onclick="toggleBigMode()" aria-label="Mode grande taille">
-  <span>&#x1F50D;</span>
-  <span class="btn-label">Grand</span>
-</button>
-
+    <button class="toolbar-btn" id="bigModeBtn" onclick="toggleBigMode()" aria-label="Mode grande taille">
+      <span>&#x1F50D;</span>
+      <span class="btn-label">Grand</span>
+    </button>
   </div>
 </nav>
-
 
 <!-- HERO -->
 <section id="hero">
@@ -506,6 +503,8 @@
     </div>
   </div>
 </div>
+
+<!-- ═══ SOUS-MODAL feat-bdd ANIMAL'AND (AVEC MCD) ═══ -->
 <div class="submodal-overlay" id="feat-bdd" onclick="closeSubModal(event,'feat-bdd')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="f8.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('feat-bdd')">&#x2715;</button></div>
@@ -515,6 +514,11 @@
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="f8.s1"><strong>PostgreSQL</strong> a ete choisi pour sa robustesse et sa gestion avancee des donnees relationnelles.</span></div>
         <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="f8.s2">Le serveur est <strong>heberge sur OVH</strong>, offrant une disponibilite fiable sans dependance a un service tiers.</span></div>
         <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="f8.s3"><strong>Termius SSH</strong> a ete utilise pour deployer le backend et configurer PostgreSQL directement depuis un terminal securise.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/mcd_animaland.png','&#x1F5C4;&#xFE0F; MCD — Animal\'and (18 tables)')"><span class="step-num">04</span><span class="step-text"><strong>MCD complet</strong> de l'application avec 18 tables relationnelles.<br><span class="step-play-hint">Voir le MCD</span></span></div>
+      </div>
+      <div style="margin:16px -32px 0 -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/mcd_animaland.png','&#x1F5C4;&#xFE0F; MCD — Animal\'and (18 tables)')">
+        <img src="images/mcd_animaland.png" alt="MCD Animal'and" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
     </div>
   </div>
@@ -566,7 +570,28 @@
 <div class="submodal-overlay" id="vest-notif" onclick="closeSubModal(event,'vest-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v8.title">Notifications push</div><button class="submodal-close" onclick="closeSubModalBtn('vest-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v8.desc">Firebase Cloud Messaging alerte l'administrateur en temps reel.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v8.s1">Des qu'un membre valide une commande, une <strong>notification push FCM</strong> est envoyee a l'administrateur.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v8.s2">La notification est recue <strong>meme si l'app est fermee</strong>.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v8.s3">Un tap <strong>ouvre directement</strong> le detail de la commande.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-mail" onclick="closeSubModal(event,'vest-mail')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x2709;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v9.title">Emails automatiques</div><button class="submodal-close" onclick="closeSubModalBtn('vest-mail')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v9.desc">A chaque etape du traitement de sa commande, le membre recoit automatiquement un email de suivi.</p><div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/emails_automatiques_montage.png','&#x2709;&#xFE0F; Emails automatiques',1400)"><img src="images/emails_automatiques_montage.png" alt="Emails automatiques" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);"><div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div></div><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v9.s1">Commande <strong>confirmee</strong> : email de recapitulatif.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v9.s2">Statut <em style="color:var(--cyan)">"traitee"</em> : email en cours de preparation.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v9.s3">Statut <em style="color:var(--cyan)">"expediee"</em> : email avec le <strong>numero de colis</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v9.s4">Statut <em style="color:var(--cyan)">"livree"</em> : email de <strong>confirmation</strong>.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v9.s5">L'envoi est declenche <strong>cote serveur</strong>.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="vest-securite" onclick="closeSubModal(event,'vest-securite')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F512;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v10.title">Securite &amp; Mot de passe</div><button class="submodal-close" onclick="closeSubModalBtn('vest-securite')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v10.desc">L'application integre plusieurs mecanismes de securite.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v10.s1"><strong>Politique commune :</strong> minimum 8 caracteres, majuscule, chiffre, caractere special.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v10.s2"><strong>Indicateur de force en temps reel.</strong></span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v10.s3"><strong>Formatters de saisie.</strong></span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v10.s4"><strong>Rate limiter :</strong> 5 tentatives max en 2 minutes.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v10.s5"><strong>FlutterSecureStorage</strong> pour les tokens JWT.</span></div></div></div></div></div>
-<div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div><div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div></div></div></div></div>
+
+<!-- ═══ SOUS-MODAL vest-bdd ANIMAL'VEST (AVEC MCD) ═══ -->
+<div class="submodal-overlay" id="vest-bdd" onclick="closeSubModal(event,'vest-bdd')">
+  <div class="submodal">
+    <div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="v11.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('vest-bdd')">&#x2715;</button></div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="v11.desc">Architecture Flutter, base relationnelle, Firebase pour les notifications.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="v11.s1"><strong>Flutter / Dart</strong> pour l'interface mobile.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="v11.s2"><strong>MySQL / PostgreSQL</strong> stocke produits, membres, commandes.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="v11.s3"><strong>Firebase</strong> pour les <strong>notifications push (FCM)</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text" data-i18n="v11.s4">Totalement independante d'Animal'and Chat.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text" data-i18n="v11.s5">Singleton <strong>ApiService</strong> avec injection automatique du token JWT.</span></div>
+        <div class="submodal-step has-video" onclick="openImageModal('images/mcd_animalvest.png','&#x1F5C4;&#xFE0F; MCD — Animal\'vest')"><span class="step-num">06</span><span class="step-text"><strong>MCD complet</strong> de l'application avec toutes les tables relationnelles.<br><span class="step-play-hint">Voir le MCD</span></span></div>
+      </div>
+      <div style="margin:16px -32px 0 -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/mcd_animalvest.png','&#x1F5C4;&#xFE0F; MCD — Animal\'vest')">
+        <img src="images/mcd_animalvest.png" alt="MCD Animal'vest" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MODAL GESTION DE PROJET ═══ -->
 <div class="modal-overlay" id="modal-taskmanager" onclick="closeModal(event,'taskmanager')">
@@ -619,7 +644,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="task-modifier" onclick="closeSubModal(event,'task-modifier')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x270F;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Fonctionnalité Modifier</div><button class="submodal-close" onclick="closeSubModalBtn('task-modifier')">&#x2715;</button></div>
@@ -633,7 +657,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="task-suivant" onclick="closeSubModal(event,'task-suivant')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x27A1;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Navigation Suivant</div><button class="submodal-close" onclick="closeSubModalBtn('task-suivant')">&#x2715;</button></div>
@@ -648,7 +671,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="task-t2" onclick="closeSubModal(event,'task-t2')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x26A0;&#xFE0F;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Particularité de la 2ᵉ tâche</div><button class="submodal-close" onclick="closeSubModalBtn('task-t2')">&#x2715;</button></div>
@@ -663,7 +685,6 @@
     </div>
   </div>
 </div>
-
 <div class="submodal-overlay" id="task-t3" onclick="closeSubModal(event,'task-t3')">
   <div class="submodal">
     <div class="submodal-header"><span class="submodal-icon">&#x1F4C4;</span><div class="submodal-type">Fonctionnalité</div><div class="submodal-title">Validation de quittancement</div><button class="submodal-close" onclick="closeSubModalBtn('task-t3')">&#x2715;</button></div>
@@ -772,17 +793,9 @@
 
 <div class="submodal-overlay" id="sal-interface" onclick="closeSubModal(event,'sal-interface')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5A5;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Interface RH</div><button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Interface web complete pour consulter, filtrer et mettre a jour les informations salariales.</p><div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/Inter2.PNG','&#x1F5A5;&#xFE0F; Liste des praticiens')"><img src="images/gsb/Inter2.PNG" alt="Liste des praticiens" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);"><div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div></div><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complete des praticiens : nom, anciennete, echelon et salaire brut.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Filtres</strong> par nom, echelon ou tranche de salaire.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text">Formulaire de <strong>mise a jour de l'anciennete</strong> avec recalcul automatique.</span></div><div class="submodal-step"><span class="step-num">04</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique.</span></div></div></div></div></div>
 
-<!-- API REST -->
 <div class="submodal-overlay" id="sal-api" onclick="closeSubModal(event,'sal-api')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4F1;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">API REST</div><button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">API REST Laravel pour exposer les donnees en vue d'un portage mobile futur.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Routes definies dans <strong>routes/api.php</strong> de Laravel.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Prete a etre consommee par une <strong>application Flutter</strong> (GSB Mission 3).</span></div></div></div></div></div>
 
-
-<!-- BDD — avec image echelon.png + etapes 01 et 02 uniquement (suppression 03, 04, 05 originaux) -->
-<div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetes, echelons et salaires.</p>
-<div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/echelon.png','&#x1F4CA; Grille des échelons')">
-  <img src="images/gsb/echelon.png" alt="Grille des échelons" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
-  <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-</div>
-<div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>echelons</strong> avec 13 niveaux et salaires associes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticiens</strong> enrichie avec anciennete et cle etrangere vers echelons.</span></div></div></div></div></div>
+<div class="submodal-overlay" id="sal-bdd" onclick="closeSubModal(event,'sal-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type">Fonctionnalite</div><div class="submodal-title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetes, echelons et salaires.</p><div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/echelon.png','&#x1F4CA; Grille des échelons')"><img src="images/gsb/echelon.png" alt="Grille des échelons" style="width:100%;height:auto;display:block;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);"><div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div></div><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>echelons</strong> avec 13 niveaux et salaires associes.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticiens</strong> enrichie avec anciennete et cle etrangere vers echelons.</span></div></div></div></div></div>
 
 <!-- ═══ MODAL LOL ═══ -->
 <div class="modal-overlay" id="modal-lol" onclick="closeModal(event,'lol')">
