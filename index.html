@@ -825,7 +825,6 @@
 <div class="submodal-overlay" id="gsb-rh" onclick="closeSubModal(event,'gsb-rh')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g3.title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g3.desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text" data-i18n="g3.s1">Le RH voit la <strong>liste de toutes les demandes</strong> en attente.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g3.s2">Le RH peut <strong>accepter ou refuser</strong> en un clic. Le solde est mis a jour automatiquement.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique.</span></div></div></div></div></div>
-
 <!-- ═══ MODAL GSB SALAIRES ═══ -->
 <div class="modal-overlay" id="modal-gsb-salaires" onclick="closeModal(event,'gsb-salaires')">
   <div class="modal">
@@ -840,14 +839,14 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4B0;</span>
-      <p class="modal-desc">Application web développée avec le framework Laravel permettant au service RH de consulter et modifier les salaires des praticiens. Les salaires sont calculés automatiquement selon l'échelon attribué en fonction de l'ancienneté. Une API REST est également exposée pour un portage mobile futur.</p>
+      <p class="modal-desc">Application web développée avec le framework Laravel permettant au service RH de consulter et modifier les salaires des praticiens hospitaliers. Les salaires sont calculés automatiquement selon l'échelon attribué en fonction de l'ancienneté du praticien. Une API REST est également exposée pour anticiper un portage mobile futur.</p>
       <div class="modal-features">
         <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalité pour en savoir plus</div>
-        <button class="modal-feature-btn" onclick="openSubModal('sal-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Droits RH</span><span class="feat-preview">Accès sécurisé réservé au service RH avec authentification Laravel et gestion des erreurs.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('sal-grille')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Grille tarifaire &amp; Échelons</span><span class="feat-preview">13 échelons selon l'ancienneté du praticien, de 4 633 € à 9 368 € brut mensuel.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('sal-anciennete')"><div style="flex:1"><span class="feat-title">&#x23F3; Calcul automatique de l'ancienneté</span><span class="feat-preview">L'échelon et le salaire sont mis à jour automatiquement selon l'ancienneté saisie.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Droits RH</span><span class="feat-preview">Accès sécurisé réservé au service RH avec authentification Laravel et gestion des erreurs de connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-grille')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Grille tarifaire &amp; Échelons</span><span class="feat-preview">13 échelons attribués selon l'ancienneté du praticien, de 4 633,98 € à 9 368,05 € brut mensuel.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-anciennete')"><div style="flex:1"><span class="feat-title">&#x23F3; Calcul automatique de l'ancienneté</span><span class="feat-preview">L'échelon et le salaire sont recalculés automatiquement dès qu'une nouvelle ancienneté est enregistrée.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-interface')"><div style="flex:1"><span class="feat-title">&#x1F5A5;&#xFE0F; Interface RH</span><span class="feat-preview">Consultation, recherche et filtrage des praticiens par nom, prénom ou nom complet.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('sal-api')"><div style="flex:1"><span class="feat-title">&#x1F4F1; API REST</span><span class="feat-preview">Endpoint JSON exposant la liste des praticiens avec ancienneté et salaire.</span></div><span class="feat-arrow">&#x203A;</span></button>
+        <button class="modal-feature-btn" onclick="openSubModal('sal-api')"><div style="flex:1"><span class="feat-title">&#x1F4F1; API REST</span><span class="feat-preview">Endpoint JSON exposant la liste des praticiens avec leur ancienneté, leur échelon et leur salaire.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de données</span><span class="feat-preview">Base MySQL avec table grille_salaire, praticiens, migrations Laravel et seeders.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
@@ -871,7 +870,7 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-connexion')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'accès est restreint au service RH avec authentification Laravel. Un message d'erreur s'affiche si les identifiants sont incorrects ou si un compte non autorisé tente de se connecter.</p>
+      <p class="submodal-desc">L'accès à l'application est restreint au service RH. L'authentification est gérée par Laravel et un message d'erreur s'affiche si les identifiants sont incorrects ou si un compte sans droits RH tente de se connecter.</p>
 
       <!-- Screen : Page de connexion propre -->
       <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/Connexion.png','&#x1F511; Page de connexion RH')">
@@ -888,11 +887,11 @@
       </div>
 
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Page de connexion dédiée avec champs <strong>Login</strong> et <strong>Mot de passe</strong>. Accès réservé aux responsables habilités.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Authentification par <strong>Laravel Auth</strong> avec sessions sécurisées.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si les identifiants sont incorrects ou non autorisés, un <strong>message d'erreur rouge</strong> s'affiche : <em style="color:#ff6b6b;">"Accès réservé aux RH"</em>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Tableau de bord listant tous les praticiens avec informations salariales une fois connecté.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text"><strong>Middleware Laravel</strong> protège toutes les routes sensibles contre l'accès direct non authentifié.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Page de connexion dédiée avec les champs <strong>Login</strong> et <strong>Mot de passe</strong>. L'accès est réservé aux responsables RH habilités.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Authentification gérée par <strong>Laravel Auth</strong> avec sessions sécurisées.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si les identifiants sont incorrects ou ne correspondent pas à un compte RH, un <strong>message d'erreur rouge</strong> s'affiche : <em style="color:#ff6b6b;">"Accès réservé aux RH"</em>.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois connecté, le responsable accède au tableau de bord listant tous les praticiens avec leurs informations salariales.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Un <strong>middleware Laravel</strong> protège toutes les routes sensibles contre tout accès direct non authentifié.</span></div>
       </div>
     </div>
   </div>
@@ -910,19 +909,19 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-grille')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">La rémunération suit une grille officielle de 13 échelons. Les échelons et salaires sont affichés en couleur dans l'interface pour une lecture rapide.</p>
+      <p class="submodal-desc">La rémunération des praticiens suit une grille officielle de 13 échelons définie dans le cahier des charges. Les échelons et salaires sont affichés en couleur dans l'interface pour une lecture rapide.</p>
 
       <!-- Screen : Interface principale montrant les échelons -->
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F4CA; Échelons et salaires — vue tableau')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Affichage des échelons colorés et salaires dans le tableau</div>
+        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Affichage des échelons et salaires dans le tableau</div>
         <img src="images/gsb/InterfaceAppli.png" alt="Grille des échelons" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
       </div>
 
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 échelons</strong>. Échelons 1–8 : 2 ans chacun, 9–12 : 4 ans, 13 : palier maximum (32+ ans).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires de <strong>4 633,98 €</strong> à <strong>9 368,05 €</strong> brut mensuel.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'échelon est affiché en <strong>couleur cyan</strong> (#4, #13, #10…) et le salaire en <strong>vert</strong> dans le tableau pour une lecture rapide.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 échelons</strong> définis selon l'ancienneté : échelons 1 à 8 durent 2 ans chacun, échelons 9 à 12 durent 4 ans, et l'échelon 13 est le palier maximum (32 ans et plus).</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires bruts mensuels allant de <strong>4 633,98 €</strong> (échelon 1) à <strong>9 368,05 €</strong> (échelon 13).</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'échelon est affiché en <strong>couleur cyan</strong> et le salaire en <strong>vert</strong> dans le tableau pour faciliter la lecture.</span></div>
       </div>
     </div>
   </div>
@@ -940,7 +939,7 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-anciennete')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">L'échelon est déterminé automatiquement à partir de l'ancienneté saisie. La modification d'un praticien recalcule instantanément son échelon et son salaire, et une notification de succès confirme l'enregistrement.</p>
+      <p class="submodal-desc">L'échelon est déterminé automatiquement à partir de l'ancienneté saisie par le responsable RH. La modification d'un praticien déclenche le recalcul immédiat de son échelon et de son salaire brut, avec une notification de confirmation.</p>
 
       <!-- Screen : Formulaire de modification -->
       <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/ModificationPrat.png','&#x270F;&#xFE0F; Formulaire Modifier un praticien')">
@@ -950,11 +949,11 @@
       </div>
 
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Un clic sur <strong>« Modifier »</strong> ouvre un formulaire affichant les infos actuelles du praticien : nom, prénom, échelon et salaire en cours.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le RH saisit la <strong>nouvelle ancienneté</strong> (en années) dans le champ dédié.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">À l'enregistrement, l'<strong>algorithme de correspondance</strong> recalcule automatiquement l'échelon et le salaire brut mensuel.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Un clic sur <strong>« Modifier »</strong> ouvre un formulaire affichant les informations actuelles du praticien : nom, prénom, échelon et salaire en cours.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le responsable RH saisit la <strong>nouvelle ancienneté</strong> (en années) dans le champ dédié.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">À l'enregistrement, l'<strong>algorithme de correspondance</strong> recalcule automatiquement l'échelon et le salaire brut mensuel selon la grille tarifaire officielle.</span></div>
         <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un <strong>bandeau vert de confirmation</strong> s'affiche : <em style="color:#3dc85a;">"Ancienneté de [Prénom Nom] mise à jour avec succès."</em></span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le tableau est mis à jour immédiatement avec la <strong>nouvelle ancienneté, le nouvel échelon et le nouveau salaire</strong>.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le tableau est mis à jour immédiatement avec la <strong>nouvelle ancienneté, le nouvel échelon et le nouveau salaire</strong> du praticien.</span></div>
       </div>
     </div>
   </div>
@@ -972,7 +971,7 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-interface')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">Interface web complète pour consulter, rechercher et mettre à jour les informations salariales de tous les praticiens. La barre de recherche permet de filtrer par nom, prénom ou nom complet.</p>
+      <p class="submodal-desc">Interface web complète permettant au service RH de consulter, rechercher et mettre à jour les informations salariales de l'ensemble des praticiens. La barre de recherche permet un filtrage instantané par nom, prénom ou nom complet.</p>
 
       <!-- Screen : Interface principale avec tableau complet -->
       <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F5A5;&#xFE0F; Liste complète des praticiens')">
@@ -996,13 +995,13 @@
       </div>
 
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complète des praticiens : <strong>nom, prénom, ancienneté, échelon et salaire brut</strong> affichés en tableau clair.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Barre de recherche</strong> : filtrage instantané par nom, prénom ou nom complet (ex : "barrett abbott"). Affiche le nombre de résultats et la pagination.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Après modification, un <strong>bandeau vert de succès</strong> confirme la mise à jour en haut du tableau.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Bouton <strong>« Réinitialiser »</strong> pour effacer le filtre et revenir à la liste complète.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Bouton <strong>« Modifier »</strong> sur chaque ligne pour accéder au formulaire de mise à jour de l'ancienneté.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique avec pagination (100 praticiens par page).</span></div>
-        <div class="submodal-step"><span class="step-num">07</span><span class="step-text">Bouton <strong>« Déconnexion »</strong> rouge visible en permanence pour sécuriser la session RH.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complète des praticiens affichée en tableau : <strong>nom, prénom, ancienneté, échelon et salaire brut</strong> mensuel.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Barre de recherche</strong> : filtrage instantané par nom, prénom ou nom complet. Affiche le nombre de résultats trouvés avec pagination.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Après une modification, un <strong>bandeau vert de confirmation</strong> s'affiche en haut du tableau.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Bouton <strong>« Réinitialiser »</strong> pour effacer le filtre de recherche et revenir à la liste complète.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Bouton <strong>« Modifier »</strong> sur chaque ligne pour accéder au formulaire de mise à jour de l'ancienneté d'un praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">06</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique, avec une pagination de 100 praticiens par page.</span></div>
+        <div class="submodal-step"><span class="step-num">07</span><span class="step-text">Bouton <strong>« Déconnexion »</strong> accessible en permanence pour sécuriser la session RH.</span></div>
       </div>
     </div>
   </div>
@@ -1020,12 +1019,12 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-api')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">API REST Laravel pour exposer les données des praticiens (ancienneté, échelon, salaire) en vue d'un portage mobile futur — consommée directement par la <strong>Mission 3 Flutter</strong>.</p>
+      <p class="submodal-desc">API REST développée avec Laravel pour exposer les données des praticiens (ancienneté, échelon, salaire) en vue d'un portage mobile futur, tel que prévu dans le cahier des charges.</p>
       <div class="submodal-steps">
         <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Routes définies dans <strong>routes/api.php</strong> de Laravel.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Données exposées au format <strong>JSON</strong> : nom, prénom, ancienneté, échelon, salaire brut mensuel.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Prête à être consommée par une <strong>application Flutter</strong> (GSB Mission 3 — Notes Praticiens).</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Réponses sérialisées via des <strong>API Resources Laravel</strong> dédiées pour un format propre et cohérent.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Données exposées au format <strong>JSON</strong> : nom, prénom, ancienneté, échelon et salaire brut mensuel de chaque praticien.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Conçue pour être consommée par une <strong>application mobile</strong> dans le cadre d'un portage futur prévu par le responsable.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Réponses sérialisées via des <strong>API Resources Laravel</strong> dédiées pour garantir un format de données propre et cohérent.</span></div>
       </div>
     </div>
   </div>
@@ -1043,7 +1042,7 @@
       <button class="submodal-close" onclick="closeSubModalBtn('sal-bdd')">&#x2715;</button>
     </div>
     <div class="submodal-body">
-      <p class="submodal-desc">Base MySQL enrichie pour la gestion des anciennetés, échelons et salaires. Le MCD ci-dessous montre l'ensemble des tables relationnelles de l'application GSB.</p>
+      <p class="submodal-desc">La base de données MySQL a été adaptée pour intégrer la gestion des anciennetés, des échelons et des salaires des praticiens. Le MCD ci-dessous présente l'ensemble des tables relationnelles de l'application GSB.</p>
 
       <!-- MCD complet -->
       <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/mcd.png','&#x1F5C4;&#xFE0F; MCD — GSB Gestion des Salaires')">
@@ -1053,13 +1052,13 @@
       </div>
 
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>grille_salaire</strong> : échelon, ancienneté min/max et salaire brut décimal associé à chaque niveau.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticien</strong> : nom, prénom, adresse, salaire, ancienneté, échelon et clés étrangères vers type_praticien et ville.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>utilisateur</strong> : login, mdp, rôle et lien vers le praticien associé — gère les accès RH.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Tables <strong>ville, departement, region</strong> : hiérarchie géographique complète liée aux praticiens.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tables <strong>demandeconge</strong> et <strong>Notif</strong> : gestion des congés (Mission 1) intégrée dans la même base.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Migrations Laravel</strong> pour créer et versionner le schéma. <strong>Seeders</strong> pour injecter les données de test.</span></div>
-        <div class="submodal-step"><span class="step-num">07</span><span class="step-text">Tables techniques Laravel : <strong>jobs, failed_jobs, sessions, cache, migrations</strong> — gestion des files d'attente et sessions.</span></div>
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>grille_salaire</strong> : stocke l'échelon, l'ancienneté minimale et maximale, ainsi que le salaire brut décimal associé à chaque niveau.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticien</strong> : contient le nom, prénom, adresse, salaire, ancienneté, échelon ainsi que les clés étrangères vers type_praticien et ville.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>utilisateur</strong> : gère les accès RH avec le login, le mot de passe, le rôle et le lien vers le praticien associé.</span></div>
+        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Tables <strong>ville, departement, region</strong> : hiérarchie géographique complète rattachée aux praticiens.</span></div>
+        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tables <strong>demandeconge</strong> et <strong>Notif</strong> : gestion des congés intégrée dans la même base de données (Mission 1).</span></div>
+        <div class="submodal-step"><span class="step-num">06</span><span class="step-text"><strong>Migrations Laravel</strong> pour créer et versionner le schéma de base. <strong>Seeders</strong> pour injecter les données de test.</span></div>
+        <div class="submodal-step"><span class="step-num">07</span><span class="step-text">Tables techniques Laravel : <strong>jobs, failed_jobs, sessions, cache, migrations</strong> pour la gestion des files d'attente et des sessions utilisateur.</span></div>
       </div>
     </div>
   </div>
