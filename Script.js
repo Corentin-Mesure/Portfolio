@@ -1725,3 +1725,232 @@ document.addEventListener('DOMContentLoaded', function () {
     if (active) apply(true);
   });
 })();
+
+/* ════════════════════════════════════════════════════════
+   PLEIN ÉCRAN IMAGE — patch à ajouter dans script.js
+   Colle ce bloc APRÈS la fonction _buildZoomBar existante
+════════════════════════════════════════════════════════ */
+
+/* ── Bouton plein écran dans la barre zoom ── */
+function _addFullscreenBtn(bar) {
+  if (!bar) return;
+
+  /* Évite les doublons si openImageModal est rappelé */
+  if (document.getElementById('_zFull')) return;
+
+  var panel = document.getElementById('_zPanel');
+  if (!panel) return;
+
+  /* Injection CSS une seule fois */
+  var styleId = '_zFullCSS';
+  if (!document.getElementById(styleId)) {
+    var s = document.createElement('style');
+    s.id = styleId;
+    s.textContent =
+      '#_zFull{background:rgba(255,255,255,0.07);border:1px solid rgba(78,205,196,0.35);' +
+      'color:#4ecdc4;border-radius:8px;width:32px;height:32px;font-size:17px;cursor:pointer;' +
+      'transition:background .15s,transform .1s,border-color .15s;' +
+      'display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
+      '#_zFull:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.8);transform:scale(1.1);}' +
+      /* Overlay plein écran natif */
+      '#_fsOverlay{position:fixed;inset:0;z-index:99999;background:#000;' +
+      'display:flex;align-items:center;justify-content:center;cursor:zoom-out;}' +
+      '#_fsOverlay img{max-width:100vw;max-height:100vh;width:auto;height:auto;' +
+      'object-fit:contain;display:block;user-select:none;-webkit-user-drag:none;}' +
+      /* Bouton fermer overlay */
+      '#_fsClose{position:fixed;top:16px;right:20px;z-index:100000;' +
+      'width:42px;height:42px;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);' +
+      'border:1px solid rgba(78,205,196,0.45);color:#4ecdc4;font-size:18px;' +
+      'border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;' +
+      'transition:background .15s,transform .1s;}' +
+      '#_fsClose:hover{background:rgba(78,205,196,0.2);transform:scale(1.1);}' +
+      /* Label hint */
+      '#_fsOverlay .fs-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
+      'font-family:inherit;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.35);' +
+      'pointer-events:none;white-space:nowrap;}';
+    document.head.appendChild(s);
+  }
+
+  /* Bouton ⛶ ajouté dans le panel zoom */
+  var btn = document.createElement('button');
+  btn.id = '_zFull';
+  btn.title = 'Plein écran';
+  btn.innerHTML = '&#x26F6;';
+  btn.onclick = function () { _openFullscreen(); };
+  panel.appendChild(btn);
+}
+
+/* ── Ouvre l'overlay plein écran avec l'image courante ── */
+function _openFullscreen() {
+  /* Cherche l'image visible dans le modal */
+  var src = _getVisibleImgSrc();
+  if (!src) return;
+
+  /* Supprime un éventuel overlay précédent */
+  var old = document.getElementById('_fsOverlay');
+  if (old) old.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = '_fsOverlay';
+
+  var img = document.createElement('img');
+  img.src = src;
+  img.alt = '';
+  img.draggable = false;
+
+  var closeBtn = document.createElement('button');
+  closeBtn.id = '_fsClose';
+  closeBtn.innerHTML = '&#x2715;';
+  closeBtn.title = 'Fermer';
+  closeBtn.onclick = function (e) { e.stopPropagation(); _closeFullscreen(); };
+
+  var hint = document.createElement('div');
+  hint.className = 'fs-hint';
+  hint.textContent = 'Cliquer ou Échap pour fermer';
+
+  overlay.appendChild(img);
+  overlay.appendChild(closeBtn);
+  overlay.appendChild(hint);
+  document.body.appendChild(overlay);
+
+  /* Clic sur le fond = fermer */
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === img) _closeFullscreen();
+  });
+
+  /* Échap = fermer */
+  overlay._escHandler = function (e) { if (e.key === 'Escape') _closeFullscreen(); };
+  document.addEventListener('keydown', overlay._escHandler);
+
+  /* Tenter le Fullscreen API natif du navigateur */
+  if (overlay.requestFullscreen) {
+    overlay.requestFullscreen().catch(function () { /* pas critique */ });
+  } else if (overlay.webkitRequestFullscreen) {
+    overlay.webkitRequestFullscreen();
+  }
+}
+
+function _closeFullscreen() {
+  var overlay = document.getElementById('_fsOverlay');
+  if (!overlay) return;
+  if (overlay._escHandler) document.removeEventListener('keydown', overlay._escHandler);
+  /* Quitter le fullscreen natif si actif */
+  if (document.fullscreenElement === overlay && document.exitFullscreen) {
+    document.exitFullscreen().catch(function () {});
+  } else if (document.webkitFullscreenElement === overlay && document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+  overlay.remove();
+}
+
+/* ── Récupère le src de l'image actuellement affichée dans le modal ── */
+function _getVisibleImgSrc() {
+  /* Cherche d'abord dans les wrappers .static-screen-img (openImageModal) */
+  var inner = document.querySelector('.video-modal-inner');
+  if (!inner) return null;
+
+  /* Image ouverte via openImageModal */
+  var wrappers = inner.querySelectorAll('.static-screen-img img');
+  if (wrappers.length > 0) {
+    /* Si un seul wrapper : prend cette image. Sinon : prend la première. */
+    return wrappers[0].src || null;
+  }
+
+  /* Image ouverte via openVideoModal (GIF / static) */
+  var media = document.getElementById('videoModalMedia');
+  if (media && media.tagName === 'IMG') return media.src || null;
+
+  return null;
+}
+
+/* ══════════════════════════════════════════════════════
+   DOUBLE-CLIC sur n'importe quelle image du modal = plein écran
+   (s'ajoute au double-clic zoom-reset existant sur imgWrap)
+══════════════════════════════════════════════════════ */
+function _patchZoomAttachForFullscreen() {
+  /* On monkey-patch _zoomAttach pour intercepter le dblclick
+     et proposer le plein écran AU LIEU du reset si déjà à 1:1 */
+  var original = _zoomAttach;
+  _zoomAttach = function (wrap, img) {
+    original(wrap, img);
+
+    /* Remplace le dblclick : reset si zoomé, plein écran si à 1:1 */
+    wrap.removeEventListener('dblclick', _zoomReset);
+    wrap.addEventListener('dblclick', function (e) {
+      e.preventDefault();
+      if (Math.abs(_zoom.scale - 1) > 0.05) {
+        _zoomReset();
+      } else {
+        /* Ouvre le plein écran avec l'image cliquée */
+        var src = img.src || img.dataset.src || '';
+        if (!src) return;
+        _openFullscreenSrc(src);
+      }
+    });
+  };
+}
+
+/* ── Ouvre le plein écran avec un src donné (dblclick direct) ── */
+function _openFullscreenSrc(src) {
+  var old = document.getElementById('_fsOverlay');
+  if (old) old.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = '_fsOverlay';
+
+  var img = document.createElement('img');
+  img.src = src;
+  img.draggable = false;
+
+  var closeBtn = document.createElement('button');
+  closeBtn.id = '_fsClose';
+  closeBtn.innerHTML = '&#x2715;';
+  closeBtn.onclick = function (e) { e.stopPropagation(); _closeFullscreen(); };
+
+  var hint = document.createElement('div');
+  hint.className = 'fs-hint';
+  hint.textContent = 'Double-clic ou Échap pour fermer';
+
+  overlay.appendChild(img);
+  overlay.appendChild(closeBtn);
+  overlay.appendChild(hint);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === img) _closeFullscreen();
+  });
+  overlay.addEventListener('dblclick', function (e) {
+    e.preventDefault();
+    _closeFullscreen();
+  });
+
+  overlay._escHandler = function (e) { if (e.key === 'Escape') _closeFullscreen(); };
+  document.addEventListener('keydown', overlay._escHandler);
+
+  if (overlay.requestFullscreen) {
+    overlay.requestFullscreen().catch(function () {});
+  } else if (overlay.webkitRequestFullscreen) {
+    overlay.webkitRequestFullscreen();
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   PATCH openImageModal — injecte le bouton plein écran
+   après la construction de la barre zoom
+══════════════════════════════════════════════════════ */
+(function () {
+  var _origOpenImageModal = window.openImageModal;
+  window.openImageModal = function (srcs, pov, size) {
+    _origOpenImageModal(srcs, pov, size);
+    /* Légère attente pour que _buildZoomBar ait fini */
+    setTimeout(function () {
+      var bar = document.querySelector('.video-modal-bar');
+      _addFullscreenBtn(bar);
+    }, 50);
+  };
+
+  /* Patch _zoomAttach une seule fois au chargement */
+  document.addEventListener('DOMContentLoaded', function () {
+    _patchZoomAttachForFullscreen();
+  });
+})();
