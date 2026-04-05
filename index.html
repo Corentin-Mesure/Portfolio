@@ -872,25 +872,27 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'accès à l'application est restreint au service RH. L'authentification est gérée par Laravel et un message d'erreur s'affiche si les identifiants sont incorrects ou si un compte sans droits RH tente de se connecter.</p>
 
-      <!-- Screen : Page de connexion propre -->
-      <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/Connexion.png','&#x1F511; Page de connexion RH')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Page de connexion RH</div>
-        <img src="images/gsb/Connexion.png" alt="Connexion RH" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
-      <!-- Screen : Connexion refusée -->
-      <div style="margin:0 -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/ConnexionRefus.png','&#x274C; Accès refusé — message d\'erreur')">
-        <div style="padding:6px 14px;font-size:11px;color:#ff6b6b;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Tentative de connexion non autorisée — message d'erreur</div>
-        <img src="images/gsb/ConnexionRefus.png" alt="Connexion refusée" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Page de connexion dédiée avec les champs <strong>Login</strong> et <strong>Mot de passe</strong>. L'accès est réservé aux responsables RH habilités.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Authentification gérée par <strong>Laravel Auth</strong> avec sessions sécurisées.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Si les identifiants sont incorrects ou ne correspondent pas à un compte RH, un <strong>message d'erreur rouge</strong> s'affiche : <em style="color:#ff6b6b;">"Accès réservé aux RH"</em>.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Une fois connecté, le responsable accède au tableau de bord listant tous les praticiens avec leurs informations salariales.</span></div>
+        <div class="submodal-step">
+          <span class="step-num">01</span>
+          <span class="step-text">Page de connexion dédiée avec les champs <strong>Login</strong> et <strong>Mot de passe</strong>. L'accès est réservé aux responsables RH habilités.
+            <br><button onclick="openImageModal('images/gsb/Connexion.png','&#x1F511; Page de connexion RH')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text">Authentification gérée par <strong>Laravel Auth</strong> avec sessions sécurisées.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">Si les identifiants sont incorrects ou ne correspondent pas à un compte RH, un <strong>message d'erreur rouge</strong> s'affiche : <em style="color:#ff6b6b;">"Accès réservé aux RH"</em>.
+            <br><button onclick="openImageModal('images/gsb/ConnexionRefus.png','&#x274C; Accès refusé — message d\'erreur')" style="margin-top:8px;background:none;border:1px solid #ff6b6b;color:#ff6b6b;padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">04</span>
+          <span class="step-text">Une fois connecté, le responsable accède au tableau de bord listant tous les praticiens avec leurs informations salariales.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -910,17 +912,21 @@
     <div class="submodal-body">
       <p class="submodal-desc">La rémunération des praticiens suit une grille officielle de 13 échelons définie dans le cahier des charges. Les échelons et salaires sont affichés en couleur dans l'interface pour une lecture rapide.</p>
 
-      <!-- Screen : Interface principale montrant les échelons -->
-      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F4CA; Échelons et salaires — vue tableau')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Affichage des échelons et salaires dans le tableau</div>
-        <img src="images/gsb/InterfaceAppli.png" alt="Grille des échelons" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text"><strong>13 échelons</strong> définis selon l'ancienneté : échelons 1 à 8 durent 2 ans chacun, échelons 9 à 12 durent 4 ans, et l'échelon 13 est le palier maximum (32 ans et plus).</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Salaires bruts mensuels allant de <strong>4 633,98 €</strong> (échelon 1) à <strong>9 368,05 €</strong> (échelon 13).</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">L'échelon est affiché en <strong>couleur cyan</strong> et le salaire en <strong>vert</strong> dans le tableau pour faciliter la lecture.</span></div>
+        <div class="submodal-step">
+          <span class="step-num">01</span>
+          <span class="step-text"><strong>13 échelons</strong> définis selon l'ancienneté : échelons 1 à 8 durent 2 ans chacun, échelons 9 à 12 durent 4 ans, et l'échelon 13 est le palier maximum (32 ans et plus).</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text">Salaires bruts mensuels allant de <strong>4 633,98 €</strong> (échelon 1) à <strong>9 368,05 €</strong> (échelon 13).</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">L'échelon est affiché en <strong>couleur cyan</strong> et le salaire en <strong>vert</strong> dans le tableau pour faciliter la lecture.
+            <br><button onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F4CA; Échelons et salaires — vue tableau')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -940,19 +946,33 @@
     <div class="submodal-body">
       <p class="submodal-desc">L'échelon est déterminé automatiquement à partir de l'ancienneté saisie par le responsable RH. La modification d'un praticien déclenche le recalcul immédiat de son échelon et de son salaire brut, avec une notification de confirmation.</p>
 
-      <!-- Screen : Formulaire de modification -->
-      <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/ModificationPrat.png','&#x270F;&#xFE0F; Formulaire Modifier un praticien')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Formulaire de modification — saisie de la nouvelle ancienneté</div>
-        <img src="images/gsb/ModificationPrat.png" alt="Modifier un praticien" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Un clic sur <strong>« Modifier »</strong> ouvre un formulaire affichant les informations actuelles du praticien : nom, prénom, échelon et salaire en cours.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Le responsable RH saisit la <strong>nouvelle ancienneté</strong> (en années) dans le champ dédié.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">À l'enregistrement, un <strong>trigger SQL</strong> se déclenche automatiquement côté base de données et recalcule l'échelon ainsi que le salaire brut mensuel selon la grille tarifaire officielle — sans aucune intervention applicative supplémentaire.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Un <strong>bandeau vert de confirmation</strong> s'affiche : <em style="color:#3dc85a;">"Ancienneté de [Prénom Nom] mise à jour avec succès."</em></span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Le tableau est mis à jour immédiatement avec la <strong>nouvelle ancienneté, le nouvel échelon et le nouveau salaire</strong> du praticien.</span></div>
+        <div class="submodal-step">
+          <span class="step-num">01</span>
+          <span class="step-text">Un clic sur <strong>« Modifier »</strong> ouvre un formulaire affichant les informations actuelles du praticien : nom, prénom, échelon et salaire en cours.
+            <br><button onclick="openImageModal('images/gsb/ModificationPrat.png','&#x270F;&#xFE0F; Formulaire Modifier un praticien')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text">Le responsable RH saisit la <strong>nouvelle ancienneté</strong> (en années) dans le champ dédié.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">À l'enregistrement, un <strong>trigger SQL</strong> se déclenche automatiquement côté base de données et recalcule l'échelon ainsi que le salaire brut mensuel selon la grille tarifaire officielle — sans aucune intervention applicative supplémentaire.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">04</span>
+          <span class="step-text">Un <strong>bandeau vert de confirmation</strong> s'affiche : <em style="color:#3dc85a;">"Ancienneté de [Prénom Nom] mise à jour avec succès."</em>
+            <br><button onclick="openImageModal('images/gsb/NotifSuccès.png','&#x2705; Notification de succès')" style="margin-top:8px;background:none;border:1px solid #3dc85a;color:#3dc85a;padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">05</span>
+          <span class="step-text">Le tableau est mis à jour immédiatement avec la <strong>nouvelle ancienneté, le nouvel échelon et le nouveau salaire</strong> du praticien.
+            <br><button onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F5A5;&#xFE0F; Tableau mis à jour')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
       </div>
 
       <!-- Triggers SQL -->
@@ -998,35 +1018,43 @@
     <div class="submodal-body">
       <p class="submodal-desc">Interface web complète permettant au service RH de consulter, rechercher et mettre à jour les informations salariales de l'ensemble des praticiens. La barre de recherche permet un filtrage instantané par nom, prénom ou nom complet.</p>
 
-      <!-- Screen : Interface principale avec tableau complet -->
-      <div style="margin:16px -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F5A5;&#xFE0F; Liste complète des praticiens')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Vue principale — Liste des praticiens avec ancienneté, échelon et salaire</div>
-        <img src="images/gsb/InterfaceAppli.png" alt="Interface principale" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
-      <!-- Screen : Notification succès après modification -->
-      <div style="margin:0 -32px 16px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/NotifSuccès.png','&#x2705; Notification — Ancienneté mise à jour avec succès')">
-        <div style="padding:6px 14px;font-size:11px;color:#3dc85a;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Notification de succès après enregistrement d'une modification</div>
-        <img src="images/gsb/NotifSuccès.png" alt="Notification succès" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
-      <!-- Screen : Barre de recherche en action -->
-      <div style="margin:0 -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/BarreRecherche.png','&#x1F50D; Recherche par nom — résultat filtré')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">Recherche "barrett abbott" — résultat filtré (1 praticien trouvé)</div>
-        <img src="images/gsb/BarreRecherche.png" alt="Barre de recherche" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Liste complète des praticiens affichée en tableau : <strong>nom, prénom, ancienneté, échelon et salaire brut</strong> mensuel.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text"><strong>Barre de recherche</strong> : filtrage instantané par nom, prénom ou nom complet. Affiche le nombre de résultats trouvés avec pagination.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Après une modification, un <strong>bandeau vert de confirmation</strong> s'affiche en haut du tableau.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Bouton <strong>« Réinitialiser »</strong> pour effacer le filtre de recherche et revenir à la liste complète.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Bouton <strong>« Modifier »</strong> sur chaque ligne pour accéder au formulaire de mise à jour de l'ancienneté d'un praticien.</span></div>
-        <div class="submodal-step"><span class="step-num">06</span><span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique, avec une pagination de 100 praticiens par page.</span></div>
-        <div class="submodal-step"><span class="step-num">07</span><span class="step-text">Bouton <strong>« Déconnexion »</strong> accessible en permanence pour sécuriser la session RH.</span></div>
+        <div class="submodal-step">
+          <span class="step-num">01</span>
+          <span class="step-text">Liste complète des praticiens affichée en tableau : <strong>nom, prénom, ancienneté, échelon et salaire brut</strong> mensuel.
+            <br><button onclick="openImageModal('images/gsb/InterfaceAppli.png','&#x1F5A5;&#xFE0F; Liste complète des praticiens')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text"><strong>Barre de recherche</strong> : filtrage instantané par nom, prénom ou nom complet. Affiche le nombre de résultats trouvés avec pagination.
+            <br><button onclick="openImageModal('images/gsb/BarreRecherche.png','&#x1F50D; Recherche par nom — résultat filtré')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">Après une modification, un <strong>bandeau vert de confirmation</strong> s'affiche en haut du tableau.
+            <br><button onclick="openImageModal('images/gsb/NotifSuccès.png','&#x2705; Notification de succès')" style="margin-top:8px;background:none;border:1px solid #3dc85a;color:#3dc85a;padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">04</span>
+          <span class="step-text">Bouton <strong>« Réinitialiser »</strong> pour effacer le filtre de recherche et revenir à la liste complète.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">05</span>
+          <span class="step-text">Bouton <strong>« Modifier »</strong> sur chaque ligne pour accéder au formulaire de mise à jour de l'ancienneté d'un praticien.
+            <br><button onclick="openImageModal('images/gsb/ModificationPrat.png','&#x270F;&#xFE0F; Formulaire de modification')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le screen</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">06</span>
+          <span class="step-text">Vues <strong>Blade de Laravel</strong> pour le rendu dynamique, avec une pagination de 100 praticiens par page.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">07</span>
+          <span class="step-text">Bouton <strong>« Déconnexion »</strong> accessible en permanence pour sécuriser la session RH.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1046,19 +1074,29 @@
     <div class="submodal-body">
       <p class="submodal-desc">La base de données MySQL a été adaptée pour intégrer la gestion des anciennetés, des échelons et des salaires des praticiens. Le MCD ci-dessous présente l'ensemble des tables relationnelles de l'application GSB.</p>
 
-      <!-- MCD complet -->
-      <div style="margin:16px -32px 28px -32px;cursor:pointer;position:relative;" onclick="openImageModal('images/gsb/mcd.png','&#x1F5C4;&#xFE0F; MCD — GSB Gestion des Salaires')">
-        <div style="padding:6px 14px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);">MCD complet — Base de données GSB</div>
-        <img src="images/gsb/mcd.png" alt="MCD GSB Salaires" style="width:100%;height:auto;display:block;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:11px;color:var(--cyan,#4ecdc4);letter-spacing:1.2px;pointer-events:none;">&#x1F50D; Agrandir</div>
-      </div>
-
       <div class="submodal-steps">
-        <div class="submodal-step"><span class="step-num">01</span><span class="step-text">Table <strong>grille_salaire</strong> : stocke l'échelon, l'ancienneté minimale et maximale, ainsi que le salaire brut décimal associé à chaque niveau.</span></div>
-        <div class="submodal-step"><span class="step-num">02</span><span class="step-text">Table <strong>praticien</strong> : contient le nom, prénom, adresse, salaire, ancienneté, échelon ainsi que les clés étrangères vers type_praticien et ville.</span></div>
-        <div class="submodal-step"><span class="step-num">03</span><span class="step-text">Table <strong>utilisateur</strong> : gère les accès RH avec le login, le mot de passe, le rôle et le lien vers le praticien associé.</span></div>
-        <div class="submodal-step"><span class="step-num">04</span><span class="step-text">Tables <strong>ville, departement, region</strong> : hiérarchie géographique complète rattachée aux praticiens.</span></div>
-        <div class="submodal-step"><span class="step-num">05</span><span class="step-text">Tables <strong>demandeconge</strong> et <strong>Notif</strong> : gestion des congés intégrée dans la même base de données (Mission 1).</span></div>
+        <div class="submodal-step">
+          <span class="step-num">01</span>
+          <span class="step-text">Table <strong>grille_salaire</strong> : stocke l'échelon, l'ancienneté minimale et maximale, ainsi que le salaire brut décimal associé à chaque niveau.
+            <br><button onclick="openImageModal('images/gsb/mcd.png','&#x1F5C4;&#xFE0F; MCD — GSB Gestion des Salaires')" style="margin-top:8px;background:none;border:1px solid var(--cyan,#4ecdc4);color:var(--cyan,#4ecdc4);padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;letter-spacing:1px;">&#x1F50D; Voir le MCD</button>
+          </span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">02</span>
+          <span class="step-text">Table <strong>praticien</strong> : contient le nom, prénom, adresse, salaire, ancienneté, échelon ainsi que les clés étrangères vers type_praticien et ville.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">03</span>
+          <span class="step-text">Table <strong>utilisateur</strong> : gère les accès RH avec le login, le mot de passe, le rôle et le lien vers le praticien associé.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">04</span>
+          <span class="step-text">Tables <strong>ville, departement, region</strong> : hiérarchie géographique complète rattachée aux praticiens.</span>
+        </div>
+        <div class="submodal-step">
+          <span class="step-num">05</span>
+          <span class="step-text">Tables <strong>demandeconge</strong> et <strong>Notif</strong> : gestion des congés intégrée dans la même base de données (Mission 1).</span>
+        </div>
       </div>
     </div>
   </div>
