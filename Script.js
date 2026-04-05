@@ -1727,170 +1727,237 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 
 /* ════════════════════════════════════════════════════════
-   PLEIN ÉCRAN IMAGE — patch à ajouter dans script.js
-   Colle ce bloc APRÈS la fonction _buildZoomBar existante
+   FIX IMAGE MODAL — image remplit tout l'espace disponible
+   Remplace le bloc openImageModal existant dans script.js
+   (cherche "function openImageModal" et remplace tout jusqu'à
+   la fonction suivante)
 ════════════════════════════════════════════════════════ */
 
-/* ── Bouton plein écran dans la barre zoom ── */
+function openImageModal(srcs, pov, size) {
+  var overlay = document.getElementById('videoModal');
+  var badge   = document.getElementById('videoModalPov');
+  var errDiv  = document.getElementById('videoModalErr');
+  var inner   = document.querySelector('.video-modal-inner');
+  var bar     = document.querySelector('.video-modal-bar');
+  var wrap    = document.querySelector('.video-modal-wrap');
+
+  _gifReset();
+  inner.querySelectorAll('#videoModalMedia,.static-screen-img').forEach(function (el) { el.remove(); });
+
+  overlay.querySelectorAll('button').forEach(function (b) {
+    if (b.id === '_imgModalClose') return;
+    b.dataset.hiddenByImg = '1';
+    b.style.display = 'none';
+  });
+
+  if (bar) {
+    bar.innerHTML = '';
+    bar.style.pointerEvents = 'auto';
+    bar.style.position      = 'relative';
+    bar.style.zIndex        = '10';
+    bar.style.visibility    = '';
+    _buildZoomBar(bar);
+    /* Bouton plein écran dans la barre */
+    setTimeout(function () { _addFullscreenBtn(bar); }, 20);
+  }
+
+  badge.innerHTML = '';
+  badge.style.cssText = 'display:none;';
+  errDiv.style.display = 'none';
+
+  var list = Array.isArray(srcs) ? srcs : [srcs];
+
+  /* ── Calcul de la taille disponible ── */
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  /* Réserve ~60px pour la barre zoom en bas + ~10px marges */
+  var availH = vh - 70;
+  var availW = vw - 40;
+
+  /* Taille max du wrap */
+  var maxW = size ? Math.min(size, availW) : availW;
+
+  if (wrap) {
+    wrap.style.cssText =
+      'background:transparent;box-shadow:none;border:none;padding:0;' +
+      'max-width:' + maxW + 'px;width:' + maxW + 'px;pointer-events:none;';
+  }
+
+  /* Layout : une seule image → centré et grand
+               deux images → côte à côte */
+  if (list.length === 1) {
+    /* ── Mode image unique : occupe tout l'espace ── */
+    inner.style.cssText =
+      'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+      'background:transparent;box-shadow:none;border:none;padding:0;' +
+      'overflow:visible;pointer-events:none;width:100%;';
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'static-screen-img';
+    wrapper.style.cssText =
+      'display:flex;flex-direction:column;align-items:center;gap:0;' +
+      'pointer-events:auto;width:100%;';
+
+    var imgWrap = document.createElement('div');
+    imgWrap.style.cssText =
+      'overflow:hidden;border-radius:10px;' +
+      'box-shadow:0 0 40px rgba(0,0,0,0.9);' +
+      'cursor:grab;touch-action:none;position:relative;' +
+      'width:100%;';
+
+    var img = document.createElement('img');
+    /* L'image prend toute la largeur disponible,
+       la hauteur s'adapte mais ne dépasse pas availH */
+    img.style.cssText =
+      'display:block;' +
+      'width:100%;' +
+      'height:auto;' +
+      'max-height:' + availH + 'px;' +
+      'object-fit:contain;' +
+      'transform-origin:0 0;' +
+      'user-select:none;-webkit-user-drag:none;';
+
+    img.onerror = function () { img.style.display = 'none'; };
+    img.src = srcs;
+
+    _zoomAttach(imgWrap, img);
+    imgWrap.appendChild(img);
+    wrapper.appendChild(imgWrap);
+    inner.appendChild(wrapper);
+
+  } else {
+    /* ── Mode double image : côte à côte ── */
+    inner.style.cssText =
+      'display:flex;flex-direction:row;align-items:flex-start;justify-content:center;' +
+      'gap:32px;background:transparent;box-shadow:none;border:none;padding:0;' +
+      'overflow:visible;pointer-events:none;';
+
+    var labels = ['\uD83D\uDC51 POV Admin', '\uD83D\uDC64 POV Membre'];
+
+    list.forEach(function (src, i) {
+      var wrapper2 = document.createElement('div');
+      wrapper2.className = 'static-screen-img';
+      wrapper2.style.cssText =
+        'display:flex;flex-direction:column;align-items:center;gap:10px;' +
+        'pointer-events:auto;flex:1;min-width:0;';
+
+      var label = document.createElement('div');
+      label.innerHTML = labels[i] || '';
+      label.style.cssText =
+        'font-family:Cinzel,serif;font-size:13px;letter-spacing:3px;' +
+        'color:' + (i === 0 ? '#C89B3C' : '#5DE8F2') + ';text-shadow:0 0 10px currentColor;';
+
+      var imgWrap2 = document.createElement('div');
+      imgWrap2.style.cssText =
+        'overflow:hidden;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,0.9);' +
+        'cursor:grab;touch-action:none;position:relative;width:100%;';
+
+      var img2 = document.createElement('img');
+      img2.style.cssText =
+        'display:block;width:100%;height:auto;' +
+        'max-height:' + (availH - 30) + 'px;' +
+        'object-fit:contain;' +
+        'transform-origin:0 0;' +
+        'user-select:none;-webkit-user-drag:none;';
+      img2.onerror = function () { img2.style.display = 'none'; };
+      img2.src = src;
+
+      _zoomAttach(imgWrap2, img2);
+      imgWrap2.appendChild(img2);
+      wrapper2.appendChild(label);
+      wrapper2.appendChild(imgWrap2);
+      inner.appendChild(wrapper2);
+    });
+  }
+
+  /* ── Bouton ✕ flottant ── */
+  var existingClose = document.getElementById('_imgModalClose');
+  if (existingClose) existingClose.remove();
+
+  var closeBtn = document.createElement('button');
+  closeBtn.id = '_imgModalClose';
+  closeBtn.innerHTML = '&#x2715;';
+  closeBtn.style.cssText =
+    'position:fixed;top:18px;right:22px;z-index:10001;' +
+    'width:42px;height:42px;background:rgba(0,0,0,0.65);' +
+    'border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
+    'font-size:18px;border-radius:8px;cursor:pointer;' +
+    'display:flex;align-items:center;justify-content:center;' +
+    'backdrop-filter:blur(8px);transition:background .15s,transform .1s;' +
+    'pointer-events:auto;';
+  closeBtn.onmouseenter = function () {
+    closeBtn.style.background = 'rgba(200,160,60,0.25)';
+    closeBtn.style.transform  = 'scale(1.1)';
+  };
+  closeBtn.onmouseleave = function () {
+    closeBtn.style.background = 'rgba(0,0,0,0.65)';
+    closeBtn.style.transform  = 'scale(1)';
+  };
+  closeBtn.onclick = function (e) { e.stopPropagation(); closeVideoModal(); };
+  document.body.appendChild(closeBtn);
+
+  overlay.classList.add('open');
+}
+
+
+/* ════════════════════════════════════════════════════════
+   PLEIN ÉCRAN IMAGE — colle ce bloc juste en dessous
+════════════════════════════════════════════════════════ */
+
 function _addFullscreenBtn(bar) {
-  if (!bar) return;
-
-  /* Évite les doublons si openImageModal est rappelé */
-  if (document.getElementById('_zFull')) return;
-
+  if (!bar || document.getElementById('_zFull')) return;
   var panel = document.getElementById('_zPanel');
   if (!panel) return;
 
-  /* Injection CSS une seule fois */
-  var styleId = '_zFullCSS';
-  if (!document.getElementById(styleId)) {
+  if (!document.getElementById('_zFullCSS')) {
     var s = document.createElement('style');
-    s.id = styleId;
+    s.id = '_zFullCSS';
     s.textContent =
       '#_zFull{background:rgba(255,255,255,0.07);border:1px solid rgba(78,205,196,0.35);' +
-      'color:#4ecdc4;border-radius:8px;width:32px;height:32px;font-size:17px;cursor:pointer;' +
+      'color:#4ecdc4;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;' +
       'transition:background .15s,transform .1s,border-color .15s;' +
       'display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
       '#_zFull:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.8);transform:scale(1.1);}' +
-      /* Overlay plein écran natif */
       '#_fsOverlay{position:fixed;inset:0;z-index:99999;background:#000;' +
       'display:flex;align-items:center;justify-content:center;cursor:zoom-out;}' +
       '#_fsOverlay img{max-width:100vw;max-height:100vh;width:auto;height:auto;' +
       'object-fit:contain;display:block;user-select:none;-webkit-user-drag:none;}' +
-      /* Bouton fermer overlay */
       '#_fsClose{position:fixed;top:16px;right:20px;z-index:100000;' +
       'width:42px;height:42px;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);' +
       'border:1px solid rgba(78,205,196,0.45);color:#4ecdc4;font-size:18px;' +
       'border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;' +
       'transition:background .15s,transform .1s;}' +
       '#_fsClose:hover{background:rgba(78,205,196,0.2);transform:scale(1.1);}' +
-      /* Label hint */
       '#_fsOverlay .fs-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
-      'font-family:inherit;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.35);' +
+      'font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.35);' +
       'pointer-events:none;white-space:nowrap;}';
     document.head.appendChild(s);
   }
 
-  /* Bouton ⛶ ajouté dans le panel zoom */
   var btn = document.createElement('button');
   btn.id = '_zFull';
   btn.title = 'Plein écran';
   btn.innerHTML = '&#x26F6;';
-  btn.onclick = function () { _openFullscreen(); };
+  btn.onclick = _openFullscreen;
   panel.appendChild(btn);
 }
 
-/* ── Ouvre l'overlay plein écran avec l'image courante ── */
-function _openFullscreen() {
-  /* Cherche l'image visible dans le modal */
-  var src = _getVisibleImgSrc();
-  if (!src) return;
-
-  /* Supprime un éventuel overlay précédent */
-  var old = document.getElementById('_fsOverlay');
-  if (old) old.remove();
-
-  var overlay = document.createElement('div');
-  overlay.id = '_fsOverlay';
-
-  var img = document.createElement('img');
-  img.src = src;
-  img.alt = '';
-  img.draggable = false;
-
-  var closeBtn = document.createElement('button');
-  closeBtn.id = '_fsClose';
-  closeBtn.innerHTML = '&#x2715;';
-  closeBtn.title = 'Fermer';
-  closeBtn.onclick = function (e) { e.stopPropagation(); _closeFullscreen(); };
-
-  var hint = document.createElement('div');
-  hint.className = 'fs-hint';
-  hint.textContent = 'Cliquer ou Échap pour fermer';
-
-  overlay.appendChild(img);
-  overlay.appendChild(closeBtn);
-  overlay.appendChild(hint);
-  document.body.appendChild(overlay);
-
-  /* Clic sur le fond = fermer */
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay || e.target === img) _closeFullscreen();
-  });
-
-  /* Échap = fermer */
-  overlay._escHandler = function (e) { if (e.key === 'Escape') _closeFullscreen(); };
-  document.addEventListener('keydown', overlay._escHandler);
-
-  /* Tenter le Fullscreen API natif du navigateur */
-  if (overlay.requestFullscreen) {
-    overlay.requestFullscreen().catch(function () { /* pas critique */ });
-  } else if (overlay.webkitRequestFullscreen) {
-    overlay.webkitRequestFullscreen();
-  }
-}
-
-function _closeFullscreen() {
-  var overlay = document.getElementById('_fsOverlay');
-  if (!overlay) return;
-  if (overlay._escHandler) document.removeEventListener('keydown', overlay._escHandler);
-  /* Quitter le fullscreen natif si actif */
-  if (document.fullscreenElement === overlay && document.exitFullscreen) {
-    document.exitFullscreen().catch(function () {});
-  } else if (document.webkitFullscreenElement === overlay && document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  }
-  overlay.remove();
-}
-
-/* ── Récupère le src de l'image actuellement affichée dans le modal ── */
 function _getVisibleImgSrc() {
-  /* Cherche d'abord dans les wrappers .static-screen-img (openImageModal) */
   var inner = document.querySelector('.video-modal-inner');
   if (!inner) return null;
-
-  /* Image ouverte via openImageModal */
-  var wrappers = inner.querySelectorAll('.static-screen-img img');
-  if (wrappers.length > 0) {
-    /* Si un seul wrapper : prend cette image. Sinon : prend la première. */
-    return wrappers[0].src || null;
-  }
-
-  /* Image ouverte via openVideoModal (GIF / static) */
+  var imgs = inner.querySelectorAll('.static-screen-img img');
+  if (imgs.length > 0) return imgs[0].src || null;
   var media = document.getElementById('videoModalMedia');
   if (media && media.tagName === 'IMG') return media.src || null;
-
   return null;
 }
 
-/* ══════════════════════════════════════════════════════
-   DOUBLE-CLIC sur n'importe quelle image du modal = plein écran
-   (s'ajoute au double-clic zoom-reset existant sur imgWrap)
-══════════════════════════════════════════════════════ */
-function _patchZoomAttachForFullscreen() {
-  /* On monkey-patch _zoomAttach pour intercepter le dblclick
-     et proposer le plein écran AU LIEU du reset si déjà à 1:1 */
-  var original = _zoomAttach;
-  _zoomAttach = function (wrap, img) {
-    original(wrap, img);
-
-    /* Remplace le dblclick : reset si zoomé, plein écran si à 1:1 */
-    wrap.removeEventListener('dblclick', _zoomReset);
-    wrap.addEventListener('dblclick', function (e) {
-      e.preventDefault();
-      if (Math.abs(_zoom.scale - 1) > 0.05) {
-        _zoomReset();
-      } else {
-        /* Ouvre le plein écran avec l'image cliquée */
-        var src = img.src || img.dataset.src || '';
-        if (!src) return;
-        _openFullscreenSrc(src);
-      }
-    });
-  };
+function _openFullscreen() {
+  var src = _getVisibleImgSrc();
+  if (!src) return;
+  _openFullscreenSrc(src);
 }
 
-/* ── Ouvre le plein écran avec un src donné (dblclick direct) ── */
 function _openFullscreenSrc(src) {
   var old = document.getElementById('_fsOverlay');
   if (old) old.remove();
@@ -1909,7 +1976,7 @@ function _openFullscreenSrc(src) {
 
   var hint = document.createElement('div');
   hint.className = 'fs-hint';
-  hint.textContent = 'Double-clic ou Échap pour fermer';
+  hint.textContent = 'Cliquer ou Échap pour fermer';
 
   overlay.appendChild(img);
   overlay.appendChild(closeBtn);
@@ -1934,23 +2001,31 @@ function _openFullscreenSrc(src) {
   }
 }
 
-/* ══════════════════════════════════════════════════════
-   PATCH openImageModal — injecte le bouton plein écran
-   après la construction de la barre zoom
-══════════════════════════════════════════════════════ */
-(function () {
-  var _origOpenImageModal = window.openImageModal;
-  window.openImageModal = function (srcs, pov, size) {
-    _origOpenImageModal(srcs, pov, size);
-    /* Légère attente pour que _buildZoomBar ait fini */
-    setTimeout(function () {
-      var bar = document.querySelector('.video-modal-bar');
-      _addFullscreenBtn(bar);
-    }, 50);
-  };
+function _closeFullscreen() {
+  var overlay = document.getElementById('_fsOverlay');
+  if (!overlay) return;
+  if (overlay._escHandler) document.removeEventListener('keydown', overlay._escHandler);
+  if (document.fullscreenElement === overlay && document.exitFullscreen) {
+    document.exitFullscreen().catch(function () {});
+  } else if (document.webkitFullscreenElement === overlay && document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+  overlay.remove();
+}
 
-  /* Patch _zoomAttach une seule fois au chargement */
-  document.addEventListener('DOMContentLoaded', function () {
-    _patchZoomAttachForFullscreen();
-  });
+/* Double-clic sur image dans le modal → plein écran si zoom = 1:1 */
+(function () {
+  var _orig = _zoomAttach;
+  _zoomAttach = function (wrap, img) {
+    _orig(wrap, img);
+    wrap.removeEventListener('dblclick', _zoomReset);
+    wrap.addEventListener('dblclick', function (e) {
+      e.preventDefault();
+      if (Math.abs(_zoom.scale - 1) > 0.05) {
+        _zoomReset();
+      } else {
+        _openFullscreenSrc(img.src || '');
+      }
+    });
+  };
 })();
