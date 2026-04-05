@@ -1727,12 +1727,468 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 
 /* ════════════════════════════════════════════════════════
-   FIX IMAGE MODAL — image remplit tout l'espace disponible
-   Remplace le bloc openImageModal existant dans script.js
-   (cherche "function openImageModal" et remplace tout jusqu'à
-   la fonction suivante)
+   REMPLACEMENT COMPLET — openImageModal + plein écran avec zoom/pan
+   
+   INSTRUCTIONS :
+   1. Dans script.js, cherche "function openImageModal("
+   2. Remplace TOUTE la fonction (jusqu'à la prochaine fonction)
+      par ce fichier complet
+   3. Si tu avais déjà collé fullscreen_patch.js, supprime-le
+      (tout est intégré ici)
 ════════════════════════════════════════════════════════ */
 
+/* ── CSS plein écran injecté une seule fois ── */
+function _injectFsCSS() {
+  if (document.getElementById('_fsCSSv2')) return;
+  var s = document.createElement('style');
+  s.id = '_fsCSSv2';
+  s.textContent = [
+
+    /* Overlay */
+    '#_fsOv{position:fixed;inset:0;z-index:99999;background:#000;',
+    'display:flex;flex-direction:column;overflow:hidden;}',
+
+    /* Zone image (flex:1 = prend tout l'espace au-dessus de la barre) */
+    '#_fsBody{flex:1;position:relative;overflow:hidden;',
+    'display:flex;align-items:center;justify-content:center;',
+    'cursor:grab;touch-action:none;user-select:none;}',
+    '#_fsBody.dragging{cursor:grabbing;}',
+
+    /* Image dans le plein écran */
+    '#_fsImg{position:absolute;top:0;left:0;',
+    'transform-origin:0 0;',
+    'will-change:transform;',
+    'user-select:none;-webkit-user-drag:none;',
+    'transition:none;}',
+    '#_fsImg.snap{transition:transform .25s cubic-bezier(0.16,1,0.3,1);}',
+
+    /* Barre basse */
+    '#_fsBar{flex-shrink:0;display:flex;align-items:center;gap:8px;',
+    'padding:10px 14px;',
+    'background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);',
+    'border-top:1px solid rgba(78,205,196,0.18);}',
+
+    /* Boutons communs */
+    '#_fsBar button{background:rgba(255,255,255,0.07);',
+    'border:1px solid rgba(78,205,196,0.3);color:#fff;',
+    'border-radius:8px;width:32px;height:32px;font-size:17px;cursor:pointer;',
+    'transition:background .15s,transform .1s,border-color .15s;',
+    'display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+    '#_fsBar button:hover{background:rgba(78,205,196,0.2);',
+    'border-color:rgba(78,205,196,0.8);transform:scale(1.1);}',
+
+    /* Slider */
+    '#_fsRange{flex:1;height:4px;accent-color:#4ecdc4;cursor:pointer;min-width:60px;}',
+
+    /* % */
+    '#_fsPct{font-size:13px;font-weight:700;color:#4ecdc4;',
+    'min-width:52px;text-align:center;',
+    'background:rgba(78,205,196,0.1);',
+    'border:1px solid rgba(78,205,196,0.35);',
+    'border-radius:6px;padding:4px 8px;cursor:pointer;',
+    'flex-shrink:0;}',
+
+    /* Bouton fermer */
+    '#_fsBtnClose{border-color:rgba(255,100,100,0.4)!important;',
+    'color:#ff8888!important;}',
+    '#_fsBtnClose:hover{background:rgba(255,100,100,0.2)!important;',
+    'border-color:rgba(255,100,100,0.8)!important;}',
+
+    /* Bouton fit (cyan accent) */
+    '#_fsBtnFit{border-color:rgba(78,205,196,0.5)!important;',
+    'color:#4ecdc4!important;}',
+
+    /* Hint bas de page */
+    '#_fsHint{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.28);',
+    'white-space:nowrap;flex-shrink:0;padding-right:4px;}',
+
+  ].join('');
+  document.head.appendChild(s);
+}
+
+/* ════════════════════════════════════════════════════════
+   STATE plein écran
+════════════════════════════════════════════════════════ */
+var _fs = {
+  scale: 1, ox: 0, oy: 0,
+  dragging: false, startX: 0, startY: 0,
+  img: null, body: null,
+  naturalW: 0, naturalH: 0,
+  minScale: 0.1, maxScale: 8,
+  _touches: {}, _lastDist: null, _tsX: 0, _tsY: 0,
+  escHandler: null
+};
+var _FS_STEPS = [25, 50, 75, 100, 125, 150, 200, 300, 400, 500, 600, 800];
+
+function _fsApply(scale, ox, oy) {
+  _fs.scale = Math.min(_fs.maxScale, Math.max(_fs.minScale, scale));
+  if (ox !== undefined) _fs.ox = ox;
+  if (oy !== undefined) _fs.oy = oy;
+  if (_fs.img) {
+    _fs.img.style.transform =
+      'translate(' + _fs.ox + 'px,' + _fs.oy + 'px) scale(' + _fs.scale + ')';
+  }
+  _fsUpdateBar();
+}
+
+function _fsUpdateBar() {
+  var pct = Math.round(_fs.scale * 100);
+  var el = document.getElementById('_fsPct');
+  if (el) el.textContent = pct + '%';
+  var rng = document.getElementById('_fsRange');
+  if (rng) {
+    var log = Math.log(_fs.maxScale / _fs.minScale);
+    var pos = Math.log(_fs.scale / _fs.minScale);
+    rng.value = Math.round((pos / log) * 100);
+  }
+}
+
+/* Calcule le scale pour que l'image tienne dans le body */
+function _fsFitScale() {
+  var body = _fs.body;
+  if (!body || !_fs.naturalW || !_fs.naturalH) return 1;
+  var bw = body.clientWidth, bh = body.clientHeight;
+  return Math.min(bw / _fs.naturalW, bh / _fs.naturalH, 1);
+}
+
+/* Centre l'image avec un scale donné */
+function _fsFit(scale) {
+  var body = _fs.body;
+  if (!body) return;
+  var s = scale !== undefined ? scale : _fsFitScale();
+  var bw = body.clientWidth, bh = body.clientHeight;
+  var ox = (bw - _fs.naturalW * s) / 2;
+  var oy = (bh - _fs.naturalH * s) / 2;
+  _fsApply(s, ox, oy);
+}
+
+/* Zoom centré sur un point (px, py) dans le body */
+function _fsZoomAt(newScale, px, py) {
+  newScale = Math.min(_fs.maxScale, Math.max(_fs.minScale, newScale));
+  var r = newScale / _fs.scale;
+  _fsApply(newScale, px + (_fs.ox - px) * r, py + (_fs.oy - py) * r);
+}
+
+/* Zoom centré sur le milieu du body */
+function _fsZoomCenter(newScale) {
+  var body = _fs.body;
+  if (!body) { _fsApply(newScale); return; }
+  _fsZoomAt(newScale, body.clientWidth / 2, body.clientHeight / 2);
+}
+
+/* ════════════════════════════════════════════════════════
+   OUVERTURE plein écran
+════════════════════════════════════════════════════════ */
+function _openFullscreenSrc(src) {
+  _injectFsCSS();
+
+  var old = document.getElementById('_fsOv');
+  if (old) old.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = '_fsOv';
+
+  /* ── Zone image ── */
+  var body = document.createElement('div');
+  body.id = '_fsBody';
+  _fs.body = body;
+
+  var img = document.createElement('img');
+  img.id = '_fsImg';
+  _fs.img = img;
+  _fs.scale = 1; _fs.ox = 0; _fs.oy = 0;
+
+  img.onload = function () {
+    _fs.naturalW = img.naturalWidth  || img.offsetWidth  || 800;
+    _fs.naturalH = img.naturalHeight || img.offsetHeight || 600;
+    /* Positionne l'image en haut à gauche avant de fit */
+    img.style.width  = _fs.naturalW + 'px';
+    img.style.height = _fs.naturalH + 'px';
+    /* Fit initial avec snap */
+    img.classList.add('snap');
+    _fsFit();
+    setTimeout(function () { if (img) img.classList.remove('snap'); }, 300);
+  };
+  img.src = src;
+  img.draggable = false;
+  body.appendChild(img);
+
+  /* ── Molette ── */
+  body.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    var rect = body.getBoundingClientRect();
+    var factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+    _fsZoomAt(_fs.scale * factor, e.clientX - rect.left, e.clientY - rect.top);
+  }, { passive: false });
+
+  /* ── Drag souris ── */
+  body.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    _fs.dragging = true;
+    _fs.startX = e.clientX - _fs.ox;
+    _fs.startY = e.clientY - _fs.oy;
+    body.classList.add('dragging');
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', function _fsMM(e) {
+    if (!_fs.dragging || _fs.body !== body) return;
+    _fsApply(_fs.scale, e.clientX - _fs.startX, e.clientY - _fs.startY);
+  });
+  window.addEventListener('mouseup', function _fsMU() {
+    if (_fs.dragging && _fs.body === body) {
+      _fs.dragging = false;
+      body.classList.remove('dragging');
+    }
+  });
+
+  /* ── Double-clic : toggle fit ↔ 100% ── */
+  body.addEventListener('dblclick', function (e) {
+    e.preventDefault();
+    var fitS = _fsFitScale();
+    if (Math.abs(_fs.scale - fitS) < 0.05) {
+      /* Zoom à 100% centré sur le clic */
+      var rect = body.getBoundingClientRect();
+      img.classList.add('snap');
+      _fsZoomAt(1, e.clientX - rect.left, e.clientY - rect.top);
+      setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+    } else {
+      img.classList.add('snap');
+      _fsFit(fitS);
+      setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+    }
+  });
+
+  /* ── Touch ── */
+  _fs._touches = {}; _fs._lastDist = null;
+  body.addEventListener('touchstart', function (e) {
+    Array.from(e.changedTouches).forEach(function (t) { _fs._touches[t.identifier] = t; });
+    var pts = Object.values(_fs._touches);
+    if (pts.length === 2) {
+      _fs._lastDist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
+    } else if (pts.length === 1) {
+      _fs._tsX = pts[0].clientX - _fs.ox;
+      _fs._tsY = pts[0].clientY - _fs.oy;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  body.addEventListener('touchmove', function (e) {
+    Array.from(e.changedTouches).forEach(function (t) { _fs._touches[t.identifier] = t; });
+    var pts = Object.values(_fs._touches);
+    if (pts.length === 2 && _fs._lastDist !== null) {
+      var dist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
+      var ratio = dist / _fs._lastDist;
+      _fs._lastDist = dist;
+      var rect = body.getBoundingClientRect();
+      var cx = (pts[0].clientX + pts[1].clientX) / 2 - rect.left;
+      var cy = (pts[0].clientY + pts[1].clientY) / 2 - rect.top;
+      _fsZoomAt(_fs.scale * ratio, cx, cy);
+    } else if (pts.length === 1) {
+      _fsApply(_fs.scale, pts[0].clientX - _fs._tsX, pts[0].clientY - _fs._tsY);
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  body.addEventListener('touchend', function (e) {
+    Array.from(e.changedTouches).forEach(function (t) { delete _fs._touches[t.identifier]; });
+    _fs._lastDist = null;
+  });
+
+  /* ── Barre de contrôle ── */
+  var bar = document.createElement('div');
+  bar.id = '_fsBar';
+
+  /* Bouton − */
+  var btnOut = document.createElement('button');
+  btnOut.title = 'Dézoomer';
+  btnOut.innerHTML = '&#x2212;';
+  btnOut.onclick = function () {
+    var cur = Math.round(_fs.scale * 100);
+    var prev = null;
+    for (var i = 0; i < _FS_STEPS.length; i++) { if (_FS_STEPS[i] < cur) prev = _FS_STEPS[i]; }
+    img.classList.add('snap');
+    _fsZoomCenter((prev || 25) / 100);
+    setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+  };
+
+  /* Slider */
+  var rng = document.createElement('input');
+  rng.type = 'range'; rng.id = '_fsRange';
+  rng.min = '0'; rng.max = '100'; rng.value = '50';
+  rng.oninput = function () {
+    var log = Math.log(_fs.maxScale / _fs.minScale);
+    var sc = _fs.minScale * Math.exp(log * this.value / 100);
+    _fsZoomCenter(sc);
+  };
+
+  /* Bouton + */
+  var btnIn = document.createElement('button');
+  btnIn.title = 'Zoomer';
+  btnIn.innerHTML = '+';
+  btnIn.onclick = function () {
+    var cur = Math.round(_fs.scale * 100);
+    var next = _FS_STEPS.find(function (v) { return v > cur; }) || 800;
+    img.classList.add('snap');
+    _fsZoomCenter(next / 100);
+    setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+  };
+
+  /* % cliquable */
+  var pct = document.createElement('div');
+  pct.id = '_fsPct';
+  pct.textContent = '100%';
+  pct.title = 'Cliquer pour saisir un %';
+  pct.onclick = function () {
+    var val = prompt('Zoom en % (10 – 800) :', Math.round(_fs.scale * 100));
+    if (val === null) return;
+    var n = parseInt(val, 10);
+    if (!isNaN(n) && n >= 10 && n <= 800) {
+      img.classList.add('snap');
+      _fsZoomCenter(n / 100);
+      setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+    }
+  };
+
+  /* Fit */
+  var btnFit = document.createElement('button');
+  btnFit.id = '_fsBtnFit';
+  btnFit.title = 'Adapter à l\'écran';
+  btnFit.innerHTML = '&#x26F6;';
+  btnFit.onclick = function () {
+    img.classList.add('snap');
+    _fsFit(_fsFitScale());
+    setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+  };
+
+  /* 100% */
+  var btn100 = document.createElement('button');
+  btn100.title = 'Zoom 100%';
+  btn100.innerHTML = '1:1';
+  btn100.style.cssText = 'font-size:12px!important;font-weight:700;color:#4ecdc4;border-color:rgba(78,205,196,0.4)!important;';
+  btn100.onclick = function () {
+    img.classList.add('snap');
+    _fsFit(1);
+    setTimeout(function () { if (img) img.classList.remove('snap'); }, 280);
+  };
+
+  /* Hint */
+  var hint = document.createElement('div');
+  hint.id = '_fsHint';
+  hint.textContent = 'Molette · Glisser · Double-clic';
+
+  /* Fermer */
+  var btnClose = document.createElement('button');
+  btnClose.id = '_fsBtnClose';
+  btnClose.title = 'Fermer (Échap)';
+  btnClose.innerHTML = '&#x2715;';
+  btnClose.onclick = function (e) { e.stopPropagation(); _closeFs(); };
+
+  bar.appendChild(btnOut);
+  bar.appendChild(rng);
+  bar.appendChild(btnIn);
+  bar.appendChild(pct);
+  bar.appendChild(btnFit);
+  bar.appendChild(btn100);
+  bar.appendChild(hint);
+  bar.appendChild(btnClose);
+
+  overlay.appendChild(body);
+  overlay.appendChild(bar);
+  document.body.appendChild(overlay);
+
+  /* Échap */
+  _fs.escHandler = function (e) { if (e.key === 'Escape') _closeFs(); };
+  document.addEventListener('keydown', _fs.escHandler);
+
+  /* Raccourcis clavier + / - */
+  _fs.keyHandler = function (e) {
+    if (!document.getElementById('_fsOv')) return;
+    if (e.key === '+' || e.key === '=') {
+      var cur2 = Math.round(_fs.scale * 100);
+      var next2 = _FS_STEPS.find(function (v) { return v > cur2; }) || 800;
+      _fsZoomCenter(next2 / 100);
+    }
+    if (e.key === '-') {
+      var cur3 = Math.round(_fs.scale * 100);
+      var prev2 = null;
+      for (var i = 0; i < _FS_STEPS.length; i++) { if (_FS_STEPS[i] < cur3) prev2 = _FS_STEPS[i]; }
+      _fsZoomCenter((prev2 || 25) / 100);
+    }
+    if (e.key === '0') { _fsFit(1); }
+    if (e.key === 'f' || e.key === 'F') { _fsFit(_fsFitScale()); }
+  };
+  document.addEventListener('keydown', _fs.keyHandler);
+
+  /* Fullscreen API natif */
+  if (overlay.requestFullscreen) {
+    overlay.requestFullscreen().catch(function () {});
+  } else if (overlay.webkitRequestFullscreen) {
+    overlay.webkitRequestFullscreen();
+  }
+}
+
+function _closeFs() {
+  if (_fs.escHandler)  document.removeEventListener('keydown', _fs.escHandler);
+  if (_fs.keyHandler)  document.removeEventListener('keydown', _fs.keyHandler);
+  _fs.dragging = false; _fs.body = null; _fs.img = null;
+  var ov = document.getElementById('_fsOv');
+  if (!ov) return;
+  if (document.fullscreenElement === ov && document.exitFullscreen) {
+    document.exitFullscreen().catch(function () {});
+  } else if (document.webkitFullscreenElement === ov && document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+  ov.remove();
+}
+
+/* Alias pour compatibilité avec l'ancien code */
+var _openFullscreen    = _openFullscreenSrc.bind(null);
+var _closeFullscreen   = _closeFs;
+
+/* ════════════════════════════════════════════════════════
+   BOUTON ⛶ dans la barre zoom du modal image normal
+════════════════════════════════════════════════════════ */
+function _addFullscreenBtn(bar) {
+  if (!bar || document.getElementById('_zFull')) return;
+  var panel = document.getElementById('_zPanel');
+  if (!panel) return;
+
+  if (!document.getElementById('_zFullBtnCSS')) {
+    var s = document.createElement('style');
+    s.id = '_zFullBtnCSS';
+    s.textContent =
+      '#_zFull{background:rgba(255,255,255,0.07);border:1px solid rgba(78,205,196,0.35);' +
+      'color:#4ecdc4;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;' +
+      'transition:background .15s,transform .1s,border-color .15s;' +
+      'display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
+      '#_zFull:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.8);transform:scale(1.1);}';
+    document.head.appendChild(s);
+  }
+
+  var btn = document.createElement('button');
+  btn.id = '_zFull';
+  btn.title = 'Plein écran avec zoom';
+  btn.innerHTML = '&#x26F6;';
+  btn.onclick = function () {
+    var src = _getVisibleImgSrc();
+    if (src) _openFullscreenSrc(src);
+  };
+  panel.appendChild(btn);
+}
+
+function _getVisibleImgSrc() {
+  var inner = document.querySelector('.video-modal-inner');
+  if (!inner) return null;
+  var imgs = inner.querySelectorAll('.static-screen-img img');
+  if (imgs.length > 0) return imgs[0].src || null;
+  var media = document.getElementById('videoModalMedia');
+  if (media && media.tagName === 'IMG') return media.src || null;
+  return null;
+}
+
+/* ════════════════════════════════════════════════════════
+   openImageModal — version corrigée (remplace l'originale)
+════════════════════════════════════════════════════════ */
 function openImageModal(srcs, pov, size) {
   var overlay = document.getElementById('videoModal');
   var badge   = document.getElementById('videoModalPov');
@@ -1757,7 +2213,6 @@ function openImageModal(srcs, pov, size) {
     bar.style.zIndex        = '10';
     bar.style.visibility    = '';
     _buildZoomBar(bar);
-    /* Bouton plein écran dans la barre */
     setTimeout(function () { _addFullscreenBtn(bar); }, 20);
   }
 
@@ -1767,14 +2222,10 @@ function openImageModal(srcs, pov, size) {
 
   var list = Array.isArray(srcs) ? srcs : [srcs];
 
-  /* ── Calcul de la taille disponible ── */
   var vw = window.innerWidth;
   var vh = window.innerHeight;
-  /* Réserve ~60px pour la barre zoom en bas + ~10px marges */
   var availH = vh - 70;
   var availW = vw - 40;
-
-  /* Taille max du wrap */
   var maxW = size ? Math.min(size, availW) : availW;
 
   if (wrap) {
@@ -1783,10 +2234,7 @@ function openImageModal(srcs, pov, size) {
       'max-width:' + maxW + 'px;width:' + maxW + 'px;pointer-events:none;';
   }
 
-  /* Layout : une seule image → centré et grand
-               deux images → côte à côte */
   if (list.length === 1) {
-    /* ── Mode image unique : occupe tout l'espace ── */
     inner.style.cssText =
       'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
       'background:transparent;box-shadow:none;border:none;padding:0;' +
@@ -1802,23 +2250,27 @@ function openImageModal(srcs, pov, size) {
     imgWrap.style.cssText =
       'overflow:hidden;border-radius:10px;' +
       'box-shadow:0 0 40px rgba(0,0,0,0.9);' +
-      'cursor:grab;touch-action:none;position:relative;' +
-      'width:100%;';
+      'cursor:grab;touch-action:none;position:relative;width:100%;';
 
     var img = document.createElement('img');
-    /* L'image prend toute la largeur disponible,
-       la hauteur s'adapte mais ne dépasse pas availH */
     img.style.cssText =
-      'display:block;' +
-      'width:100%;' +
-      'height:auto;' +
+      'display:block;width:100%;height:auto;' +
       'max-height:' + availH + 'px;' +
       'object-fit:contain;' +
       'transform-origin:0 0;' +
       'user-select:none;-webkit-user-drag:none;';
-
     img.onerror = function () { img.style.display = 'none'; };
-    img.src = srcs;
+    img.src = list[0];
+
+    /* Double-clic sur le modal normal → plein écran */
+    imgWrap.addEventListener('dblclick', function (e) {
+      e.preventDefault();
+      if (Math.abs(_zoom.scale - 1) > 0.05) {
+        _zoomReset();
+      } else {
+        _openFullscreenSrc(img.src);
+      }
+    });
 
     _zoomAttach(imgWrap, img);
     imgWrap.appendChild(img);
@@ -1826,7 +2278,6 @@ function openImageModal(srcs, pov, size) {
     inner.appendChild(wrapper);
 
   } else {
-    /* ── Mode double image : côte à côte ── */
     inner.style.cssText =
       'display:flex;flex-direction:row;align-items:flex-start;justify-content:center;' +
       'gap:32px;background:transparent;box-shadow:none;border:none;padding:0;' +
@@ -1862,6 +2313,12 @@ function openImageModal(srcs, pov, size) {
       img2.onerror = function () { img2.style.display = 'none'; };
       img2.src = src;
 
+      /* Double-clic → plein écran (image cliquée) */
+      imgWrap2.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        _openFullscreenSrc(img2.src);
+      });
+
       _zoomAttach(imgWrap2, img2);
       imgWrap2.appendChild(img2);
       wrapper2.appendChild(label);
@@ -1870,10 +2327,9 @@ function openImageModal(srcs, pov, size) {
     });
   }
 
-  /* ── Bouton ✕ flottant ── */
+  /* ✕ flottant */
   var existingClose = document.getElementById('_imgModalClose');
   if (existingClose) existingClose.remove();
-
   var closeBtn = document.createElement('button');
   closeBtn.id = '_imgModalClose';
   closeBtn.innerHTML = '&#x2715;';
@@ -1898,134 +2354,3 @@ function openImageModal(srcs, pov, size) {
 
   overlay.classList.add('open');
 }
-
-
-/* ════════════════════════════════════════════════════════
-   PLEIN ÉCRAN IMAGE — colle ce bloc juste en dessous
-════════════════════════════════════════════════════════ */
-
-function _addFullscreenBtn(bar) {
-  if (!bar || document.getElementById('_zFull')) return;
-  var panel = document.getElementById('_zPanel');
-  if (!panel) return;
-
-  if (!document.getElementById('_zFullCSS')) {
-    var s = document.createElement('style');
-    s.id = '_zFullCSS';
-    s.textContent =
-      '#_zFull{background:rgba(255,255,255,0.07);border:1px solid rgba(78,205,196,0.35);' +
-      'color:#4ecdc4;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;' +
-      'transition:background .15s,transform .1s,border-color .15s;' +
-      'display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
-      '#_zFull:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.8);transform:scale(1.1);}' +
-      '#_fsOverlay{position:fixed;inset:0;z-index:99999;background:#000;' +
-      'display:flex;align-items:center;justify-content:center;cursor:zoom-out;}' +
-      '#_fsOverlay img{max-width:100vw;max-height:100vh;width:auto;height:auto;' +
-      'object-fit:contain;display:block;user-select:none;-webkit-user-drag:none;}' +
-      '#_fsClose{position:fixed;top:16px;right:20px;z-index:100000;' +
-      'width:42px;height:42px;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);' +
-      'border:1px solid rgba(78,205,196,0.45);color:#4ecdc4;font-size:18px;' +
-      'border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;' +
-      'transition:background .15s,transform .1s;}' +
-      '#_fsClose:hover{background:rgba(78,205,196,0.2);transform:scale(1.1);}' +
-      '#_fsOverlay .fs-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
-      'font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.35);' +
-      'pointer-events:none;white-space:nowrap;}';
-    document.head.appendChild(s);
-  }
-
-  var btn = document.createElement('button');
-  btn.id = '_zFull';
-  btn.title = 'Plein écran';
-  btn.innerHTML = '&#x26F6;';
-  btn.onclick = _openFullscreen;
-  panel.appendChild(btn);
-}
-
-function _getVisibleImgSrc() {
-  var inner = document.querySelector('.video-modal-inner');
-  if (!inner) return null;
-  var imgs = inner.querySelectorAll('.static-screen-img img');
-  if (imgs.length > 0) return imgs[0].src || null;
-  var media = document.getElementById('videoModalMedia');
-  if (media && media.tagName === 'IMG') return media.src || null;
-  return null;
-}
-
-function _openFullscreen() {
-  var src = _getVisibleImgSrc();
-  if (!src) return;
-  _openFullscreenSrc(src);
-}
-
-function _openFullscreenSrc(src) {
-  var old = document.getElementById('_fsOverlay');
-  if (old) old.remove();
-
-  var overlay = document.createElement('div');
-  overlay.id = '_fsOverlay';
-
-  var img = document.createElement('img');
-  img.src = src;
-  img.draggable = false;
-
-  var closeBtn = document.createElement('button');
-  closeBtn.id = '_fsClose';
-  closeBtn.innerHTML = '&#x2715;';
-  closeBtn.onclick = function (e) { e.stopPropagation(); _closeFullscreen(); };
-
-  var hint = document.createElement('div');
-  hint.className = 'fs-hint';
-  hint.textContent = 'Cliquer ou Échap pour fermer';
-
-  overlay.appendChild(img);
-  overlay.appendChild(closeBtn);
-  overlay.appendChild(hint);
-  document.body.appendChild(overlay);
-
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay || e.target === img) _closeFullscreen();
-  });
-  overlay.addEventListener('dblclick', function (e) {
-    e.preventDefault();
-    _closeFullscreen();
-  });
-
-  overlay._escHandler = function (e) { if (e.key === 'Escape') _closeFullscreen(); };
-  document.addEventListener('keydown', overlay._escHandler);
-
-  if (overlay.requestFullscreen) {
-    overlay.requestFullscreen().catch(function () {});
-  } else if (overlay.webkitRequestFullscreen) {
-    overlay.webkitRequestFullscreen();
-  }
-}
-
-function _closeFullscreen() {
-  var overlay = document.getElementById('_fsOverlay');
-  if (!overlay) return;
-  if (overlay._escHandler) document.removeEventListener('keydown', overlay._escHandler);
-  if (document.fullscreenElement === overlay && document.exitFullscreen) {
-    document.exitFullscreen().catch(function () {});
-  } else if (document.webkitFullscreenElement === overlay && document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  }
-  overlay.remove();
-}
-
-/* Double-clic sur image dans le modal → plein écran si zoom = 1:1 */
-(function () {
-  var _orig = _zoomAttach;
-  _zoomAttach = function (wrap, img) {
-    _orig(wrap, img);
-    wrap.removeEventListener('dblclick', _zoomReset);
-    wrap.addEventListener('dblclick', function (e) {
-      e.preventDefault();
-      if (Math.abs(_zoom.scale - 1) > 0.05) {
-        _zoomReset();
-      } else {
-        _openFullscreenSrc(img.src || '');
-      }
-    });
-  };
-})();
