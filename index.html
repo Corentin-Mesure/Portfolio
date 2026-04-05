@@ -840,19 +840,18 @@
     </div>
     <div class="modal-body">
       <span class="modal-emoji">&#x1F4B0;</span>
-      <p class="modal-desc">Application web développée avec le framework Laravel permettant au service RH de consulter et modifier les salaires des praticiens hospitaliers. Les salaires sont calculés automatiquement selon l'échelon attribué en fonction de l'ancienneté du praticien. Une API REST est également exposée pour anticiper un portage mobile futur.</p>
+      <p class="modal-desc">Application web développée avec le framework Laravel permettant au service RH de consulter et modifier les salaires des praticiens hospitaliers. Les salaires sont calculés automatiquement selon l'échelon attribué en fonction de l'ancienneté du praticien.</p>
       <div class="modal-features">
         <div class="modal-features-title" data-i18n="modal.clickHint">&#x2756; Cliquer sur une fonctionnalité pour en savoir plus</div>
         <button class="modal-feature-btn" onclick="openSubModal('sal-connexion')"><div style="flex:1"><span class="feat-title">&#x1F511; Connexion &amp; Droits RH</span><span class="feat-preview">Accès sécurisé réservé au service RH avec authentification Laravel et gestion des erreurs de connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-grille')"><div style="flex:1"><span class="feat-title">&#x1F4CA; Grille tarifaire &amp; Échelons</span><span class="feat-preview">13 échelons attribués selon l'ancienneté du praticien, de 4 633,98 € à 9 368,05 € brut mensuel.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-anciennete')"><div style="flex:1"><span class="feat-title">&#x23F3; Calcul automatique de l'ancienneté</span><span class="feat-preview">L'échelon et le salaire sont recalculés automatiquement dès qu'une nouvelle ancienneté est enregistrée.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-interface')"><div style="flex:1"><span class="feat-title">&#x1F5A5;&#xFE0F; Interface RH</span><span class="feat-preview">Consultation, recherche et filtrage des praticiens par nom, prénom ou nom complet.</span></div><span class="feat-arrow">&#x203A;</span></button>
-        <button class="modal-feature-btn" onclick="openSubModal('sal-api')"><div style="flex:1"><span class="feat-title">&#x1F4F1; API REST</span><span class="feat-preview">Endpoint JSON exposant la liste des praticiens avec leur ancienneté, leur échelon et leur salaire.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('sal-bdd')"><div style="flex:1"><span class="feat-title">&#x1F5C4;&#xFE0F; Base de données</span><span class="feat-preview">Base MySQL avec table grille_salaire, praticiens, migrations Laravel et seeders.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
       <div class="modal-tags">
         <span class="modal-tag">Laravel</span><span class="modal-tag">PHP</span>
-        <span class="modal-tag">MySQL</span><span class="modal-tag">API REST</span>
+        <span class="modal-tag">MySQL</span>
         <span class="modal-tag">Blade</span><span class="modal-tag">MVC</span>
       </div>
     </div>
