@@ -1098,6 +1098,42 @@
           <span class="step-text">Tables <strong>demandeconge</strong> et <strong>Notif</strong> : gestion des congés intégrée dans la même base de données (Mission 1).</span>
         </div>
       </div>
+
+      <!-- ✦ SECTION CODE -->
+      <div style="margin-top:32px;">
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a8a;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #1e2d3d;">✦ Code</div>
+
+        <!-- PraticienController Web -->
+        <div style="margin-bottom:28px;">
+          <div style="font-size:11px;color:#a5d6ff;font-weight:700;margin-bottom:6px;font-family:monospace;">🖥️ PraticienController.php — Gestion web (recherche, édition, mise à jour)</div>
+          <div style="font-size:13px;color:#8eb8d8;line-height:1.8;margin-bottom:12px;">
+            Ce contrôleur gère l'interface web utilisée par le responsable RH.<br><br>
+            — <strong style="color:#c8dff0;">index()</strong> : récupère la liste des praticiens avec un filtre de recherche optionnel. Si un terme est saisi, il filtre sur <em>nom</em>, <em>prénom</em>, ou les deux combinés via <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px;">orWhereRaw(CONCAT(...))</code>. Les résultats sont triés alphabétiquement et paginés par 100.<br><br>
+            — <strong style="color:#c8dff0;">edit()</strong> : charge le formulaire de modification d'un praticien en récupérant ses données actuelles via <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px;">findOrFail()</code>.<br><br>
+            — <strong style="color:#c8dff0;">update()</strong> : valide que l'ancienneté saisie est un entier ≥ 1, met à jour le praticien via Eloquent, puis redirige avec un message flash de succès. C'est cette sauvegarde qui déclenche automatiquement les triggers SQL côté base de données, recalculant l'échelon et le salaire sans intervention supplémentaire.
+          </div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/PratController.png','🖥️ PraticienController — Web (index, edit, update)')">
+            <img src="images/gsb/PratController.png" alt="PraticienController Web" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+        <!-- APIController -->
+        <div>
+          <div style="font-size:11px;color:#ffa040;font-weight:700;margin-bottom:6px;font-family:monospace;">📡 Api/PraticienController.php — Endpoints REST (index, show, avisClients)</div>
+          <div style="font-size:13px;color:#8eb8d8;line-height:1.8;margin-bottom:12px;">
+            Ce second contrôleur expose les données en JSON pour l'application Flutter mobile.<br><br>
+            — <strong style="color:#c8dff0;">index()</strong> : effectue une jointure entre les tables <em>praticien</em>, <em>avis_client</em> et <em>avis_expert</em> via deux <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px;">leftJoin()</code>. Il calcule la moyenne arrondie des notes client et expert avec <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px;">ROUND(AVG(...))</code>, groupées par praticien. Le tout est retourné en JSON.<br><br>
+            — <strong style="color:#c8dff0;">show()</strong> : retourne les informations d'un praticien précis par son identifiant, utilisé pour la fiche détail dans Flutter.<br><br>
+            — <strong style="color:#c8dff0;">avisClients()</strong> : renvoie la liste des avis clients (note + commentaire + date) associés à un praticien donné, filtrés par <em>id_praticien</em>.
+          </div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/APIController.png','📡 Api/PraticienController — REST (index, show, avisClients)')">
+            <img src="images/gsb/APIController.png" alt="API PraticienController" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
