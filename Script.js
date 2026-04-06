@@ -1390,8 +1390,22 @@ var TRANSLATIONS = {
     "hero.cta2":"&#x2B07; Telecharger CV","hero.scroll":"Defiler",
     "btn.animOff":"Anims ON","btn.animOn":"Anims OFF","btn.open":"&#x2756; Ouvrir",
     "about.title":"A propos","about.flipHint":"&#x2756; Cliquer pour decouvrir &#x2756;",
-    "about.text1":"Bonjour, je m'appelle Corentin, je vais vous expliquer mon parcours et comment je me suis retrouve a faire un BTS informatique alors qu'a la base j'etais en Bac Pro MELEC.",
-    "about.text2":"J'ai fait mon Bac Pro Metiers de l'Electricite et de ses Environnements Connectes, et au bout de deux ans j'ai realise que ca ne me correspondait plus. Donc j'ai decide de me reorienter vers l'informatique, j'ai integre un BTS SIO option SLAM et franchement des le debut j'ai retrouve l'envie. Aujourd'hui je developpe des applications mobiles et web, j'ai meme publie une appli sur le Play Store durant mon stage.",
+    "about.text1":"Bonjour, je m'appelle Corentin.
+Après la troisième, je me suis orienté vers un Bac Professionnel MELEC (Métiers de l'Électricité et de ses Environnements Connectés). Ce choix n’était pas réellement réfléchi, puisque j’avais oublié de formuler mes vœux d’orientation, et j’ai donc été placé dans cette filière par défaut..",
+    "about.text2":"Dès le début, ce domaine ne m’intéressait pas particulièrement. Malgré tout, j’ai poursuivi cette formation pendant quatre ans, ce qui m’a permis d’acquérir de la rigueur, de la méthode et une certaine autonomie dans mon travail.
+
+Au fil du temps, j’ai pris conscience que je souhaitais me diriger vers un domaine qui me correspondait davantage. Je me suis alors tourné vers l’informatique, un secteur qui m’attirait plus et dans lequel je me reconnaissais davantage.
+
+J’ai choisi d’intégrer un BTS SIO (Services Informatiques aux Organisations), avec l’option SLAM, spécialisée dans le développement d’applications. Ce choix a été influencé à la fois par mon intérêt pour le développement et par des connaissances de mon entourage déjà engagées dans cette voie.
+
+Dès le début de la formation, j’ai retrouvé de la motivation et un réel intérêt pour ce que j’apprenais. J’ai particulièrement apprécié le fait de pouvoir créer des projets concrets et de développer des applications.
+
+Lors de mon stage, j’ai eu l’opportunité de développer deux applications, ce qui m’a permis de mettre en pratique mes compétences et de progresser rapidement. Cette expérience a renforcé mon intérêt pour le développement et m’a permis de gagner en confiance.
+
+Aujourd’hui, je souhaite continuer dans cette voie professionnelle. Mon objectif est soit de me lancer en freelance, soit de créer ma propre entreprise dans le domaine du développement informatique.
+
+Cette réorientation a donc été une étape importante dans mon parcours, et elle m’a permis de trouver un domaine dans lequel je peux m’épanouir et évoluer.
+</p>",
     "about.projects":"Projets","about.apps":"Apps Play Store",
     "timeline.title":"Parcours",
     "tl1.title":"BTS SIO — 2eme annee","tl1.sub":"Option SLAM",
