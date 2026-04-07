@@ -2373,3 +2373,580 @@ function toggleLightMode() { applyLightMode(!lightMode); }
 document.addEventListener('DOMContentLoaded', function () {
   if (lightMode) applyLightMode(true);
 });
+
+/* ════════════════════════════════════════════════════════
+   NAVIGATION PAR FLÈCHES — CARDS PROJETS & MODALS
+   À coller à la fin de Script.js
+
+   FONCTIONNEMENT :
+   1. Chaque .project-card reçoit des flèches ◀ ▶ pour
+      naviguer entre les sous-étapes/images de ses
+      project-features (fonctionnalités modal).
+   2. Dans les modals ouverts : ← → navigue entre les
+      modal-feature-btn (fonctionnalités de la modal).
+   3. Dans les sous-modals : ← → navigue entre les
+      submodal-step (étapes numérotées).
+   4. Un hint clavier apparaît à l'ouverture de chaque
+      modal/sous-modal.
+════════════════════════════════════════════════════════ */
+
+(function () {
+  'use strict';
+
+  /* ──────────────────────────────────────────────
+     ÉTAT GLOBAL DE NAVIGATION
+  ────────────────────────────────────────────── */
+  var _nav = {
+    modal: {
+      id: null,           /* ID de la modal ouverte ex: 'animaland' */
+      items: [],          /* liste des .modal-feature-btn */
+      idx: 0
+    },
+    submodal: {
+      id: null,           /* ID du sous-modal ouvert */
+      items: [],          /* liste des .submodal-step */
+      idx: 0
+    }
+  };
+
+  /* ──────────────────────────────────────────────
+     HINT CLAVIER
+  ────────────────────────────────────────────── */
+  function _ensureHint() {
+    if (document.getElementById('kbdHint')) return;
+    var el = document.createElement('div');
+    el.id = 'kbdHint';
+    el.innerHTML =
+      '<kbd>←</kbd> <kbd>→</kbd> Naviguer' +
+      '<span style="margin:0 6px;opacity:.4;">|</span>' +
+      '<kbd>Enter</kbd> Ouvrir' +
+      '<span style="margin:0 6px;opacity:.4;">|</span>' +
+      '<kbd>Esc</kbd> Fermer';
+    document.body.appendChild(el);
+  }
+
+  var _hintTimer = null;
+  function _showHint() {
+    _ensureHint();
+    var el = document.getElementById('kbdHint');
+    if (!el) return;
+    el.classList.add('visible');
+    clearTimeout(_hintTimer);
+    _hintTimer = setTimeout(function () {
+      el.classList.remove('visible');
+    }, 3500);
+  }
+
+  /* ──────────────────────────────────────────────
+     NAVIGATION DANS LES SOUS-MODALS (étapes)
+  ────────────────────────────────────────────── */
+  function _getActiveSubmodal() {
+    var all = document.querySelectorAll('.submodal-overlay.active');
+    if (!all.length) return null;
+    /* Prendre le dernier (le plus haut dans le z-index) */
+    return all[all.length - 1];
+  }
+
+  function _initSubmodalNav(overlay) {
+    if (!overlay) return;
+    var id = overlay.id;
+    var steps = Array.from(overlay.querySelectorAll('.submodal-step'));
+    if (!steps.length) return;
+
+    _nav.submodal.id = id;
+    _nav.submodal.items = steps;
+    _nav.submodal.idx = 0;
+
+    /* Injecter la barre de navigation si elle n'existe pas */
+    var body = overlay.querySelector('.submodal-body');
+    if (!body) return;
+
+    var existing = overlay.querySelector('.submodal-step-nav');
+    if (existing) existing.remove();
+
+    if (steps.length < 2) return; /* Pas de nav si 1 seule étape */
+
+    var nav = document.createElement('div');
+    nav.className = 'submodal-step-nav';
+    nav.setAttribute('data-subid', id);
+
+    var btnPrev = document.createElement('button');
+    btnPrev.className = 'sub-nav-btn';
+    btnPrev.innerHTML = '&#x2190; Préc.';
+    btnPrev.disabled = true;
+    btnPrev.setAttribute('data-dir', 'prev');
+
+    var counter = document.createElement('div');
+    counter.className = 'sub-nav-counter';
+    counter.textContent = '1 / ' + steps.length;
+
+    var btnNext = document.createElement('button');
+    btnNext.className = 'sub-nav-btn';
+    btnNext.innerHTML = 'Suiv. &#x2192;';
+    btnNext.setAttribute('data-dir', 'next');
+
+    btnPrev.onclick = function () { _submodalNavGo(_nav.submodal.idx - 1); };
+    btnNext.onclick = function () { _submodalNavGo(_nav.submodal.idx + 1); };
+
+    nav.appendChild(btnPrev);
+    nav.appendChild(counter);
+    nav.appendChild(btnNext);
+    body.appendChild(nav);
+
+    _submodalNavGo(0, true); /* init silencieux */
+  }
+
+  function _submodalNavGo(idx, silent) {
+    var items = _nav.submodal.items;
+    if (!items.length) return;
+    idx = Math.max(0, Math.min(items.length - 1, idx));
+    _nav.submodal.idx = idx;
+
+    /* Highlight */
+    items.forEach(function (s, i) {
+      s.classList.toggle('nav-focus', i === idx);
+    });
+
+    /* Scroll vers l'étape */
+    var target = items[idx];
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    /* Update UI */
+    var overlay = _getActiveSubmodal();
+    if (!overlay) return;
+    var nav = overlay.querySelector('.submodal-step-nav');
+    if (!nav) return;
+
+    var counter = nav.querySelector('.sub-nav-counter');
+    if (counter) counter.textContent = (idx + 1) + ' / ' + items.length;
+
+    var btnPrev = nav.querySelector('[data-dir="prev"]');
+    var btnNext = nav.querySelector('[data-dir="next"]');
+    if (btnPrev) btnPrev.disabled = (idx === 0);
+    if (btnNext) btnNext.disabled = (idx === items.length - 1);
+
+    if (!silent) _showHint();
+  }
+
+  /* ──────────────────────────────────────────────
+     NAVIGATION DANS LES MODALS (features / boutons)
+  ────────────────────────────────────────────── */
+  function _getActiveModal() {
+    var all = document.querySelectorAll('.modal-overlay.active');
+    if (!all.length) return null;
+    return all[all.length - 1];
+  }
+
+  function _initModalNav(overlay) {
+    if (!overlay) return;
+    var id = overlay.id.replace('modal-', '');
+    var btns = Array.from(overlay.querySelectorAll('.modal-feature-btn'));
+    if (!btns.length) return;
+
+    _nav.modal.id = id;
+    _nav.modal.items = btns;
+    _nav.modal.idx = 0;
+
+    /* Injecter la barre sticky en bas de modal */
+    var existing = overlay.querySelector('.modal-global-nav');
+    if (existing) existing.remove();
+
+    var modalEl = overlay.querySelector('.modal');
+    if (!modalEl) return;
+
+    var nav = document.createElement('div');
+    nav.className = 'modal-global-nav';
+
+    var btnPrev = document.createElement('button');
+    btnPrev.className = 'modal-nav-btn';
+    btnPrev.innerHTML = '&#x2190; Préc.';
+    btnPrev.disabled = true;
+    btnPrev.setAttribute('data-dir', 'prev');
+
+    var info = document.createElement('div');
+    info.className = 'modal-nav-info';
+    var label = document.createElement('div');
+    label.className = 'modal-nav-label';
+    var pos = document.createElement('div');
+    pos.className = 'modal-nav-pos';
+    info.appendChild(label);
+    info.appendChild(pos);
+
+    var btnNext = document.createElement('button');
+    btnNext.className = 'modal-nav-btn';
+    btnNext.innerHTML = 'Suiv. &#x2192;';
+    btnNext.setAttribute('data-dir', 'next');
+
+    btnPrev.onclick = function (e) { e.stopPropagation(); _modalNavGo(_nav.modal.idx - 1); };
+    btnNext.onclick = function (e) { e.stopPropagation(); _modalNavGo(_nav.modal.idx + 1); };
+
+    nav.appendChild(btnPrev);
+    nav.appendChild(info);
+    nav.appendChild(btnNext);
+
+    /* Bouton "Ouvrir la fonctionnalité" */
+    var btnOpen = document.createElement('button');
+    btnOpen.className = 'modal-nav-btn';
+    btnOpen.innerHTML = '&#x21B5; Ouvrir';
+    btnOpen.onclick = function (e) {
+      e.stopPropagation();
+      var cur = _nav.modal.items[_nav.modal.idx];
+      if (cur) cur.click();
+    };
+    nav.appendChild(btnOpen);
+
+    modalEl.appendChild(nav);
+
+    _modalNavGo(0, true);
+    _showHint();
+  }
+
+  function _modalNavGo(idx, silent) {
+    var items = _nav.modal.items;
+    if (!items.length) return;
+    idx = Math.max(0, Math.min(items.length - 1, idx));
+    _nav.modal.idx = idx;
+
+    /* Highlight */
+    items.forEach(function (b, i) {
+      b.style.background    = (i === idx) ? 'rgba(240,200,74,0.12)' : '';
+      b.style.borderColor   = (i === idx) ? 'rgba(240,200,74,0.5)' : '';
+      b.style.transform     = (i === idx) ? 'translateX(6px)' : '';
+    });
+
+    /* Scroll vers le bouton */
+    var target = items[idx];
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    /* Update barre */
+    var overlay = _getActiveModal();
+    if (!overlay) return;
+    var nav = overlay.querySelector('.modal-global-nav');
+    if (!nav) return;
+
+    var label = nav.querySelector('.modal-nav-label');
+    var posEl = nav.querySelector('.modal-nav-pos');
+    var btnPrev = nav.querySelector('[data-dir="prev"]');
+    var btnNext = nav.querySelector('[data-dir="next"]');
+
+    if (btnPrev) btnPrev.disabled = (idx === 0);
+    if (btnNext) btnNext.disabled = (idx === items.length - 1);
+
+    if (label && target) {
+      var featTitle = target.querySelector('.feat-title');
+      label.textContent = featTitle ? featTitle.textContent.replace(/[^\w\s'àâéèêëîïôùûüç&]/gi, '').trim() : '';
+    }
+    if (posEl) posEl.textContent = (idx + 1) + ' / ' + items.length;
+
+    if (!silent) _showHint();
+  }
+
+  /* ──────────────────────────────────────────────
+     NAVIGATION DANS LES CARDS (images des visuals)
+  ────────────────────────────────────────────── */
+  function _buildCardNavigation() {
+    /* Pour chaque project-card avec un project-visual contenant une image */
+    var cards = document.querySelectorAll('.project-card');
+    cards.forEach(function (card) {
+      if (card.dataset.navBuilt) return;
+      card.dataset.navBuilt = '1';
+
+      var vis = card.querySelector('.project-visual, .ap-project-visual');
+      if (!vis) return;
+
+      /* Chercher toutes les images navigables dans la card */
+      /* On récupère aussi le btn openModal pour lister les features */
+      var btn = card.querySelector('.project-btn');
+      if (!btn) return;
+
+      /* Récupérer l'id modal depuis onclick */
+      var onclk = btn.getAttribute('onclick') || '';
+      var match = onclk.match(/openModal\(['"]([^'"]+)['"]\)/);
+      if (!match) return;
+      var modalId = match[1];
+
+      /* Récupérer les features de la modal correspondante */
+      var modalEl = document.getElementById('modal-' + modalId);
+      if (!modalEl) return;
+
+      var featureBtns = Array.from(modalEl.querySelectorAll('.modal-feature-btn'));
+      if (!featureBtns.length) return;
+
+      /* Ne pas ajouter si une seule feature */
+      if (featureBtns.length < 2) return;
+
+      /* Construire la barre de nav dans la card */
+      var body = card.querySelector('.project-body');
+      if (!body) return;
+
+      var existing = body.querySelector('.card-nav');
+      if (existing) existing.remove();
+
+      var navWrap = document.createElement('div');
+      navWrap.className = 'card-nav';
+
+      /* Dots */
+      var dotsWrap = document.createElement('div');
+      dotsWrap.className = 'card-nav-dots';
+
+      /* Flèches */
+      var arrows = document.createElement('div');
+      arrows.className = 'card-nav-arrows';
+
+      var btnPrev = document.createElement('button');
+      btnPrev.className = 'card-nav-btn';
+      btnPrev.innerHTML = '&#x25C4;';
+      btnPrev.title = 'Fonctionnalité précédente';
+      btnPrev.disabled = true;
+
+      var counter = document.createElement('div');
+      counter.className = 'card-nav-counter';
+      counter.textContent = '1 / ' + featureBtns.length;
+
+      var btnNext = document.createElement('button');
+      btnNext.className = 'card-nav-btn';
+      btnNext.innerHTML = '&#x25BA;';
+      btnNext.title = 'Fonctionnalité suivante';
+
+      /* Créer les dots */
+      var maxDots = Math.min(featureBtns.length, 10);
+      for (var d = 0; d < maxDots; d++) {
+        (function (dotIdx) {
+          var dot = document.createElement('div');
+          dot.className = 'card-nav-dot' + (dotIdx === 0 ? ' active' : '');
+          dot.title = (featureBtns[dotIdx].querySelector('.feat-title') || {}).textContent || '';
+          dot.onclick = function () { goCard(dotIdx); };
+          dotsWrap.appendChild(dot);
+        })(d);
+      }
+
+      var currentIdx = 0;
+
+      function goCard(idx) {
+        idx = Math.max(0, Math.min(featureBtns.length - 1, idx));
+        currentIdx = idx;
+
+        /* Update counter */
+        counter.textContent = (idx + 1) + ' / ' + featureBtns.length;
+
+        /* Update dots */
+        var dots = dotsWrap.querySelectorAll('.card-nav-dot');
+        dots.forEach(function (dot, i) { dot.classList.toggle('active', i === idx); });
+
+        /* Update btns */
+        btnPrev.disabled = (idx === 0);
+        btnNext.disabled = (idx === featureBtns.length - 1);
+
+        /* Mise en évidence de la feature dans la card :
+           Afficher le titre et preview de la feature courante */
+        _updateCardPreview(card, featureBtns[idx]);
+      }
+
+      btnPrev.onclick = function () { goCard(currentIdx - 1); };
+      btnNext.onclick = function () { goCard(currentIdx + 1); };
+
+      /* Bouton "Voir" qui ouvre la feature dans la modal */
+      var btnSee = document.createElement('button');
+      btnSee.className = 'card-nav-btn';
+      btnSee.innerHTML = '&#x21B5;';
+      btnSee.title = 'Voir cette fonctionnalité';
+      btnSee.style.cssText = 'border-color:rgba(93,232,242,0.35);color:var(--cyan-dim);';
+      btnSee.onclick = function () {
+        openModal(modalId);
+        /* Après ouverture, naviguer vers la feature courante */
+        setTimeout(function () {
+          _modalNavGo(currentIdx);
+          _showHint();
+        }, 450);
+      };
+
+      arrows.appendChild(btnPrev);
+      arrows.appendChild(counter);
+      arrows.appendChild(btnNext);
+      arrows.appendChild(btnSee);
+
+      navWrap.appendChild(dotsWrap);
+      navWrap.appendChild(arrows);
+      body.appendChild(navWrap);
+
+      /* Preview initiale */
+      _updateCardPreview(card, featureBtns[0]);
+    });
+  }
+
+  /* Met à jour l'affichage de la feature active dans la card */
+  function _updateCardPreview(card, featBtn) {
+    if (!featBtn) return;
+
+    /* Chercher ou créer la zone de preview */
+    var body = card.querySelector('.project-body');
+    var previewWrap = body.querySelector('.card-feat-preview');
+
+    if (!previewWrap) {
+      previewWrap = document.createElement('div');
+      previewWrap.className = 'card-feat-preview';
+      previewWrap.style.cssText =
+        'margin-top:12px;padding:10px 14px;' +
+        'background:rgba(93,232,242,0.04);' +
+        'border:1px solid rgba(93,232,242,0.15);' +
+        'border-radius:4px;' +
+        'transition:all 0.25s;';
+      /* Insérer avant la .card-nav */
+      var nav = body.querySelector('.card-nav');
+      if (nav) body.insertBefore(previewWrap, nav);
+      else body.appendChild(previewWrap);
+    }
+
+    var titleEl = featBtn.querySelector('.feat-title');
+    var prevEl  = featBtn.querySelector('.feat-preview');
+
+    var titleTxt = titleEl ? titleEl.innerHTML : '';
+    var prevTxt  = prevEl  ? prevEl.textContent  : '';
+
+    previewWrap.innerHTML =
+      '<div style="font-family:Cinzel,serif;font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">' +
+      titleTxt + '</div>' +
+      '<div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;">' + prevTxt + '</div>';
+
+    /* Animation flash */
+    previewWrap.style.opacity = '0.4';
+    previewWrap.style.transform = 'translateY(3px)';
+    setTimeout(function () {
+      previewWrap.style.opacity = '1';
+      previewWrap.style.transform = 'translateY(0)';
+    }, 30);
+  }
+
+  /* ──────────────────────────────────────────────
+     HOOKS OUVRERTURE / FERMETURE MODAL
+  ────────────────────────────────────────────── */
+  var _originalOpenModal = window.openModal;
+  window.openModal = function (id) {
+    if (typeof _originalOpenModal === 'function') _originalOpenModal(id);
+    setTimeout(function () {
+      var overlay = document.getElementById('modal-' + id);
+      if (overlay && overlay.classList.contains('active')) {
+        _initModalNav(overlay);
+      }
+    }, 150);
+  };
+
+  var _originalCloseModalBtn = window.closeModalBtn;
+  window.closeModalBtn = function (id) {
+    if (typeof _originalCloseModalBtn === 'function') _originalCloseModalBtn(id);
+    /* Reset nav modal */
+    _nav.modal.id = null;
+    _nav.modal.items = [];
+    _nav.modal.idx = 0;
+  };
+
+  var _originalOpenSubModal = window.openSubModal;
+  window.openSubModal = function (id) {
+    if (typeof _originalOpenSubModal === 'function') _originalOpenSubModal(id);
+    setTimeout(function () {
+      var overlay = document.getElementById(id);
+      if (overlay && overlay.classList.contains('active')) {
+        _initSubmodalNav(overlay);
+        _showHint();
+      }
+    }, 150);
+  };
+
+  var _originalCloseSubModalBtn = window.closeSubModalBtn;
+  window.closeSubModalBtn = function (id) {
+    if (typeof _originalCloseSubModalBtn === 'function') _originalCloseSubModalBtn(id);
+    /* Reset nav sous-modal */
+    _nav.submodal.id = null;
+    _nav.submodal.items = [];
+    _nav.submodal.idx = 0;
+  };
+
+  /* ──────────────────────────────────────────────
+     NAVIGATION CLAVIER GLOBALE
+  ────────────────────────────────────────────── */
+  document.addEventListener('keydown', function (e) {
+    /* Ne pas interférer si on tape dans un input */
+    var tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tag) !== -1) return;
+
+    var key = e.key;
+
+    /* Priorité : sous-modal ouvert */
+    var activeSub = _getActiveSubmodal();
+    if (activeSub) {
+      if (key === 'ArrowLeft' || key === 'ArrowUp') {
+        e.preventDefault();
+        _submodalNavGo(_nav.submodal.idx - 1);
+        return;
+      }
+      if (key === 'ArrowRight' || key === 'ArrowDown') {
+        e.preventDefault();
+        _submodalNavGo(_nav.submodal.idx + 1);
+        return;
+      }
+      /* Enter : déclencher l'action de l'étape (si has-video) */
+      if (key === 'Enter') {
+        var step = _nav.submodal.items[_nav.submodal.idx];
+        if (step && step.classList.contains('has-video')) {
+          e.preventDefault();
+          step.click();
+        }
+        return;
+      }
+      return; /* Laisser Esc géré par le handler principal */
+    }
+
+    /* Ensuite : modal principale ouverte */
+    var activeMod = _getActiveModal();
+    if (activeMod) {
+      if (key === 'ArrowLeft' || key === 'ArrowUp') {
+        e.preventDefault();
+        _modalNavGo(_nav.modal.idx - 1);
+        return;
+      }
+      if (key === 'ArrowRight' || key === 'ArrowDown') {
+        e.preventDefault();
+        _modalNavGo(_nav.modal.idx + 1);
+        return;
+      }
+      /* Enter : ouvrir la feature sélectionnée */
+      if (key === 'Enter') {
+        var featBtn = _nav.modal.items[_nav.modal.idx];
+        if (featBtn) {
+          e.preventDefault();
+          featBtn.click();
+        }
+        return;
+      }
+    }
+  });
+
+  /* ──────────────────────────────────────────────
+     INIT AU CHARGEMENT
+  ────────────────────────────────────────────── */
+  function _init() {
+    _ensureHint();
+    _buildCardNavigation();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _init);
+  } else {
+    _init();
+  }
+
+  /* Rebuild si les cards changent (perso-grid toggle etc.) */
+  var _persoBtn = document.getElementById('persoTeaserBtn');
+  if (_persoBtn) {
+    var _origTogglePerso = window.togglePersoProjects;
+    window.togglePersoProjects = function () {
+      if (typeof _origTogglePerso === 'function') _origTogglePerso();
+      setTimeout(_buildCardNavigation, 650);
+    };
+  }
+
+})();
