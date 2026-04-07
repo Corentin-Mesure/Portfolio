@@ -2514,18 +2514,18 @@ body.no-anim .ap-particle {
 ════════════════════════════════════════════════════════ */
 
 :root.light-mode {
-  --bg:       #f5f3ee;
-  --bg2:      #ede9e0;
-  --bg3:      #e4dfd3;
-  --text:     #1a1714;
-  --text-dim: #4a4540;
-  --gold:          #b8860b;
-  --gold-light:    #d4a520;
-  --gold-dim:      #8a6208;
-  --cyan:          #1a7a88;
-  --cyan-dim:      #145f6b;
-  --purple:        #5c3d9e;
-  --purple-dark:   #432d7a;
+  --bg:         #f5f3ee;
+  --bg2:        #ede9e0;
+  --bg3:        #e4dfd3;
+  --text:       #1a1714;
+  --text-dim:   #4a4540;
+  --gold:       #b8860b;
+  --gold-light: #d4a520;
+  --gold-dim:   #8a6208;
+  --cyan:       #1a7a88;
+  --cyan-dim:   #145f6b;
+  --purple:     #5c3d9e;
+  --purple-dark:#432d7a;
 }
 
 /* ── Body & fond global ── */
@@ -2549,10 +2549,10 @@ body.no-anim .ap-particle {
   background: linear-gradient(to bottom, rgba(240,236,227,0.97), transparent);
 }
 
-:root.light-mode .nav-links a         { color: #4a4540; }
+:root.light-mode .nav-links a        { color: #4a4540; }
 :root.light-mode .nav-links a:hover,
-:root.light-mode .nav-links a.active  { color: #b8860b; }
-:root.light-mode .nav-links a::after  { background: #b8860b; }
+:root.light-mode .nav-links a.active { color: #b8860b; }
+:root.light-mode .nav-links a::after { background: #b8860b; }
 
 :root.light-mode .toolbar-btn {
   border-color: rgba(184,134,11,0.35);
@@ -2577,8 +2577,8 @@ body.no-anim .ap-particle {
   color: transparent;
 }
 
-:root.light-mode .hero-subtitle  { color: #1a7a88; }
-:root.light-mode .hero-eyebrow   { color: #8a6208; }
+:root.light-mode .hero-subtitle { color: #1a7a88; }
+:root.light-mode .hero-eyebrow  { color: #8a6208; }
 :root.light-mode .hero-eyebrow::before,
 :root.light-mode .hero-eyebrow::after { background: #8a6208; }
 
@@ -2621,28 +2621,28 @@ body.no-anim .ap-particle {
 :root.light-mode .back-subtitle { color: #1a7a88; }
 :root.light-mode .back-divider  { background: linear-gradient(to right, transparent, #c49820, transparent); }
 :root.light-mode .back-text,
-:root.light-mode .back-text-extra { color: #1a1714; }
-:root.light-mode .back-skill-tag  { border-color: rgba(26,122,136,0.4); color: #145f6b; }
-:root.light-mode .back-stat-item  { background: rgba(184,134,11,0.07); border-color: rgba(184,134,11,0.22); }
+:root.light-mode .back-text-extra  { color: #1a1714; }
+:root.light-mode .back-skill-tag   { border-color: rgba(26,122,136,0.4); color: #145f6b; }
+:root.light-mode .back-stat-item   { background: rgba(184,134,11,0.07); border-color: rgba(184,134,11,0.22); }
 :root.light-mode .back-stat-number { color: #b8860b; }
 :root.light-mode .back-stat-label  { color: #1a1714; }
-:root.light-mode .back-stats        { border-top-color: rgba(184,134,11,0.2); }
-:root.light-mode .back-skills-row   { border-top-color: rgba(26,122,136,0.2); }
-:root.light-mode .back-close { border-color: rgba(184,134,11,0.4); color: #8a6208; }
-:root.light-mode .back-close:hover  { background: #b8860b; border-color: #b8860b; color: #f5f3ee; }
+:root.light-mode .back-stats       { border-top-color: rgba(184,134,11,0.2); }
+:root.light-mode .back-skills-row  { border-top-color: rgba(26,122,136,0.2); }
+:root.light-mode .back-close       { border-color: rgba(184,134,11,0.4); color: #8a6208; }
+:root.light-mode .back-close:hover { background: #b8860b; border-color: #b8860b; color: #f5f3ee; }
 
 /* ── Timeline ── */
 :root.light-mode .timeline-track::before {
   background: linear-gradient(to bottom, transparent, #c49820 15%, #c49820 85%, transparent);
 }
-:root.light-mode .timeline-gem         { background: #f0ece3; border-color: #c49820; }
+:root.light-mode .timeline-gem { background: #f0ece3; border-color: #c49820; }
 :root.light-mode .timeline-item.visible .timeline-gem { border-color: #b8860b; box-shadow: 0 0 10px rgba(184,134,11,0.3); }
 :root.light-mode .timeline-item.current .timeline-gem { background: #b8860b; box-shadow: 0 0 16px rgba(184,134,11,0.45); }
 :root.light-mode .timeline-year  { color: #8a6208; }
 :root.light-mode .timeline-title { color: #b8860b; }
 :root.light-mode .timeline-sub   { color: #1a7a88; }
 :root.light-mode .timeline-desc  { color: #1a1714; }
-:root.light-mode .timeline-badge { border-color: rgba(184,134,11,0.3); color: #8a6208; }
+:root.light-mode .timeline-badge        { border-color: rgba(184,134,11,0.3); color: #8a6208; }
 :root.light-mode .timeline-badge.active { border-color: rgba(26,122,136,0.5); color: #1a7a88; }
 
 /* ── Skills ── */
@@ -2656,11 +2656,11 @@ body.no-anim .ap-particle {
 :root.light-mode .skill-card::before {
   background: linear-gradient(to right, transparent, #1a7a88, transparent);
 }
-:root.light-mode .skill-card:hover { background: rgba(228,224,213,0.99); }
-:root.light-mode .skill-name  { color: #b8860b; }
-:root.light-mode .skill-tag   { border-color: rgba(26,122,136,0.3); color: #1a1714; }
+:root.light-mode .skill-card:hover            { background: rgba(228,224,213,0.99); }
+:root.light-mode .skill-name                  { color: #b8860b; }
+:root.light-mode .skill-tag                   { border-color: rgba(26,122,136,0.3); color: #1a1714; }
 :root.light-mode .skill-card:hover .skill-tag { border-color: rgba(26,122,136,0.65); }
-:root.light-mode .skill-icon-item span { color: #4a4540; }
+:root.light-mode .skill-icon-item span        { color: #4a4540; }
 
 /* ── Projects ── */
 :root.light-mode .project-card {
@@ -2681,22 +2681,19 @@ body.no-anim .ap-particle {
   border-color: rgba(184,134,11,0.22);
   color: #8a6208;
 }
-:root.light-mode .project-btn {
-  border-color: #8a6208;
-  color: #b8860b;
-}
+:root.light-mode .project-btn       { border-color: #8a6208; color: #b8860b; }
 :root.light-mode .project-btn:hover { color: #f5f3ee; }
 
 /* ── Perso teaser ── */
-:root.light-mode .perso-teaser-line { background: linear-gradient(to right, transparent, rgba(26,122,136,0.25), transparent); }
-:root.light-mode .perso-teaser-btn  { border-color: rgba(26,122,136,0.35); color: #1a7a88; }
+:root.light-mode .perso-teaser-line      { background: linear-gradient(to right, transparent, rgba(26,122,136,0.25), transparent); }
+:root.light-mode .perso-teaser-btn       { border-color: rgba(26,122,136,0.35); color: #1a7a88; }
 :root.light-mode .perso-teaser-btn:hover { border-color: rgba(26,122,136,0.7); }
-:root.light-mode .perso-card::after { border-color: rgba(26,122,136,0.4); color: #1a7a88; background: rgba(26,122,136,0.05); }
+:root.light-mode .perso-card::after      { border-color: rgba(26,122,136,0.4); color: #1a7a88; background: rgba(26,122,136,0.05); }
 
 /* ── Contact ── */
-:root.light-mode .contact-title { color: #b8860b; }
-:root.light-mode .contact-text  { color: #1a1714; }
-:root.light-mode .contact-link  { border-color: #8a6208; color: #b8860b; }
+:root.light-mode .contact-title        { color: #b8860b; }
+:root.light-mode .contact-text         { color: #1a1714; }
+:root.light-mode .contact-link         { border-color: #8a6208; color: #b8860b; }
 :root.light-mode .contact-link::before { background: #b8860b; }
 :root.light-mode .contact-link:hover   { color: #f5f3ee; }
 
@@ -2711,24 +2708,20 @@ body.no-anim .ap-particle {
 :root.light-mode .modal-overlay { background: rgba(200,194,182,0.72); }
 
 :root.light-mode .modal {
-  background: linear-gradient(160deg, #f5f1e8, #eeead f);
   background: #f5f1e8;
   border-color: rgba(184,134,11,0.3);
 }
 :root.light-mode .modal::before {
   background: linear-gradient(to right, transparent, #b8860b, transparent);
 }
-:root.light-mode .modal-corner { border-color: #b8860b; }
-:root.light-mode .modal-header { border-bottom-color: rgba(184,134,11,0.15); }
-:root.light-mode .modal-type   { color: #1a7a88; }
-:root.light-mode .modal-title  { color: #b8860b; }
-:root.light-mode .modal-desc   { color: #1a1714; }
+:root.light-mode .modal-corner         { border-color: #b8860b; }
+:root.light-mode .modal-header         { border-bottom-color: rgba(184,134,11,0.15); }
+:root.light-mode .modal-type           { color: #1a7a88; }
+:root.light-mode .modal-title          { color: #b8860b; }
+:root.light-mode .modal-desc           { color: #1a1714; }
 
-:root.light-mode .modal-close {
-  border-color: rgba(184,134,11,0.35);
-  color: #8a6208;
-}
-:root.light-mode .modal-close:hover { background: #b8860b; border-color: #b8860b; color: #f5f3ee; }
+:root.light-mode .modal-close          { border-color: rgba(184,134,11,0.35); color: #8a6208; }
+:root.light-mode .modal-close:hover    { background: #b8860b; border-color: #b8860b; color: #f5f3ee; }
 
 :root.light-mode .modal-features-title { color: #1a1714; }
 :root.light-mode .modal-feature-btn {
@@ -2756,8 +2749,8 @@ body.no-anim .ap-particle {
   background: #f5f1e8;
   border-bottom-color: rgba(184,134,11,0.15);
 }
-:root.light-mode .modal-tab-btn       { color: rgba(26,23,20,0.4); }
-:root.light-mode .modal-tab-btn:hover { color: rgba(26,23,20,0.75); }
+:root.light-mode .modal-tab-btn        { color: rgba(26,23,20,0.4); }
+:root.light-mode .modal-tab-btn:hover  { color: rgba(26,23,20,0.75); }
 :root.light-mode .modal-tab-btn.active { color: #b8860b; border-bottom-color: #b8860b; }
 
 /* ── Code carousel ── */
@@ -2768,15 +2761,15 @@ body.no-anim .ap-particle {
   border-color: rgba(184,134,11,0.15);
   border-left-color: #8a6208;
 }
-:root.light-mode .code-explanation-title { color: #b8860b; }
+:root.light-mode .code-explanation-title         { color: #b8860b; }
 :root.light-mode .code-explanation-title::before { color: #8a6208; }
-:root.light-mode .code-explanation-text { color: rgba(26,23,20,0.82); }
-:root.light-mode .code-explanation-text strong { color: #1a1714; }
-:root.light-mode .code-nav-btn { border-color: rgba(184,134,11,0.25); color: #8a6208; }
+:root.light-mode .code-explanation-text          { color: rgba(26,23,20,0.82); }
+:root.light-mode .code-explanation-text strong   { color: #1a1714; }
+:root.light-mode .code-nav-btn                   { border-color: rgba(184,134,11,0.25); color: #8a6208; }
 :root.light-mode .code-nav-btn:hover:not(:disabled) { background: rgba(184,134,11,0.09); border-color: #b8860b; color: #b8860b; }
-:root.light-mode .code-carousel-counter { color: rgba(26,23,20,0.35); }
-:root.light-mode .code-carousel-dot { background: rgba(184,134,11,0.18); border-color: rgba(184,134,11,0.18); }
-:root.light-mode .code-carousel-dot.active { background: #b8860b; box-shadow: 0 0 6px rgba(184,134,11,0.45); }
+:root.light-mode .code-carousel-counter          { color: rgba(26,23,20,0.35); }
+:root.light-mode .code-carousel-dot              { background: rgba(184,134,11,0.18); border-color: rgba(184,134,11,0.18); }
+:root.light-mode .code-carousel-dot.active       { background: #b8860b; box-shadow: 0 0 6px rgba(184,134,11,0.45); }
 
 /* ════════════════════════════════════════════════════════
    SOUS-MODALS — FOND CLAIR
@@ -2788,28 +2781,20 @@ body.no-anim .ap-particle {
   background: #f2ede4;
   border-color: rgba(26,122,136,0.28);
 }
-:root.light-mode .submodal::before {
-  background: linear-gradient(to right, transparent, #1a7a88, transparent);
-}
-:root.light-mode .submodal-header { border-bottom-color: rgba(26,122,136,0.14); }
-:root.light-mode .submodal-type   { color: #1a7a88; }
-:root.light-mode .submodal-title  { color: #b8860b; }
-:root.light-mode .submodal-desc   { color: #1a1714; }
+:root.light-mode .submodal::before     { background: linear-gradient(to right, transparent, #1a7a88, transparent); }
+:root.light-mode .submodal-header      { border-bottom-color: rgba(26,122,136,0.14); }
+:root.light-mode .submodal-type        { color: #1a7a88; }
+:root.light-mode .submodal-title       { color: #b8860b; }
+:root.light-mode .submodal-desc        { color: #1a1714; }
 
-:root.light-mode .submodal-close {
-  border-color: rgba(26,122,136,0.3);
-  color: #145f6b;
-}
+:root.light-mode .submodal-close       { border-color: rgba(26,122,136,0.3); color: #145f6b; }
 :root.light-mode .submodal-close:hover { background: #1a7a88; color: #f5f3ee; }
 
-:root.light-mode .submodal-step {
-  background: rgba(184,134,11,0.04);
-  border-color: rgba(184,134,11,0.14);
-}
+:root.light-mode .submodal-step              { background: rgba(184,134,11,0.04); border-color: rgba(184,134,11,0.14); }
 :root.light-mode .submodal-step.has-video:hover { background: rgba(184,134,11,0.09); }
-:root.light-mode .step-num  { color: #8a6208; }
-:root.light-mode .step-text { color: #1a1714; }
-:root.light-mode .step-text strong { color: #1a1714; }
+:root.light-mode .step-num                   { color: #8a6208; }
+:root.light-mode .step-text                  { color: #1a1714; }
+:root.light-mode .step-text strong           { color: #1a1714; }
 
 /* ── Accordéon tech ── */
 :root.light-mode .tech-accordion {
@@ -2824,7 +2809,7 @@ body.no-anim .ap-particle {
   border-color: rgba(26,122,136,0.18);
   border-left-color: rgba(26,122,136,0.5);
 }
-:root.light-mode .tech-accordion-body li        { color: #1a1714; }
+:root.light-mode .tech-accordion-body li         { color: #1a1714; }
 :root.light-mode .tech-accordion-body li::before { color: #1a7a88; }
 :root.light-mode .tech-accordion-body li strong  { color: #1a1714; }
 
@@ -2837,13 +2822,13 @@ body.no-anim .ap-particle {
   background: #ede8df;
   border-bottom-color: rgba(184,134,11,0.14);
 }
-:root.light-mode .sp-title  { color: #b8860b; }
-:root.light-mode .sp-close  { border-color: rgba(184,134,11,0.3); color: rgba(184,134,11,0.65); }
-:root.light-mode .sp-close:hover { background: rgba(184,134,11,0.1); border-color: rgba(184,134,11,0.65); color: #b8860b; }
-:root.light-mode .sp-section { border-bottom-color: rgba(0,0,0,0.06); }
-:root.light-mode .sp-section-label { color: rgba(184,134,11,0.55); }
-:root.light-mode .sp-row { border-bottom-color: rgba(0,0,0,0.05); }
+:root.light-mode .sp-title          { color: #b8860b; }
+:root.light-mode .sp-close          { border-color: rgba(184,134,11,0.3); color: rgba(184,134,11,0.65); }
+:root.light-mode .sp-close:hover    { background: rgba(184,134,11,0.1); border-color: rgba(184,134,11,0.65); color: #b8860b; }
+:root.light-mode .sp-section        { border-bottom-color: rgba(0,0,0,0.06); }
+:root.light-mode .sp-section-label  { color: rgba(184,134,11,0.55); }
+:root.light-mode .sp-row            { border-bottom-color: rgba(0,0,0,0.05); }
 :root.light-mode .sp-row-info span  { color: rgba(26,23,20,0.85); }
 :root.light-mode .sp-row-info small { color: rgba(26,23,20,0.4); }
-:root.light-mode .sp-footer { color: rgba(26,23,20,0.2); }
-:root.light-mode #settingsOverlay { background: rgba(180,174,162,0.55); }
+:root.light-mode .sp-footer         { color: rgba(26,23,20,0.2); }
+:root.light-mode #settingsOverlay   { background: rgba(180,174,162,0.55); }
