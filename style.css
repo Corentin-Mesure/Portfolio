@@ -1161,18 +1161,24 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
   touch-action: pan-y;
 }
 
+/* CORRECTION 2 — L'image ne dépasse pas la fenêtre en tenant compte de la barre */
 .video-modal-inner img,
 .video-modal-inner canvas {
   display: block;
   width: 100% !important;
-  max-height: 65vh !important;
+  max-height: calc(65vh - 80px) !important; /* -80px pour la barre de zoom */
   object-fit: contain !important;
   border-radius: 18px;
   min-height: 100px;
   touch-action: pan-y !important;
 }
 
-.video-modal-bar { display: flex; justify-content: center; width: 100%; }
+
+.video-modal-bar {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
 
 @keyframes videoModalIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
 
@@ -1385,7 +1391,16 @@ footer p { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; c
 
   /* ── VIDEO MODAL ── */
   .video-modal-overlay { padding: 60px 12px 16px !important; touch-action: pan-y !important; }
-  .video-modal-wrap { max-width: 100% !important; }
+  .video-modal-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 360px;
+  width: 100%;
+  /* AJOUT : empêche les enfants de déborder */
+  overflow: hidden;
+}
   .video-modal-inner { touch-action: pan-y !important; }
   .video-modal-inner img, .video-modal-inner canvas { max-height: 55vh !important; touch-action: pan-y !important; }
 
