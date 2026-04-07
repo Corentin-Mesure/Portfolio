@@ -2834,50 +2834,52 @@ body.no-anim .ap-particle {
 :root.light-mode #settingsOverlay   { background: rgba(180,174,162,0.55); }
 
 /* ════════════════════════════════════════════════════════
-   NAVIGATION MÉDIA — flèches gauche / droite
+   NAVIGATION MÉDIA — flèches prev / next
 ════════════════════════════════════════════════════════ */
 
 .vm-nav {
-  position: fixed;
-  top: 60px;           /* sous le badge POV */
-  bottom: 90px;        /* au-dessus de la barre zoom/vitesse */
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 10;
-  padding: 0 6px;
+  position:        sticky;
+  bottom:          0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             24px;
+  width:           100%;
+  padding:         14px 0 10px;
+  margin-top:      -68px;        /* remonte sur l'image */
+  background:      linear-gradient(to top, rgba(0,0,0,0.85) 55%, transparent);
+  z-index:         10;
+  pointer-events:  none;         /* laisse scroller/cliquer l'image derrière */
 }
 
 .vm-nav-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.75);
-  background: rgba(0, 0, 0, 0.52);
-  color: #ffffff;
-  font-size: 28px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  pointer-events: all;
-  transition: background 0.2s, border-color 0.2s, opacity 0.2s, transform 0.15s;
-  flex-shrink: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.5),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  user-select: none;
+  width:                    54px;
+  height:                   54px;
+  border-radius:            50%;
+  border:                   2px solid rgba(255,255,255,0.8);
+  background:               rgba(255,255,255,0.18);
+  color:                    #ffffff;
+  font-size:                30px;
+  line-height:              1;
+  display:                  flex;
+  align-items:              center;
+  justify-content:          center;
+  cursor:                   pointer;
+  pointer-events:           all;   /* réactive les clics sur les boutons */
+  transition:               background 0.2s, border-color 0.2s,
+                            opacity 0.2s, transform 0.15s;
+  flex-shrink:              0;
+  backdrop-filter:          blur(8px);
+  -webkit-backdrop-filter:  blur(8px);
+  box-shadow:               0 2px 16px rgba(0,0,0,0.55),
+                            inset 0 1px 0 rgba(255,255,255,0.25);
+  user-select:              none;
 }
 
 .vm-nav-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.28);
+  background:   rgba(255,255,255,0.35);
   border-color: #ffffff;
-  transform: scale(1.1);
+  transform:    scale(1.1);
 }
 
 .vm-nav-btn:active:not(:disabled) {
@@ -2885,64 +2887,61 @@ body.no-anim .ap-particle {
 }
 
 .vm-nav-btn:disabled {
-  opacity: 0.15;
-  cursor: default;
+  opacity:   0.18;
+  cursor:    default;
   transform: none;
 }
 
-/* Compteur centré en haut, au-dessus de l'image */
 .vm-nav-counter {
-  position: fixed;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
+  font-family:    'Cinzel', serif;
+  font-size:      12px;
   letter-spacing: 2.5px;
-  color: rgba(255, 255, 255, 0.92);
+  color:          rgba(255,255,255,0.95);
+  min-width:      54px;
+  text-align:     center;
+  user-select:    none;
   pointer-events: none;
-  user-select: none;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 4px 14px;
-  border-radius: 20px;
-  backdrop-filter: blur(6px);
+  text-shadow:    0 1px 6px rgba(0,0,0,0.8);
 }
 
-/* Mode clair */
-:root.light-mode .vm-nav { /* pas de changement structurel */ }
+/* ── Mode clair ── */
+:root.light-mode .vm-nav {
+  background: linear-gradient(to top, rgba(160,148,120,0.85) 55%, transparent);
+}
 
 :root.light-mode .vm-nav-btn {
-  border-color: rgba(120, 85, 0, 0.75);
-  background: rgba(255, 245, 200, 0.45);
-  color: #3a2000;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18),
-              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-color: rgba(120,85,0,0.75);
+  background:   rgba(255,245,200,0.45);
+  color:        #3a2000;
+  box-shadow:   0 2px 16px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 :root.light-mode .vm-nav-btn:hover:not(:disabled) {
-  background: rgba(255, 220, 100, 0.7);
+  background:   rgba(255,220,100,0.7);
   border-color: #8a6208;
-  color: #2a1500;
+  color:        #2a1500;
 }
 
 :root.light-mode .vm-nav-counter {
-  color: rgba(50, 30, 0, 0.9);
+  color:       rgba(50,30,0,0.9);
   text-shadow: none;
-  background: rgba(255, 240, 180, 0.6);
 }
 
-/* Mobile */
+/* ── Responsive mobile ── */
 @media (max-width: 768px) {
   .vm-nav {
-    top: 56px;
-    bottom: 80px;
-    padding: 0 4px;
+    margin-top: -56px;
+    padding:    10px 0 8px;
+    gap:        18px;
   }
   .vm-nav-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 22px;
+    width:     46px;
+    height:    46px;
+    font-size: 24px;
+  }
+  .vm-nav-counter {
+    font-size: 10px;
+    min-width: 40px;
   }
 }
