@@ -2838,48 +2838,57 @@ body.no-anim .ap-particle {
 ════════════════════════════════════════════════════════ */
 
 .vm-nav {
+  position:        sticky;
+  bottom:          0;
   display:         flex;
   align-items:     center;
   justify-content: center;
-  gap:             20px;
+  gap:             24px;
   width:           100%;
-  position:        sticky;
-  bottom:          0;
-  padding:         10px 0 6px;
-  background:      linear-gradient(to top, rgba(0,0,0,0.75) 70%, transparent);
+  padding:         14px 0 10px;
+  margin-top:      -68px;        /* remonte sur l'image */
+  background:      linear-gradient(to top, rgba(0,0,0,0.85) 55%, transparent);
   z-index:         10;
-  margin-top:      0;
+  pointer-events:  none;         /* laisse scroller/cliquer l'image derrière */
 }
 
 .vm-nav-btn {
-  width:           52px;
-  height:          52px;
-  border-radius:   50%;
-  border:          2px solid rgba(255, 255, 255, 0.6);
-  background:      rgba(255, 255, 255, 0.18);
-  color:           #ffffff;
-  font-size:       30px;
-  line-height:     1;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  cursor:          pointer;
-  transition:      background 0.2s, border-color 0.2s, opacity 0.2s, transform 0.2s;
-  flex-shrink:     0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  text-shadow:     0 1px 4px rgba(0,0,0,0.5);
+  width:                    54px;
+  height:                   54px;
+  border-radius:            50%;
+  border:                   2px solid rgba(255,255,255,0.8);
+  background:               rgba(255,255,255,0.18);
+  color:                    #ffffff;
+  font-size:                30px;
+  line-height:              1;
+  display:                  flex;
+  align-items:              center;
+  justify-content:          center;
+  cursor:                   pointer;
+  pointer-events:           all;   /* réactive les clics sur les boutons */
+  transition:               background 0.2s, border-color 0.2s,
+                            opacity 0.2s, transform 0.15s;
+  flex-shrink:              0;
+  backdrop-filter:          blur(8px);
+  -webkit-backdrop-filter:  blur(8px);
+  box-shadow:               0 2px 16px rgba(0,0,0,0.55),
+                            inset 0 1px 0 rgba(255,255,255,0.25);
+  user-select:              none;
 }
 
 .vm-nav-btn:hover:not(:disabled) {
-  background:    rgba(255, 255, 255, 0.35);
-  border-color:  #ffffff;
-  transform:     scale(1.1);
+  background:   rgba(255,255,255,0.35);
+  border-color: #ffffff;
+  transform:    scale(1.1);
+}
+
+.vm-nav-btn:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .vm-nav-btn:disabled {
-  opacity: 0.25;
-  cursor:  default;
+  opacity:   0.18;
+  cursor:    default;
   transform: none;
 }
 
@@ -2887,36 +2896,52 @@ body.no-anim .ap-particle {
   font-family:    'Cinzel', serif;
   font-size:      12px;
   letter-spacing: 2.5px;
-  color:          rgba(255, 255, 255, 0.9);
-  min-width:      52px;
+  color:          rgba(255,255,255,0.95);
+  min-width:      54px;
   text-align:     center;
   user-select:    none;
-  text-shadow:    0 1px 4px rgba(0,0,0,0.6);
+  pointer-events: none;
+  text-shadow:    0 1px 6px rgba(0,0,0,0.8);
 }
 
 /* ── Mode clair ── */
 :root.light-mode .vm-nav {
-  background: linear-gradient(to top, rgba(200,190,170,0.75) 70%, transparent);
+  background: linear-gradient(to top, rgba(160,148,120,0.85) 55%, transparent);
 }
 
 :root.light-mode .vm-nav-btn {
-  border-color: rgba(100, 70, 0, 0.65);
-  background:   rgba(255, 240, 200, 0.55);
-  color:        #5a3a00;
+  border-color: rgba(120,85,0,0.75);
+  background:   rgba(255,245,200,0.45);
+  color:        #3a2000;
+  box-shadow:   0 2px 16px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 :root.light-mode .vm-nav-btn:hover:not(:disabled) {
-  background:   rgba(255, 220, 120, 0.75);
+  background:   rgba(255,220,100,0.7);
   border-color: #8a6208;
+  color:        #2a1500;
 }
 
 :root.light-mode .vm-nav-counter {
-  color: rgba(80, 50, 0, 0.85);
+  color:       rgba(50,30,0,0.9);
   text-shadow: none;
 }
 
 /* ── Responsive mobile ── */
 @media (max-width: 768px) {
-  .vm-nav-btn    { width: 44px; height: 44px; font-size: 24px; }
-  .vm-nav-counter { font-size: 10px; min-width: 42px; }
+  .vm-nav {
+    margin-top: -56px;
+    padding:    10px 0 8px;
+    gap:        18px;
+  }
+  .vm-nav-btn {
+    width:     46px;
+    height:    46px;
+    font-size: 24px;
+  }
+  .vm-nav-counter {
+    font-size: 10px;
+    min-width: 40px;
+  }
 }
