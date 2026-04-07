@@ -2508,3 +2508,62 @@ body.no-anim .ap-particle {
     min-height: unset;
   }
 }
+
+:root.light-mode body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root.light-mode nav {
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+:root.light-mode .section-title {
+  color: var(--section-title-color);
+}
+
+:root.light-mode .project-card,
+:root.light-mode .skill-card {
+  background: var(--project-card-bg);
+  border-color: var(--card-border);
+}
+
+:root.light-mode .project-title,
+:root.light-mode .project-type {
+  color: var(--gold);
+}
+
+:root.light-mode .project-tag,
+:root.light-mode .skill-tag {
+  background: var(--tag-bg);
+  border-color: var(--tag-border);
+  color: var(--tag-color);
+}
+
+:root.light-mode .modal,
+:root.light-mode .submodal {
+  background: var(--modal-bg);
+  color: var(--text-primary);
+}
+
+:root.light-mode .hero-name {
+  background: var(--hero-name-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root.light-mode .timeline-track::before {
+  background: var(--timeline-line);
+}
+
+:root.light-mode .scroll-progress {
+  background: var(--scroll-progress-color);
+}
+
+:root.light-mode .back-text,
+:root.light-mode .timeline-desc,
+:root.light-mode .project-desc {
+  color: var(--text-secondary);
+}
