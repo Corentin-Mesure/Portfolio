@@ -2839,16 +2839,16 @@ body.no-anim .ap-particle {
 
 .vm-nav {
   position: fixed;
-  top: 0;
-  bottom: 0;
+  top: 60px;           /* sous le badge POV */
+  bottom: 90px;        /* au-dessus de la barre zoom/vitesse */
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   pointer-events: none;
-  z-index: 1000000;
-  padding: 0 12px;
+  z-index: 10;
+  padding: 0 6px;
 }
 
 .vm-nav-btn {
@@ -2864,7 +2864,7 @@ body.no-anim .ap-particle {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  pointer-events: auto;           /* ← clé : réactive les clics */
+  pointer-events: all;
   transition: background 0.2s, border-color 0.2s, opacity 0.2s, transform 0.15s;
   flex-shrink: 0;
   backdrop-filter: blur(8px);
@@ -2890,6 +2890,7 @@ body.no-anim .ap-particle {
   transform: none;
 }
 
+/* Compteur centré en haut, au-dessus de l'image */
 .vm-nav-counter {
   position: fixed;
   top: 14px;
@@ -2902,7 +2903,7 @@ body.no-anim .ap-particle {
   pointer-events: none;
   user-select: none;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
-  z-index: 1000001;
+  z-index: 10;
   background: rgba(0, 0, 0, 0.45);
   padding: 4px 14px;
   border-radius: 20px;
@@ -2910,6 +2911,8 @@ body.no-anim .ap-particle {
 }
 
 /* Mode clair */
+:root.light-mode .vm-nav { /* pas de changement structurel */ }
+
 :root.light-mode .vm-nav-btn {
   border-color: rgba(120, 85, 0, 0.75);
   background: rgba(255, 245, 200, 0.45);
@@ -2933,7 +2936,9 @@ body.no-anim .ap-particle {
 /* Mobile */
 @media (max-width: 768px) {
   .vm-nav {
-    padding: 0 6px;
+    top: 56px;
+    bottom: 80px;
+    padding: 0 4px;
   }
   .vm-nav-btn {
     width: 42px;
