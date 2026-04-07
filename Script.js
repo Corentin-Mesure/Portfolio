@@ -2354,3 +2354,22 @@ function openImageModal(srcs, pov, size) {
 
   overlay.classList.add('open');
 }
+
+/* ════════════════════════════════════════════════════════
+   MODE LIGHT
+════════════════════════════════════════════════════════ */
+var lightMode = localStorage.getItem('portfolio-light') === '1';
+
+function applyLightMode(on) {
+  lightMode = on;
+  localStorage.setItem('portfolio-light', on ? '1' : '0');
+  document.documentElement.classList.toggle('light-mode', on);
+  var btn = document.getElementById('lightModeBtn');
+  if (btn) btn.classList.toggle('active', on);
+}
+
+function toggleLightMode() { applyLightMode(!lightMode); }
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (lightMode) applyLightMode(true);
+});
