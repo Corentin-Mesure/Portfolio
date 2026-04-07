@@ -2374,684 +2374,176 @@ document.addEventListener('DOMContentLoaded', function () {
   if (lightMode) applyLightMode(true);
 });
 
+
 /* ════════════════════════════════════════════════════════
-   GALERIE MÉDIA — Navigation entre images/vidéos
-   dans les sous-modals et cards projets
-   
-   À AJOUTER à la fin de Script.js
-   
-   FONCTIONNEMENT :
-   - Quand tu ouvres un sous-modal, toutes les étapes
-     qui ont des images/vidéos sont collectées en une
-     liste de médias.
-   - Le videoModal devient une galerie avec :
-     · Flèches ◀ ▶ à gauche/droite de l'image
-     · Navigation clavier ← → quand le modal est ouvert
-     · Compteur "2 / 7" en bas
-     · Le titre de l'étape source s'affiche
+   NAVIGATION MÉDIA — flèches prev / next dans le modal
+   v3 : sticky overlay + navigation clavier
 ════════════════════════════════════════════════════════ */
 
 (function () {
-  'use strict';
 
-  /* ── État de la galerie ── */
-  var _gallery = {
-    items: [],      /* [{type:'image'|'video', src, label}, ...] */
-    idx: 0,
-    active: false
-  };
+  var _allItems = [];
+  var _idx      = 0;
+  var _navEl    = null;
 
-  /* ── CSS injecté une fois ── */
-  function _injectGalleryCSS() {
-    if (document.getElementById('_galCSS')) return;
-    var s = document.createElement('style');
-    s.id = '_galCSS';
-    s.textContent = [
-      /* Flèches sur le côté du modal vidéo */
-      '#_galPrev, #_galNext {',
-      '  position: fixed;',
-      '  top: 50%;',
-      '  transform: translateY(-50%);',
-      '  z-index: 9999998;',
-      '  width: 52px;',
-      '  height: 52px;',
-      '  background: rgba(0,0,0,0.65);',
-      '  border: 1px solid rgba(200,160,60,0.5);',
-      '  color: #f0c84a;',
-      '  font-size: 22px;',
-      '  border-radius: 50%;',
-      '  cursor: pointer;',
-      '  display: none;',
-      '  align-items: center;',
-      '  justify-content: center;',
-      '  transition: background 0.15s, transform 0.15s;',
-      '  backdrop-filter: blur(8px);',
-      '  pointer-events: auto;',
-      '}',
-      '#_galPrev { left: 16px; }',
-      '#_galNext { right: 16px; }',
-      '#_galPrev:hover, #_galNext:hover {',
-      '  background: rgba(200,160,60,0.25);',
-      '  transform: translateY(-50%) scale(1.1);',
-      '}',
-      '#_galPrev:disabled, #_galNext:disabled {',
-      '  opacity: 0.2;',
-      '  cursor: default;',
-      '  pointer-events: none;',
-      '}',
-      /* Compteur en bas */
-      '#_galCounter {',
-      '  position: fixed;',
-      '  bottom: 90px;',
-      '  left: 50%;',
-      '  transform: translateX(-50%);',
-      '  z-index: 9999998;',
-      '  display: none;',
-      '  align-items: center;',
-      '  gap: 10px;',
-      '  background: rgba(0,0,0,0.7);',
-      '  border: 1px solid rgba(200,160,60,0.35);',
-      '  border-radius: 20px;',
-      '  padding: 6px 18px;',
-      '  pointer-events: none;',
-      '}',
-      '#_galCounter .gal-pos {',
-      '  font-family: Cinzel, serif;',
-      '  font-size: 12px;',
-      '  letter-spacing: 3px;',
-      '  color: #f0c84a;',
-      '}',
-      '#_galCounter .gal-label {',
-      '  font-family: Cinzel, serif;',
-      '  font-size: 10px;',
-      '  letter-spacing: 1.5px;',
-      '  color: rgba(255,255,255,0.55);',
-      '  max-width: 200px;',
-      '  overflow: hidden;',
-      '  text-overflow: ellipsis;',
-      '  white-space: nowrap;',
-      '}',
-      /* Dots de navigation */
-      '#_galDots {',
-      '  position: fixed;',
-      '  bottom: 68px;',
-      '  left: 50%;',
-      '  transform: translateX(-50%);',
-      '  z-index: 9999998;',
-      '  display: none;',
-      '  gap: 6px;',
-      '  flex-wrap: wrap;',
-      '  justify-content: center;',
-      '  max-width: 80vw;',
-      '  pointer-events: none;',
-      '}',
-      '#_galDots .gd {',
-      '  width: 7px;',
-      '  height: 7px;',
-      '  border-radius: 50%;',
-      '  background: rgba(200,160,60,0.25);',
-      '  border: 1px solid rgba(200,160,60,0.3);',
-      '  cursor: pointer;',
-      '  pointer-events: auto;',
-      '  flex-shrink: 0;',
-      '  transition: all 0.2s;',
-      '}',
-      '#_galDots .gd.on {',
-      '  background: #f0c84a;',
-      '  box-shadow: 0 0 8px rgba(240,200,74,0.8);',
-      '  transform: scale(1.35);',
-      '}',
-      /* Bouton "ouvrir dans galerie" sur les étapes has-video */
-      '.step-gal-hint {',
-      '  display: inline-flex;',
-      '  align-items: center;',
-      '  gap: 4px;',
-      '  margin-left: 6px;',
-      '  font-size: 10px;',
-      '  color: rgba(200,160,60,0.7);',
-      '  font-style: italic;',
-      '  vertical-align: middle;',
-      '}',
-    ].join('\n');
-    document.head.appendChild(s);
+  /* ── Injection du bloc flèches dans .video-modal-wrap ── */
+  function _injectNav() {
+    var wrap = document.querySelector('.video-modal-wrap');
+    if (!wrap) return;
+
+    if (_navEl && !document.body.contains(_navEl)) _navEl = null;
+    if (_navEl && wrap.contains(_navEl)) return;
+
+    _navEl = document.createElement('div');
+    _navEl.className = 'vm-nav';
+    _navEl.innerHTML =
+      '<button class="vm-nav-btn vm-prev" aria-label="Précédent">&#x2039;</button>' +
+      '<span class="vm-nav-counter"></span>' +
+      '<button class="vm-nav-btn vm-next" aria-label="Suivant">&#x203A;</button>';
+
+    _navEl.querySelector('.vm-prev').addEventListener('click', function () { window.mediaNavGo(-1); });
+    _navEl.querySelector('.vm-next').addEventListener('click', function () { window.mediaNavGo(1); });
+
+    wrap.appendChild(_navEl);
   }
 
-  /* ── Crée les éléments flèches/compteur dans le DOM ── */
-  function _createGalleryUI() {
-    _injectGalleryCSS();
-    if (document.getElementById('_galPrev')) return;
+  /* ── Mise à jour visuelle ── */
+  function _updateNav() {
+    if (!_navEl || !document.body.contains(_navEl)) return;
+    var total   = _allItems.length;
+    var counter = _navEl.querySelector('.vm-nav-counter');
+    var btnPrev = _navEl.querySelector('.vm-prev');
+    var btnNext = _navEl.querySelector('.vm-next');
 
-    var prev = document.createElement('button');
-    prev.id = '_galPrev';
-    prev.innerHTML = '&#x2039;';
-    prev.title = 'Précédent (←)';
-    prev.onclick = function () { _galGo(_gallery.idx - 1); };
-    document.body.appendChild(prev);
+    if (total <= 1) { _navEl.style.display = 'none'; return; }
 
-    var next = document.createElement('button');
-    next.id = '_galNext';
-    next.innerHTML = '&#x203A;';
-    next.title = 'Suivant (→)';
-    next.onclick = function () { _galGo(_gallery.idx + 1); };
-    document.body.appendChild(next);
-
-    var counter = document.createElement('div');
-    counter.id = '_galCounter';
-    counter.innerHTML = '<span class="gal-pos">1 / 1</span><span class="gal-label"></span>';
-    document.body.appendChild(counter);
-
-    var dots = document.createElement('div');
-    dots.id = '_galDots';
-    document.body.appendChild(dots);
+    _navEl.style.display  = 'flex';
+    counter.textContent   = (_idx + 1) + ' / ' + total;
+    btnPrev.disabled      = (_idx === 0);
+    btnNext.disabled      = (_idx === total - 1);
   }
 
-  /* ── Affiche/cache les contrôles galerie ── */
-  function _galShow(visible) {
-    ['_galPrev','_galNext','_galCounter','_galDots'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.style.display = visible ? 'flex' : 'none';
-    });
-  }
+  /* ── Collecte de TOUS les médias de toutes les étapes du modal parent ── */
+  function _buildAllItems(triggerEl) {
+    _allItems = [];
 
-  /* ── Met à jour l'état des boutons ── */
-  function _galUpdateUI() {
-    var items = _gallery.items;
-    var idx   = _gallery.idx;
-
-    var prev = document.getElementById('_galPrev');
-    var next = document.getElementById('_galNext');
-    if (prev) prev.disabled = (idx === 0);
-    if (next) next.disabled = (idx === items.length - 1);
-
-    var counter = document.getElementById('_galCounter');
-    if (counter) {
-      counter.querySelector('.gal-pos').textContent = (idx + 1) + ' / ' + items.length;
-      var lbl = items[idx] ? (items[idx].label || '') : '';
-      counter.querySelector('.gal-label').textContent = lbl;
+    var currentSubmodal = triggerEl.closest('.submodal-overlay');
+    if (!currentSubmodal) {
+      _allItems = [{ el: triggerEl, submodalId: null, submodalEl: null }];
+      _idx = 0;
+      return;
     }
 
-    /* Dots */
-    var dotsWrap = document.getElementById('_galDots');
-    if (dotsWrap) {
-      dotsWrap.innerHTML = '';
-      /* Max 15 dots sinon trop chargé */
-      if (items.length > 1 && items.length <= 15) {
-        items.forEach(function (item, i) {
-          var d = document.createElement('div');
-          d.className = 'gd' + (i === idx ? ' on' : '');
-          d.title = item.label || '';
-          d.onclick = (function (ci) {
-            return function () { _galGo(ci); };
-          })(i);
-          dotsWrap.appendChild(d);
-        });
-        dotsWrap.style.display = 'flex';
-      } else {
-        dotsWrap.style.display = 'none';
-      }
-    }
-  }
+    var activeModal = document.querySelector('.modal-overlay.active');
 
-  /* ── Navigue vers l'item idx ── */
-  function _galGo(idx) {
-    var items = _gallery.items;
-    if (!items.length) return;
-    idx = Math.max(0, Math.min(items.length - 1, idx));
-    _gallery.idx = idx;
-
-    var item = items[idx];
-    if (!item) return;
-
-    /* Ouvre le bon type de média */
-    if (item.type === 'video') {
-      /* Appel direct à openVideoModal sans reconstruire la galerie */
-      _openVideoModalDirect(item.src, item.label || '');
-    } else {
-      _openImageModalDirect(item.src, item.label || '');
-    }
-  }
-
-  /* ── Ouvre une image sans reconstruire la galerie ── */
-  function _openImageModalDirect(src, pov) {
-    var overlay = document.getElementById('videoModal');
-    var badge   = document.getElementById('videoModalPov');
-    var errDiv  = document.getElementById('videoModalErr');
-    var inner   = document.querySelector('.video-modal-inner');
-    var bar     = document.querySelector('.video-modal-bar');
-    var wrap    = document.querySelector('.video-modal-wrap');
-
-    if (!overlay || !inner) return;
-
-    /* Nettoyer le contenu précédent */
-    inner.querySelectorAll('#videoModalMedia, .static-screen-img, #gifLoader').forEach(function (el) { el.remove(); });
-    if (typeof _gifReset === 'function') _gifReset();
-    if (typeof _revokeBlobs === 'function') _revokeBlobs();
-
-    /* Masquer les anciens boutons */
-    overlay.querySelectorAll('button').forEach(function (b) {
-      if (b.id === '_imgModalClose' || b.id === '_galPrev' || b.id === '_galNext') return;
-      b.dataset.hiddenByImg = '1';
-      b.style.display = 'none';
-    });
-
-    if (badge) { badge.innerHTML = pov || ''; badge.style.cssText = pov ? '' : 'display:none;'; }
-    if (errDiv) errDiv.style.display = 'none';
-
-    /* Barre zoom */
-    if (bar) {
-      bar.innerHTML = '';
-      bar.style.pointerEvents = 'auto';
-      bar.style.position      = 'relative';
-      bar.style.zIndex        = '10';
-      bar.style.visibility    = '';
-      if (typeof _buildZoomBar === 'function') _buildZoomBar(bar);
+    if (!activeModal) {
+      _fillFromSubmodal(currentSubmodal);
+      _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
+      if (_idx < 0) _idx = 0;
+      return;
     }
 
-    if (wrap) {
-      wrap.style.cssText =
-        'background:transparent;box-shadow:none;border:none;padding:0;' +
-        'max-width:98vw;width:98vw;pointer-events:none;';
-    }
+    var featureBtns = Array.from(
+      activeModal.querySelectorAll('[onclick*="openSubModal"]')
+    );
 
-    inner.style.cssText =
-      'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
-      'background:transparent;box-shadow:none;border:none;padding:0;' +
-      'overflow:visible;pointer-events:none;width:100%;';
+    featureBtns.forEach(function (btn) {
+      var oc = btn.getAttribute('onclick') || '';
+      var match = oc.match(/openSubModal\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+      if (!match) return;
+      var submodalId = match[1];
+      var submodalEl = document.getElementById(submodalId);
+      if (!submodalEl) return;
 
-    var wrapper = document.createElement('div');
-    wrapper.className = 'static-screen-img';
-    wrapper.style.cssText =
-      'display:flex;flex-direction:column;align-items:center;gap:0;pointer-events:auto;width:100%;';
-
-    var imgWrap = document.createElement('div');
-    imgWrap.style.cssText =
-      'overflow:hidden;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,0.9);' +
-      'cursor:grab;touch-action:none;position:relative;width:100%;';
-
-    var availH = window.innerHeight - 70;
-    var img = document.createElement('img');
-    img.style.cssText =
-      'display:block;width:100%;height:auto;max-height:' + availH + 'px;' +
-      'object-fit:contain;transform-origin:0 0;user-select:none;-webkit-user-drag:none;';
-    img.onerror = function () { img.style.display = 'none'; };
-    img.src = src;
-
-    if (typeof _zoomAttach === 'function') _zoomAttach(imgWrap, img);
-    imgWrap.appendChild(img);
-    wrapper.appendChild(imgWrap);
-    inner.appendChild(wrapper);
-
-    /* Bouton fermer */
-    var existing = document.getElementById('_imgModalClose');
-    if (existing) existing.remove();
-    var closeBtn = document.createElement('button');
-    closeBtn.id = '_imgModalClose';
-    closeBtn.innerHTML = '&#x2715;';
-    closeBtn.style.cssText =
-      'position:fixed;top:18px;right:22px;z-index:10001;width:42px;height:42px;' +
-      'background:rgba(0,0,0,0.65);border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
-      'font-size:18px;border-radius:8px;cursor:pointer;' +
-      'display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);' +
-      'transition:background .15s,transform .1s;pointer-events:auto;';
-    closeBtn.onclick = function (e) {
-      e.stopPropagation();
-      _galClose();
-    };
-    document.body.appendChild(closeBtn);
-
-    if (!overlay.classList.contains('open')) overlay.classList.add('open');
-    _galUpdateUI();
-    _galShow(true);
-  }
-
-  /* ── Ouvre une vidéo/gif sans reconstruire la galerie ── */
-  function _openVideoModalDirect(src, pov) {
-    var overlay = document.getElementById('videoModal');
-    var badge   = document.getElementById('videoModalPov');
-    var errDiv  = document.getElementById('videoModalErr');
-    var inner   = document.querySelector('.video-modal-inner');
-    var bar     = document.querySelector('.video-modal-bar');
-    var wrap    = document.querySelector('.video-modal-wrap');
-
-    if (!overlay || !inner) return;
-
-    if (typeof _gifReset === 'function') _gifReset();
-    if (typeof _revokeBlobs === 'function') _revokeBlobs();
-
-    inner.querySelectorAll('#videoModalMedia, #videoModalMedia-next, canvas, .static-screen-img, #gifLoader').forEach(function (el) { el.remove(); });
-
-    if (wrap) { wrap.style.cssText = ''; }
-    if (bar)  { bar.innerHTML = ''; bar.style.visibility = 'hidden'; bar.style.pointerEvents = 'auto'; }
-
-    if (badge) badge.innerHTML = pov || '';
-    if (errDiv) errDiv.style.display = 'none';
-
-    var safeSrc = src.split('').map(function (c) {
-      return c.charCodeAt(0) > 127 ? encodeURIComponent(c) : c;
-    }).join('');
-    var ext = safeSrc.split('?')[0].split('.').pop().toLowerCase();
-
-    /* Bouton fermer */
-    var existing = document.getElementById('_imgModalClose');
-    if (existing) existing.remove();
-    var closeBtn = document.createElement('button');
-    closeBtn.id = '_imgModalClose';
-    closeBtn.innerHTML = '&#x2715;';
-    closeBtn.style.cssText =
-      'position:fixed;top:18px;right:22px;z-index:10001;width:42px;height:42px;' +
-      'background:rgba(0,0,0,0.65);border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
-      'font-size:18px;border-radius:8px;cursor:pointer;' +
-      'display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);' +
-      'transition:background .15s,transform .1s;pointer-events:auto;';
-    closeBtn.onclick = function (e) { e.stopPropagation(); _galClose(); };
-    document.body.appendChild(closeBtn);
-
-    if (ext === 'gif') {
-      /* Utiliser le système GIF existant */
-      if (typeof _currentSrc !== 'undefined') {
-        window._currentSrc = src;
-        window._modalOpen  = true;
-      }
-
-      /* Mobile : affichage direct */
-      if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
-        var imgM = document.createElement('img');
-        imgM.id = 'videoModalMedia';
-        imgM.style.cssText = 'display:block;width:100%;border-radius:18px;';
-        imgM.src = safeSrc;
-        inner.insertBefore(imgM, inner.firstChild);
-      } else {
-        /* Desktop : panel vitesse + fetch */
-        if (typeof _buildPanel === 'function') _buildPanel(src);
-        var absSrc = (function (s) {
-          if (s.match(/^(https?:|data:|blob:)/)) return s;
-          var a = document.createElement('a'); a.href = s; return a.href;
-        })(safeSrc);
-
-        var cache = (typeof _gifCache !== 'undefined') ? _gifCache : {};
-        if (cache[src]) {
-          var url = (typeof _makeBlobUrl === 'function') ? _makeBlobUrl(cache[src], 1) : src;
-          var imgG = document.createElement('img');
-          imgG.id = 'videoModalMedia';
-          imgG.style.cssText = 'display:block;width:100%;border-radius:18px;';
-          imgG.src = url;
-          inner.insertBefore(imgG, inner.firstChild);
-        } else {
-          var loader = document.createElement('div');
-          loader.id = 'gifLoader';
-          loader.style.cssText =
-            'color:rgba(200,160,60,0.6);font-family:Cinzel,serif;font-size:11px;' +
-            'letter-spacing:3px;text-align:center;padding:48px 0;width:100%;';
-          loader.textContent = 'Chargement…';
-          inner.insertBefore(loader, inner.firstChild);
-
-          fetch(absSrc)
-            .then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
-            .then(function (buf) {
-              var l = inner.querySelector('#gifLoader');
-              if (l) l.remove();
-              if (typeof _gifCache !== 'undefined') _gifCache[src] = buf;
-              var blobUrl = (typeof _makeBlobUrl === 'function') ? _makeBlobUrl(buf, 1) : src;
-              var ig = document.createElement('img');
-              ig.id = 'videoModalMedia';
-              ig.style.cssText = 'display:block;width:100%;border-radius:18px;';
-              ig.src = blobUrl;
-              inner.insertBefore(ig, inner.firstChild);
-            })
-            .catch(function () {
-              var l = inner.querySelector('#gifLoader');
-              if (l) l.remove();
-              var ig = document.createElement('img');
-              ig.id = 'videoModalMedia';
-              ig.style.cssText = 'display:block;width:100%;border-radius:18px;';
-              ig.src = safeSrc;
-              inner.insertBefore(ig, inner.firstChild);
-            });
-        }
-      }
-    } else {
-      /* MP4 / WEBM */
-      var video = document.createElement('video');
-      video.id = 'videoModalMedia';
-      video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
-      video.style.cssText = 'display:block;width:100%;min-height:100px;';
-      var source = document.createElement('source');
-      source.src = safeSrc;
-      source.type = 'video/' + (ext === 'webm' ? 'webm' : 'mp4');
-      video.appendChild(source);
-      inner.insertBefore(video, inner.firstChild);
-    }
-
-    if (!overlay.classList.contains('open')) overlay.classList.add('open');
-    _galUpdateUI();
-    _galShow(true);
-  }
-
-  /* ── Ferme la galerie ── */
-  function _galClose() {
-    _gallery.active = false;
-    _gallery.items  = [];
-    _gallery.idx    = 0;
-    _galShow(false);
-    if (typeof closeVideoModal === 'function') closeVideoModal();
-  }
-
-  /* ──────────────────────────────────────────────
-     COLLECTE DES MÉDIAS dans un sous-modal
-  ────────────────────────────────────────────── */
-  function _collectMediaFromSubmodal(submodalEl) {
-    var items = [];
-    if (!submodalEl) return items;
-
-    /* Chercher tous les éléments cliquables qui ouvrent un média */
-    submodalEl.querySelectorAll('[onclick]').forEach(function (el) {
-      var onclick = el.getAttribute('onclick') || '';
-
-      /* openVideoModal('videos/xxx.gif', 'Label') */
-      var mV = onclick.match(/openVideoModal\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]/);
-      if (mV) {
-        items.push({
-          type: 'video',
-          src:  mV[1],
-          label: (mV[2] || '').replace(/&#x[0-9A-F]+;/gi, '').replace(/&[a-z]+;/gi, '').trim()
-        });
-        return;
-      }
-
-      /* openImageModal('images/xxx.png', 'Label') */
-      var mI = onclick.match(/openImageModal\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]/);
-      if (mI) {
-        items.push({
-          type: 'image',
-          src:  mI[1],
-          label: (mI[2] || '').replace(/&#x[0-9A-F]+;/gi, '').replace(/&[a-z]+;/gi, '').trim()
-        });
-        return;
-      }
-
-      /* openImageModal(['img1','img2'], 'Label') — multi-image */
-      var mArr = onclick.match(/openImageModal\(\[([^\]]+)\]/);
-      if (mArr) {
-        var srcs = mArr[1].match(/['"]([^'"]+)['"]/g);
-        if (srcs) {
-          srcs.forEach(function (s) {
-            var clean = s.replace(/['"]/g, '');
-            items.push({ type: 'image', src: clean, label: clean.split('/').pop() });
-          });
-        }
-      }
-    });
-
-    return items;
-  }
-
-  /* ──────────────────────────────────────────────
-     COLLECTE DES MÉDIAS dans une card projet
-     (en parcourant toutes ses sous-modals liées)
-  ────────────────────────────────────────────── */
-  function _collectMediaFromCard(card) {
-    var items = [];
-    if (!card) return items;
-
-    /* Récupérer l'id du modal lié */
-    var btn = card.querySelector('.project-btn');
-    if (!btn) return items;
-    var onclk = btn.getAttribute('onclick') || '';
-    var match = onclk.match(/openModal\(['"]([^'"]+)['"]\)/);
-    if (!match) return items;
-    var modalId = match[1];
-
-    var modalEl = document.getElementById('modal-' + modalId);
-    if (!modalEl) return items;
-
-    /* Parcourir chaque bouton de feature → récupérer les médias de son sous-modal */
-    modalEl.querySelectorAll('.modal-feature-btn').forEach(function (featBtn) {
-      var featOnclick = featBtn.getAttribute('onclick') || '';
-      var mSub = featOnclick.match(/openSubModal\(['"]([^'"]+)['"]\)/);
-      if (!mSub) return;
-      var subId = mSub[1];
-      var subEl = document.getElementById(subId);
-      if (!subEl) return;
-
-      var subItems = _collectMediaFromSubmodal(subEl);
-      subItems.forEach(function (item) { items.push(item); });
-    });
-
-    return items;
-  }
-
-  /* ──────────────────────────────────────────────
-     HOOK — Intercepte openVideoModal & openImageModal
-     pour alimenter la galerie
-  ────────────────────────────────────────────── */
-
-  /* On mémorise quelle sous-modal est ouverte pour savoir
-     de quel pool de médias on part */
-  var _currentSubmodalId = null;
-  var _currentCardEl = null;
-
-  var _origOpenSubModal = window.openSubModal;
-  window.openSubModal = function (id) {
-    _currentSubmodalId = id;
-    _currentCardEl = null;
-    if (typeof _origOpenSubModal === 'function') _origOpenSubModal(id);
-  };
-
-  var _origCloseSubModalBtn = window.closeSubModalBtn;
-  window.closeSubModalBtn = function (id) {
-    _currentSubmodalId = null;
-    _galClose();
-    if (typeof _origCloseSubModalBtn === 'function') _origCloseSubModalBtn(id);
-  };
-
-  /* Intercepte l'ouverture d'un média DEPUIS un sous-modal ou une card */
-  function _interceptMediaOpen(type, src, label) {
-    _createGalleryUI();
-
-    var items = [];
-
-    /* Cas 1 : ouvert depuis un sous-modal */
-    if (_currentSubmodalId) {
-      var subEl = document.getElementById(_currentSubmodalId);
-      if (subEl) {
-        items = _collectMediaFromSubmodal(subEl);
-      }
-    }
-
-    /* Cas 2 : ouvert directement (pas de sous-modal ouvert)
-       → chercher si on est dans une card */
-    if (!items.length) {
-      /* Essayer de trouver via le contexte actif */
-      var activeModals = document.querySelectorAll('.modal-overlay.active, .submodal-overlay.active');
-      activeModals.forEach(function (m) {
-        if (items.length) return;
-        var more = _collectMediaFromSubmodal(m);
-        if (more.length) items = more;
+      var mediaEls = Array.from(
+        submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
+      );
+      mediaEls.forEach(function (el) {
+        _allItems.push({ el: el, submodalId: submodalId, submodalEl: submodalEl });
       });
-    }
-
-    if (!items.length) {
-      /* Pas de galerie, ouvrir normalement */
-      return false;
-    }
-
-    /* Trouver l'index de l'item cliqué */
-    var startIdx = 0;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].src === src) { startIdx = i; break; }
-    }
-
-    _gallery.items  = items;
-    _gallery.idx    = startIdx;
-    _gallery.active = true;
-
-    return true; /* intercepté */
-  }
-
-  /* ── Remplace openVideoModal ── */
-  var _origOpenVideoModal = window.openVideoModal;
-  window.openVideoModal = function (src, pov, size) {
-    var intercepted = _interceptMediaOpen('video', src, pov);
-    if (intercepted) {
-      _openVideoModalDirect(src, pov || '');
-    } else {
-      if (typeof _origOpenVideoModal === 'function') _origOpenVideoModal(src, pov, size);
-    }
-  };
-
-  /* ── Remplace openImageModal ── */
-  var _origOpenImageModal = window.openImageModal;
-  window.openImageModal = function (srcs, pov, size) {
-    var firstSrc = Array.isArray(srcs) ? srcs[0] : srcs;
-    var intercepted = _interceptMediaOpen('image', firstSrc, pov);
-    if (intercepted) {
-      _openImageModalDirect(firstSrc, pov || '');
-    } else {
-      if (typeof _origOpenImageModal === 'function') _origOpenImageModal(srcs, pov, size);
-    }
-  };
-
-  /* ── Remplace closeVideoModal pour aussi cacher la galerie ── */
-  var _origCloseVideoModal = window.closeVideoModal;
-  window.closeVideoModal = function () {
-    _gallery.active = false;
-    _gallery.items  = [];
-    _gallery.idx    = 0;
-    _galShow(false);
-    if (typeof _origCloseVideoModal === 'function') _origCloseVideoModal();
-  };
-
-  /* ──────────────────────────────────────────────
-     NAVIGATION CLAVIER ← →
-  ────────────────────────────────────────────── */
-  document.addEventListener('keydown', function (e) {
-    /* Seulement si le modal vidéo est ouvert ET la galerie est active */
-    var videoOverlay = document.getElementById('videoModal');
-    if (!videoOverlay || !videoOverlay.classList.contains('open')) return;
-    if (!_gallery.active || _gallery.items.length < 2) return;
-
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      e.stopPropagation();
-      _galGo(_gallery.idx - 1);
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      e.stopPropagation();
-      _galGo(_gallery.idx + 1);
-    }
-  }, true); /* capture = true pour priorité */
-
-  /* ──────────────────────────────────────────────
-     INIT — crée les éléments UI au chargement
-  ────────────────────────────────────────────── */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      _createGalleryUI();
-      _galShow(false);
     });
-  } else {
-    _createGalleryUI();
-    _galShow(false);
+
+    if (_allItems.length === 0) _fillFromSubmodal(currentSubmodal);
+
+    _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
+    if (_idx < 0) _idx = 0;
   }
+
+  function _fillFromSubmodal(submodalEl) {
+    var mediaEls = Array.from(
+      submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
+    );
+    mediaEls.forEach(function (el) {
+      _allItems.push({ el: el, submodalId: submodalEl.id, submodalEl: submodalEl });
+    });
+  }
+
+  /* ── Écoute globale des clics sur les déclencheurs médias ── */
+  document.addEventListener('click', function (e) {
+    var trigger = e.target;
+    while (trigger && trigger !== document) {
+      var oc = trigger.getAttribute && trigger.getAttribute('onclick');
+      if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
+        if (trigger.closest('.submodal-overlay')) {
+          _buildAllItems(trigger);
+          setTimeout(function () {
+            _injectNav();
+            _updateNav();
+          }, 120);
+        }
+        break;
+      }
+      trigger = trigger.parentElement;
+    }
+  }, false);
+
+  /* ── Navigation prev / next ── */
+  window.mediaNavGo = function (dir) {
+    var next = _idx + dir;
+    if (next < 0 || next >= _allItems.length) return;
+    _idx = next;
+
+    var item       = _allItems[_idx];
+    var submodalEl = item.submodalEl;
+
+    if (submodalEl) {
+      var currentActive = document.querySelector('.submodal-overlay.active');
+      if (currentActive && currentActive !== submodalEl) {
+        currentActive.classList.remove('active');
+      }
+      if (!submodalEl.classList.contains('active')) {
+        submodalEl.classList.add('active');
+      }
+    }
+
+    var oc = item.el.getAttribute('onclick');
+    if (oc) {
+      try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
+    }
+
+    setTimeout(function () {
+      _injectNav();
+      _updateNav();
+    }, 100);
+  };
+
+  /* ── Navigation clavier ── */
+  document.addEventListener('keydown', function (e) {
+    var overlay = document.querySelector('.video-modal-overlay.open');
+    if (!overlay) return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      window.mediaNavGo(-1);
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      window.mediaNavGo(1);
+    }
+    if (e.key === 'Escape') {
+      var closeBtn = overlay.querySelector('.video-modal-close');
+      if (closeBtn) closeBtn.click();
+    }
+  }, false);
 
 })();
