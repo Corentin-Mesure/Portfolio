@@ -2373,3 +2373,100 @@ function toggleLightMode() { applyLightMode(!lightMode); }
 document.addEventListener('DOMContentLoaded', function () {
   if (lightMode) applyLightMode(true);
 });
+
+/* ════════════════════════════════════════════════════════
+   NAVIGATION MÉDIA — flèches prev / next dans le modal
+   À coller à la FIN de Script.js
+════════════════════════════════════════════════════════ */
+
+(function () {
+
+  var _items   = [];   // liste des éléments cliquables du submodal courant
+  var _idx     = 0;    // index courant
+  var _navEl   = null; // le bloc .vm-nav injecté dans le modal
+
+  /* ── Injection du bloc flèches dans .video-modal-wrap ── */
+  function _injectNav() {
+    var wrap = document.querySelector('.video-modal-wrap');
+    if (!wrap || wrap.querySelector('.vm-nav')) return;
+
+    _navEl = document.createElement('div');
+    _navEl.className = 'vm-nav';
+    _navEl.innerHTML =
+      '<button class="vm-nav-btn vm-prev" onclick="mediaNavGo(-1)">&#x2039;</button>' +
+      '<span class="vm-nav-counter"></span>' +
+      '<button class="vm-nav-btn vm-next" onclick="mediaNavGo(1)">&#x203A;</button>';
+    wrap.appendChild(_navEl);
+  }
+
+  /* ── Mise à jour visuelle des flèches ── */
+  function _updateNav() {
+    if (!_navEl) return;
+    var total   = _items.length;
+    var counter = _navEl.querySelector('.vm-nav-counter');
+    var btnPrev = _navEl.querySelector('.vm-prev');
+    var btnNext = _navEl.querySelector('.vm-next');
+
+    if (total <= 1) {
+      _navEl.style.display = 'none';
+      return;
+    }
+
+    _navEl.style.display   = 'flex';
+    counter.textContent    = (_idx + 1) + ' / ' + total;
+    btnPrev.disabled       = (_idx === 0);
+    btnNext.disabled       = (_idx === total - 1);
+  }
+
+  /* ── Collecte des médias dans le submodal parent ── */
+  function _buildList(triggerEl) {
+    var submodal = triggerEl.closest('.submodal-overlay');
+    if (!submodal) { _items = []; return; }
+
+    // Tous les éléments avec onclick openVideoModal ou openImageModal
+    _items = Array.from(
+      submodal.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
+    );
+    _idx = _items.indexOf(triggerEl);
+    if (_idx < 0) _idx = 0;
+  }
+
+  /* ── Écoute globale des clics sur les déclencheurs médias ── */
+  document.addEventListener('click', function (e) {
+    // Remonter jusqu'au premier ancêtre avec un onclick média
+    var trigger = e.target;
+    while (trigger && trigger !== document) {
+      var oc = trigger.getAttribute && trigger.getAttribute('onclick');
+      if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
+        // Vérifier qu'on est bien dans un submodal (pas ailleurs)
+        if (trigger.closest('.submodal-overlay')) {
+          _buildList(trigger);
+          // Laisser le temps au modal de s'ouvrir avant de mettre à jour
+          setTimeout(function () {
+            _injectNav();
+            _updateNav();
+          }, 120);
+        }
+        break;
+      }
+      trigger = trigger.parentElement;
+    }
+  }, false);
+
+  /* ── Navigation prev / next (appelée par les boutons) ── */
+  window.mediaNavGo = function (dir) {
+    var next = _idx + dir;
+    if (next < 0 || next >= _items.length) return;
+    _idx = next;
+
+    var el = _items[_idx];
+    var oc = el.getAttribute('onclick');
+    if (oc) {
+      try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
+    }
+
+    // Petit délai pour laisser le modal se recharger (gif/image)
+    setTimeout(_updateNav, 80);
+  };
+
+})();
