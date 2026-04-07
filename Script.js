@@ -2377,12 +2377,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* ════════════════════════════════════════════════════════
    NAVIGATION MÉDIA — flèches prev / next dans le modal
-   v2 : navigation inter-submodals (toutes les étapes)
+   v3 : sticky overlay + navigation clavier
 ════════════════════════════════════════════════════════ */
 
 (function () {
 
-  var _allItems = [];  // [{el, submodalId, submodalEl}, ...]
+  var _allItems = [];
   var _idx      = 0;
   var _navEl    = null;
 
@@ -2391,16 +2391,19 @@ document.addEventListener('DOMContentLoaded', function () {
     var wrap = document.querySelector('.video-modal-wrap');
     if (!wrap) return;
 
-    // Si le précédent navEl a été supprimé du DOM (après closeVideoModal), on le recréé
     if (_navEl && !document.body.contains(_navEl)) _navEl = null;
     if (_navEl && wrap.contains(_navEl)) return;
 
     _navEl = document.createElement('div');
     _navEl.className = 'vm-nav';
     _navEl.innerHTML =
-      '<button class="vm-nav-btn vm-prev" onclick="mediaNavGo(-1)">&#x2039;</button>' +
+      '<button class="vm-nav-btn vm-prev" aria-label="Précédent">&#x2039;</button>' +
       '<span class="vm-nav-counter"></span>' +
-      '<button class="vm-nav-btn vm-next" onclick="mediaNavGo(1)">&#x203A;</button>';
+      '<button class="vm-nav-btn vm-next" aria-label="Suivant">&#x203A;</button>';
+
+    _navEl.querySelector('.vm-prev').addEventListener('click', function () { window.mediaNavGo(-1); });
+    _navEl.querySelector('.vm-next').addEventListener('click', function () { window.mediaNavGo(1); });
+
     wrap.appendChild(_navEl);
   }
 
@@ -2431,18 +2434,15 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // Cherche le modal parent actif (modal-overlay.active)
     var activeModal = document.querySelector('.modal-overlay.active');
 
     if (!activeModal) {
-      // Fallback : uniquement le submodal courant
       _fillFromSubmodal(currentSubmodal);
       _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
       if (_idx < 0) _idx = 0;
       return;
     }
 
-    // Parcourt tous les boutons de features qui ouvrent un submodal
     var featureBtns = Array.from(
       activeModal.querySelectorAll('[onclick*="openSubModal"]')
     );
@@ -2463,7 +2463,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    // Si aucun résultat (structure différente), fallback sur le submodal courant
     if (_allItems.length === 0) _fillFromSubmodal(currentSubmodal);
 
     _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
@@ -2507,7 +2506,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var item       = _allItems[_idx];
     var submodalEl = item.submodalEl;
 
-    // Change de submodal si nécessaire
     if (submodalEl) {
       var currentActive = document.querySelector('.submodal-overlay.active');
       if (currentActive && currentActive !== submodalEl) {
@@ -2518,16 +2516,34 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // Déclenche le média
     var oc = item.el.getAttribute('onclick');
     if (oc) {
       try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
     }
 
     setTimeout(function () {
-      _injectNav();   // recrée le nav si le modal a été reconstruit
+      _injectNav();
       _updateNav();
     }, 100);
   };
+
+  /* ── Navigation clavier ── */
+  document.addEventListener('keydown', function (e) {
+    var overlay = document.querySelector('.video-modal-overlay.open');
+    if (!overlay) return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      window.mediaNavGo(-1);
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      window.mediaNavGo(1);
+    }
+    if (e.key === 'Escape') {
+      var closeBtn = overlay.querySelector('.video-modal-close');
+      if (closeBtn) closeBtn.click();
+    }
+  }, false);
 
 })();
