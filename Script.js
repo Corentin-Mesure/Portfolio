@@ -2375,578 +2375,683 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ════════════════════════════════════════════════════════
-   NAVIGATION PAR FLÈCHES — CARDS PROJETS & MODALS
-   À coller à la fin de Script.js
-
+   GALERIE MÉDIA — Navigation entre images/vidéos
+   dans les sous-modals et cards projets
+   
+   À AJOUTER à la fin de Script.js
+   
    FONCTIONNEMENT :
-   1. Chaque .project-card reçoit des flèches ◀ ▶ pour
-      naviguer entre les sous-étapes/images de ses
-      project-features (fonctionnalités modal).
-   2. Dans les modals ouverts : ← → navigue entre les
-      modal-feature-btn (fonctionnalités de la modal).
-   3. Dans les sous-modals : ← → navigue entre les
-      submodal-step (étapes numérotées).
-   4. Un hint clavier apparaît à l'ouverture de chaque
-      modal/sous-modal.
+   - Quand tu ouvres un sous-modal, toutes les étapes
+     qui ont des images/vidéos sont collectées en une
+     liste de médias.
+   - Le videoModal devient une galerie avec :
+     · Flèches ◀ ▶ à gauche/droite de l'image
+     · Navigation clavier ← → quand le modal est ouvert
+     · Compteur "2 / 7" en bas
+     · Le titre de l'étape source s'affiche
 ════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
-  /* ──────────────────────────────────────────────
-     ÉTAT GLOBAL DE NAVIGATION
-  ────────────────────────────────────────────── */
-  var _nav = {
-    modal: {
-      id: null,           /* ID de la modal ouverte ex: 'animaland' */
-      items: [],          /* liste des .modal-feature-btn */
-      idx: 0
-    },
-    submodal: {
-      id: null,           /* ID du sous-modal ouvert */
-      items: [],          /* liste des .submodal-step */
-      idx: 0
-    }
+  /* ── État de la galerie ── */
+  var _gallery = {
+    items: [],      /* [{type:'image'|'video', src, label}, ...] */
+    idx: 0,
+    active: false
   };
 
-  /* ──────────────────────────────────────────────
-     HINT CLAVIER
-  ────────────────────────────────────────────── */
-  function _ensureHint() {
-    if (document.getElementById('kbdHint')) return;
-    var el = document.createElement('div');
-    el.id = 'kbdHint';
-    el.innerHTML =
-      '<kbd>←</kbd> <kbd>→</kbd> Naviguer' +
-      '<span style="margin:0 6px;opacity:.4;">|</span>' +
-      '<kbd>Enter</kbd> Ouvrir' +
-      '<span style="margin:0 6px;opacity:.4;">|</span>' +
-      '<kbd>Esc</kbd> Fermer';
-    document.body.appendChild(el);
+  /* ── CSS injecté une fois ── */
+  function _injectGalleryCSS() {
+    if (document.getElementById('_galCSS')) return;
+    var s = document.createElement('style');
+    s.id = '_galCSS';
+    s.textContent = [
+      /* Flèches sur le côté du modal vidéo */
+      '#_galPrev, #_galNext {',
+      '  position: fixed;',
+      '  top: 50%;',
+      '  transform: translateY(-50%);',
+      '  z-index: 9999998;',
+      '  width: 52px;',
+      '  height: 52px;',
+      '  background: rgba(0,0,0,0.65);',
+      '  border: 1px solid rgba(200,160,60,0.5);',
+      '  color: #f0c84a;',
+      '  font-size: 22px;',
+      '  border-radius: 50%;',
+      '  cursor: pointer;',
+      '  display: none;',
+      '  align-items: center;',
+      '  justify-content: center;',
+      '  transition: background 0.15s, transform 0.15s;',
+      '  backdrop-filter: blur(8px);',
+      '  pointer-events: auto;',
+      '}',
+      '#_galPrev { left: 16px; }',
+      '#_galNext { right: 16px; }',
+      '#_galPrev:hover, #_galNext:hover {',
+      '  background: rgba(200,160,60,0.25);',
+      '  transform: translateY(-50%) scale(1.1);',
+      '}',
+      '#_galPrev:disabled, #_galNext:disabled {',
+      '  opacity: 0.2;',
+      '  cursor: default;',
+      '  pointer-events: none;',
+      '}',
+      /* Compteur en bas */
+      '#_galCounter {',
+      '  position: fixed;',
+      '  bottom: 90px;',
+      '  left: 50%;',
+      '  transform: translateX(-50%);',
+      '  z-index: 9999998;',
+      '  display: none;',
+      '  align-items: center;',
+      '  gap: 10px;',
+      '  background: rgba(0,0,0,0.7);',
+      '  border: 1px solid rgba(200,160,60,0.35);',
+      '  border-radius: 20px;',
+      '  padding: 6px 18px;',
+      '  pointer-events: none;',
+      '}',
+      '#_galCounter .gal-pos {',
+      '  font-family: Cinzel, serif;',
+      '  font-size: 12px;',
+      '  letter-spacing: 3px;',
+      '  color: #f0c84a;',
+      '}',
+      '#_galCounter .gal-label {',
+      '  font-family: Cinzel, serif;',
+      '  font-size: 10px;',
+      '  letter-spacing: 1.5px;',
+      '  color: rgba(255,255,255,0.55);',
+      '  max-width: 200px;',
+      '  overflow: hidden;',
+      '  text-overflow: ellipsis;',
+      '  white-space: nowrap;',
+      '}',
+      /* Dots de navigation */
+      '#_galDots {',
+      '  position: fixed;',
+      '  bottom: 68px;',
+      '  left: 50%;',
+      '  transform: translateX(-50%);',
+      '  z-index: 9999998;',
+      '  display: none;',
+      '  gap: 6px;',
+      '  flex-wrap: wrap;',
+      '  justify-content: center;',
+      '  max-width: 80vw;',
+      '  pointer-events: none;',
+      '}',
+      '#_galDots .gd {',
+      '  width: 7px;',
+      '  height: 7px;',
+      '  border-radius: 50%;',
+      '  background: rgba(200,160,60,0.25);',
+      '  border: 1px solid rgba(200,160,60,0.3);',
+      '  cursor: pointer;',
+      '  pointer-events: auto;',
+      '  flex-shrink: 0;',
+      '  transition: all 0.2s;',
+      '}',
+      '#_galDots .gd.on {',
+      '  background: #f0c84a;',
+      '  box-shadow: 0 0 8px rgba(240,200,74,0.8);',
+      '  transform: scale(1.35);',
+      '}',
+      /* Bouton "ouvrir dans galerie" sur les étapes has-video */
+      '.step-gal-hint {',
+      '  display: inline-flex;',
+      '  align-items: center;',
+      '  gap: 4px;',
+      '  margin-left: 6px;',
+      '  font-size: 10px;',
+      '  color: rgba(200,160,60,0.7);',
+      '  font-style: italic;',
+      '  vertical-align: middle;',
+      '}',
+    ].join('\n');
+    document.head.appendChild(s);
   }
 
-  var _hintTimer = null;
-  function _showHint() {
-    _ensureHint();
-    var el = document.getElementById('kbdHint');
-    if (!el) return;
-    el.classList.add('visible');
-    clearTimeout(_hintTimer);
-    _hintTimer = setTimeout(function () {
-      el.classList.remove('visible');
-    }, 3500);
-  }
+  /* ── Crée les éléments flèches/compteur dans le DOM ── */
+  function _createGalleryUI() {
+    _injectGalleryCSS();
+    if (document.getElementById('_galPrev')) return;
 
-  /* ──────────────────────────────────────────────
-     NAVIGATION DANS LES SOUS-MODALS (étapes)
-  ────────────────────────────────────────────── */
-  function _getActiveSubmodal() {
-    var all = document.querySelectorAll('.submodal-overlay.active');
-    if (!all.length) return null;
-    /* Prendre le dernier (le plus haut dans le z-index) */
-    return all[all.length - 1];
-  }
+    var prev = document.createElement('button');
+    prev.id = '_galPrev';
+    prev.innerHTML = '&#x2039;';
+    prev.title = 'Précédent (←)';
+    prev.onclick = function () { _galGo(_gallery.idx - 1); };
+    document.body.appendChild(prev);
 
-  function _initSubmodalNav(overlay) {
-    if (!overlay) return;
-    var id = overlay.id;
-    var steps = Array.from(overlay.querySelectorAll('.submodal-step'));
-    if (!steps.length) return;
-
-    _nav.submodal.id = id;
-    _nav.submodal.items = steps;
-    _nav.submodal.idx = 0;
-
-    /* Injecter la barre de navigation si elle n'existe pas */
-    var body = overlay.querySelector('.submodal-body');
-    if (!body) return;
-
-    var existing = overlay.querySelector('.submodal-step-nav');
-    if (existing) existing.remove();
-
-    if (steps.length < 2) return; /* Pas de nav si 1 seule étape */
-
-    var nav = document.createElement('div');
-    nav.className = 'submodal-step-nav';
-    nav.setAttribute('data-subid', id);
-
-    var btnPrev = document.createElement('button');
-    btnPrev.className = 'sub-nav-btn';
-    btnPrev.innerHTML = '&#x2190; Préc.';
-    btnPrev.disabled = true;
-    btnPrev.setAttribute('data-dir', 'prev');
+    var next = document.createElement('button');
+    next.id = '_galNext';
+    next.innerHTML = '&#x203A;';
+    next.title = 'Suivant (→)';
+    next.onclick = function () { _galGo(_gallery.idx + 1); };
+    document.body.appendChild(next);
 
     var counter = document.createElement('div');
-    counter.className = 'sub-nav-counter';
-    counter.textContent = '1 / ' + steps.length;
+    counter.id = '_galCounter';
+    counter.innerHTML = '<span class="gal-pos">1 / 1</span><span class="gal-label"></span>';
+    document.body.appendChild(counter);
 
-    var btnNext = document.createElement('button');
-    btnNext.className = 'sub-nav-btn';
-    btnNext.innerHTML = 'Suiv. &#x2192;';
-    btnNext.setAttribute('data-dir', 'next');
-
-    btnPrev.onclick = function () { _submodalNavGo(_nav.submodal.idx - 1); };
-    btnNext.onclick = function () { _submodalNavGo(_nav.submodal.idx + 1); };
-
-    nav.appendChild(btnPrev);
-    nav.appendChild(counter);
-    nav.appendChild(btnNext);
-    body.appendChild(nav);
-
-    _submodalNavGo(0, true); /* init silencieux */
+    var dots = document.createElement('div');
+    dots.id = '_galDots';
+    document.body.appendChild(dots);
   }
 
-  function _submodalNavGo(idx, silent) {
-    var items = _nav.submodal.items;
-    if (!items.length) return;
-    idx = Math.max(0, Math.min(items.length - 1, idx));
-    _nav.submodal.idx = idx;
-
-    /* Highlight */
-    items.forEach(function (s, i) {
-      s.classList.toggle('nav-focus', i === idx);
+  /* ── Affiche/cache les contrôles galerie ── */
+  function _galShow(visible) {
+    ['_galPrev','_galNext','_galCounter','_galDots'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = visible ? 'flex' : 'none';
     });
+  }
 
-    /* Scroll vers l'étape */
-    var target = items[idx];
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  /* ── Met à jour l'état des boutons ── */
+  function _galUpdateUI() {
+    var items = _gallery.items;
+    var idx   = _gallery.idx;
+
+    var prev = document.getElementById('_galPrev');
+    var next = document.getElementById('_galNext');
+    if (prev) prev.disabled = (idx === 0);
+    if (next) next.disabled = (idx === items.length - 1);
+
+    var counter = document.getElementById('_galCounter');
+    if (counter) {
+      counter.querySelector('.gal-pos').textContent = (idx + 1) + ' / ' + items.length;
+      var lbl = items[idx] ? (items[idx].label || '') : '';
+      counter.querySelector('.gal-label').textContent = lbl;
     }
 
-    /* Update UI */
-    var overlay = _getActiveSubmodal();
-    if (!overlay) return;
-    var nav = overlay.querySelector('.submodal-step-nav');
-    if (!nav) return;
-
-    var counter = nav.querySelector('.sub-nav-counter');
-    if (counter) counter.textContent = (idx + 1) + ' / ' + items.length;
-
-    var btnPrev = nav.querySelector('[data-dir="prev"]');
-    var btnNext = nav.querySelector('[data-dir="next"]');
-    if (btnPrev) btnPrev.disabled = (idx === 0);
-    if (btnNext) btnNext.disabled = (idx === items.length - 1);
-
-    if (!silent) _showHint();
+    /* Dots */
+    var dotsWrap = document.getElementById('_galDots');
+    if (dotsWrap) {
+      dotsWrap.innerHTML = '';
+      /* Max 15 dots sinon trop chargé */
+      if (items.length > 1 && items.length <= 15) {
+        items.forEach(function (item, i) {
+          var d = document.createElement('div');
+          d.className = 'gd' + (i === idx ? ' on' : '');
+          d.title = item.label || '';
+          d.onclick = (function (ci) {
+            return function () { _galGo(ci); };
+          })(i);
+          dotsWrap.appendChild(d);
+        });
+        dotsWrap.style.display = 'flex';
+      } else {
+        dotsWrap.style.display = 'none';
+      }
+    }
   }
 
-  /* ──────────────────────────────────────────────
-     NAVIGATION DANS LES MODALS (features / boutons)
-  ────────────────────────────────────────────── */
-  function _getActiveModal() {
-    var all = document.querySelectorAll('.modal-overlay.active');
-    if (!all.length) return null;
-    return all[all.length - 1];
+  /* ── Navigue vers l'item idx ── */
+  function _galGo(idx) {
+    var items = _gallery.items;
+    if (!items.length) return;
+    idx = Math.max(0, Math.min(items.length - 1, idx));
+    _gallery.idx = idx;
+
+    var item = items[idx];
+    if (!item) return;
+
+    /* Ouvre le bon type de média */
+    if (item.type === 'video') {
+      /* Appel direct à openVideoModal sans reconstruire la galerie */
+      _openVideoModalDirect(item.src, item.label || '');
+    } else {
+      _openImageModalDirect(item.src, item.label || '');
+    }
   }
 
-  function _initModalNav(overlay) {
-    if (!overlay) return;
-    var id = overlay.id.replace('modal-', '');
-    var btns = Array.from(overlay.querySelectorAll('.modal-feature-btn'));
-    if (!btns.length) return;
+  /* ── Ouvre une image sans reconstruire la galerie ── */
+  function _openImageModalDirect(src, pov) {
+    var overlay = document.getElementById('videoModal');
+    var badge   = document.getElementById('videoModalPov');
+    var errDiv  = document.getElementById('videoModalErr');
+    var inner   = document.querySelector('.video-modal-inner');
+    var bar     = document.querySelector('.video-modal-bar');
+    var wrap    = document.querySelector('.video-modal-wrap');
 
-    _nav.modal.id = id;
-    _nav.modal.items = btns;
-    _nav.modal.idx = 0;
+    if (!overlay || !inner) return;
 
-    /* Injecter la barre sticky en bas de modal */
-    var existing = overlay.querySelector('.modal-global-nav');
+    /* Nettoyer le contenu précédent */
+    inner.querySelectorAll('#videoModalMedia, .static-screen-img, #gifLoader').forEach(function (el) { el.remove(); });
+    if (typeof _gifReset === 'function') _gifReset();
+    if (typeof _revokeBlobs === 'function') _revokeBlobs();
+
+    /* Masquer les anciens boutons */
+    overlay.querySelectorAll('button').forEach(function (b) {
+      if (b.id === '_imgModalClose' || b.id === '_galPrev' || b.id === '_galNext') return;
+      b.dataset.hiddenByImg = '1';
+      b.style.display = 'none';
+    });
+
+    if (badge) { badge.innerHTML = pov || ''; badge.style.cssText = pov ? '' : 'display:none;'; }
+    if (errDiv) errDiv.style.display = 'none';
+
+    /* Barre zoom */
+    if (bar) {
+      bar.innerHTML = '';
+      bar.style.pointerEvents = 'auto';
+      bar.style.position      = 'relative';
+      bar.style.zIndex        = '10';
+      bar.style.visibility    = '';
+      if (typeof _buildZoomBar === 'function') _buildZoomBar(bar);
+    }
+
+    if (wrap) {
+      wrap.style.cssText =
+        'background:transparent;box-shadow:none;border:none;padding:0;' +
+        'max-width:98vw;width:98vw;pointer-events:none;';
+    }
+
+    inner.style.cssText =
+      'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+      'background:transparent;box-shadow:none;border:none;padding:0;' +
+      'overflow:visible;pointer-events:none;width:100%;';
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'static-screen-img';
+    wrapper.style.cssText =
+      'display:flex;flex-direction:column;align-items:center;gap:0;pointer-events:auto;width:100%;';
+
+    var imgWrap = document.createElement('div');
+    imgWrap.style.cssText =
+      'overflow:hidden;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,0.9);' +
+      'cursor:grab;touch-action:none;position:relative;width:100%;';
+
+    var availH = window.innerHeight - 70;
+    var img = document.createElement('img');
+    img.style.cssText =
+      'display:block;width:100%;height:auto;max-height:' + availH + 'px;' +
+      'object-fit:contain;transform-origin:0 0;user-select:none;-webkit-user-drag:none;';
+    img.onerror = function () { img.style.display = 'none'; };
+    img.src = src;
+
+    if (typeof _zoomAttach === 'function') _zoomAttach(imgWrap, img);
+    imgWrap.appendChild(img);
+    wrapper.appendChild(imgWrap);
+    inner.appendChild(wrapper);
+
+    /* Bouton fermer */
+    var existing = document.getElementById('_imgModalClose');
     if (existing) existing.remove();
-
-    var modalEl = overlay.querySelector('.modal');
-    if (!modalEl) return;
-
-    var nav = document.createElement('div');
-    nav.className = 'modal-global-nav';
-
-    var btnPrev = document.createElement('button');
-    btnPrev.className = 'modal-nav-btn';
-    btnPrev.innerHTML = '&#x2190; Préc.';
-    btnPrev.disabled = true;
-    btnPrev.setAttribute('data-dir', 'prev');
-
-    var info = document.createElement('div');
-    info.className = 'modal-nav-info';
-    var label = document.createElement('div');
-    label.className = 'modal-nav-label';
-    var pos = document.createElement('div');
-    pos.className = 'modal-nav-pos';
-    info.appendChild(label);
-    info.appendChild(pos);
-
-    var btnNext = document.createElement('button');
-    btnNext.className = 'modal-nav-btn';
-    btnNext.innerHTML = 'Suiv. &#x2192;';
-    btnNext.setAttribute('data-dir', 'next');
-
-    btnPrev.onclick = function (e) { e.stopPropagation(); _modalNavGo(_nav.modal.idx - 1); };
-    btnNext.onclick = function (e) { e.stopPropagation(); _modalNavGo(_nav.modal.idx + 1); };
-
-    nav.appendChild(btnPrev);
-    nav.appendChild(info);
-    nav.appendChild(btnNext);
-
-    /* Bouton "Ouvrir la fonctionnalité" */
-    var btnOpen = document.createElement('button');
-    btnOpen.className = 'modal-nav-btn';
-    btnOpen.innerHTML = '&#x21B5; Ouvrir';
-    btnOpen.onclick = function (e) {
+    var closeBtn = document.createElement('button');
+    closeBtn.id = '_imgModalClose';
+    closeBtn.innerHTML = '&#x2715;';
+    closeBtn.style.cssText =
+      'position:fixed;top:18px;right:22px;z-index:10001;width:42px;height:42px;' +
+      'background:rgba(0,0,0,0.65);border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
+      'font-size:18px;border-radius:8px;cursor:pointer;' +
+      'display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);' +
+      'transition:background .15s,transform .1s;pointer-events:auto;';
+    closeBtn.onclick = function (e) {
       e.stopPropagation();
-      var cur = _nav.modal.items[_nav.modal.idx];
-      if (cur) cur.click();
+      _galClose();
     };
-    nav.appendChild(btnOpen);
+    document.body.appendChild(closeBtn);
 
-    modalEl.appendChild(nav);
-
-    _modalNavGo(0, true);
-    _showHint();
+    if (!overlay.classList.contains('open')) overlay.classList.add('open');
+    _galUpdateUI();
+    _galShow(true);
   }
 
-  function _modalNavGo(idx, silent) {
-    var items = _nav.modal.items;
-    if (!items.length) return;
-    idx = Math.max(0, Math.min(items.length - 1, idx));
-    _nav.modal.idx = idx;
+  /* ── Ouvre une vidéo/gif sans reconstruire la galerie ── */
+  function _openVideoModalDirect(src, pov) {
+    var overlay = document.getElementById('videoModal');
+    var badge   = document.getElementById('videoModalPov');
+    var errDiv  = document.getElementById('videoModalErr');
+    var inner   = document.querySelector('.video-modal-inner');
+    var bar     = document.querySelector('.video-modal-bar');
+    var wrap    = document.querySelector('.video-modal-wrap');
 
-    /* Highlight */
-    items.forEach(function (b, i) {
-      b.style.background    = (i === idx) ? 'rgba(240,200,74,0.12)' : '';
-      b.style.borderColor   = (i === idx) ? 'rgba(240,200,74,0.5)' : '';
-      b.style.transform     = (i === idx) ? 'translateX(6px)' : '';
-    });
+    if (!overlay || !inner) return;
 
-    /* Scroll vers le bouton */
-    var target = items[idx];
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (typeof _gifReset === 'function') _gifReset();
+    if (typeof _revokeBlobs === 'function') _revokeBlobs();
+
+    inner.querySelectorAll('#videoModalMedia, #videoModalMedia-next, canvas, .static-screen-img, #gifLoader').forEach(function (el) { el.remove(); });
+
+    if (wrap) { wrap.style.cssText = ''; }
+    if (bar)  { bar.innerHTML = ''; bar.style.visibility = 'hidden'; bar.style.pointerEvents = 'auto'; }
+
+    if (badge) badge.innerHTML = pov || '';
+    if (errDiv) errDiv.style.display = 'none';
+
+    var safeSrc = src.split('').map(function (c) {
+      return c.charCodeAt(0) > 127 ? encodeURIComponent(c) : c;
+    }).join('');
+    var ext = safeSrc.split('?')[0].split('.').pop().toLowerCase();
+
+    /* Bouton fermer */
+    var existing = document.getElementById('_imgModalClose');
+    if (existing) existing.remove();
+    var closeBtn = document.createElement('button');
+    closeBtn.id = '_imgModalClose';
+    closeBtn.innerHTML = '&#x2715;';
+    closeBtn.style.cssText =
+      'position:fixed;top:18px;right:22px;z-index:10001;width:42px;height:42px;' +
+      'background:rgba(0,0,0,0.65);border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
+      'font-size:18px;border-radius:8px;cursor:pointer;' +
+      'display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);' +
+      'transition:background .15s,transform .1s;pointer-events:auto;';
+    closeBtn.onclick = function (e) { e.stopPropagation(); _galClose(); };
+    document.body.appendChild(closeBtn);
+
+    if (ext === 'gif') {
+      /* Utiliser le système GIF existant */
+      if (typeof _currentSrc !== 'undefined') {
+        window._currentSrc = src;
+        window._modalOpen  = true;
+      }
+
+      /* Mobile : affichage direct */
+      if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
+        var imgM = document.createElement('img');
+        imgM.id = 'videoModalMedia';
+        imgM.style.cssText = 'display:block;width:100%;border-radius:18px;';
+        imgM.src = safeSrc;
+        inner.insertBefore(imgM, inner.firstChild);
+      } else {
+        /* Desktop : panel vitesse + fetch */
+        if (typeof _buildPanel === 'function') _buildPanel(src);
+        var absSrc = (function (s) {
+          if (s.match(/^(https?:|data:|blob:)/)) return s;
+          var a = document.createElement('a'); a.href = s; return a.href;
+        })(safeSrc);
+
+        var cache = (typeof _gifCache !== 'undefined') ? _gifCache : {};
+        if (cache[src]) {
+          var url = (typeof _makeBlobUrl === 'function') ? _makeBlobUrl(cache[src], 1) : src;
+          var imgG = document.createElement('img');
+          imgG.id = 'videoModalMedia';
+          imgG.style.cssText = 'display:block;width:100%;border-radius:18px;';
+          imgG.src = url;
+          inner.insertBefore(imgG, inner.firstChild);
+        } else {
+          var loader = document.createElement('div');
+          loader.id = 'gifLoader';
+          loader.style.cssText =
+            'color:rgba(200,160,60,0.6);font-family:Cinzel,serif;font-size:11px;' +
+            'letter-spacing:3px;text-align:center;padding:48px 0;width:100%;';
+          loader.textContent = 'Chargement…';
+          inner.insertBefore(loader, inner.firstChild);
+
+          fetch(absSrc)
+            .then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+            .then(function (buf) {
+              var l = inner.querySelector('#gifLoader');
+              if (l) l.remove();
+              if (typeof _gifCache !== 'undefined') _gifCache[src] = buf;
+              var blobUrl = (typeof _makeBlobUrl === 'function') ? _makeBlobUrl(buf, 1) : src;
+              var ig = document.createElement('img');
+              ig.id = 'videoModalMedia';
+              ig.style.cssText = 'display:block;width:100%;border-radius:18px;';
+              ig.src = blobUrl;
+              inner.insertBefore(ig, inner.firstChild);
+            })
+            .catch(function () {
+              var l = inner.querySelector('#gifLoader');
+              if (l) l.remove();
+              var ig = document.createElement('img');
+              ig.id = 'videoModalMedia';
+              ig.style.cssText = 'display:block;width:100%;border-radius:18px;';
+              ig.src = safeSrc;
+              inner.insertBefore(ig, inner.firstChild);
+            });
+        }
+      }
+    } else {
+      /* MP4 / WEBM */
+      var video = document.createElement('video');
+      video.id = 'videoModalMedia';
+      video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
+      video.style.cssText = 'display:block;width:100%;min-height:100px;';
+      var source = document.createElement('source');
+      source.src = safeSrc;
+      source.type = 'video/' + (ext === 'webm' ? 'webm' : 'mp4');
+      video.appendChild(source);
+      inner.insertBefore(video, inner.firstChild);
     }
 
-    /* Update barre */
-    var overlay = _getActiveModal();
-    if (!overlay) return;
-    var nav = overlay.querySelector('.modal-global-nav');
-    if (!nav) return;
+    if (!overlay.classList.contains('open')) overlay.classList.add('open');
+    _galUpdateUI();
+    _galShow(true);
+  }
 
-    var label = nav.querySelector('.modal-nav-label');
-    var posEl = nav.querySelector('.modal-nav-pos');
-    var btnPrev = nav.querySelector('[data-dir="prev"]');
-    var btnNext = nav.querySelector('[data-dir="next"]');
-
-    if (btnPrev) btnPrev.disabled = (idx === 0);
-    if (btnNext) btnNext.disabled = (idx === items.length - 1);
-
-    if (label && target) {
-      var featTitle = target.querySelector('.feat-title');
-      label.textContent = featTitle ? featTitle.textContent.replace(/[^\w\s'àâéèêëîïôùûüç&]/gi, '').trim() : '';
-    }
-    if (posEl) posEl.textContent = (idx + 1) + ' / ' + items.length;
-
-    if (!silent) _showHint();
+  /* ── Ferme la galerie ── */
+  function _galClose() {
+    _gallery.active = false;
+    _gallery.items  = [];
+    _gallery.idx    = 0;
+    _galShow(false);
+    if (typeof closeVideoModal === 'function') closeVideoModal();
   }
 
   /* ──────────────────────────────────────────────
-     NAVIGATION DANS LES CARDS (images des visuals)
+     COLLECTE DES MÉDIAS dans un sous-modal
   ────────────────────────────────────────────── */
-  function _buildCardNavigation() {
-    /* Pour chaque project-card avec un project-visual contenant une image */
-    var cards = document.querySelectorAll('.project-card');
-    cards.forEach(function (card) {
-      if (card.dataset.navBuilt) return;
-      card.dataset.navBuilt = '1';
+  function _collectMediaFromSubmodal(submodalEl) {
+    var items = [];
+    if (!submodalEl) return items;
 
-      var vis = card.querySelector('.project-visual, .ap-project-visual');
-      if (!vis) return;
+    /* Chercher tous les éléments cliquables qui ouvrent un média */
+    submodalEl.querySelectorAll('[onclick]').forEach(function (el) {
+      var onclick = el.getAttribute('onclick') || '';
 
-      /* Chercher toutes les images navigables dans la card */
-      /* On récupère aussi le btn openModal pour lister les features */
-      var btn = card.querySelector('.project-btn');
-      if (!btn) return;
-
-      /* Récupérer l'id modal depuis onclick */
-      var onclk = btn.getAttribute('onclick') || '';
-      var match = onclk.match(/openModal\(['"]([^'"]+)['"]\)/);
-      if (!match) return;
-      var modalId = match[1];
-
-      /* Récupérer les features de la modal correspondante */
-      var modalEl = document.getElementById('modal-' + modalId);
-      if (!modalEl) return;
-
-      var featureBtns = Array.from(modalEl.querySelectorAll('.modal-feature-btn'));
-      if (!featureBtns.length) return;
-
-      /* Ne pas ajouter si une seule feature */
-      if (featureBtns.length < 2) return;
-
-      /* Construire la barre de nav dans la card */
-      var body = card.querySelector('.project-body');
-      if (!body) return;
-
-      var existing = body.querySelector('.card-nav');
-      if (existing) existing.remove();
-
-      var navWrap = document.createElement('div');
-      navWrap.className = 'card-nav';
-
-      /* Dots */
-      var dotsWrap = document.createElement('div');
-      dotsWrap.className = 'card-nav-dots';
-
-      /* Flèches */
-      var arrows = document.createElement('div');
-      arrows.className = 'card-nav-arrows';
-
-      var btnPrev = document.createElement('button');
-      btnPrev.className = 'card-nav-btn';
-      btnPrev.innerHTML = '&#x25C4;';
-      btnPrev.title = 'Fonctionnalité précédente';
-      btnPrev.disabled = true;
-
-      var counter = document.createElement('div');
-      counter.className = 'card-nav-counter';
-      counter.textContent = '1 / ' + featureBtns.length;
-
-      var btnNext = document.createElement('button');
-      btnNext.className = 'card-nav-btn';
-      btnNext.innerHTML = '&#x25BA;';
-      btnNext.title = 'Fonctionnalité suivante';
-
-      /* Créer les dots */
-      var maxDots = Math.min(featureBtns.length, 10);
-      for (var d = 0; d < maxDots; d++) {
-        (function (dotIdx) {
-          var dot = document.createElement('div');
-          dot.className = 'card-nav-dot' + (dotIdx === 0 ? ' active' : '');
-          dot.title = (featureBtns[dotIdx].querySelector('.feat-title') || {}).textContent || '';
-          dot.onclick = function () { goCard(dotIdx); };
-          dotsWrap.appendChild(dot);
-        })(d);
+      /* openVideoModal('videos/xxx.gif', 'Label') */
+      var mV = onclick.match(/openVideoModal\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]/);
+      if (mV) {
+        items.push({
+          type: 'video',
+          src:  mV[1],
+          label: (mV[2] || '').replace(/&#x[0-9A-F]+;/gi, '').replace(/&[a-z]+;/gi, '').trim()
+        });
+        return;
       }
 
-      var currentIdx = 0;
-
-      function goCard(idx) {
-        idx = Math.max(0, Math.min(featureBtns.length - 1, idx));
-        currentIdx = idx;
-
-        /* Update counter */
-        counter.textContent = (idx + 1) + ' / ' + featureBtns.length;
-
-        /* Update dots */
-        var dots = dotsWrap.querySelectorAll('.card-nav-dot');
-        dots.forEach(function (dot, i) { dot.classList.toggle('active', i === idx); });
-
-        /* Update btns */
-        btnPrev.disabled = (idx === 0);
-        btnNext.disabled = (idx === featureBtns.length - 1);
-
-        /* Mise en évidence de la feature dans la card :
-           Afficher le titre et preview de la feature courante */
-        _updateCardPreview(card, featureBtns[idx]);
+      /* openImageModal('images/xxx.png', 'Label') */
+      var mI = onclick.match(/openImageModal\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]/);
+      if (mI) {
+        items.push({
+          type: 'image',
+          src:  mI[1],
+          label: (mI[2] || '').replace(/&#x[0-9A-F]+;/gi, '').replace(/&[a-z]+;/gi, '').trim()
+        });
+        return;
       }
 
-      btnPrev.onclick = function () { goCard(currentIdx - 1); };
-      btnNext.onclick = function () { goCard(currentIdx + 1); };
-
-      /* Bouton "Voir" qui ouvre la feature dans la modal */
-      var btnSee = document.createElement('button');
-      btnSee.className = 'card-nav-btn';
-      btnSee.innerHTML = '&#x21B5;';
-      btnSee.title = 'Voir cette fonctionnalité';
-      btnSee.style.cssText = 'border-color:rgba(93,232,242,0.35);color:var(--cyan-dim);';
-      btnSee.onclick = function () {
-        openModal(modalId);
-        /* Après ouverture, naviguer vers la feature courante */
-        setTimeout(function () {
-          _modalNavGo(currentIdx);
-          _showHint();
-        }, 450);
-      };
-
-      arrows.appendChild(btnPrev);
-      arrows.appendChild(counter);
-      arrows.appendChild(btnNext);
-      arrows.appendChild(btnSee);
-
-      navWrap.appendChild(dotsWrap);
-      navWrap.appendChild(arrows);
-      body.appendChild(navWrap);
-
-      /* Preview initiale */
-      _updateCardPreview(card, featureBtns[0]);
+      /* openImageModal(['img1','img2'], 'Label') — multi-image */
+      var mArr = onclick.match(/openImageModal\(\[([^\]]+)\]/);
+      if (mArr) {
+        var srcs = mArr[1].match(/['"]([^'"]+)['"]/g);
+        if (srcs) {
+          srcs.forEach(function (s) {
+            var clean = s.replace(/['"]/g, '');
+            items.push({ type: 'image', src: clean, label: clean.split('/').pop() });
+          });
+        }
+      }
     });
-  }
 
-  /* Met à jour l'affichage de la feature active dans la card */
-  function _updateCardPreview(card, featBtn) {
-    if (!featBtn) return;
-
-    /* Chercher ou créer la zone de preview */
-    var body = card.querySelector('.project-body');
-    var previewWrap = body.querySelector('.card-feat-preview');
-
-    if (!previewWrap) {
-      previewWrap = document.createElement('div');
-      previewWrap.className = 'card-feat-preview';
-      previewWrap.style.cssText =
-        'margin-top:12px;padding:10px 14px;' +
-        'background:rgba(93,232,242,0.04);' +
-        'border:1px solid rgba(93,232,242,0.15);' +
-        'border-radius:4px;' +
-        'transition:all 0.25s;';
-      /* Insérer avant la .card-nav */
-      var nav = body.querySelector('.card-nav');
-      if (nav) body.insertBefore(previewWrap, nav);
-      else body.appendChild(previewWrap);
-    }
-
-    var titleEl = featBtn.querySelector('.feat-title');
-    var prevEl  = featBtn.querySelector('.feat-preview');
-
-    var titleTxt = titleEl ? titleEl.innerHTML : '';
-    var prevTxt  = prevEl  ? prevEl.textContent  : '';
-
-    previewWrap.innerHTML =
-      '<div style="font-family:Cinzel,serif;font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">' +
-      titleTxt + '</div>' +
-      '<div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;">' + prevTxt + '</div>';
-
-    /* Animation flash */
-    previewWrap.style.opacity = '0.4';
-    previewWrap.style.transform = 'translateY(3px)';
-    setTimeout(function () {
-      previewWrap.style.opacity = '1';
-      previewWrap.style.transform = 'translateY(0)';
-    }, 30);
+    return items;
   }
 
   /* ──────────────────────────────────────────────
-     HOOKS OUVRERTURE / FERMETURE MODAL
+     COLLECTE DES MÉDIAS dans une card projet
+     (en parcourant toutes ses sous-modals liées)
   ────────────────────────────────────────────── */
-  var _originalOpenModal = window.openModal;
-  window.openModal = function (id) {
-    if (typeof _originalOpenModal === 'function') _originalOpenModal(id);
-    setTimeout(function () {
-      var overlay = document.getElementById('modal-' + id);
-      if (overlay && overlay.classList.contains('active')) {
-        _initModalNav(overlay);
-      }
-    }, 150);
-  };
+  function _collectMediaFromCard(card) {
+    var items = [];
+    if (!card) return items;
 
-  var _originalCloseModalBtn = window.closeModalBtn;
-  window.closeModalBtn = function (id) {
-    if (typeof _originalCloseModalBtn === 'function') _originalCloseModalBtn(id);
-    /* Reset nav modal */
-    _nav.modal.id = null;
-    _nav.modal.items = [];
-    _nav.modal.idx = 0;
-  };
+    /* Récupérer l'id du modal lié */
+    var btn = card.querySelector('.project-btn');
+    if (!btn) return items;
+    var onclk = btn.getAttribute('onclick') || '';
+    var match = onclk.match(/openModal\(['"]([^'"]+)['"]\)/);
+    if (!match) return items;
+    var modalId = match[1];
 
-  var _originalOpenSubModal = window.openSubModal;
+    var modalEl = document.getElementById('modal-' + modalId);
+    if (!modalEl) return items;
+
+    /* Parcourir chaque bouton de feature → récupérer les médias de son sous-modal */
+    modalEl.querySelectorAll('.modal-feature-btn').forEach(function (featBtn) {
+      var featOnclick = featBtn.getAttribute('onclick') || '';
+      var mSub = featOnclick.match(/openSubModal\(['"]([^'"]+)['"]\)/);
+      if (!mSub) return;
+      var subId = mSub[1];
+      var subEl = document.getElementById(subId);
+      if (!subEl) return;
+
+      var subItems = _collectMediaFromSubmodal(subEl);
+      subItems.forEach(function (item) { items.push(item); });
+    });
+
+    return items;
+  }
+
+  /* ──────────────────────────────────────────────
+     HOOK — Intercepte openVideoModal & openImageModal
+     pour alimenter la galerie
+  ────────────────────────────────────────────── */
+
+  /* On mémorise quelle sous-modal est ouverte pour savoir
+     de quel pool de médias on part */
+  var _currentSubmodalId = null;
+  var _currentCardEl = null;
+
+  var _origOpenSubModal = window.openSubModal;
   window.openSubModal = function (id) {
-    if (typeof _originalOpenSubModal === 'function') _originalOpenSubModal(id);
-    setTimeout(function () {
-      var overlay = document.getElementById(id);
-      if (overlay && overlay.classList.contains('active')) {
-        _initSubmodalNav(overlay);
-        _showHint();
-      }
-    }, 150);
+    _currentSubmodalId = id;
+    _currentCardEl = null;
+    if (typeof _origOpenSubModal === 'function') _origOpenSubModal(id);
   };
 
-  var _originalCloseSubModalBtn = window.closeSubModalBtn;
+  var _origCloseSubModalBtn = window.closeSubModalBtn;
   window.closeSubModalBtn = function (id) {
-    if (typeof _originalCloseSubModalBtn === 'function') _originalCloseSubModalBtn(id);
-    /* Reset nav sous-modal */
-    _nav.submodal.id = null;
-    _nav.submodal.items = [];
-    _nav.submodal.idx = 0;
+    _currentSubmodalId = null;
+    _galClose();
+    if (typeof _origCloseSubModalBtn === 'function') _origCloseSubModalBtn(id);
+  };
+
+  /* Intercepte l'ouverture d'un média DEPUIS un sous-modal ou une card */
+  function _interceptMediaOpen(type, src, label) {
+    _createGalleryUI();
+
+    var items = [];
+
+    /* Cas 1 : ouvert depuis un sous-modal */
+    if (_currentSubmodalId) {
+      var subEl = document.getElementById(_currentSubmodalId);
+      if (subEl) {
+        items = _collectMediaFromSubmodal(subEl);
+      }
+    }
+
+    /* Cas 2 : ouvert directement (pas de sous-modal ouvert)
+       → chercher si on est dans une card */
+    if (!items.length) {
+      /* Essayer de trouver via le contexte actif */
+      var activeModals = document.querySelectorAll('.modal-overlay.active, .submodal-overlay.active');
+      activeModals.forEach(function (m) {
+        if (items.length) return;
+        var more = _collectMediaFromSubmodal(m);
+        if (more.length) items = more;
+      });
+    }
+
+    if (!items.length) {
+      /* Pas de galerie, ouvrir normalement */
+      return false;
+    }
+
+    /* Trouver l'index de l'item cliqué */
+    var startIdx = 0;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].src === src) { startIdx = i; break; }
+    }
+
+    _gallery.items  = items;
+    _gallery.idx    = startIdx;
+    _gallery.active = true;
+
+    return true; /* intercepté */
+  }
+
+  /* ── Remplace openVideoModal ── */
+  var _origOpenVideoModal = window.openVideoModal;
+  window.openVideoModal = function (src, pov, size) {
+    var intercepted = _interceptMediaOpen('video', src, pov);
+    if (intercepted) {
+      _openVideoModalDirect(src, pov || '');
+    } else {
+      if (typeof _origOpenVideoModal === 'function') _origOpenVideoModal(src, pov, size);
+    }
+  };
+
+  /* ── Remplace openImageModal ── */
+  var _origOpenImageModal = window.openImageModal;
+  window.openImageModal = function (srcs, pov, size) {
+    var firstSrc = Array.isArray(srcs) ? srcs[0] : srcs;
+    var intercepted = _interceptMediaOpen('image', firstSrc, pov);
+    if (intercepted) {
+      _openImageModalDirect(firstSrc, pov || '');
+    } else {
+      if (typeof _origOpenImageModal === 'function') _origOpenImageModal(srcs, pov, size);
+    }
+  };
+
+  /* ── Remplace closeVideoModal pour aussi cacher la galerie ── */
+  var _origCloseVideoModal = window.closeVideoModal;
+  window.closeVideoModal = function () {
+    _gallery.active = false;
+    _gallery.items  = [];
+    _gallery.idx    = 0;
+    _galShow(false);
+    if (typeof _origCloseVideoModal === 'function') _origCloseVideoModal();
   };
 
   /* ──────────────────────────────────────────────
-     NAVIGATION CLAVIER GLOBALE
+     NAVIGATION CLAVIER ← →
   ────────────────────────────────────────────── */
   document.addEventListener('keydown', function (e) {
-    /* Ne pas interférer si on tape dans un input */
-    var tag = (document.activeElement && document.activeElement.tagName) || '';
-    if (['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tag) !== -1) return;
+    /* Seulement si le modal vidéo est ouvert ET la galerie est active */
+    var videoOverlay = document.getElementById('videoModal');
+    if (!videoOverlay || !videoOverlay.classList.contains('open')) return;
+    if (!_gallery.active || _gallery.items.length < 2) return;
 
-    var key = e.key;
-
-    /* Priorité : sous-modal ouvert */
-    var activeSub = _getActiveSubmodal();
-    if (activeSub) {
-      if (key === 'ArrowLeft' || key === 'ArrowUp') {
-        e.preventDefault();
-        _submodalNavGo(_nav.submodal.idx - 1);
-        return;
-      }
-      if (key === 'ArrowRight' || key === 'ArrowDown') {
-        e.preventDefault();
-        _submodalNavGo(_nav.submodal.idx + 1);
-        return;
-      }
-      /* Enter : déclencher l'action de l'étape (si has-video) */
-      if (key === 'Enter') {
-        var step = _nav.submodal.items[_nav.submodal.idx];
-        if (step && step.classList.contains('has-video')) {
-          e.preventDefault();
-          step.click();
-        }
-        return;
-      }
-      return; /* Laisser Esc géré par le handler principal */
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      e.stopPropagation();
+      _galGo(_gallery.idx - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      e.stopPropagation();
+      _galGo(_gallery.idx + 1);
     }
-
-    /* Ensuite : modal principale ouverte */
-    var activeMod = _getActiveModal();
-    if (activeMod) {
-      if (key === 'ArrowLeft' || key === 'ArrowUp') {
-        e.preventDefault();
-        _modalNavGo(_nav.modal.idx - 1);
-        return;
-      }
-      if (key === 'ArrowRight' || key === 'ArrowDown') {
-        e.preventDefault();
-        _modalNavGo(_nav.modal.idx + 1);
-        return;
-      }
-      /* Enter : ouvrir la feature sélectionnée */
-      if (key === 'Enter') {
-        var featBtn = _nav.modal.items[_nav.modal.idx];
-        if (featBtn) {
-          e.preventDefault();
-          featBtn.click();
-        }
-        return;
-      }
-    }
-  });
+  }, true); /* capture = true pour priorité */
 
   /* ──────────────────────────────────────────────
-     INIT AU CHARGEMENT
+     INIT — crée les éléments UI au chargement
   ────────────────────────────────────────────── */
-  function _init() {
-    _ensureHint();
-    _buildCardNavigation();
-  }
-
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', _init);
+    document.addEventListener('DOMContentLoaded', function () {
+      _createGalleryUI();
+      _galShow(false);
+    });
   } else {
-    _init();
-  }
-
-  /* Rebuild si les cards changent (perso-grid toggle etc.) */
-  var _persoBtn = document.getElementById('persoTeaserBtn');
-  if (_persoBtn) {
-    var _origTogglePerso = window.togglePersoProjects;
-    window.togglePersoProjects = function () {
-      if (typeof _origTogglePerso === 'function') _origTogglePerso();
-      setTimeout(_buildCardNavigation, 650);
-    };
+    _createGalleryUI();
+    _galShow(false);
   }
 
 })();
