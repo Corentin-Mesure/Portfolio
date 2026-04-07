@@ -2849,114 +2849,263 @@ body.no-anim .ap-particle {
 :root.light-mode #settingsOverlay   { background: rgba(180,174,162,0.55); }
 
 /* ════════════════════════════════════════════════════════
-   NAVIGATION MÉDIA — flèches prev / next
+   NAVIGATION MÉDIA — flèches sur les CÔTÉS de l'image
+   Remplace l'ancienne section .vm-nav dans style.css
 ════════════════════════════════════════════════════════ */
 
+/* Flèches positionnées en absolu par rapport à .video-modal-inner */
 .vm-nav {
-  position:        sticky;
-  bottom:          0;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  gap:             24px;
-  width:           100%;
-  padding:         14px 0 10px;
-  margin-top:      -68px;        /* remonte sur l'image */
-  background:      linear-gradient(to top, rgba(0,0,0,0.85) 55%, transparent);
-  z-index:         10;
-  pointer-events:  none;         /* laisse scroller/cliquer l'image derrière */
+  display: none; /* caché par défaut, JS le gère */
 }
 
 .vm-nav-btn {
-  width:                    54px;
-  height:                   54px;
-  border-radius:            50%;
-  border:                   2px solid rgba(255,255,255,0.8);
-  background:               rgba(255,255,255,0.18);
-  color:                    #ffffff;
-  font-size:                30px;
-  line-height:              1;
-  display:                  flex;
-  align-items:              center;
-  justify-content:          center;
-  cursor:                   pointer;
-  pointer-events:           all;   /* réactive les clics sur les boutons */
-  transition:               background 0.2s, border-color 0.2s,
-                            opacity 0.2s, transform 0.15s;
-  flex-shrink:              0;
-  backdrop-filter:          blur(8px);
-  -webkit-backdrop-filter:  blur(8px);
-  box-shadow:               0 2px 16px rgba(0,0,0,0.55),
-                            inset 0 1px 0 rgba(255,255,255,0.25);
-  user-select:              none;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  font-size: 30px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100002;
+  transition: background 0.2s, border-color 0.2s, opacity 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.55),
+              inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  user-select: none;
+  pointer-events: all;
 }
 
 .vm-nav-btn:hover:not(:disabled) {
-  background:   rgba(255,255,255,0.35);
+  background: rgba(255, 255, 255, 0.35);
   border-color: #ffffff;
-  transform:    scale(1.1);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .vm-nav-btn:active:not(:disabled) {
-  transform: scale(0.96);
+  transform: translateY(-50%) scale(0.96);
 }
 
 .vm-nav-btn:disabled {
-  opacity:   0.18;
-  cursor:    default;
-  transform: none;
+  opacity: 0.18;
+  cursor: default;
+  transform: translateY(-50%);
 }
 
+/* Positionnement gauche/droite */
+.vm-nav-btn.vm-prev {
+  left: 16px;
+}
+
+.vm-nav-btn.vm-next {
+  right: 16px;
+}
+
+/* Compteur — centré en bas, au-dessus de la barre de zoom */
 .vm-nav-counter {
-  font-family:    'Cinzel', serif;
-  font-size:      12px;
+  position: fixed;
+  bottom: 130px; /* au-dessus de la barre zoom (~90px) + marge */
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
   letter-spacing: 2.5px;
-  color:          rgba(255,255,255,0.95);
-  min-width:      54px;
-  text-align:     center;
-  user-select:    none;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  user-select: none;
   pointer-events: none;
-  text-shadow:    0 1px 6px rgba(0,0,0,0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  z-index: 100002;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 14px;
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
 }
 
 /* ── Mode clair ── */
-:root.light-mode .vm-nav {
-  background: linear-gradient(to top, rgba(160,148,120,0.85) 55%, transparent);
-}
-
 :root.light-mode .vm-nav-btn {
-  border-color: rgba(120,85,0,0.75);
-  background:   rgba(255,245,200,0.45);
-  color:        #3a2000;
-  box-shadow:   0 2px 16px rgba(0,0,0,0.2),
-                inset 0 1px 0 rgba(255,255,255,0.6);
+  border-color: rgba(120, 85, 0, 0.75);
+  background: rgba(255, 245, 200, 0.45);
+  color: #3a2000;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 :root.light-mode .vm-nav-btn:hover:not(:disabled) {
-  background:   rgba(255,220,100,0.7);
+  background: rgba(255, 220, 100, 0.7);
   border-color: #8a6208;
-  color:        #2a1500;
+  color: #2a1500;
 }
 
 :root.light-mode .vm-nav-counter {
-  color:       rgba(50,30,0,0.9);
+  color: rgba(50, 30, 0, 0.9);
   text-shadow: none;
+  background: rgba(255, 245, 200, 0.6);
 }
 
 /* ── Responsive mobile ── */
 @media (max-width: 768px) {
-  .vm-nav {
-    margin-top: -56px;
-    padding:    10px 0 8px;
-    gap:        18px;
-  }
   .vm-nav-btn {
-    width:     46px;
-    height:    46px;
-    font-size: 24px;
+    width: 42px;
+    height: 42px;
+    font-size: 22px;
   }
+
+  .vm-nav-btn.vm-prev {
+    left: 6px;
+  }
+
+  .vm-nav-btn.vm-next {
+    right: 6px;
+  }
+
   .vm-nav-counter {
+    bottom: 110px;
     font-size: 10px;
-    min-width: 40px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   VIDEO MODAL — structure repensée pour que la barre
+   de zoom soit TOUJOURS visible (jamais sous l'image)
+════════════════════════════════════════════════════════ */
+
+.video-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 999999;
+  background: rgba(0, 0, 0, 0.92);
+  align-items: stretch;       /* ← stretch pour remplir */
+  justify-content: center;
+  flex-direction: column;     /* ← colonne : image en haut, barre en bas */
+  padding: 60px 80px 0 80px; /* ← padding latéral pour laisser place aux flèches */
+  box-sizing: border-box;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+.video-modal-overlay.open {
+  display: flex;
+}
+
+/* Wrap = zone image (flex:1) + barre en dessous */
+.video-modal-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 360px; /* sera écrasé par JS pour les images */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden; /* pas de scroll ici */
+  margin: 0 auto;
+}
+
+/* Zone image — prend tout l'espace disponible */
+.video-modal-inner {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.video-modal-inner img,
+.video-modal-inner canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain !important;
+  border-radius: 14px;
+  min-height: 100px;
+  touch-action: pan-y !important;
+}
+
+/* Barre de zoom — TOUJOURS en bas, jamais cachée */
+.video-modal-bar {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 10px 0 16px;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Badge POV */
+.video-modal-pov {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(200, 160, 60, 0.6);
+  color: #c8a03c;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  z-index: 100001;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+/* Bouton fermer */
+.video-modal-close {
+  position: fixed;
+  top: 10px;
+  right: 14px;
+  background: rgba(30, 30, 30, 0.95);
+  color: #fff;
+  border: 2px solid rgba(200, 160, 60, 0.6);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Erreur */
+.video-modal-err {
+  display: none;
+  padding: 14px 16px;
+  color: #f87171;
+  font-size: 12px;
+  word-break: break-all;
+  background: #1a0808;
+  border-top: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.video-modal-err span {
+  color: #fca5a5;
+  font-family: monospace;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .video-modal-overlay {
+    padding: 50px 52px 0 52px;
+  }
+
+  .video-modal-inner img,
+  .video-modal-inner canvas {
+    max-height: 100%;
   }
 }
