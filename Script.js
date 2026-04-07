@@ -2578,3 +2578,166 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
 })();
+
+/* ════════════════════════════════════════════════════════
+   PATCH JS — Correction openImageModal + openVideoModal
+   pour le mode grande taille (body zoom 1.35)
+
+   Coller à la FIN de script.js
+   (remplace ou complète les patches existants)
+════════════════════════════════════════════════════════ */
+
+/* Patch openImageModal : corrige les dimensions
+   en tenant compte du zoom body */
+(function () {
+  var _orig = window.openImageModal;
+
+  window.openImageModal = function (srcs, pov, size) {
+    /* Calcule les dimensions réelles disponibles (hors zoom body) */
+    var bz   = window._bodyZoom || 1;
+    var vw   = Math.round(window.innerWidth  / bz);
+    var vh   = Math.round(window.innerHeight / bz);
+    var avH  = vh - 180;  /* padding haut + barre zoom + marge */
+    var avW  = vw - (bz > 1 ? 120 : 40);
+
+    var maxW = size ? Math.min(size, avW) : avW;
+
+    var overlay = document.getElementById('videoModal');
+    var bar     = document.querySelector('.video-modal-bar');
+    var wrap    = document.querySelector('.video-modal-wrap');
+    var inner   = document.querySelector('.video-modal-inner');
+
+    /* Réinitialise */
+    if (inner) inner.querySelectorAll('#videoModalMedia,.static-screen-img').forEach(function (el) { el.remove(); });
+
+    overlay.querySelectorAll('button').forEach(function (b) {
+      if (b.id === '_imgModalClose') return;
+      b.dataset.hiddenByImg = '1';
+      b.style.display = 'none';
+    });
+
+    var badge = document.getElementById('videoModalPov');
+    var errDiv = document.getElementById('videoModalErr');
+    if (badge)  { badge.innerHTML = ''; badge.style.cssText = 'display:none;'; }
+    if (errDiv) errDiv.style.display = 'none';
+
+    if (bar) {
+      bar.innerHTML = '';
+      bar.style.pointerEvents = 'auto';
+      bar.style.zIndex = '10';
+      bar.style.visibility = '';
+      if (typeof _buildZoomBar === 'function') _buildZoomBar(bar);
+    }
+
+    if (wrap) {
+      wrap.style.cssText =
+        'background:transparent;box-shadow:none;border:none;padding:0;' +
+        'display:flex;flex-direction:column;align-items:center;' +
+        'flex:1;min-height:0;overflow:hidden;margin:0 auto;' +
+        'max-width:' + maxW + 'px;width:100%;pointer-events:none;';
+    }
+
+    if (inner) {
+      inner.style.cssText =
+        'flex:1;min-height:0;display:flex;align-items:center;' +
+        'justify-content:center;overflow:hidden;width:100%;' +
+        'background:transparent;box-shadow:none;border:none;padding:0;' +
+        'position:relative;pointer-events:none;';
+    }
+
+    var list = Array.isArray(srcs) ? srcs : [srcs];
+
+    /* Cas 1 image */
+    if (list.length === 1) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'static-screen-img';
+      wrapper.style.cssText =
+        'display:flex;flex-direction:column;align-items:center;' +
+        'pointer-events:auto;width:100%;';
+
+      var imgWrap = document.createElement('div');
+      imgWrap.style.cssText =
+        'overflow:hidden;border-radius:10px;' +
+        'box-shadow:0 0 40px rgba(0,0,0,0.9);' +
+        'cursor:grab;touch-action:none;position:relative;width:100%;';
+
+      var img = document.createElement('img');
+      img.style.cssText =
+        'display:block;width:100%;height:auto;' +
+        'max-height:' + avH + 'px;' +
+        'object-fit:contain;transform-origin:0 0;' +
+        'user-select:none;-webkit-user-drag:none;';
+      img.onerror = function () { img.style.display = 'none'; };
+      img.src = list[0];
+
+      if (typeof _zoomAttach === 'function') _zoomAttach(imgWrap, img);
+      imgWrap.appendChild(img);
+      wrapper.appendChild(imgWrap);
+      if (inner) inner.appendChild(wrapper);
+
+    } else {
+      /* Cas 2 images côte à côte */
+      if (inner) {
+        inner.style.flexDirection = 'row';
+        inner.style.gap = '32px';
+        inner.style.alignItems = 'flex-start';
+      }
+      var labels = ['\uD83D\uDC51 POV Admin', '\uD83D\uDC64 POV Membre'];
+      list.forEach(function (src, i) {
+        var w2 = document.createElement('div');
+        w2.className = 'static-screen-img';
+        w2.style.cssText =
+          'display:flex;flex-direction:column;align-items:center;gap:10px;' +
+          'pointer-events:auto;flex:1;min-width:0;';
+
+        var lbl = document.createElement('div');
+        lbl.innerHTML = labels[i] || '';
+        lbl.style.cssText =
+          'font-family:Cinzel,serif;font-size:13px;letter-spacing:3px;' +
+          'color:' + (i === 0 ? '#C89B3C' : '#5DE8F2') + ';';
+
+        var iw2 = document.createElement('div');
+        iw2.style.cssText =
+          'overflow:hidden;border-radius:10px;' +
+          'box-shadow:0 0 40px rgba(0,0,0,0.9);' +
+          'cursor:grab;touch-action:none;position:relative;width:100%;';
+
+        var img2 = document.createElement('img');
+        img2.style.cssText =
+          'display:block;width:100%;height:auto;' +
+          'max-height:' + avH + 'px;' +
+          'object-fit:contain;transform-origin:0 0;' +
+          'user-select:none;-webkit-user-drag:none;';
+        img2.onerror = function () { img2.style.display = 'none'; };
+        img2.src = src;
+
+        if (typeof _zoomAttach === 'function') _zoomAttach(iw2, img2);
+        iw2.appendChild(img2);
+        w2.appendChild(lbl);
+        w2.appendChild(iw2);
+        if (inner) inner.appendChild(w2);
+      });
+    }
+
+    /* Bouton ✕ */
+    var existing = document.getElementById('_imgModalClose');
+    if (existing) existing.remove();
+    var closeBtn = document.createElement('button');
+    closeBtn.id = '_imgModalClose';
+    closeBtn.innerHTML = '&#x2715;';
+    closeBtn.style.cssText =
+      'position:fixed;top:18px;right:22px;z-index:10001;' +
+      'width:42px;height:42px;background:rgba(0,0,0,0.65);' +
+      'border:1px solid rgba(200,160,60,0.5);color:#f0c84a;' +
+      'font-size:18px;border-radius:8px;cursor:pointer;' +
+      'display:flex;align-items:center;justify-content:center;' +
+      'pointer-events:auto;';
+    closeBtn.onclick = function (e) {
+      e.stopPropagation();
+      if (typeof closeVideoModal === 'function') closeVideoModal();
+    };
+    document.body.appendChild(closeBtn);
+
+    overlay.classList.add('open');
+  };
+})();
