@@ -2255,7 +2255,7 @@ function openImageModal(srcs, pov, size) {
     var img = document.createElement('img');
     img.style.cssText =
       'display:block;width:100%;height:auto;' +
-      'max-height:' + availH + 'px;' +
+      'max-height:' + (availH - 30) + 'px;' +
       'object-fit:contain;' +
       'transform-origin:0 0;' +
       'user-select:none;-webkit-user-drag:none;';
