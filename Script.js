@@ -2447,23 +2447,8 @@ document.addEventListener('DOMContentLoaded', function () {
       activeModal.querySelectorAll('[onclick*="openSubModal"]')
     );
 
-    featureBtns.forEach(function (btn) {
-      var oc = btn.getAttribute('onclick') || '';
-      var match = oc.match(/openSubModal\s*\(\s*['"]([^'"]+)['"]\s*\)/);
-      if (!match) return;
-      var submodalId = match[1];
-      var submodalEl = document.getElementById(submodalId);
-      if (!submodalEl) return;
-
-      var mediaEls = Array.from(
-        submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
-      );
-      mediaEls.forEach(function (el) {
-        _allItems.push({ el: el, submodalId: submodalId, submodalEl: submodalEl });
-      });
-    });
-
-    if (_allItems.length === 0) _fillFromSubmodal(currentSubmodal);
+   // APRÈS — collecte uniquement le sous-modal courant
+_fillFromSubmodal(currentSubmodal);
 
     _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
     if (_idx < 0) _idx = 0;
