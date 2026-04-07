@@ -2374,21 +2374,26 @@ document.addEventListener('DOMContentLoaded', function () {
   if (lightMode) applyLightMode(true);
 });
 
+
 /* ════════════════════════════════════════════════════════
    NAVIGATION MÉDIA — flèches prev / next dans le modal
-   À coller à la FIN de Script.js
+   v2 : navigation inter-submodals (toutes les étapes)
 ════════════════════════════════════════════════════════ */
 
 (function () {
 
-  var _items   = [];   // liste des éléments cliquables du submodal courant
-  var _idx     = 0;    // index courant
-  var _navEl   = null; // le bloc .vm-nav injecté dans le modal
+  var _allItems = [];  // [{el, submodalId, submodalEl}, ...]
+  var _idx      = 0;
+  var _navEl    = null;
 
   /* ── Injection du bloc flèches dans .video-modal-wrap ── */
   function _injectNav() {
     var wrap = document.querySelector('.video-modal-wrap');
-    if (!wrap || wrap.querySelector('.vm-nav')) return;
+    if (!wrap) return;
+
+    // Si le précédent navEl a été supprimé du DOM (après closeVideoModal), on le recréé
+    if (_navEl && !document.body.contains(_navEl)) _navEl = null;
+    if (_navEl && wrap.contains(_navEl)) return;
 
     _navEl = document.createElement('div');
     _navEl.className = 'vm-nav';
@@ -2399,49 +2404,89 @@ document.addEventListener('DOMContentLoaded', function () {
     wrap.appendChild(_navEl);
   }
 
-  /* ── Mise à jour visuelle des flèches ── */
+  /* ── Mise à jour visuelle ── */
   function _updateNav() {
-    if (!_navEl) return;
-    var total   = _items.length;
+    if (!_navEl || !document.body.contains(_navEl)) return;
+    var total   = _allItems.length;
     var counter = _navEl.querySelector('.vm-nav-counter');
     var btnPrev = _navEl.querySelector('.vm-prev');
     var btnNext = _navEl.querySelector('.vm-next');
 
-    if (total <= 1) {
-      _navEl.style.display = 'none';
+    if (total <= 1) { _navEl.style.display = 'none'; return; }
+
+    _navEl.style.display  = 'flex';
+    counter.textContent   = (_idx + 1) + ' / ' + total;
+    btnPrev.disabled      = (_idx === 0);
+    btnNext.disabled      = (_idx === total - 1);
+  }
+
+  /* ── Collecte de TOUS les médias de toutes les étapes du modal parent ── */
+  function _buildAllItems(triggerEl) {
+    _allItems = [];
+
+    var currentSubmodal = triggerEl.closest('.submodal-overlay');
+    if (!currentSubmodal) {
+      _allItems = [{ el: triggerEl, submodalId: null, submodalEl: null }];
+      _idx = 0;
       return;
     }
 
-    _navEl.style.display   = 'flex';
-    counter.textContent    = (_idx + 1) + ' / ' + total;
-    btnPrev.disabled       = (_idx === 0);
-    btnNext.disabled       = (_idx === total - 1);
+    // Cherche le modal parent actif (modal-overlay.active)
+    var activeModal = document.querySelector('.modal-overlay.active');
+
+    if (!activeModal) {
+      // Fallback : uniquement le submodal courant
+      _fillFromSubmodal(currentSubmodal);
+      _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
+      if (_idx < 0) _idx = 0;
+      return;
+    }
+
+    // Parcourt tous les boutons de features qui ouvrent un submodal
+    var featureBtns = Array.from(
+      activeModal.querySelectorAll('[onclick*="openSubModal"]')
+    );
+
+    featureBtns.forEach(function (btn) {
+      var oc = btn.getAttribute('onclick') || '';
+      var match = oc.match(/openSubModal\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+      if (!match) return;
+      var submodalId = match[1];
+      var submodalEl = document.getElementById(submodalId);
+      if (!submodalEl) return;
+
+      var mediaEls = Array.from(
+        submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
+      );
+      mediaEls.forEach(function (el) {
+        _allItems.push({ el: el, submodalId: submodalId, submodalEl: submodalEl });
+      });
+    });
+
+    // Si aucun résultat (structure différente), fallback sur le submodal courant
+    if (_allItems.length === 0) _fillFromSubmodal(currentSubmodal);
+
+    _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
+    if (_idx < 0) _idx = 0;
   }
 
-  /* ── Collecte des médias dans le submodal parent ── */
-  function _buildList(triggerEl) {
-    var submodal = triggerEl.closest('.submodal-overlay');
-    if (!submodal) { _items = []; return; }
-
-    // Tous les éléments avec onclick openVideoModal ou openImageModal
-    _items = Array.from(
-      submodal.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
+  function _fillFromSubmodal(submodalEl) {
+    var mediaEls = Array.from(
+      submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
     );
-    _idx = _items.indexOf(triggerEl);
-    if (_idx < 0) _idx = 0;
+    mediaEls.forEach(function (el) {
+      _allItems.push({ el: el, submodalId: submodalEl.id, submodalEl: submodalEl });
+    });
   }
 
   /* ── Écoute globale des clics sur les déclencheurs médias ── */
   document.addEventListener('click', function (e) {
-    // Remonter jusqu'au premier ancêtre avec un onclick média
     var trigger = e.target;
     while (trigger && trigger !== document) {
       var oc = trigger.getAttribute && trigger.getAttribute('onclick');
       if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
-        // Vérifier qu'on est bien dans un submodal (pas ailleurs)
         if (trigger.closest('.submodal-overlay')) {
-          _buildList(trigger);
-          // Laisser le temps au modal de s'ouvrir avant de mettre à jour
+          _buildAllItems(trigger);
           setTimeout(function () {
             _injectNav();
             _updateNav();
@@ -2453,20 +2498,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
-  /* ── Navigation prev / next (appelée par les boutons) ── */
+  /* ── Navigation prev / next ── */
   window.mediaNavGo = function (dir) {
     var next = _idx + dir;
-    if (next < 0 || next >= _items.length) return;
+    if (next < 0 || next >= _allItems.length) return;
     _idx = next;
 
-    var el = _items[_idx];
-    var oc = el.getAttribute('onclick');
+    var item       = _allItems[_idx];
+    var submodalEl = item.submodalEl;
+
+    // Change de submodal si nécessaire
+    if (submodalEl) {
+      var currentActive = document.querySelector('.submodal-overlay.active');
+      if (currentActive && currentActive !== submodalEl) {
+        currentActive.classList.remove('active');
+      }
+      if (!submodalEl.classList.contains('active')) {
+        submodalEl.classList.add('active');
+      }
+    }
+
+    // Déclenche le média
+    var oc = item.el.getAttribute('onclick');
     if (oc) {
       try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
     }
 
-    // Petit délai pour laisser le modal se recharger (gif/image)
-    setTimeout(_updateNav, 80);
+    setTimeout(function () {
+      _injectNav();   // recrée le nav si le modal a été reconstruit
+      _updateNav();
+    }, 100);
   };
 
 })();
