@@ -2387,163 +2387,36 @@ document.addEventListener('DOMContentLoaded', function () {
   var _navEl    = null;
 
   /* ── Injection du bloc flèches dans .video-modal-wrap ── */
-  function _injectNav() {
-    var wrap = document.querySelector('.video-modal-wrap');
-    if (!wrap) return;
+function _injectNav() {
+  /* On injecte dans l'overlay, pas dans le wrap */
+  var overlay = document.getElementById('videoModal');
+  if (!overlay) return;
 
-    if (_navEl && !document.body.contains(_navEl)) _navEl = null;
-    if (_navEl && wrap.contains(_navEl)) return;
+  /* Nettoyage si déjà présent */
+  var old = overlay.querySelector('.vm-nav');
+  if (old) { _navEl = old; return; }
 
-    _navEl = document.createElement('div');
-    _navEl.className = 'vm-nav';
-    _navEl.innerHTML =
-      '<button class="vm-nav-btn vm-prev" aria-label="Précédent">&#x2039;</button>' +
-      '<span class="vm-nav-counter"></span>' +
-      '<button class="vm-nav-btn vm-next" aria-label="Suivant">&#x203A;</button>';
+  _navEl = document.createElement('div');
+  _navEl.className = 'vm-nav';
 
-    _navEl.querySelector('.vm-prev').addEventListener('click', function () { window.mediaNavGo(-1); });
-    _navEl.querySelector('.vm-next').addEventListener('click', function () { window.mediaNavGo(1); });
+  var btnPrev = document.createElement('button');
+  btnPrev.className = 'vm-nav-btn vm-prev';
+  btnPrev.setAttribute('aria-label', 'Précédent');
+  btnPrev.innerHTML = '&#x2039;';
+  btnPrev.addEventListener('click', function () { window.mediaNavGo(-1); });
 
-    wrap.appendChild(_navEl);
-  }
+  var counter = document.createElement('span');
+  counter.className = 'vm-nav-counter';
 
-  /* ── Mise à jour visuelle ── */
-  function _updateNav() {
-    if (!_navEl || !document.body.contains(_navEl)) return;
-    var total   = _allItems.length;
-    var counter = _navEl.querySelector('.vm-nav-counter');
-    var btnPrev = _navEl.querySelector('.vm-prev');
-    var btnNext = _navEl.querySelector('.vm-next');
+  var btnNext = document.createElement('button');
+  btnNext.className = 'vm-nav-btn vm-next';
+  btnNext.setAttribute('aria-label', 'Suivant');
+  btnNext.innerHTML = '&#x203A;';
+  btnNext.addEventListener('click', function () { window.mediaNavGo(1); });
 
-    if (total <= 1) { _navEl.style.display = 'none'; return; }
+  _navEl.appendChild(btnPrev);
+  _navEl.appendChild(counter);   /* centré via CSS fixed */
+  _navEl.appendChild(btnNext);
 
-    _navEl.style.display  = 'flex';
-    counter.textContent   = (_idx + 1) + ' / ' + total;
-    btnPrev.disabled      = (_idx === 0);
-    btnNext.disabled      = (_idx === total - 1);
-  }
-
-  /* ── Collecte de TOUS les médias de toutes les étapes du modal parent ── */
-  function _buildAllItems(triggerEl) {
-    _allItems = [];
-
-    var currentSubmodal = triggerEl.closest('.submodal-overlay');
-    if (!currentSubmodal) {
-      _allItems = [{ el: triggerEl, submodalId: null, submodalEl: null }];
-      _idx = 0;
-      return;
-    }
-
-    var activeModal = document.querySelector('.modal-overlay.active');
-
-    if (!activeModal) {
-      _fillFromSubmodal(currentSubmodal);
-      _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
-      if (_idx < 0) _idx = 0;
-      return;
-    }
-
-    var featureBtns = Array.from(
-      activeModal.querySelectorAll('[onclick*="openSubModal"]')
-    );
-
-    featureBtns.forEach(function (btn) {
-      var oc = btn.getAttribute('onclick') || '';
-      var match = oc.match(/openSubModal\s*\(\s*['"]([^'"]+)['"]\s*\)/);
-      if (!match) return;
-      var submodalId = match[1];
-      var submodalEl = document.getElementById(submodalId);
-      if (!submodalEl) return;
-
-      var mediaEls = Array.from(
-        submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
-      );
-      mediaEls.forEach(function (el) {
-        _allItems.push({ el: el, submodalId: submodalId, submodalEl: submodalEl });
-      });
-    });
-
-    if (_allItems.length === 0) _fillFromSubmodal(currentSubmodal);
-
-    _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
-    if (_idx < 0) _idx = 0;
-  }
-
-  function _fillFromSubmodal(submodalEl) {
-    var mediaEls = Array.from(
-      submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
-    );
-    mediaEls.forEach(function (el) {
-      _allItems.push({ el: el, submodalId: submodalEl.id, submodalEl: submodalEl });
-    });
-  }
-
-  /* ── Écoute globale des clics sur les déclencheurs médias ── */
-  document.addEventListener('click', function (e) {
-    var trigger = e.target;
-    while (trigger && trigger !== document) {
-      var oc = trigger.getAttribute && trigger.getAttribute('onclick');
-      if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
-        if (trigger.closest('.submodal-overlay')) {
-          _buildAllItems(trigger);
-          setTimeout(function () {
-            _injectNav();
-            _updateNav();
-          }, 120);
-        }
-        break;
-      }
-      trigger = trigger.parentElement;
-    }
-  }, false);
-
-  /* ── Navigation prev / next ── */
-  window.mediaNavGo = function (dir) {
-    var next = _idx + dir;
-    if (next < 0 || next >= _allItems.length) return;
-    _idx = next;
-
-    var item       = _allItems[_idx];
-    var submodalEl = item.submodalEl;
-
-    if (submodalEl) {
-      var currentActive = document.querySelector('.submodal-overlay.active');
-      if (currentActive && currentActive !== submodalEl) {
-        currentActive.classList.remove('active');
-      }
-      if (!submodalEl.classList.contains('active')) {
-        submodalEl.classList.add('active');
-      }
-    }
-
-    var oc = item.el.getAttribute('onclick');
-    if (oc) {
-      try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
-    }
-
-    setTimeout(function () {
-      _injectNav();
-      _updateNav();
-    }, 100);
-  };
-
-  /* ── Navigation clavier ── */
-  document.addEventListener('keydown', function (e) {
-    var overlay = document.querySelector('.video-modal-overlay.open');
-    if (!overlay) return;
-
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      window.mediaNavGo(-1);
-    }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      window.mediaNavGo(1);
-    }
-    if (e.key === 'Escape') {
-      var closeBtn = overlay.querySelector('.video-modal-close');
-      if (closeBtn) closeBtn.click();
-    }
-  }, false);
-
-})();
+  overlay.appendChild(_navEl);
+}
