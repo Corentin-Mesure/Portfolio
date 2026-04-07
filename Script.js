@@ -2376,80 +2376,84 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 /* ════════════════════════════════════════════════════════
-   NAVIGATION MÉDIA — flèches prev / next dans le modal
-   v3 : sticky overlay + navigation clavier
+   PATCH — Navigation flèches sur les côtés + barre toujours visible
+   Remplace la section IIFE "(function () { var _allItems..." 
+   à la FIN de Script.js
 ════════════════════════════════════════════════════════ */
 
 (function () {
 
   var _allItems = [];
   var _idx      = 0;
-  var _navEl    = null;
+  var _prevBtn  = null;
+  var _nextBtn  = null;
+  var _counter  = null;
 
-  /* ── Injection du bloc flèches dans .video-modal-wrap ── */
-  function _injectNav() {
-    var wrap = document.querySelector('.video-modal-wrap');
-    if (!wrap) return;
+  /* ── Création des éléments fixes (une seule fois) ── */
+  function _ensureElements() {
+    if (_prevBtn && document.body.contains(_prevBtn)) return;
 
-    if (_navEl && !document.body.contains(_navEl)) _navEl = null;
-    if (_navEl && wrap.contains(_navEl)) return;
+    _prevBtn = document.createElement('button');
+    _prevBtn.className = 'vm-nav-btn vm-prev';
+    _prevBtn.innerHTML = '&#x2039;';
+    _prevBtn.setAttribute('aria-label', 'Précédent');
+    _prevBtn.style.display = 'none';
+    _prevBtn.addEventListener('click', function () { window.mediaNavGo(-1); });
 
-    _navEl = document.createElement('div');
-    _navEl.className = 'vm-nav';
-    _navEl.innerHTML =
-      '<button class="vm-nav-btn vm-prev" aria-label="Précédent">&#x2039;</button>' +
-      '<span class="vm-nav-counter"></span>' +
-      '<button class="vm-nav-btn vm-next" aria-label="Suivant">&#x203A;</button>';
+    _nextBtn = document.createElement('button');
+    _nextBtn.className = 'vm-nav-btn vm-next';
+    _nextBtn.innerHTML = '&#x203A;';
+    _nextBtn.setAttribute('aria-label', 'Suivant');
+    _nextBtn.style.display = 'none';
+    _nextBtn.addEventListener('click', function () { window.mediaNavGo(1); });
 
-    _navEl.querySelector('.vm-prev').addEventListener('click', function () { window.mediaNavGo(-1); });
-    _navEl.querySelector('.vm-next').addEventListener('click', function () { window.mediaNavGo(1); });
+    _counter = document.createElement('div');
+    _counter.className = 'vm-nav-counter';
+    _counter.style.display = 'none';
 
-    wrap.appendChild(_navEl);
+    document.body.appendChild(_prevBtn);
+    document.body.appendChild(_nextBtn);
+    document.body.appendChild(_counter);
   }
 
   /* ── Mise à jour visuelle ── */
   function _updateNav() {
-    if (!_navEl || !document.body.contains(_navEl)) return;
-    var total   = _allItems.length;
-    var counter = _navEl.querySelector('.vm-nav-counter');
-    var btnPrev = _navEl.querySelector('.vm-prev');
-    var btnNext = _navEl.querySelector('.vm-next');
+    _ensureElements();
+    var total = _allItems.length;
+    var overlay = document.querySelector('.video-modal-overlay.open');
 
-    if (total <= 1) { _navEl.style.display = 'none'; return; }
+    if (total <= 1 || !overlay) {
+      _prevBtn.style.display  = 'none';
+      _nextBtn.style.display  = 'none';
+      _counter.style.display  = 'none';
+      return;
+    }
 
-    _navEl.style.display  = 'flex';
-    counter.textContent   = (_idx + 1) + ' / ' + total;
-    btnPrev.disabled      = (_idx === 0);
-    btnNext.disabled      = (_idx === total - 1);
+    _prevBtn.style.display  = 'flex';
+    _nextBtn.style.display  = 'flex';
+    _counter.style.display  = 'block';
+    _counter.textContent    = (_idx + 1) + ' / ' + total;
+    _prevBtn.disabled       = (_idx === 0);
+    _nextBtn.disabled       = (_idx === total - 1);
   }
 
-  /* ── Collecte de TOUS les médias de toutes les étapes du modal parent ── */
+  /* ── Cache les flèches quand le modal se ferme ── */
+  function _hideNav() {
+    if (_prevBtn) _prevBtn.style.display = 'none';
+    if (_nextBtn) _nextBtn.style.display = 'none';
+    if (_counter) _counter.style.display = 'none';
+  }
+
+  /* ── Collecte des médias du sous-modal courant uniquement ── */
   function _buildAllItems(triggerEl) {
     _allItems = [];
-
     var currentSubmodal = triggerEl.closest('.submodal-overlay');
     if (!currentSubmodal) {
-      _allItems = [{ el: triggerEl, submodalId: null, submodalEl: null }];
+      _allItems = [{ el: triggerEl, submodalEl: null }];
       _idx = 0;
       return;
     }
-
-    var activeModal = document.querySelector('.modal-overlay.active');
-
-    if (!activeModal) {
-      _fillFromSubmodal(currentSubmodal);
-      _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
-      if (_idx < 0) _idx = 0;
-      return;
-    }
-
-    var featureBtns = Array.from(
-      activeModal.querySelectorAll('[onclick*="openSubModal"]')
-    );
-
-   // APRÈS — collecte uniquement le sous-modal courant
-_fillFromSubmodal(currentSubmodal);
-
+    _fillFromSubmodal(currentSubmodal);
     _idx = _allItems.findIndex(function (item) { return item.el === triggerEl; });
     if (_idx < 0) _idx = 0;
   }
@@ -2463,7 +2467,7 @@ _fillFromSubmodal(currentSubmodal);
     });
   }
 
-  /* ── Écoute globale des clics sur les déclencheurs médias ── */
+  /* ── Écoute des clics déclencheurs ── */
   document.addEventListener('click', function (e) {
     var trigger = e.target;
     while (trigger && trigger !== document) {
@@ -2471,10 +2475,7 @@ _fillFromSubmodal(currentSubmodal);
       if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
         if (trigger.closest('.submodal-overlay')) {
           _buildAllItems(trigger);
-          setTimeout(function () {
-            _injectNav();
-            _updateNav();
-          }, 120);
+          setTimeout(function () { _updateNav(); }, 150);
         }
         break;
       }
@@ -2482,13 +2483,13 @@ _fillFromSubmodal(currentSubmodal);
     }
   }, false);
 
-  /* ── Navigation prev / next ── */
+  /* ── Navigation ── */
   window.mediaNavGo = function (dir) {
     var next = _idx + dir;
     if (next < 0 || next >= _allItems.length) return;
     _idx = next;
 
-    var item       = _allItems[_idx];
+    var item = _allItems[_idx];
     var submodalEl = item.submodalEl;
 
     if (submodalEl) {
@@ -2506,13 +2507,10 @@ _fillFromSubmodal(currentSubmodal);
       try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
     }
 
-    setTimeout(function () {
-      _injectNav();
-      _updateNav();
-    }, 100);
+    setTimeout(function () { _updateNav(); }, 150);
   };
 
-  /* ── Navigation clavier ── */
+  /* ── Clavier ── */
   document.addEventListener('keydown', function (e) {
     var overlay = document.querySelector('.video-modal-overlay.open');
     if (!overlay) return;
@@ -2526,9 +2524,63 @@ _fillFromSubmodal(currentSubmodal);
       window.mediaNavGo(1);
     }
     if (e.key === 'Escape') {
-      var closeBtn = overlay.querySelector('.video-modal-close');
-      if (closeBtn) closeBtn.click();
+      _hideNav();
     }
   }, false);
+
+  /* ── Patch closeVideoModal pour cacher les flèches ── */
+  var _origClose = window.closeVideoModal;
+  window.closeVideoModal = function () {
+    _hideNav();
+    if (typeof _origClose === 'function') _origClose();
+  };
+
+  /* ── Patch openVideoModal / openImageModal pour recalculer la hauteur ── */
+  /* S'assure que .video-modal-wrap a la bonne structure flex */
+  function _fixModalLayout() {
+    var overlay = document.getElementById('videoModal');
+    if (!overlay) return;
+
+    /* La barre doit rester sticky en bas — on s'assure que l'overlay est en flex column */
+    overlay.style.flexDirection = 'column';
+    overlay.style.alignItems    = 'stretch';
+
+    var wrap = overlay.querySelector('.video-modal-wrap');
+    if (!wrap) return;
+    wrap.style.flex        = '1';
+    wrap.style.minHeight   = '0';
+    wrap.style.display     = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.overflow    = 'visible';
+
+    /* La barre de zoom doit toujours rester en bas */
+    var bar = wrap.querySelector('.video-modal-bar');
+    if (bar) {
+      bar.style.flexShrink = '0';
+      bar.style.width      = '100%';
+    }
+
+    /* L'inner (zone image) prend le reste */
+    var inner = wrap.querySelector('.video-modal-inner');
+    if (inner) {
+      inner.style.flex      = '1';
+      inner.style.minHeight = '0';
+      inner.style.overflow  = 'hidden';
+    }
+  }
+
+  /* Patch openVideoModal */
+  var _origOpenVideo = window.openVideoModal;
+  window.openVideoModal = function (src, pov, size) {
+    if (typeof _origOpenVideo === 'function') _origOpenVideo(src, pov, size);
+    setTimeout(_fixModalLayout, 80);
+  };
+
+  /* Patch openImageModal */
+  var _origOpenImage = window.openImageModal;
+  window.openImageModal = function (srcs, pov, size) {
+    if (typeof _origOpenImage === 'function') _origOpenImage(srcs, pov, size);
+    setTimeout(_fixModalLayout, 80);
+  };
 
 })();
