@@ -2224,7 +2224,7 @@ function openImageModal(srcs, pov, size) {
 
   var vw = window.innerWidth;
   var vh = window.innerHeight;
-  var availH = vh - 70;
+  var availH = vh - 160; /* 70 padding + ~90px barre de zoom + flèches */
   var availW = vw - 40;
   var maxW = size ? Math.min(size, availW) : availW;
 
