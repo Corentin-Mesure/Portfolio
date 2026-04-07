@@ -817,6 +817,7 @@
         <button class="modal-feature-btn" onclick="openSubModal('gsb-notif')"><div style="flex:1"><span class="feat-title" data-i18n="g4.title">&#x1F514; Notifications a la connexion</span><span class="feat-preview" data-i18n="g4.preview">Le praticien est notifie de l'etat de ses demandes des la connexion.</span></div><span class="feat-arrow">&#x203A;</span></button>
         <button class="modal-feature-btn" onclick="openSubModal('gsb-bdd')"><div style="flex:1"><span class="feat-title" data-i18n="g5.title">&#x1F5C4;&#xFE0F; Base de donnees</span><span class="feat-preview" data-i18n="g5.preview">API REST Laravel, base MySQL, consommee par l'application C# Windows.</span></div><span class="feat-arrow">&#x203A;</span></button>
       </div>
+    
       <div class="modal-tags">
         <span class="modal-tag">C#</span><span class="modal-tag">Windows Forms</span>
         <span class="modal-tag">Laravel</span><span class="modal-tag">MySQL</span><span class="modal-tag">API REST</span>
@@ -827,8 +828,70 @@
 <div class="submodal-overlay" id="gsb-connexion" onclick="closeSubModal(event,'gsb-connexion')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F511;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g1.title">Connexion &amp; Comptes</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-connexion')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g1.desc">L'application propose deux types de comptes avec des interfaces et des droits distincts selon le role.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/schema.png','&#x1F4CA; Schema — Connexion &amp; Roles')"><span class="step-num">01</span><span class="step-text" data-i18n="g1.s1">Deux roles : <strong>Praticien</strong> et <strong>Responsable RH</strong>.<br><span class="step-play-hint">Voir le schema</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g1.s2">Le <strong>compte praticien</strong> donne acces au formulaire de demande et a l'historique.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g1.s3">Le <strong>compte RH</strong> donne acces a la liste complete des demandes.</span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-demande" onclick="closeSubModal(event,'gsb-demande')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F4C5;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g2.title">Demande de conges</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-demande')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g2.desc">Le praticien peut soumettre une demande de conges. L'application verifie automatiquement son solde avant d'autoriser la demande.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/demandecongés.png','&#x1F464; POV Praticien')"><span class="step-num">01</span><span class="step-text" data-i18n="g2.s1">Selection de la <strong>date de debut</strong> et <strong>date de fin</strong>.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion2.png','&#x2139;&#xFE0F; Solde de conges')"><span class="step-num">02</span><span class="step-text" data-i18n="g2.s2">Le solde disponible s'affiche en cliquant sur <strong>"Voir mes jours restants"</strong>.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step has-video" onclick="openImageModal('images/gsb/attente.png','&#x23F3; Demande en attente')"><span class="step-num">03</span><span class="step-text" data-i18n="g2.s3">Si le solde est suffisant, la demande est <strong>soumise et enregistree</strong> en base.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x274C; Demande refusee')"><span class="step-num">04</span><span class="step-text" data-i18n="g2.s4">Si refusee, une notification s'affiche a la prochaine connexion.<br><span class="step-play-hint">Voir le screen</span></span></div></div></div></div></div>
 <div class="submodal-overlay" id="gsb-rh" onclick="closeSubModal(event,'gsb-rh')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F6E1;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g3.title">Panel RH</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-rh')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g3.desc">Le responsable RH dispose d'un espace dedie pour consulter et traiter toutes les demandes.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/panelrh.png','&#x1F6E1;&#xFE0F; POV RH')"><span class="step-num">01</span><span class="step-text" data-i18n="g3.s1">Le RH voit la <strong>liste de toutes les demandes</strong> en attente.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g3.s2">Le RH peut <strong>accepter ou refuser</strong> en un clic. Le solde est mis a jour automatiquement.</span></div></div></div></div></div>
-<div class="submodal-overlay" id="gsb-notif" onclick="closeSubModal(event,'gsb-notif')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F514;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g4.title">Notifications a la connexion</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-notif')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g4.desc">Lors de chaque connexion, le praticien est automatiquement informe de l'etat de ses demandes en cours.</p><div class="submodal-steps"><div class="submodal-step has-video" onclick="openImageModal('images/gsb/notifconnexion.png','&#x1F514; Notification a la connexion')"><span class="step-num">01</span><span class="step-text" data-i18n="g4.s1">Des la connexion, une <strong>notification s'affiche</strong> si des demandes ont ete traitees.<br><span class="step-play-hint">Voir le screen</span></span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g4.s2">Le praticien peut consulter l'<strong>historique complet</strong> de ses demandes avec leur statut.</span></div></div></div></div></div>
-<div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')"><div class="submodal"><div class="submodal-header"><span class="submodal-icon">&#x1F5C4;&#xFE0F;</span><div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div><div class="submodal-title" data-i18n="g5.title">Base de donnees</div><button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button></div><div class="submodal-body"><p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p><div class="submodal-steps"><div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations.</span></div><div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.</span></div><div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique.</span></div></div></div></div></div>
+
+<div class="submodal-overlay" id="gsb-bdd" onclick="closeSubModal(event,'gsb-bdd')">
+  <div class="submodal">
+    <div class="submodal-header">
+      <span class="submodal-icon">&#x1F5C4;&#xFE0F;</span>
+      <div class="submodal-type" data-i18n="submodal.feature">Fonctionnalite</div>
+      <div class="submodal-title" data-i18n="g5.title">Base de donnees</div>
+      <button class="submodal-close" onclick="closeSubModalBtn('gsb-bdd')">&#x2715;</button>
+    </div>
+    <div class="submodal-body">
+      <p class="submodal-desc" data-i18n="g5.desc">L'application C# communique avec un backend Laravel via une API REST. Les donnees sont en MySQL.</p>
+      <div class="submodal-steps">
+        <div class="submodal-step"><span class="step-num">01</span><span class="step-text" data-i18n="g5.s1"><strong>Laravel</strong> expose une API REST pour toutes les operations.</span></div>
+        <div class="submodal-step"><span class="step-num">02</span><span class="step-text" data-i18n="g5.s2"><strong>MySQL</strong> stocke les praticiens, soldes, demandes et statuts.</span></div>
+        <div class="submodal-step"><span class="step-num">03</span><span class="step-text" data-i18n="g5.s3"><strong>C# Windows Forms</strong> constitue l'interface graphique.</span></div>
+      </div>
+
+      <div style="margin-top:32px;">
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a8a;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #1e2d3d;">✦ Code</div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#a5d6ff;font-weight:700;margin-bottom:8px;font-family:monospace;">🔑 Authentification C# — Connexion &amp; routage des rôles</div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/CodeConnexion.png','🔑 Connexion C# — Routage praticien / RH')">
+            <img src="images/gsb/CodeConnexion.png" alt="Code Connexion C#" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#ffa040;font-weight:700;margin-bottom:8px;font-family:monospace;">📅 Demande de congés — Vérification du solde &amp; insertion en BDD</div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/CodeDemandeConges.png','📅 Demande de congés — Solde & INSERT C#')">
+            <img src="images/gsb/CodeDemandeConges.png" alt="Code Demande Congés" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#3dd68c;font-weight:700;margin-bottom:8px;font-family:monospace;">🛡️ Panel RH — Récupération de la demande (1/3)</div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/CodeGestionConges1.png','🛡️ Panel RH — Lecture de la demande en BDD')">
+            <img src="images/gsb/CodeGestionConges1.png" alt="Code Gestion Congés 1" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#3dd68c;font-weight:700;margin-bottom:8px;font-family:monospace;">🛡️ Panel RH — Calcul du delta de jours (2/3)</div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/CodeGestionConges2.png','🛡️ Panel RH — Calcul delta & UPDATE solde')">
+            <img src="images/gsb/CodeGestionConges2.png" alt="Code Gestion Congés 2" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:11px;color:#3dd68c;font-weight:700;margin-bottom:8px;font-family:monospace;">🛡️ Panel RH — Mise à jour de l'état &amp; rafraîchissement (3/3)</div>
+          <div style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;border:1px solid #1e2d3d;" onclick="openImageModal('images/gsb/CodeGestionConges3.png','🛡️ Panel RH — UPDATE état & rechargement affichage')">
+            <img src="images/gsb/CodeGestionConges3.png" alt="Code Gestion Congés 3" style="width:100%;height:auto;display:block;">
+            <div style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);padding:4px 10px;border-radius:20px;font-size:11px;color:#4ecdc4;letter-spacing:1.2px;pointer-events:none;">🔍 Agrandir</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MODAL GSB SALAIRES ═══ -->
 <div class="modal-overlay" id="modal-gsb-salaires" onclick="closeModal(event,'gsb-salaires')">
