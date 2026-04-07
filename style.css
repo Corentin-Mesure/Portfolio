@@ -2846,3 +2846,346 @@ body.no-anim .ap-particle {
 :root.light-mode .sp-row-info small { color: rgba(232,224,208,0.3); }
 :root.light-mode .sp-footer { color: rgba(232,224,208,0.15); }
 :root.light-mode #settingsOverlay { background: rgba(0,0,0,0.6); }
+
+
+/* ════════════════════════════════════════════════════════
+   NAVIGATION PAR FLÈCHES — CARDS PROJETS & MODALS
+   À coller à la fin de style.css
+════════════════════════════════════════════════════════ */
+
+/* ── Boutons fléchés dans les cards ── */
+.card-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(240, 200, 74, 0.1);
+}
+
+.card-nav-arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(240, 200, 74, 0.06);
+  border: 1px solid rgba(240, 200, 74, 0.25);
+  color: var(--gold-dim);
+  font-size: 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.card-nav-btn:hover:not(:disabled) {
+  background: rgba(240, 200, 74, 0.18);
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: scale(1.08);
+}
+
+.card-nav-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-nav-counter {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(240, 200, 74, 0.5);
+  min-width: 40px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Indicateurs de slide (dots) */
+.card-nav-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.card-nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(240, 200, 74, 0.2);
+  border: 1px solid rgba(240, 200, 74, 0.2);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.card-nav-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(240, 200, 74, 0.7);
+  transform: scale(1.3);
+}
+
+.card-nav-dot:hover:not(.active) {
+  background: rgba(240, 200, 74, 0.45);
+}
+
+/* ── Zone d'image navigable dans les cards ── */
+.card-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img-wrap .card-arrow-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.2s;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.card-img-wrap:hover .card-arrow-overlay {
+  opacity: 1;
+}
+
+.card-img-wrap .card-arrow-overlay:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.card-img-wrap .card-arrow-overlay.left { left: 0; }
+.card-img-wrap .card-arrow-overlay.right { right: 0; }
+
+.card-arrow-overlay span {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+/* ── Navigation globale dans les modals ── */
+.modal-global-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 64px 8px;
+  border-top: 1px solid rgba(240, 200, 74, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+}
+
+.modal-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  background: rgba(240, 200, 74, 0.05);
+  border: 1px solid rgba(240, 200, 74, 0.22);
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  cursor: pointer;
+  transition: all 0.25s;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.modal-nav-btn:hover:not(:disabled) {
+  background: rgba(240, 200, 74, 0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.modal-nav-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+  pointer-events: none;
+}
+
+.modal-nav-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.modal-nav-label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.modal-nav-pos {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(240, 200, 74, 0.45);
+}
+
+/* ── Navigation dans sous-modals ── */
+.submodal-step-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(93, 232, 242, 0.1);
+}
+
+.sub-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(93, 232, 242, 0.05);
+  border: 1px solid rgba(93, 232, 242, 0.2);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.sub-nav-btn:hover:not(:disabled) {
+  background: rgba(93, 232, 242, 0.12);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.sub-nav-btn:disabled {
+  opacity: 0.18;
+  cursor: default;
+  pointer-events: none;
+}
+
+.sub-nav-counter {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(93, 232, 242, 0.4);
+  text-align: center;
+}
+
+/* ── Highlight step actif (navigation au clavier) ── */
+.submodal-step.nav-focus {
+  background: rgba(93, 232, 242, 0.1) !important;
+  border-color: rgba(93, 232, 242, 0.4) !important;
+  transform: translateX(6px);
+}
+
+.submodal-step.nav-focus .step-num {
+  color: var(--cyan) !important;
+}
+
+/* Animation de transition de step */
+@keyframes stepFadeIn {
+  from { opacity: 0.4; transform: translateX(8px) translateY(2px); }
+  to   { opacity: 1;   transform: translateX(0) translateY(0); }
+}
+
+.submodal-step.nav-focus {
+  animation: stepFadeIn 0.22s ease;
+}
+
+/* ── Indicateur clavier flottant ── */
+#kbdHint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: rgba(14, 11, 30, 0.95);
+  border: 1px solid rgba(93, 232, 242, 0.3);
+  color: rgba(93, 232, 242, 0.75);
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  padding: 9px 22px;
+  border-radius: 20px;
+  z-index: 9999998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#kbdHint.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#kbdHint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  background: rgba(93, 232, 242, 0.12);
+  border: 1px solid rgba(93, 232, 242, 0.3);
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--cyan);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .modal-global-nav {
+    padding: 12px 16px 10px;
+    gap: 8px;
+  }
+
+  .modal-nav-btn {
+    padding: 8px 12px;
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .modal-nav-label {
+    font-size: 10px;
+    max-width: 110px;
+  }
+
+  .card-nav-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  #kbdHint { display: none; }
+}
