@@ -1691,7 +1691,40 @@ function applyAnimState(enabled) {
 }
 function toggleAnimations() { applyAnimState(!animEnabled); }
 
+/* ════════════════════════════════════════════════════════
+   INIT au chargement
+════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+  applyLang(currentLang);
+  applyAnimState(animEnabled);
+});
 
+/* ════════════════════════════════════════════════════════
+   MODE GRANDE TAILLE — toggle normal / XXL
+   zoom appliqué sur body → position:fixed non affecté
+════════════════════════════════════════════════════════ */
+(function () {
+  var BIG    = 1.35;
+  var active = localStorage.getItem('portfolio-bigmode') === '1';
+
+  /* Expose le facteur zoom pour que handleFlip corrige les coords */
+  window._bodyZoom = active ? BIG : 1;
+
+  function apply(on) {
+    active = on;
+    localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
+    window._bodyZoom       = on ? BIG : 1;
+    document.body.style.zoom = on ? BIG : '';
+    var btn = document.getElementById('bigModeBtn');
+    if (btn) btn.classList.toggle('active', on);
+  }
+
+  window.toggleBigMode = function () { apply(!active); };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (active) apply(true);
+  });
+})();
 
 /* ════════════════════════════════════════════════════════
    REMPLACEMENT COMPLET — openImageModal + plein écran avec zoom/pan
@@ -1716,15 +1749,24 @@ function _injectFsCSS() {
     'display:flex;flex-direction:column;overflow:hidden;}',
 
     /* Zone image (flex:1 = prend tout l'espace au-dessus de la barre) */
-    '#_fsBody{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;min-height:0;}',
+    '#_fsBody{flex:1;position:relative;overflow:hidden;',
+    'display:flex;align-items:center;justify-content:center;',
+    'cursor:grab;touch-action:none;user-select:none;}',
     '#_fsBody.dragging{cursor:grabbing;}',
 
     /* Image dans le plein écran */
-   '#_fsImg{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;max-width:none;user-select:none;-webkit-user-drag:none;transition:none;}',
+    '#_fsImg{position:absolute;top:0;left:0;',
+    'transform-origin:0 0;',
+    'will-change:transform;',
+    'user-select:none;-webkit-user-drag:none;',
+    'transition:none;}',
     '#_fsImg.snap{transition:transform .25s cubic-bezier(0.16,1,0.3,1);}',
 
     /* Barre basse */
-    '#_fsBar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);border-top:1px solid rgba(78,205,196,0.18);z-index:10;position:relative;}',
+    '#_fsBar{flex-shrink:0;display:flex;align-items:center;gap:8px;',
+    'padding:10px 14px;',
+    'background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);',
+    'border-top:1px solid rgba(78,205,196,0.18);}',
 
     /* Boutons communs */
     '#_fsBar button{background:rgba(255,255,255,0.07);',
@@ -1732,7 +1774,6 @@ function _injectFsCSS() {
     'border-radius:8px;width:32px;height:32px;font-size:17px;cursor:pointer;',
     'transition:background .15s,transform .1s,border-color .15s;',
     'display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
-    
     '#_fsBar button:hover{background:rgba(78,205,196,0.2);',
     'border-color:rgba(78,205,196,0.8);transform:scale(1.1);}',
 
@@ -2181,11 +2222,9 @@ function openImageModal(srcs, pov, size) {
 
   var list = Array.isArray(srcs) ? srcs : [srcs];
 
-  /* ── Dimensions réelles sans le zoom body ── */
-  var bz = window._bodyZoom || 1;
-  var vw = Math.round(window.innerWidth  / bz);
-  var vh = Math.round(window.innerHeight / bz);
-  var availH = vh - 160;
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  var availH = vh - 160; /* 70 padding + ~90px barre de zoom + flèches */
   var availW = vw - 40;
   var maxW = size ? Math.min(size, availW) : availW;
 
@@ -2223,6 +2262,7 @@ function openImageModal(srcs, pov, size) {
     img.onerror = function () { img.style.display = 'none'; };
     img.src = list[0];
 
+    /* Double-clic sur le modal normal → plein écran */
     imgWrap.addEventListener('dblclick', function (e) {
       e.preventDefault();
       if (Math.abs(_zoom.scale - 1) > 0.05) {
@@ -2273,6 +2313,7 @@ function openImageModal(srcs, pov, size) {
       img2.onerror = function () { img2.style.display = 'none'; };
       img2.src = src;
 
+      /* Double-clic → plein écran (image cliquée) */
       imgWrap2.addEventListener('dblclick', function (e) {
         e.preventDefault();
         _openFullscreenSrc(img2.src);
@@ -2336,6 +2377,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* ════════════════════════════════════════════════════════
    PATCH — Navigation flèches sur les côtés + barre toujours visible
+   Remplace la section IIFE "(function () { var _allItems..." 
+   à la FIN de Script.js
 ════════════════════════════════════════════════════════ */
 
 (function () {
@@ -2346,6 +2389,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var _nextBtn  = null;
   var _counter  = null;
 
+  /* ── Création des éléments fixes (une seule fois) ── */
   function _ensureElements() {
     if (_prevBtn && document.body.contains(_prevBtn)) return;
 
@@ -2372,6 +2416,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(_counter);
   }
 
+  /* ── Mise à jour visuelle ── */
   function _updateNav() {
     _ensureElements();
     var total = _allItems.length;
@@ -2392,12 +2437,14 @@ document.addEventListener('DOMContentLoaded', function () {
     _nextBtn.disabled       = (_idx === total - 1);
   }
 
+  /* ── Cache les flèches quand le modal se ferme ── */
   function _hideNav() {
     if (_prevBtn) _prevBtn.style.display = 'none';
     if (_nextBtn) _nextBtn.style.display = 'none';
     if (_counter) _counter.style.display = 'none';
   }
 
+  /* ── Collecte des médias du sous-modal courant uniquement ── */
   function _buildAllItems(triggerEl) {
     _allItems = [];
     var currentSubmodal = triggerEl.closest('.submodal-overlay');
@@ -2420,6 +2467,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ── Écoute des clics déclencheurs ── */
   document.addEventListener('click', function (e) {
     var trigger = e.target;
     while (trigger && trigger !== document) {
@@ -2435,6 +2483,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
+  /* ── Navigation ── */
   window.mediaNavGo = function (dir) {
     var next = _idx + dir;
     if (next < 0 || next >= _allItems.length) return;
@@ -2461,6 +2510,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () { _updateNav(); }, 150);
   };
 
+  /* ── Clavier ── */
   document.addEventListener('keydown', function (e) {
     var overlay = document.querySelector('.video-modal-overlay.open');
     if (!overlay) return;
@@ -2478,33 +2528,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
+  /* ── Patch closeVideoModal pour cacher les flèches ── */
   var _origClose = window.closeVideoModal;
   window.closeVideoModal = function () {
     _hideNav();
     if (typeof _origClose === 'function') _origClose();
   };
 
+  /* ── Patch openVideoModal / openImageModal pour recalculer la hauteur ── */
+  /* S'assure que .video-modal-wrap a la bonne structure flex */
   function _fixModalLayout() {
     var overlay = document.getElementById('videoModal');
     if (!overlay) return;
 
+    /* La barre doit rester sticky en bas — on s'assure que l'overlay est en flex column */
     overlay.style.flexDirection = 'column';
     overlay.style.alignItems    = 'stretch';
 
     var wrap = overlay.querySelector('.video-modal-wrap');
     if (!wrap) return;
-    wrap.style.flex          = '1';
-    wrap.style.minHeight     = '0';
-    wrap.style.display       = 'flex';
+    wrap.style.flex        = '1';
+    wrap.style.minHeight   = '0';
+    wrap.style.display     = 'flex';
     wrap.style.flexDirection = 'column';
-    wrap.style.overflow      = 'visible';
+    wrap.style.overflow    = 'visible';
 
+    /* La barre de zoom doit toujours rester en bas */
     var bar = wrap.querySelector('.video-modal-bar');
     if (bar) {
       bar.style.flexShrink = '0';
       bar.style.width      = '100%';
     }
 
+    /* L'inner (zone image) prend le reste */
     var inner = wrap.querySelector('.video-modal-inner');
     if (inner) {
       inner.style.flex      = '1';
@@ -2513,51 +2569,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  /* Patch openVideoModal */
   var _origOpenVideo = window.openVideoModal;
   window.openVideoModal = function (src, pov, size) {
     if (typeof _origOpenVideo === 'function') _origOpenVideo(src, pov, size);
     setTimeout(_fixModalLayout, 80);
   };
 
+  /* Patch openImageModal */
   var _origOpenImage = window.openImageModal;
   window.openImageModal = function (srcs, pov, size) {
     if (typeof _origOpenImage === 'function') _origOpenImage(srcs, pov, size);
     setTimeout(_fixModalLayout, 80);
   };
 
-})();
-
-/* ════════════════════════════════════════════════════════
-   INIT au chargement
-════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
-  applyLang(currentLang);
-  applyAnimState(animEnabled);
-});
-
-
-/* ════════════════════════════════════════════════════════
-   MODE GRANDE TAILLE
-   CORRECTION : les overlays fixed sont contre-zoomés mais
-   doivent aussi être recentrés explicitement.
-════════════════════════════════════════════════════════ */
-(function () {
-  var BIG    = 1.35;
-  var active = localStorage.getItem('portfolio-bigmode') === '1';
-  window._bodyZoom = active ? BIG : 1;
-
-  function apply(on) {
-    active = on;
-    localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
-    window._bodyZoom = on ? BIG : 1;
-    document.body.style.zoom = on ? BIG : '';
-    document.documentElement.classList.toggle('big-mode', on);
-    var btn = document.getElementById('bigModeBtn');
-    if (btn) btn.classList.toggle('active', on);
-  }
-
-  window.toggleBigMode = function () { apply(!active); };
-  document.addEventListener('DOMContentLoaded', function () {
-    if (active) apply(true);
-  });
 })();
