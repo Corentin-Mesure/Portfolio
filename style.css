@@ -3129,16 +3129,19 @@ html.big-mode #_fsOv {
   left:   0 !important;
   right:  auto !important;
   bottom: auto !important;
+  transform-origin: top left !important;
   position: fixed !important;
 }
 
 html.big-mode #settingsPanel {
   zoom:   calc(1 / 1.35);
   height: 135.135vh;
-  top:    0;
-  right:  0;
-  left:   auto;
+  top:    0 !important;
+  right:  0 !important;
+  left:   auto !important;
+  bottom: auto !important;
   position: fixed !important;
+  transform-origin: top right !important;
 }
 
 /* Boutons flottants créés par JS */
@@ -3147,12 +3150,11 @@ html.big-mode .vm-nav-counter,
 html.big-mode #_imgModalClose,
 html.big-mode #kcToast,
 html.big-mode #kcMsgToast,
-html.big-mode #gifSpeedToast,
-html.big-mode #_fsOv {
+html.big-mode #gifSpeedToast {
   zoom: calc(1 / 1.35);
+  transform-origin: top left;
 }
 
-/* Repositionnement des flèches et compteur */
 html.big-mode .vm-nav-btn.vm-prev { left:  21.6px; }
 html.big-mode .vm-nav-btn.vm-next { right: 21.6px; }
 html.big-mode .vm-nav-counter     { bottom: 175.5px; }
