@@ -2181,10 +2181,11 @@ function openImageModal(srcs, pov, size) {
 
   var list = Array.isArray(srcs) ? srcs : [srcs];
 
-var bz = window._bodyZoom || 1;
-var vw = Math.round(window.innerWidth  / bz);
-var vh = Math.round(window.innerHeight / bz);
-  var availH = vh - 160; /* 70 padding + ~90px barre de zoom + flèches */
+  /* ── Dimensions réelles sans le zoom body ── */
+  var bz = window._bodyZoom || 1;
+  var vw = Math.round(window.innerWidth  / bz);
+  var vh = Math.round(window.innerHeight / bz);
+  var availH = vh - 160;
   var availW = vw - 40;
   var maxW = size ? Math.min(size, availW) : availW;
 
@@ -2222,7 +2223,6 @@ var vh = Math.round(window.innerHeight / bz);
     img.onerror = function () { img.style.display = 'none'; };
     img.src = list[0];
 
-    /* Double-clic sur le modal normal → plein écran */
     imgWrap.addEventListener('dblclick', function (e) {
       e.preventDefault();
       if (Math.abs(_zoom.scale - 1) > 0.05) {
@@ -2273,7 +2273,6 @@ var vh = Math.round(window.innerHeight / bz);
       img2.onerror = function () { img2.style.display = 'none'; };
       img2.src = src;
 
-      /* Double-clic → plein écran (image cliquée) */
       imgWrap2.addEventListener('dblclick', function (e) {
         e.preventDefault();
         _openFullscreenSrc(img2.src);
@@ -2337,8 +2336,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* ════════════════════════════════════════════════════════
    PATCH — Navigation flèches sur les côtés + barre toujours visible
-   Remplace la section IIFE "(function () { var _allItems..." 
-   à la FIN de Script.js
 ════════════════════════════════════════════════════════ */
 
 (function () {
@@ -2349,7 +2346,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var _nextBtn  = null;
   var _counter  = null;
 
-  /* ── Création des éléments fixes (une seule fois) ── */
   function _ensureElements() {
     if (_prevBtn && document.body.contains(_prevBtn)) return;
 
@@ -2376,7 +2372,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(_counter);
   }
 
-  /* ── Mise à jour visuelle ── */
   function _updateNav() {
     _ensureElements();
     var total = _allItems.length;
@@ -2397,14 +2392,12 @@ document.addEventListener('DOMContentLoaded', function () {
     _nextBtn.disabled       = (_idx === total - 1);
   }
 
-  /* ── Cache les flèches quand le modal se ferme ── */
   function _hideNav() {
     if (_prevBtn) _prevBtn.style.display = 'none';
     if (_nextBtn) _nextBtn.style.display = 'none';
     if (_counter) _counter.style.display = 'none';
   }
 
-  /* ── Collecte des médias du sous-modal courant uniquement ── */
   function _buildAllItems(triggerEl) {
     _allItems = [];
     var currentSubmodal = triggerEl.closest('.submodal-overlay');
@@ -2427,7 +2420,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Écoute des clics déclencheurs ── */
   document.addEventListener('click', function (e) {
     var trigger = e.target;
     while (trigger && trigger !== document) {
@@ -2443,7 +2435,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
-  /* ── Navigation ── */
   window.mediaNavGo = function (dir) {
     var next = _idx + dir;
     if (next < 0 || next >= _allItems.length) return;
@@ -2470,7 +2461,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () { _updateNav(); }, 150);
   };
 
-  /* ── Clavier ── */
   document.addEventListener('keydown', function (e) {
     var overlay = document.querySelector('.video-modal-overlay.open');
     if (!overlay) return;
@@ -2488,39 +2478,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
-  /* ── Patch closeVideoModal pour cacher les flèches ── */
   var _origClose = window.closeVideoModal;
   window.closeVideoModal = function () {
     _hideNav();
     if (typeof _origClose === 'function') _origClose();
   };
 
-  /* ── Patch openVideoModal / openImageModal pour recalculer la hauteur ── */
-  /* S'assure que .video-modal-wrap a la bonne structure flex */
   function _fixModalLayout() {
     var overlay = document.getElementById('videoModal');
     if (!overlay) return;
 
-    /* La barre doit rester sticky en bas — on s'assure que l'overlay est en flex column */
     overlay.style.flexDirection = 'column';
     overlay.style.alignItems    = 'stretch';
 
     var wrap = overlay.querySelector('.video-modal-wrap');
     if (!wrap) return;
-    wrap.style.flex        = '1';
-    wrap.style.minHeight   = '0';
-    wrap.style.display     = 'flex';
+    wrap.style.flex          = '1';
+    wrap.style.minHeight     = '0';
+    wrap.style.display       = 'flex';
     wrap.style.flexDirection = 'column';
-    wrap.style.overflow    = 'visible';
+    wrap.style.overflow      = 'visible';
 
-    /* La barre de zoom doit toujours rester en bas */
     var bar = wrap.querySelector('.video-modal-bar');
     if (bar) {
       bar.style.flexShrink = '0';
       bar.style.width      = '100%';
     }
 
-    /* L'inner (zone image) prend le reste */
     var inner = wrap.querySelector('.video-modal-inner');
     if (inner) {
       inner.style.flex      = '1';
@@ -2529,14 +2513,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  /* Patch openVideoModal */
   var _origOpenVideo = window.openVideoModal;
   window.openVideoModal = function (src, pov, size) {
     if (typeof _origOpenVideo === 'function') _origOpenVideo(src, pov, size);
     setTimeout(_fixModalLayout, 80);
   };
 
-  /* Patch openImageModal */
   var _origOpenImage = window.openImageModal;
   window.openImageModal = function (srcs, pov, size) {
     if (typeof _origOpenImage === 'function') _origOpenImage(srcs, pov, size);
@@ -2556,6 +2538,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* ════════════════════════════════════════════════════════
    MODE GRANDE TAILLE
+   CORRECTION : les overlays fixed sont contre-zoomés mais
+   doivent aussi être recentrés explicitement.
 ════════════════════════════════════════════════════════ */
 (function () {
   var BIG    = 1.35;
@@ -2577,4 +2561,3 @@ document.addEventListener('DOMContentLoaded', function () {
     if (active) apply(true);
   });
 })();
-
