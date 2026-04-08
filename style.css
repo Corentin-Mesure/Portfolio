@@ -3118,12 +3118,14 @@ html.big-mode .video-modal-overlay,
 html.big-mode .modal-overlay,
 html.big-mode .submodal-overlay,
 html.big-mode #settingsOverlay {
-  zoom: 0.74074; /* 1 / 1.35 */
+  zoom: 0.74074;
   width:  135.135vw;
   height: 135.135vh;
-  inset: unset;
   top:  0 !important;
   left: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  position: fixed !important;
 }
 
 html.big-mode #settingsPanel {
@@ -3132,6 +3134,7 @@ html.big-mode #settingsPanel {
   top:    0;
   right:  0;
   left:   auto;
+  position: fixed !important;
 }
 
 /* Boutons flottants créés par JS */
