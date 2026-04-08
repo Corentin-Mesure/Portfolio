@@ -3117,19 +3117,23 @@ body.no-anim .ap-particle {
 html.big-mode .video-modal-overlay,
 html.big-mode .modal-overlay,
 html.big-mode .submodal-overlay,
-html.big-mode #settingsOverlay {
-  zoom: 0.74074;
+html.big-mode #settingsOverlay,
+html.big-mode #kcGallery,
+html.big-mode #_fsOv {
+  zoom: calc(1 / 1.35);
   width:  135.135vw;
   height: 135.135vh;
-  top:  0 !important;
-  left: 0 !important;
-  right: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  top:    0 !important;
+  left:   0 !important;
+  right:  auto !important;
   bottom: auto !important;
   position: fixed !important;
 }
 
 html.big-mode #settingsPanel {
-  zoom:   0.74074;
+  zoom:   calc(1 / 1.35);
   height: 135.135vh;
   top:    0;
   right:  0;
@@ -3142,11 +3146,14 @@ html.big-mode .vm-nav-btn,
 html.big-mode .vm-nav-counter,
 html.big-mode #_imgModalClose,
 html.big-mode #kcToast,
-html.big-mode #gifSpeedToast {
-  zoom: 0.74074;
+html.big-mode #kcMsgToast,
+html.big-mode #gifSpeedToast,
+html.big-mode #_fsOv {
+  zoom: calc(1 / 1.35);
 }
 
-html.big-mode .vm-nav-btn.vm-prev { left:  calc(16px * 1.35); }
-html.big-mode .vm-nav-btn.vm-next { right: calc(16px * 1.35); }
-html.big-mode .vm-nav-counter     { bottom: calc(130px * 1.35); }
-html.big-mode #_imgModalClose     { top: calc(18px * 1.35); right: calc(22px * 1.35); }
+/* Repositionnement des flèches et compteur */
+html.big-mode .vm-nav-btn.vm-prev { left:  21.6px; }
+html.big-mode .vm-nav-btn.vm-next { right: 21.6px; }
+html.big-mode .vm-nav-counter     { bottom: 175.5px; }
+html.big-mode #_imgModalClose     { top: 24.3px; right: 29.7px; }
