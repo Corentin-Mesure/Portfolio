@@ -1691,13 +1691,6 @@ function applyAnimState(enabled) {
 }
 function toggleAnimations() { applyAnimState(!animEnabled); }
 
-/* ════════════════════════════════════════════════════════
-   INIT au chargement
-════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
-  applyLang(currentLang);
-  applyAnimState(animEnabled);
-});
 
 
 /* ════════════════════════════════════════════════════════
@@ -2188,7 +2181,9 @@ function openImageModal(srcs, pov, size) {
 
   var list = Array.isArray(srcs) ? srcs : [srcs];
 
-
+var bz = window._bodyZoom || 1;
+var vw = Math.round(window.innerWidth  / bz);
+var vh = Math.round(window.innerHeight / bz);
   var availH = vh - 160; /* 70 padding + ~90px barre de zoom + flèches */
   var availW = vw - 40;
   var maxW = size ? Math.min(size, availW) : availW;
@@ -2550,4 +2545,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 })();
 
+/* ════════════════════════════════════════════════════════
+   INIT au chargement
+════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+  applyLang(currentLang);
+  applyAnimState(animEnabled);
+});
+
+
+/* ════════════════════════════════════════════════════════
+   MODE GRANDE TAILLE
+════════════════════════════════════════════════════════ */
+(function () {
+  var BIG    = 1.35;
+  var active = localStorage.getItem('portfolio-bigmode') === '1';
+  window._bodyZoom = active ? BIG : 1;
+
+  function apply(on) {
+    active = on;
+    localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
+    window._bodyZoom = on ? BIG : 1;
+    document.body.style.zoom = on ? BIG : '';
+    document.documentElement.classList.toggle('big-mode', on);
+    var btn = document.getElementById('bigModeBtn');
+    if (btn) btn.classList.toggle('active', on);
+  }
+
+  window.toggleBigMode = function () { apply(!active); };
+  document.addEventListener('DOMContentLoaded', function () {
+    if (active) apply(true);
+  });
+})();
 
