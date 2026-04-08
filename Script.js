@@ -2376,80 +2376,125 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 /* ════════════════════════════════════════════════════════
-   PATCH — Navigation flèches sur les côtés + barre toujours visible
-   Remplace la section IIFE "(function () { var _allItems..." 
-   à la FIN de Script.js
+   NAVIGATION MÉDIA — flèches prev / next dans le modal
+   v6 : masquage fiable à la fermeture
 ════════════════════════════════════════════════════════ */
 
 (function () {
 
   var _allItems = [];
   var _idx      = 0;
-  var _prevBtn  = null;
-  var _nextBtn  = null;
-  var _counter  = null;
+  var _navEl    = null;
 
-  /* ── Création des éléments fixes (une seule fois) ── */
-  function _ensureElements() {
-    if (_prevBtn && document.body.contains(_prevBtn)) return;
+  /* ── CSS ── */
+  (function _injectStyles() {
+    if (document.getElementById('vm-nav-styles')) return;
+    var style = document.createElement('style');
+    style.id  = 'vm-nav-styles';
+    style.textContent = [
+      '.vm-nav {',
+      '  display: none;',
+      '  position: fixed;',
+      '  top: 0; left: 0; right: 0; bottom: 0;',
+      '  pointer-events: none;',
+      '  z-index: 99999;',
+      '}',
+      '.vm-nav-btn {',
+      '  position: fixed;',
+      '  top: 50%;',
+      '  transform: translateY(-50%);',
+      '  pointer-events: all;',
+      '  background: rgba(0,0,0,0.6);',
+      '  color: #fff;',
+      '  border: none;',
+      '  border-radius: 50%;',
+      '  width: 52px; height: 52px;',
+      '  font-size: 32px;',
+      '  cursor: pointer;',
+      '  transition: background 0.2s;',
+      '  display: flex; align-items: center; justify-content: center;',
+      '}',
+      '.vm-nav-btn:hover:not(:disabled) { background: rgba(0,0,0,0.9); }',
+      '.vm-nav-btn:disabled { opacity: 0.2; cursor: default; }',
+      '.vm-prev { left: 16px; }',
+      '.vm-next { right: 16px; }',
+      '.vm-nav-counter {',
+      '  position: fixed;',
+      '  bottom: 20px;',
+      '  left: 50%;',
+      '  transform: translateX(-50%);',
+      '  background: rgba(0,0,0,0.6);',
+      '  color: #fff;',
+      '  padding: 4px 12px;',
+      '  border-radius: 12px;',
+      '  font-size: 14px;',
+      '  pointer-events: none;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  })();
 
-    _prevBtn = document.createElement('button');
-    _prevBtn.className = 'vm-nav-btn vm-prev';
-    _prevBtn.innerHTML = '&#x2039;';
-    _prevBtn.setAttribute('aria-label', 'Précédent');
-    _prevBtn.style.display = 'none';
-    _prevBtn.addEventListener('click', function () { window.mediaNavGo(-1); });
+  /* ── Cacher les flèches ── */
+  function _hideNav() {
+    if (_navEl) _navEl.style.display = 'none';
+    _allItems = [];
+    _idx = 0;
+  }
 
-    _nextBtn = document.createElement('button');
-    _nextBtn.className = 'vm-nav-btn vm-next';
-    _nextBtn.innerHTML = '&#x203A;';
-    _nextBtn.setAttribute('aria-label', 'Suivant');
-    _nextBtn.style.display = 'none';
-    _nextBtn.addEventListener('click', function () { window.mediaNavGo(1); });
+  /* ── Observer : surveille TOUT le DOM pour détecter la fermeture ── */
+  var _observer = new MutationObserver(function () {
+    // Si aucun modal vidéo n'est ouvert → cacher les flèches
+    var isOpen = !!document.querySelector('.video-modal-overlay.open');
+    if (!isOpen && _navEl && _navEl.style.display !== 'none') {
+      _hideNav();
+    }
+  });
 
-    _counter = document.createElement('div');
-    _counter.className = 'vm-nav-counter';
-    _counter.style.display = 'none';
+  _observer.observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class', 'style']
+  });
 
-    document.body.appendChild(_prevBtn);
-    document.body.appendChild(_nextBtn);
-    document.body.appendChild(_counter);
+  /* ── Injection du bloc flèches dans le body ── */
+  function _injectNav() {
+    if (_navEl && document.body.contains(_navEl)) return;
+
+    _navEl = document.createElement('div');
+    _navEl.className = 'vm-nav';
+    _navEl.innerHTML =
+      '<button class="vm-nav-btn vm-prev" aria-label="Précédent">&#x2039;</button>' +
+      '<span class="vm-nav-counter"></span>' +
+      '<button class="vm-nav-btn vm-next" aria-label="Suivant">&#x203A;</button>';
+
+    _navEl.querySelector('.vm-prev').addEventListener('click', function () { window.mediaNavGo(-1); });
+    _navEl.querySelector('.vm-next').addEventListener('click', function () { window.mediaNavGo(1); });
+
+    document.body.appendChild(_navEl);
   }
 
   /* ── Mise à jour visuelle ── */
   function _updateNav() {
-    _ensureElements();
-    var total = _allItems.length;
-    var overlay = document.querySelector('.video-modal-overlay.open');
+    if (!_navEl || !document.body.contains(_navEl)) return;
+    var total   = _allItems.length;
+    var counter = _navEl.querySelector('.vm-nav-counter');
+    var btnPrev = _navEl.querySelector('.vm-prev');
+    var btnNext = _navEl.querySelector('.vm-next');
 
-    if (total <= 1 || !overlay) {
-      _prevBtn.style.display  = 'none';
-      _nextBtn.style.display  = 'none';
-      _counter.style.display  = 'none';
-      return;
-    }
+    if (total <= 1) { _navEl.style.display = 'none'; return; }
 
-    _prevBtn.style.display  = 'flex';
-    _nextBtn.style.display  = 'flex';
-    _counter.style.display  = 'block';
-    _counter.textContent    = (_idx + 1) + ' / ' + total;
-    _prevBtn.disabled       = (_idx === 0);
-    _nextBtn.disabled       = (_idx === total - 1);
+    _navEl.style.display  = 'block';
+    counter.textContent   = (_idx + 1) + ' / ' + total;
+    btnPrev.disabled      = (_idx === 0);
+    btnNext.disabled      = (_idx === total - 1);
   }
 
-  /* ── Cache les flèches quand le modal se ferme ── */
-  function _hideNav() {
-    if (_prevBtn) _prevBtn.style.display = 'none';
-    if (_nextBtn) _nextBtn.style.display = 'none';
-    if (_counter) _counter.style.display = 'none';
-  }
-
-  /* ── Collecte des médias du sous-modal courant uniquement ── */
+  /* ── Collecte des médias ── */
   function _buildAllItems(triggerEl) {
     _allItems = [];
     var currentSubmodal = triggerEl.closest('.submodal-overlay');
     if (!currentSubmodal) {
-      _allItems = [{ el: triggerEl, submodalEl: null }];
+      _allItems = [{ el: triggerEl, submodalId: null, submodalEl: null }];
       _idx = 0;
       return;
     }
@@ -2459,15 +2504,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function _fillFromSubmodal(submodalEl) {
-    var mediaEls = Array.from(
+    Array.from(
       submodalEl.querySelectorAll('[onclick*="openVideoModal"],[onclick*="openImageModal"]')
-    );
-    mediaEls.forEach(function (el) {
+    ).forEach(function (el) {
       _allItems.push({ el: el, submodalId: submodalEl.id, submodalEl: submodalEl });
     });
   }
 
-  /* ── Écoute des clics déclencheurs ── */
+  /* ── Clic sur un déclencheur média ── */
   document.addEventListener('click', function (e) {
     var trigger = e.target;
     while (trigger && trigger !== document) {
@@ -2475,7 +2519,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (oc && (oc.indexOf('openVideoModal') !== -1 || oc.indexOf('openImageModal') !== -1)) {
         if (trigger.closest('.submodal-overlay')) {
           _buildAllItems(trigger);
-          setTimeout(function () { _updateNav(); }, 150);
+          setTimeout(function () { _injectNav(); _updateNav(); }, 120);
         }
         break;
       }
@@ -2483,104 +2527,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, false);
 
-  /* ── Navigation ── */
+  /* ── Navigation prev / next ── */
   window.mediaNavGo = function (dir) {
     var next = _idx + dir;
     if (next < 0 || next >= _allItems.length) return;
     _idx = next;
 
     var item = _allItems[_idx];
-    var submodalEl = item.submodalEl;
-
-    if (submodalEl) {
+    if (item.submodalEl) {
       var currentActive = document.querySelector('.submodal-overlay.active');
-      if (currentActive && currentActive !== submodalEl) {
+      if (currentActive && currentActive !== item.submodalEl)
         currentActive.classList.remove('active');
-      }
-      if (!submodalEl.classList.contains('active')) {
-        submodalEl.classList.add('active');
-      }
+      if (!item.submodalEl.classList.contains('active'))
+        item.submodalEl.classList.add('active');
     }
 
     var oc = item.el.getAttribute('onclick');
-    if (oc) {
-      try { eval(oc); } catch (err) { console.warn('mediaNavGo eval error:', err); }
-    }
+    if (oc) { try { eval(oc); } catch (err) { console.warn(err); } }
 
-    setTimeout(function () { _updateNav(); }, 150);
+    setTimeout(function () { _injectNav(); _updateNav(); }, 100);
   };
 
-  /* ── Clavier ── */
+  /* ── Navigation clavier ── */
   document.addEventListener('keydown', function (e) {
     var overlay = document.querySelector('.video-modal-overlay.open');
     if (!overlay) return;
 
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      window.mediaNavGo(-1);
-    }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      window.mediaNavGo(1);
-    }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    { e.preventDefault(); window.mediaNavGo(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown')  { e.preventDefault(); window.mediaNavGo(1);  }
     if (e.key === 'Escape') {
-      _hideNav();
+      var closeBtn = overlay.querySelector('.video-modal-close');
+      if (closeBtn) closeBtn.click();
     }
   }, false);
-
-  /* ── Patch closeVideoModal pour cacher les flèches ── */
-  var _origClose = window.closeVideoModal;
-  window.closeVideoModal = function () {
-    _hideNav();
-    if (typeof _origClose === 'function') _origClose();
-  };
-
-  /* ── Patch openVideoModal / openImageModal pour recalculer la hauteur ── */
-  /* S'assure que .video-modal-wrap a la bonne structure flex */
-  function _fixModalLayout() {
-    var overlay = document.getElementById('videoModal');
-    if (!overlay) return;
-
-    /* La barre doit rester sticky en bas — on s'assure que l'overlay est en flex column */
-    overlay.style.flexDirection = 'column';
-    overlay.style.alignItems    = 'stretch';
-
-    var wrap = overlay.querySelector('.video-modal-wrap');
-    if (!wrap) return;
-    wrap.style.flex        = '1';
-    wrap.style.minHeight   = '0';
-    wrap.style.display     = 'flex';
-    wrap.style.flexDirection = 'column';
-    wrap.style.overflow    = 'visible';
-
-    /* La barre de zoom doit toujours rester en bas */
-    var bar = wrap.querySelector('.video-modal-bar');
-    if (bar) {
-      bar.style.flexShrink = '0';
-      bar.style.width      = '100%';
-    }
-
-    /* L'inner (zone image) prend le reste */
-    var inner = wrap.querySelector('.video-modal-inner');
-    if (inner) {
-      inner.style.flex      = '1';
-      inner.style.minHeight = '0';
-      inner.style.overflow  = 'hidden';
-    }
-  }
-
-  /* Patch openVideoModal */
-  var _origOpenVideo = window.openVideoModal;
-  window.openVideoModal = function (src, pov, size) {
-    if (typeof _origOpenVideo === 'function') _origOpenVideo(src, pov, size);
-    setTimeout(_fixModalLayout, 80);
-  };
-
-  /* Patch openImageModal */
-  var _origOpenImage = window.openImageModal;
-  window.openImageModal = function (srcs, pov, size) {
-    if (typeof _origOpenImage === 'function') _origOpenImage(srcs, pov, size);
-    setTimeout(_fixModalLayout, 80);
-  };
 
 })();
