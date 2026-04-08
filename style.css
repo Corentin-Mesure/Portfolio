@@ -2850,12 +2850,10 @@ body.no-anim .ap-particle {
 
 /* ════════════════════════════════════════════════════════
    NAVIGATION MÉDIA — flèches sur les CÔTÉS de l'image
-   Remplace l'ancienne section .vm-nav dans style.css
 ════════════════════════════════════════════════════════ */
 
-/* Flèches positionnées en absolu par rapport à .video-modal-inner */
 .vm-nav {
-  display: none; /* caché par défaut, JS le gère */
+  display: none;
 }
 
 .vm-nav-btn {
@@ -2901,7 +2899,6 @@ body.no-anim .ap-particle {
   transform: translateY(-50%);
 }
 
-/* Positionnement gauche/droite */
 .vm-nav-btn.vm-prev {
   left: 16px;
 }
@@ -2910,10 +2907,9 @@ body.no-anim .ap-particle {
   right: 16px;
 }
 
-/* Compteur — centré en bas, au-dessus de la barre de zoom */
 .vm-nav-counter {
   position: fixed;
-  bottom: 130px; /* au-dessus de la barre zoom (~90px) + marge */
+  bottom: 130px;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Cinzel', serif;
@@ -2925,11 +2921,11 @@ body.no-anim .ap-particle {
   pointer-events: none;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
   z-index: 100002;
-   background: rgba(0, 0, 0, 0.82);
+  background: rgba(0, 0, 0, 0.82);
   padding: 4px 14px;
   border-radius: 20px;
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.25);  /* ajout d'un contour */
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* ── Mode clair ── */
@@ -2976,8 +2972,7 @@ body.no-anim .ap-particle {
 }
 
 /* ════════════════════════════════════════════════════════
-   VIDEO MODAL — structure repensée pour que la barre
-   de zoom soit TOUJOURS visible (jamais sous l'image)
+   VIDEO MODAL — structure
 ════════════════════════════════════════════════════════ */
 
 .video-modal-overlay {
@@ -2986,10 +2981,10 @@ body.no-anim .ap-particle {
   top: 0; left: 0; width: 100%; height: 100%;
   z-index: 999999;
   background: rgba(0, 0, 0, 0.92);
-  align-items: stretch;       /* ← stretch pour remplir */
+  align-items: stretch;
   justify-content: center;
-  flex-direction: column;     /* ← colonne : image en haut, barre en bas */
-  padding: 60px 80px 0 80px; /* ← padding latéral pour laisser place aux flèches */
+  flex-direction: column;
+  padding: 60px 80px 0 80px;
   box-sizing: border-box;
   touch-action: pan-y;
   overscroll-behavior: contain;
@@ -2999,21 +2994,19 @@ body.no-anim .ap-particle {
   display: flex;
 }
 
-/* Wrap = zone image (flex:1) + barre en dessous */
 .video-modal-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0;
   width: 100%;
-  max-width: 360px; /* sera écrasé par JS pour les images */
+  max-width: 360px;
   flex: 1;
   min-height: 0;
-  overflow: hidden; /* pas de scroll ici */
+  overflow: hidden;
   margin: 0 auto;
 }
 
-/* Zone image — prend tout l'espace disponible */
 .video-modal-inner {
   flex: 1;
   min-height: 0;
@@ -3036,7 +3029,6 @@ body.no-anim .ap-particle {
   touch-action: pan-y !important;
 }
 
-/* Barre de zoom — TOUJOURS en bas, jamais cachée */
 .video-modal-bar {
   flex-shrink: 0;
   width: 100%;
@@ -3046,7 +3038,6 @@ body.no-anim .ap-particle {
   pointer-events: auto;
 }
 
-/* Badge POV */
 .video-modal-pov {
   position: fixed;
   top: 14px;
@@ -3064,7 +3055,6 @@ body.no-anim .ap-particle {
   pointer-events: none;
 }
 
-/* Bouton fermer */
 .video-modal-close {
   position: fixed;
   top: 10px;
@@ -3083,7 +3073,6 @@ body.no-anim .ap-particle {
   cursor: pointer;
 }
 
-/* Erreur */
 .video-modal-err {
   display: none;
   padding: 14px 16px;
@@ -3099,7 +3088,6 @@ body.no-anim .ap-particle {
   font-family: monospace;
 }
 
-/* ── Mobile ── */
 @media (max-width: 768px) {
   .video-modal-overlay {
     padding: 50px 52px 0 52px;
@@ -3112,8 +3100,15 @@ body.no-anim .ap-particle {
 }
 
 /* ════════════════════════════════════════════════════════
-   BIG MODE — contre-zoom sur les overlays fixed
+   BIG MODE — contre-zoom + RECENTRAGE des overlays fixed
+   
+   Le problème : zoom sur body déplace les éléments fixed.
+   La solution : contre-zoom (1/1.35) + dimensions étendues
+   + transform-origin top left pour les overlays plein écran,
+   mais les modaux centrés utilisent translate(-50%,-50%)
+   depuis le centre de l'écran physique.
 ════════════════════════════════════════════════════════ */
+
 html.big-mode .video-modal-overlay,
 html.big-mode .modal-overlay,
 html.big-mode .submodal-overlay,
@@ -3121,12 +3116,15 @@ html.big-mode #settingsOverlay,
 html.big-mode #kcGallery,
 html.big-mode #_fsOv {
   zoom: calc(1 / 1.35);
+  /* Dimensions étendues pour couvrir tout l'écran physique */
   width:  135.135vw;
   height: 135.135vh;
   max-width: none !important;
   max-height: none !important;
-  top:    0 !important;
-  left:   0 !important;
+  /* Centrage correct : on place le coin top-left à (-17.5%, -17.5%)
+     de sorte que le centre du bloc tombe exactement au centre de l'écran */
+  top:    -17.5675vh !important;
+  left:   -17.5675vw !important;
   right:  auto !important;
   bottom: auto !important;
   transform-origin: top left !important;
@@ -3136,15 +3134,18 @@ html.big-mode #_fsOv {
 html.big-mode #settingsPanel {
   zoom:   calc(1 / 1.35);
   height: 135.135vh;
-  top:    0 !important;
-  right:  0 !important;
+  top:    -17.5675vh !important;
+  right:  -17.5675vw !important;
   left:   auto !important;
   bottom: auto !important;
   position: fixed !important;
   transform-origin: top right !important;
 }
 
-/* Boutons flottants créés par JS */
+/* ── Boutons flottants créés par JS ── */
+/* Ces éléments sont dans body (hors du zoom body) mais
+   le navigateur leur applique quand même le zoom hérité.
+   On neutralise + on repositionne. */
 html.big-mode .vm-nav-btn,
 html.big-mode .vm-nav-counter,
 html.big-mode #_imgModalClose,
@@ -3155,6 +3156,9 @@ html.big-mode #gifSpeedToast {
   transform-origin: top left;
 }
 
+/* Repositionnement des boutons flottants :
+   leurs coordonnées fixed sont exprimées dans l'espace
+   contre-zoomé (×1.35), donc on multiplie par 1.35. */
 html.big-mode .vm-nav-btn.vm-prev { left:  21.6px; }
 html.big-mode .vm-nav-btn.vm-next { right: 21.6px; }
 html.big-mode .vm-nav-counter     { bottom: 175.5px; }
