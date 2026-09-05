@@ -581,22 +581,81 @@ function selectFeature(fid) {
     content.innerHTML = html;
   }
   content.scrollTop = 0;
+  _pvInitMedia();
 }
 
+/* -- Médias différés : ne charge/joue un screen ou un gif QUE quand il
+   entre dans la zone visible du panneau, et coupe la lecture des vidéos
+   quand elles en ressortent. Evite de faire tourner 5-6 gifs/vidéos en
+   même temps, qui est la cause du ralentissement dans les modals. -- */
 function renderMedia(src) {
-  var safe = _safeSrc(src);
   var ext = src.split('?')[0].split('.').pop().toLowerCase();
   var isVideo = (ext === 'mp4' || ext === 'webm');
-  var inner = isVideo
-    ? '<video src="' + safe + '" autoplay loop muted playsinline></video>'
-    : '<img src="' + safe + '" loading="lazy" alt="">';
-  return '<div class="pv-media" onclick="openLightbox(\'' + src.replace(/'/g, "\\'") + '\')">' +
-    inner + '<span class="pv-media-zoom">&#x1F50D; Agrandir</span></div>';
+  return '<div class="pv-media" data-media-src="' + src.replace(/"/g, '&quot;') + '" data-media-type="' + (isVideo ? 'video' : 'image') + '" onclick="_pvMediaClick(this)">' +
+    '<div class="pv-media-skeleton"><span>&#x1F5BC;</span></div>' +
+    '<span class="pv-media-zoom">&#x1F50D; Agrandir</span></div>';
+}
+
+function _pvMediaClick(el) {
+  var src = el.getAttribute('data-media-src');
+  if (src) openLightbox(src);
+}
+
+var _pvMediaObserver = null;
+function _pvInitMedia() {
+  if (_pvMediaObserver) _pvMediaObserver.disconnect();
+  var root = document.getElementById('pvContent');
+  _pvMediaObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var el = entry.target;
+      if (entry.isIntersecting) {
+        if (!el.dataset.loaded) { _pvLoadMedia(el); }
+        else {
+          var vid = el.querySelector('video');
+          if (vid) vid.play().catch(function () {});
+        }
+      } else {
+        var vid2 = el.querySelector('video');
+        if (vid2) vid2.pause();
+      }
+    });
+  }, { root: root, rootMargin: '150px 0px', threshold: 0.01 });
+
+  root.querySelectorAll('.pv-media[data-media-src]').forEach(function (el) {
+    _pvMediaObserver.observe(el);
+  });
+}
+
+function _pvLoadMedia(container) {
+  container.dataset.loaded = '1';
+  var src = container.getAttribute('data-media-src');
+  var type = container.getAttribute('data-media-type');
+  var safe = _safeSrc(src);
+  var skeleton = container.querySelector('.pv-media-skeleton');
+  var el;
+  if (type === 'video') {
+    el = document.createElement('video');
+    el.muted = true; el.loop = true; el.playsInline = true; el.preload = 'metadata';
+    el.src = safe;
+    el.addEventListener('loadeddata', function () { el.play().catch(function () {}); });
+  } else {
+    el = document.createElement('img');
+    el.loading = 'lazy';
+    el.alt = '';
+    el.src = safe;
+  }
+  el.addEventListener('error', function () {
+    container.innerHTML = '<div class="pv-media-error">&#x26A0; Fichier introuvable<br>' + src + '</div>';
+  });
+  container.insertBefore(el, skeleton);
+  if (skeleton) skeleton.remove();
 }
 
 function closeProject() {
   document.getElementById('pvOverlay').classList.remove('active');
   document.body.style.overflow = '';
+  if (_pvMediaObserver) { _pvMediaObserver.disconnect(); }
+  document.querySelectorAll('#pvContent video').forEach(function (v) { v.pause(); });
 }
 function closeProjectOverlay(e) { if (e.target === e.currentTarget) closeProject(); }
 
@@ -861,12 +920,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ════════════════════════════════════════════════════════
+   MODE GRAND — zoome automatiquement TOUT le site (pas juste
+   une image) : reste actif sur toutes les pages/sections tant
+   qu'on ne le désactive pas, et se souvient du choix.
+════════════════════════════════════════════════════════ */
+function applyBigMode(on) {
+  document.documentElement.classList.toggle('big-mode', on);
+  document.body.classList.toggle('big-mode', on);
+  var btn = document.getElementById('bigModeBtn');
+  if (btn) btn.classList.toggle('toolbar-btn-active', on);
+  localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
+}
+function toggleBigMode() {
+  var isOn = document.body.classList.contains('big-mode');
+  applyBigMode(!isOn);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  applyBigMode(localStorage.getItem('portfolio-bigmode') === '1');
+});
+
+/* ════════════════════════════════════════════════════════
    TRADUCTIONS (FR / EN) — inchangé pour le reste du site
 ════════════════════════════════════════════════════════ */
 var TRANSLATIONS = {
   fr: {
     "nav.about":"A propos","nav.timeline":"Parcours","nav.skills":"Competences",
-    "nav.projects":"Projets","nav.ap":"Projet AP","nav.contact":"Contact",
+    "nav.projects":"Projets","nav.ap":"Projet AP","nav.contact":"Contact","nav.bigmode":"Grand",
     "hero.subtitle":"Etudiant","hero.cta1":"Voir mes projets",
     "hero.cta2":"&#x2B07; Telecharger CV","hero.scroll":"Defiler",
     "btn.open":"&#x2756; Ouvrir",
@@ -908,7 +987,7 @@ var TRANSLATIONS = {
   },
   en: {
     "nav.about":"About","nav.timeline":"Journey","nav.skills":"Skills",
-    "nav.projects":"Projects","nav.ap":"AP Project","nav.contact":"Contact",
+    "nav.projects":"Projects","nav.ap":"AP Project","nav.contact":"Contact","nav.bigmode":"Large",
     "hero.subtitle":"Student","hero.cta1":"View my projects",
     "hero.cta2":"&#x2B07; Download CV","hero.scroll":"Scroll",
     "btn.open":"&#x2756; Open",
