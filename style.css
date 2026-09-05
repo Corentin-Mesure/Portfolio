@@ -106,7 +106,20 @@ nav {
   font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
 }
 .toolbar-btn:hover { color: var(--primary-2); border-color: var(--primary); }
-.anim-btn, #bigModeBtn { display: none !important; }
+.anim-btn { display: none !important; }
+
+.toolbar-btn-active {
+  border-color: var(--primary) !important;
+  color: var(--primary-2) !important;
+  background: rgba(109, 91, 255, 0.16) !important;
+}
+
+/* Mode grand : zoome automatiquement toutes les pages/sections du site.
+   `zoom` est supporté par tous les navigateurs modernes (Chrome, Edge,
+   Safari, Firefox 126+) et agrandit tout sans casser la mise en page. */
+html.big-mode, body.big-mode {
+  zoom: 1.28;
+}
 .btn-label { font-size: 12px; font-weight: 600; }
 .lang-en { display: none; }
 .theme-icon-light { display: none; }
@@ -541,6 +554,15 @@ section { padding: 96px 6%; }
   background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(6px);
   padding: 4px 10px; border-radius: 20px; font-size: 11px; color: var(--primary-2);
   letter-spacing: .5px; pointer-events: none;
+}
+/* Placeholder affiché tant que le screen/gif n'est pas encore entré dans
+   le cadre visible du panneau (évite de tout charger/animer d'un coup) */
+.pv-media-skeleton {
+  height: 180px; display: flex; align-items: center; justify-content: center;
+  color: var(--border-dark); font-size: 28px; background: var(--surface-soft);
+}
+.pv-media-error {
+  padding: 16px; color: var(--danger); font-size: 12px; text-align: center; word-break: break-all;
 }
 
 .pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 7px; padding: 14px 24px; border-top: 1px solid var(--border); background: var(--surface); }
