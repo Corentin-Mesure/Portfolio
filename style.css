@@ -114,47 +114,17 @@ nav {
   background: rgba(109, 91, 255, 0.16) !important;
 }
 
-/* Mode grand : zoome automatiquement toutes les pages/sections du site.
+/* Mode grand : zoome automatiquement toutes les pages/sections du site,
+   y compris les fenêtres projet et la visionneuse.
    `zoom` est supporté par tous les navigateurs modernes (Chrome, Edge,
-   Safari, Firefox 126+) et agrandit tout sans casser la mise en page. */
+   Safari, Firefox 126+) et agrandit tout sans casser la mise en page.
+   IMPORTANT : `zoom` agrandit les px et les % mais PAS les vh/vw (qui
+   restent toujours calculés sur la taille réelle de l'écran). C'est
+   pour ça que les fenêtres modales sont dimensionnées en % de leur
+   parent (déjà pile à la taille de l'écran via inset:0) plutôt qu'en
+   vh/vw directement — voir .pv-modal / .lightbox-inner plus bas. */
 html.big-mode, body.big-mode {
   zoom: 1.28;
-}
-
-/* --- Correction pour les modals (fenêtre projet + visionneuse) ---
-   `zoom` agrandit les px mais PAS les vw/vh (toujours calculés sur
-   l'écran réel), donc une fenêtre en 92vh déborderait de l'écran une
-   fois multipliée par 1.28. On neutralise le zoom composé sur le fond
-   plein écran (qui doit rester pile à la taille réelle de l'écran),
-   puis on ré-applique un zoom contrôlé sur la boîte interne en
-   compensant ses vw/vh pour qu'elle garde la bonne proportion à
-   l'écran, avec un contenu agrandi et lisible à l'intérieur. */
-body.big-mode .pv-overlay,
-body.big-mode .lightbox {
-  zoom: calc(1 / 1.28);
-}
-body.big-mode .pv-modal {
-  zoom: 1.28;
-  height: min(760px, calc(92vh / 1.28));
-}
-body.big-mode .lightbox-inner {
-  zoom: 1.28;
-  height: min(760px, calc(88vh / 1.28));
-}
-body.big-mode .lightbox-inner.big {
-  width: calc(98vw / 1.28);
-  height: calc(96vh / 1.28);
-}
-body.big-mode #lightboxMedia img,
-body.big-mode #lightboxMedia video {
-  max-height: calc(82vh / 1.28);
-}
-body.big-mode .lightbox-inner.big #lightboxMedia img,
-body.big-mode .lightbox-inner.big #lightboxMedia video {
-  max-height: calc(90vh / 1.28);
-}
-@media (max-width: 800px) {
-  body.big-mode .pv-modal { height: calc(94vh / 1.28); }
 }
 .btn-label { font-size: 12px; font-weight: 600; }
 .lang-en { display: none; }
@@ -508,7 +478,7 @@ section { padding: 96px 6%; }
 
 .pv-modal {
   width: min(1080px, 100%);
-  height: min(760px, 92vh);
+  height: min(760px, 92%);
   display: flex; flex-direction: column;
   background: linear-gradient(160deg, var(--surface), var(--surface-soft));
   border: 1px solid var(--border); border-radius: 14px;
@@ -615,7 +585,7 @@ section { padding: 96px 6%; }
 .lightbox-inner {
   position: relative;
   width: min(1100px, 100%);
-  height: min(760px, 88vh);
+  height: min(760px, 88%);
   max-width: 100%;
   border-radius: 10px;
   overflow: hidden;
@@ -624,9 +594,9 @@ section { padding: 96px 6%; }
 }
 /* Mode grand écran : prend quasiment tout le viewport, pour bien voir le détail */
 .lightbox-inner.big {
-  width: 98vw;
-  height: 96vh;
-  max-width: 98vw;
+  width: 98%;
+  height: 96%;
+  max-width: 98%;
 }
 
 .lightbox-bar {
@@ -666,18 +636,15 @@ section { padding: 96px 6%; }
 
 #lightboxMedia { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 #lightboxMedia img, #lightboxMedia video {
-  max-width: 96%; max-height: 82vh; width: auto; height: auto;
+  max-width: 96%; max-height: 96%; width: auto; height: auto;
   border-radius: 6px; object-fit: contain;
   user-select: none; -webkit-user-drag: none;
-}
-.lightbox-inner.big #lightboxMedia img, .lightbox-inner.big #lightboxMedia video {
-  max-height: 90vh;
 }
 
 .lightbox-err { padding: 25px; color: var(--danger); text-align: center; }
 
 @media (max-width: 800px) {
-  .pv-modal { height: 94vh; border-radius: 10px; }
+  .pv-modal { height: 94%; border-radius: 10px; }
   .pv-body { flex-direction: column; }
   .pv-sidebar {
     flex: 0 0 auto; width: 100%; min-width: 0;
