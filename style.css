@@ -513,8 +513,15 @@ body.big-mode .pv-modal {
   background: var(--surface); border-bottom: 1px solid var(--border);
 }
 .pv-icon { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
-.pv-type { color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; }
-.pv-title { color: var(--navy); font-family: var(--font-display); font-size: 21px; font-weight: 700; }
+.pv-header-title { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.pv-type {
+  color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pv-title {
+  color: var(--navy); font-family: var(--font-display); font-size: 21px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .pv-close {
   flex-shrink: 0; width: 36px; height: 36px;
   border: 1px solid var(--border); border-radius: 8px;
@@ -526,10 +533,8 @@ body.big-mode .pv-modal {
    Placée dans l'en-tête, entre le titre et le bouton fermer. */
 .pv-search {
   position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 440px;
-  margin-left: auto;
+  flex: 0 1 300px;
+  min-width: 160px;
   display: flex; align-items: center; gap: 8px;
 }
 .pv-search-icon { flex-shrink: 0; color: var(--muted); font-size: 13px; }
@@ -741,7 +746,7 @@ body.big-mode .lightbox-inner.big {
   body.big-mode .pv-modal { height: min(760px, calc(94% / 1.28)); }
   .pv-header { flex-wrap: wrap; }
   .pv-search {
-    order: 3; flex-basis: 100%; max-width: none; margin-left: 0; margin-top: 4px;
+    order: 3; flex-basis: 100%; min-width: 0; margin-top: 4px;
   }
   .pv-body { flex-direction: column; }
   .pv-sidebar {
