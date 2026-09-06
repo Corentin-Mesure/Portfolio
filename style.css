@@ -114,16 +114,29 @@ nav {
   background: rgba(109, 91, 255, 0.16) !important;
 }
 
-/* Mode grand : zoome automatiquement toutes les pages/sections du site,
-   y compris les fenêtres projet et la visionneuse.
+/* Mode grand : zoome automatiquement toutes les pages/sections du site.
    `zoom` est supporté par tous les navigateurs modernes (Chrome, Edge,
    Safari, Firefox 126+) et agrandit tout sans casser la mise en page.
-   IMPORTANT : `zoom` agrandit les px et les % mais PAS les vh/vw (qui
-   restent toujours calculés sur la taille réelle de l'écran). C'est
-   pour ça que les fenêtres modales sont dimensionnées en % de leur
-   parent (déjà pile à la taille de l'écran via inset:0) plutôt qu'en
-   vh/vw directement — voir .pv-modal / .lightbox-inner plus bas. */
-html.big-mode, body.big-mode {
+
+   IMPORTANT (pourquoi les modals sont traités différemment) :
+   `zoom` force le navigateur à recalculer toute la mise en page de
+   l'élément zoomé à chaque changement à l'intérieur — hors, en
+   scrollant dans une fenêtre modale, du contenu apparaît/disparaît en
+   continu (chargement différé des screens, content-visibility), ce
+   qui, DANS un ancêtre zoomé, obligeait le navigateur à tout
+   recalculer en zoomé à chaque frame → gros ralentissement au scroll.
+
+   Solution : seul #siteWrap (nav + sections + footer, contenu stable)
+   est zoomé. Les fenêtres modales (.pv-overlay, .lightbox) restent EN
+   DEHORS de #siteWrap et ne sont donc jamais zoomées → leur scroll
+   reste fluide. Pour qu'elles soient quand même agrandies en Mode
+   Grand, on leur applique un `transform: scale()` à la place : c'est
+   une opération purement graphique (GPU), calculée une seule fois,
+   qui ne redéclenche aucun calcul de mise en page quand on scrolle
+   à l'intérieur. Leur taille de base est légèrement réduite en amont
+   (division par le même facteur) pour qu'une fois agrandies par le
+   scale, elles retombent pile à la bonne taille à l'écran. */
+body.big-mode #siteWrap {
   zoom: 1.28;
 }
 .btn-label { font-size: 12px; font-weight: 600; }
@@ -485,6 +498,14 @@ section { padding: 96px 6%; }
   box-shadow: 0 40px 90px -24px rgba(0, 0, 0, 0.8);
   overflow: hidden;
 }
+/* Mode grand : agrandi via transform (GPU), pas via zoom — voir la note
+   plus haut. On réduit d'abord la taille de base par le même facteur
+   pour qu'elle retombe juste après le scale. */
+body.big-mode .pv-modal {
+  width: min(1080px, calc(100% / 1.28));
+  height: min(760px, calc(92% / 1.28));
+  transform: scale(1.28);
+}
 
 .pv-header {
   flex: 0 0 auto;
@@ -594,11 +615,24 @@ section { padding: 96px 6%; }
   background: #05060f;
   border: 1px solid var(--border);
 }
-/* Mode grand écran : prend quasiment tout le viewport, pour bien voir le détail */
+/* Mode grand écran (bouton ⛶ dans la visionneuse) : prend quasiment
+   tout le viewport, pour bien voir le détail */
 .lightbox-inner.big {
   width: 98%;
   height: 96%;
   max-width: 98%;
+}
+/* Mode grand (site) : même principe que .pv-modal, transform au lieu
+   de zoom pour un scroll fluide à l'intérieur */
+body.big-mode .lightbox-inner {
+  width: min(1100px, calc(100% / 1.28));
+  height: min(760px, calc(88% / 1.28));
+  transform: scale(1.28);
+}
+body.big-mode .lightbox-inner.big {
+  width: calc(98% / 1.28);
+  height: calc(96% / 1.28);
+  max-width: calc(98% / 1.28);
 }
 
 .lightbox-bar {
@@ -648,6 +682,7 @@ section { padding: 96px 6%; }
 
 @media (max-width: 800px) {
   .pv-modal { height: 94%; border-radius: 10px; }
+  body.big-mode .pv-modal { height: min(760px, calc(94% / 1.28)); }
   .pv-body { flex-direction: column; }
   .pv-sidebar {
     flex: 0 0 auto; width: 100%; min-width: 0;
