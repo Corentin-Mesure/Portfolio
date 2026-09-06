@@ -492,7 +492,7 @@ section { padding: 96px 6%; }
   width: min(1080px, 100%);
   height: min(760px, 92%);
   display: flex; flex-direction: column;
-  border: 1px solid rgba(109, 91, 255, 0.22); border-radius: 8px;
+  border: 1px solid rgba(109, 91, 255, 0.22); border-radius: 4px;
   background:
     linear-gradient(#e8c97e, #e8c97e) top left / 28px 2px no-repeat,
     linear-gradient(#e8c97e, #e8c97e) top left / 2px 28px no-repeat,
@@ -519,16 +519,19 @@ body.big-mode .pv-modal {
 .pv-header {
   flex: 0 0 auto;
   display: flex; align-items: center; gap: 14px; padding: 20px 24px;
-  background: var(--surface); border-bottom: 1px solid var(--border);
+  background: transparent; border-bottom: 1px solid var(--border);
 }
 .pv-icon { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
 .pv-header-title { flex: 1 1 auto; min-width: 0; overflow: hidden; }
 .pv-type {
+  display: flex; align-items: center; gap: 8px;
   color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.pv-type::before { content: ""; flex-shrink: 0; width: 8px; height: 8px; background: var(--primary-2); }
 .pv-title {
-  color: var(--navy); font-family: var(--font-display); font-size: 21px; font-weight: 700;
+  margin-top: 3px;
+  color: var(--navy); font-family: var(--font-display); font-size: 23px; font-weight: 700; letter-spacing: -.4px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .pv-close {
@@ -611,10 +614,10 @@ body.big-mode .pv-modal {
   clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
   background: transparent; color: var(--muted); text-align: left; font-size: 13px; font-weight: 600;
 }
-.pv-nav-item:hover { background: rgba(109, 91, 255, 0.08); color: var(--text); }
+.pv-nav-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--primary-2); }
 .pv-nav-item.active {
-  background: rgba(109, 91, 255, 0.14);
-  border-color: rgba(109, 91, 255, 0.35);
+  background: rgba(232, 201, 126, 0.08);
+  border-color: rgba(232, 201, 126, 0.4);
   color: var(--navy);
 }
 .pv-nav-icon { flex-shrink: 0; font-size: 15px; line-height: 1; }
@@ -630,10 +633,10 @@ body.big-mode .pv-modal {
 .pv-overview-card {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 16px; border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
-  background: var(--surface-soft); color: var(--navy); text-align: left; font-weight: 700; font-size: 14px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  background: rgba(15, 18, 36, 0.55); color: var(--navy); text-align: left; font-weight: 700; font-size: 14px;
 }
-.pv-overview-card:hover { border-color: var(--primary); }
+.pv-overview-card:hover { border-color: var(--border-dark); }
 .pv-overview-icon { font-size: 20px; flex-shrink: 0; }
 
 .pv-steps { margin-top: 22px; display: flex; flex-direction: column; }
@@ -642,7 +645,14 @@ body.big-mode .pv-modal {
   content-visibility: auto; contain-intrinsic-size: 0 260px;
 }
 .pv-step:last-child { border-bottom: none; }
-.pv-step-num { flex: 0 0 auto; color: var(--primary-2); font-size: 12px; font-weight: 800; font-family: var(--font-display); padding-top: 2px; }
+.pv-step-num {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+  min-width: 30px; height: 30px; padding: 0 2px;
+  border: 1px solid rgba(109, 91, 255, 0.4);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  background: rgba(109, 91, 255, 0.10); color: var(--primary-2);
+  font-family: 'Courier New', ui-monospace, SFMono-Regular, monospace; font-size: 12px; font-weight: 700; letter-spacing: .5px;
+}
 .pv-step-body { flex: 1 1 auto; min-width: 0; }
 .pv-step-body p { color: var(--muted); line-height: 1.7; font-size: 14.5px; }
 .pv-step-body strong { color: var(--navy); }
@@ -669,10 +679,10 @@ body.big-mode .pv-modal {
   padding: 16px; color: var(--danger); font-size: 12px; text-align: center; word-break: break-all;
 }
 
-.pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 7px; padding: 14px 24px; border-top: 1px solid var(--border); background: var(--surface); }
+.pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 24px; border-top: 1px solid var(--border); background: transparent; }
 .pv-tag {
-  padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px;
-  color: var(--muted); font-size: 11px;
+  padding: 4px 9px; border: 1px solid var(--border); border-radius: 20px;
+  color: var(--muted); font-size: 10px; font-weight: 700;
 }
 
 /* ---- Lightbox (zoom + pan + mode grand écran) ---- */
@@ -688,7 +698,7 @@ body.big-mode .pv-modal {
   width: min(1100px, 100%);
   height: min(760px, 88%);
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 4px;
   overflow: hidden;
   border: 1px solid rgba(109, 91, 255, 0.22);
   background:
@@ -771,7 +781,7 @@ body.big-mode .lightbox-inner.big {
 .lightbox-err { padding: 25px; color: var(--danger); text-align: center; }
 
 @media (max-width: 800px) {
-  .pv-modal { height: 94%; border-radius: 10px; }
+  .pv-modal { height: 94%; border-radius: 4px; }
   body.big-mode .pv-modal { height: min(760px, calc(94% / 1.28)); }
   .pv-header { flex-wrap: wrap; }
   .pv-search {
@@ -929,10 +939,10 @@ footer {
     linear-gradient(#c9a24a, #c9a24a) bottom right / 2px 28px no-repeat,
     var(--surface);
 }
-:root.light-mode .pv-header, :root.light-mode .pv-tags { background: var(--surface); border-color: var(--border); }
+:root.light-mode .pv-header, :root.light-mode .pv-tags { background: transparent; border-color: var(--border); }
 :root.light-mode .pv-sidebar { background: rgba(0, 0, 0, 0.03); border-color: var(--border); }
 :root.light-mode .pv-close, :root.light-mode .lightbox-close, :root.light-mode .lightbox-tool, :root.light-mode .pv-search-clear, :root.light-mode .pv-search-input { background: var(--surface-soft); border-color: var(--border); }
-:root.light-mode .pv-overview-card { background: var(--surface-soft); border-color: var(--border); }
+:root.light-mode .pv-overview-card { background: rgba(242, 236, 221, 0.85); border-color: var(--border); }
 :root.light-mode .pv-tag { border-color: var(--border-dark); }
 :root.light-mode footer { border-color: var(--border); }
 
