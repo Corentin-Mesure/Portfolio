@@ -516,20 +516,21 @@ body.big-mode .pv-modal {
 .pv-type { color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; }
 .pv-title { color: var(--navy); font-family: var(--font-display); font-size: 21px; font-weight: 700; }
 .pv-close {
-  margin-left: auto; width: 36px; height: 36px; flex-shrink: 0;
+  flex-shrink: 0; width: 36px; height: 36px;
   border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface-soft); color: var(--muted);
 }
 .pv-close:hover { color: var(--danger); }
 
-/* --- Barre de recherche (écrans/fonctionnalités du projet ouvert) --- */
+/* --- Barre de recherche (écrans/fonctionnalités du projet ouvert) ---
+   Placée dans l'en-tête, entre le titre et le bouton fermer. */
 .pv-search {
   position: relative;
-  flex: 0 0 auto;
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 24px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.1);
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 440px;
+  margin-left: auto;
+  display: flex; align-items: center; gap: 8px;
 }
 .pv-search-icon { flex-shrink: 0; color: var(--muted); font-size: 13px; }
 .pv-search-input {
@@ -548,11 +549,10 @@ body.big-mode .pv-modal {
 
 .pv-search-results {
   display: none;
-  position: absolute; top: 100%; left: 24px; right: 24px; z-index: 30;
+  position: absolute; top: calc(100% + 10px); left: 0; right: 0; z-index: 30;
   max-height: 50vh; overflow-y: auto;
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
   box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.65);
-  margin-top: 6px;
 }
 .pv-search-results.open { display: block; }
 .pv-search-hit {
@@ -739,6 +739,10 @@ body.big-mode .lightbox-inner.big {
 @media (max-width: 800px) {
   .pv-modal { height: 94%; border-radius: 10px; }
   body.big-mode .pv-modal { height: min(760px, calc(94% / 1.28)); }
+  .pv-header { flex-wrap: wrap; }
+  .pv-search {
+    order: 3; flex-basis: 100%; max-width: none; margin-left: 0; margin-top: 4px;
+  }
   .pv-body { flex-direction: column; }
   .pv-sidebar {
     flex: 0 0 auto; width: 100%; min-width: 0;
