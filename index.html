@@ -422,6 +422,15 @@
       </div>
       <button class="pv-close" onclick="closeProject()">&#x2715;</button>
     </div>
+    <div class="pv-search">
+      <span class="pv-search-icon">&#x1F50D;</span>
+      <input type="search" id="pvSearchInput" class="pv-search-input"
+        placeholder="Rechercher un screen, une fonctionnalité..."
+        oninput="pvSearch(this.value)"
+        onkeydown="if(event.key==='Escape'){pvSearchClear();this.blur();}">
+      <button class="pv-search-clear" id="pvSearchClearBtn" onclick="pvSearchClear()" type="button" style="display:none;" aria-label="Effacer la recherche">&#x2715;</button>
+      <div class="pv-search-results" id="pvSearchResults"></div>
+    </div>
     <div class="pv-body">
       <nav class="pv-sidebar" id="pvSidebar"></nav>
       <div class="pv-content" id="pvContent"></div>
