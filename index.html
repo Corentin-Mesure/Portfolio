@@ -10,6 +10,10 @@
 </head>
 <body>
 
+<!-- Tout le contenu "page" est isolé dans ce conteneur : c'est LUI qui est
+     zoomé en Mode Grand, jamais les fenêtres modales (voir style.css) -->
+<div id="siteWrap">
+
 <!-- NAV -->
 <nav>
   <div class="nav-logo">CM</div>
@@ -404,6 +408,8 @@
 <footer>
   <p data-i18n="footer.text">&#169; 2026 Corentin Mesure — BTS SIO SLAM</p>
 </footer>
+
+</div><!-- /#siteWrap -->
 
 <!-- ═══ VUE PROJET (sidebar + contenu) ═══ -->
 <div class="pv-overlay" id="pvOverlay" onclick="closeProjectOverlay(event)">
