@@ -106,39 +106,7 @@ nav {
   font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
 }
 .toolbar-btn:hover { color: var(--primary-2); border-color: var(--primary); }
-.anim-btn { display: none !important; }
-
-.toolbar-btn-active {
-  border-color: var(--primary) !important;
-  color: var(--primary-2) !important;
-  background: rgba(109, 91, 255, 0.16) !important;
-}
-
-/* Mode grand : zoome automatiquement toutes les pages/sections du site.
-   `zoom` est supporté par tous les navigateurs modernes (Chrome, Edge,
-   Safari, Firefox 126+) et agrandit tout sans casser la mise en page.
-
-   IMPORTANT (pourquoi les modals sont traités différemment) :
-   `zoom` force le navigateur à recalculer toute la mise en page de
-   l'élément zoomé à chaque changement à l'intérieur — hors, en
-   scrollant dans une fenêtre modale, du contenu apparaît/disparaît en
-   continu (chargement différé des screens, content-visibility), ce
-   qui, DANS un ancêtre zoomé, obligeait le navigateur à tout
-   recalculer en zoomé à chaque frame → gros ralentissement au scroll.
-
-   Solution : seul #siteWrap (nav + sections + footer, contenu stable)
-   est zoomé. Les fenêtres modales (.pv-overlay, .lightbox) restent EN
-   DEHORS de #siteWrap et ne sont donc jamais zoomées → leur scroll
-   reste fluide. Pour qu'elles soient quand même agrandies en Mode
-   Grand, on leur applique un `transform: scale()` à la place : c'est
-   une opération purement graphique (GPU), calculée une seule fois,
-   qui ne redéclenche aucun calcul de mise en page quand on scrolle
-   à l'intérieur. Leur taille de base est légèrement réduite en amont
-   (division par le même facteur) pour qu'une fois agrandies par le
-   scale, elles retombent pile à la bonne taille à l'écran. */
-body.big-mode #siteWrap {
-  zoom: 1.28;
-}
+.anim-btn, #bigModeBtn { display: none !important; }
 .btn-label { font-size: 12px; font-weight: 600; }
 .lang-en { display: none; }
 .theme-icon-light { display: none; }
@@ -365,9 +333,6 @@ section { padding: 96px 6%; }
   margin-bottom: 24px;
 }
 
-/* Avant : min-width trop étroit + white-space:nowrap sur le label =>
-   le texte débordait et se faisait couper ("Flutti", "GitHi"...).
-   Fix : largeur suffisante + retour à la ligne autorisé. */
 .skill-icon-item {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   width: 68px;
@@ -484,135 +449,43 @@ section { padding: 96px 6%; }
 .pv-overlay {
   position: fixed; inset: 0; z-index: 9000;
   display: flex; align-items: center; justify-content: center;
-  padding: 24px; background: rgba(2, 3, 8, .92);
-  visibility: hidden; opacity: 0; pointer-events: none;
-  transition: opacity 0.22s ease, visibility 0s linear 0.22s !important;
+  padding: 24px; background: rgba(2, 3, 8, .82);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  opacity: 0; visibility: hidden; pointer-events: none;
 }
-.pv-overlay.active {
-  visibility: visible; opacity: 1; pointer-events: auto;
-  transition: opacity 0.22s ease, visibility 0s linear 0s !important;
-}
+.pv-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
 .pv-modal {
   width: min(1080px, 100%);
-  height: min(760px, 92%);
+  height: min(760px, 92vh);
   display: flex; flex-direction: column;
-  --pv-enter: translateY(18px) scale(0.96);
-  --pv-bigscale: 1;
-  transform: var(--pv-enter) scale(var(--pv-bigscale));
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  border: 1px solid rgba(109, 91, 255, 0.22); border-radius: 4px;
-  background:
-    linear-gradient(#e8c97e, #e8c97e) top left / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top left / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top right / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top right / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom left / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom left / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom right / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom right / 2px 28px no-repeat,
-    linear-gradient(160deg, var(--surface), var(--surface-soft));
+  background: linear-gradient(160deg, var(--surface), var(--surface-soft));
+  border: 1px solid var(--border); border-radius: 14px;
   color: var(--text);
-  box-shadow: 0 30px 80px -24px rgba(109, 91, 255, 0.45), inset 0 0 60px rgba(109, 91, 255, 0.06);
+  box-shadow: 0 40px 90px -24px rgba(0, 0, 0, 0.8);
   overflow: hidden;
 }
-/* Mode grand : agrandi via transform (GPU), pas via zoom — voir la note
-   plus haut. On réduit d'abord la taille de base par le même facteur
-   pour qu'elle retombe juste après le scale. */
-body.big-mode .pv-modal {
-  width: min(1080px, calc(100% / 1.28));
-  height: min(760px, calc(92% / 1.28));
-  --pv-bigscale: 1.28;
-}
-.pv-overlay.active .pv-modal { --pv-enter: translateY(0) scale(1); }
 
 .pv-header {
   flex: 0 0 auto;
   display: flex; align-items: center; gap: 14px; padding: 20px 24px;
-  background: transparent; border-bottom: 1px solid var(--border);
+  background: var(--surface); border-bottom: 1px solid var(--border);
 }
 .pv-icon { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
-.pv-header-title { flex: 1 1 auto; min-width: 0; overflow: hidden; }
-.pv-type {
-  display: flex; align-items: center; gap: 8px;
-  color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.pv-type::before { content: ""; flex-shrink: 0; width: 8px; height: 8px; background: var(--primary-2); }
-.pv-title {
-  margin-top: 3px;
-  color: var(--navy); font-family: var(--font-display); font-size: 23px; font-weight: 700; letter-spacing: -.4px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
+.pv-type { color: var(--primary-2); font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; }
+.pv-title { color: var(--navy); font-family: var(--font-display); font-size: 21px; font-weight: 700; }
 .pv-close {
-  flex-shrink: 0; width: 36px; height: 36px;
-  border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  margin-left: auto; width: 36px; height: 36px; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface-soft); color: var(--muted);
 }
 .pv-close:hover { color: var(--danger); }
-
-/* --- Barre de recherche (écrans/fonctionnalités du projet ouvert) ---
-   Placée dans l'en-tête, entre le titre et le bouton fermer. */
-.pv-search {
-  position: relative;
-  flex: 0 1 300px;
-  min-width: 160px;
-  display: flex; align-items: center; gap: 8px;
-}
-.pv-search-icon { flex-shrink: 0; color: var(--muted); font-size: 13px; }
-.pv-search-input {
-  flex: 1 1 auto; min-width: 0;
-  background: var(--surface-soft); border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-  padding: 9px 12px; color: var(--text); font-size: 13px; font-family: inherit;
-}
-.pv-search-input:focus { outline: none; border-color: var(--primary); }
-.pv-search-input::placeholder { color: var(--muted); }
-.pv-search-clear {
-  flex-shrink: 0; width: 28px; height: 28px;
-  border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-  background: var(--surface-soft); color: var(--muted); font-size: 11px;
-}
-.pv-search-clear:hover { color: var(--danger); border-color: var(--danger); }
-
-.pv-search-results {
-  display: none;
-  position: absolute; top: calc(100% + 10px); left: 0; right: 0; z-index: 30;
-  max-height: 50vh; overflow-y: auto;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.65);
-}
-.pv-search-results.open { display: block; animation: pvDropIn 0.16s ease !important; }
-.pv-search-hit {
-  display: flex; align-items: flex-start; gap: 10px; width: 100%;
-  padding: 11px 14px; border: none; border-bottom: 1px solid var(--border);
-  background: transparent; color: var(--text); text-align: left;
-}
-.pv-search-hit:last-child { border-bottom: none; }
-.pv-search-hit:hover { background: var(--surface-soft); }
-.pv-search-hit-icon { flex-shrink: 0; font-size: 16px; line-height: 1.3; }
-.pv-search-hit-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.pv-search-hit-title { font-weight: 800; font-size: 12px; color: var(--navy); }
-.pv-search-hit-snippet { font-size: 11px; color: var(--muted); line-height: 1.45; overflow-wrap: anywhere; }
-.pv-search-hit mark, .pv-search-hit-title mark {
-  background: rgba(34, 211, 238, 0.3); color: var(--navy); border-radius: 2px; padding: 0 1px;
-}
-.pv-search-empty { padding: 18px; color: var(--muted); font-size: 12px; text-align: center; }
-
-/* Étape mise en avant après un clic depuis les résultats de recherche */
-.pv-step-highlight {
-  outline: 1px solid var(--primary);
-  border-radius: 8px;
-  animation: pvHighlightPulse 1.6s ease-out !important;
-}
 
 .pv-body { flex: 1 1 auto; min-height: 0; display: flex; }
 
 .pv-sidebar {
   flex: 0 0 250px; min-width: 250px;
-  overflow-y: auto; contain: layout paint style;
+  overflow-y: auto;
   padding: 14px; display: flex; flex-direction: column; gap: 4px;
   border-right: 1px solid var(--border);
   background: rgba(0, 0, 0, 0.12);
@@ -620,56 +493,37 @@ body.big-mode .pv-modal {
 
 .pv-nav-item {
   display: flex; align-items: center; gap: 10px; width: 100%;
-  padding: 11px 12px; border: 1px solid transparent; border-radius: 0;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  padding: 11px 12px; border: 1px solid transparent; border-radius: 8px;
   background: transparent; color: var(--muted); text-align: left; font-size: 13px; font-weight: 600;
 }
-.pv-nav-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--primary-2); }
+.pv-nav-item:hover { background: rgba(109, 91, 255, 0.08); color: var(--text); }
 .pv-nav-item.active {
-  background: rgba(232, 201, 126, 0.08);
-  border-color: rgba(232, 201, 126, 0.4);
+  background: rgba(109, 91, 255, 0.14);
+  border-color: rgba(109, 91, 255, 0.35);
   color: var(--navy);
 }
 .pv-nav-icon { flex-shrink: 0; font-size: 15px; line-height: 1; }
 
-.pv-content { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: 28px 32px; contain: layout paint style; }
+.pv-content { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: 28px 32px; }
 
-.pv-desc {
-  color: var(--muted); line-height: 1.75; font-size: 14.5px;
-  animation: pvFadeIn 0.28s ease !important;
-}
+.pv-desc { color: var(--muted); line-height: 1.75; font-size: 14.5px; }
 .pv-desc-lead { font-size: 16px; margin-bottom: 24px; }
 
 .pv-overview-grid {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-  animation: pvFadeIn 0.3s ease !important;
 }
 .pv-overview-card {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
-  background: rgba(15, 18, 36, 0.55); color: var(--navy); text-align: left; font-weight: 700; font-size: 14px;
+  padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-soft); color: var(--navy); text-align: left; font-weight: 700; font-size: 14px;
 }
-.pv-overview-card:hover { border-color: var(--border-dark); }
+.pv-overview-card:hover { border-color: var(--primary); }
 .pv-overview-icon { font-size: 20px; flex-shrink: 0; }
 
-.pv-steps {
-  margin-top: 22px; display: flex; flex-direction: column;
-  animation: pvFadeIn 0.3s ease !important;
-}
-.pv-step {
-  display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border);
-  content-visibility: auto; contain-intrinsic-size: 0 260px;
-}
+.pv-steps { margin-top: 22px; display: flex; flex-direction: column; }
+.pv-step { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border); }
 .pv-step:last-child { border-bottom: none; }
-.pv-step-num {
-  flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
-  min-width: 30px; height: 30px; padding: 0 2px;
-  border: 1px solid rgba(109, 91, 255, 0.4);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
-  background: rgba(109, 91, 255, 0.10); color: var(--primary-2);
-  font-family: 'Courier New', ui-monospace, SFMono-Regular, monospace; font-size: 12px; font-weight: 700; letter-spacing: .5px;
-}
+.pv-step-num { flex: 0 0 auto; color: var(--primary-2); font-size: 12px; font-weight: 800; font-family: var(--font-display); padding-top: 2px; }
 .pv-step-body { flex: 1 1 auto; min-width: 0; }
 .pv-step-body p { color: var(--muted); line-height: 1.7; font-size: 14.5px; }
 .pv-step-body strong { color: var(--navy); }
@@ -678,91 +532,44 @@ body.big-mode .pv-modal {
   position: relative; margin-top: 12px; cursor: zoom-in;
   border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
   background: #05060f;
-  transition: border-color 0.18s ease, transform 0.18s ease !important;
 }
-.pv-media:hover { border-color: var(--border-dark); transform: translateY(-2px); }
-.pv-media img, .pv-media video {
-  display: block; width: 100%; max-height: 340px; object-fit: contain;
-  animation: pvFadeIn 0.3s ease !important;
-}
+.pv-media img, .pv-media video { display: block; width: 100%; max-height: 340px; object-fit: contain; }
 .pv-media-zoom {
   position: absolute; bottom: 8px; right: 10px;
-  background: rgba(0, 0, 0, 0.78);
+  background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(6px);
   padding: 4px 10px; border-radius: 20px; font-size: 11px; color: var(--primary-2);
   letter-spacing: .5px; pointer-events: none;
 }
-/* Placeholder affiché tant que le screen/gif n'est pas encore entré dans
-   le cadre visible du panneau (évite de tout charger/animer d'un coup) */
-.pv-media-skeleton {
-  height: 180px; display: flex; align-items: center; justify-content: center;
-  color: var(--border-dark); font-size: 28px; background: var(--surface-soft);
-}
-.pv-media-error {
-  padding: 16px; color: var(--danger); font-size: 12px; text-align: center; word-break: break-all;
-}
 
-.pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 24px; border-top: 1px solid var(--border); background: transparent; }
-.pv-tag {
-  padding: 4px 9px; border: 1px solid var(--border); border-radius: 20px;
-  color: var(--muted); font-size: 10px; font-weight: 700;
-}
+.pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 7px; padding: 14px 24px; border-top: 1px solid var(--border); background: var(--surface); }
+.pv-tag { padding: 4px 9px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 10px; font-weight: 700; }
 
 /* ---- Lightbox (zoom + pan + mode grand écran) ---- */
 .lightbox {
   position: fixed; inset: 0; z-index: 9500;
   display: flex; align-items: center; justify-content: center;
   padding: 24px; background: rgba(2, 3, 8, .9);
-  visibility: hidden; opacity: 0; pointer-events: none;
-  transition: opacity 0.2s ease, visibility 0s linear 0.2s !important;
+  opacity: 0; visibility: hidden; pointer-events: none;
 }
-.lightbox.active {
-  visibility: visible; opacity: 1; pointer-events: auto;
-  transition: opacity 0.2s ease, visibility 0s linear 0s !important;
-}
+.lightbox.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
 .lightbox-inner {
   position: relative;
   width: min(1100px, 100%);
-  height: min(760px, 88%);
+  height: min(760px, 88vh);
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: 10px;
   overflow: hidden;
-  --lb-enter: translateY(14px) scale(0.96);
-  --lb-bigscale: 1;
-  transform: var(--lb-enter) scale(var(--lb-bigscale));
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  border: 1px solid rgba(109, 91, 255, 0.22);
-  background:
-    linear-gradient(#e8c97e, #e8c97e) top left / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top left / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top right / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) top right / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom left / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom left / 2px 28px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom right / 28px 2px no-repeat,
-    linear-gradient(#e8c97e, #e8c97e) bottom right / 2px 28px no-repeat,
-    #05060f;
-  box-shadow: 0 30px 80px -24px rgba(109, 91, 255, 0.4);
+  background: #05060f;
+  border: 1px solid var(--border);
+  transform: scale(.94);
 }
-/* Mode grand écran (bouton ⛶ dans la visionneuse) : prend quasiment
-   tout le viewport, pour bien voir le détail */
+.lightbox.active .lightbox-inner { transform: scale(1); }
+/* Mode grand écran : prend quasiment tout le viewport, pour bien voir le détail */
 .lightbox-inner.big {
-  width: 98%;
-  height: 96%;
-  max-width: 98%;
-}
-/* Mode grand (site) : même principe que .pv-modal, transform au lieu
-   de zoom pour un scroll fluide à l'intérieur */
-body.big-mode .lightbox-inner {
-  width: min(1100px, calc(100% / 1.28));
-  height: min(760px, calc(88% / 1.28));
-  --lb-bigscale: 1.28;
-}
-.lightbox.active .lightbox-inner { --lb-enter: translateY(0) scale(1); }
-body.big-mode .lightbox-inner.big {
-  width: calc(98% / 1.28);
-  height: calc(96% / 1.28);
-  max-width: calc(98% / 1.28);
+  width: 98vw;
+  height: 96vh;
+  max-width: 98vw;
 }
 
 .lightbox-bar {
@@ -775,8 +582,7 @@ body.big-mode .lightbox-inner.big {
 .lightbox-tool {
   width: 34px; height: 34px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface-soft); color: var(--muted);
   font-size: 15px; font-weight: 700;
 }
@@ -787,8 +593,7 @@ body.big-mode .lightbox-inner.big {
 .lightbox-close {
   position: static;
   width: 34px; height: 34px; flex-shrink: 0;
-  border: 1px solid var(--border); border-radius: 0;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface-soft); color: var(--muted);
 }
 .lightbox-close:hover { color: var(--danger); }
@@ -798,27 +603,108 @@ body.big-mode .lightbox-inner.big {
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   cursor: zoom-in;
-  contain: layout paint style;
 }
 .lightbox-viewport.zoomed { cursor: grab; }
 .lightbox-viewport.dragging { cursor: grabbing; }
 
 #lightboxMedia { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 #lightboxMedia img, #lightboxMedia video {
-  max-width: 96%; max-height: 96%; width: auto; height: auto;
+  max-width: 96%; max-height: 82vh; width: auto; height: auto;
   border-radius: 6px; object-fit: contain;
   user-select: none; -webkit-user-drag: none;
+}
+.lightbox-inner.big #lightboxMedia img, .lightbox-inner.big #lightboxMedia video {
+  max-height: 90vh;
 }
 
 .lightbox-err { padding: 25px; color: var(--danger); text-align: center; }
 
-@media (max-width: 800px) {
-  .pv-modal { height: 94%; border-radius: 4px; }
-  body.big-mode .pv-modal { height: min(760px, calc(94% / 1.28)); }
-  .pv-header { flex-wrap: wrap; }
-  .pv-search {
-    order: 3; flex-basis: 100%; min-width: 0; margin-top: 4px;
+/* ---------------------------------------------------------
+   ANIMATIONS — ouverture/fermeture de la vue projet,
+   navigation entre catégories, lightbox.
+   Ces règles sont volontairement plus spécifiques que la
+   remise à zéro globale "* { transition:none; animation:none }"
+   ci-dessus, donc elles prennent le dessus sur celle-ci.
+   --------------------------------------------------------- */
+
+.pv-overlay {
+  transition: opacity .28s ease, visibility 0s linear .28s !important;
+}
+.pv-overlay.active {
+  transition: opacity .28s ease, visibility 0s linear !important;
+}
+
+.pv-modal {
+  transform: translateY(18px) scale(.96);
+  opacity: 0;
+  transition: transform .32s cubic-bezier(.16,1,.3,1), opacity .26s ease !important;
+}
+.pv-overlay.active .pv-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.pv-close, .lightbox-close, .lightbox-tool, .project-btn, .pv-overview-card,
+.perso-teaser-btn, .toolbar-btn, .contact-link, .hero-cta {
+  transition: background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease !important;
+}
+
+.pv-nav-item {
+  transition: background .22s ease, border-color .22s ease, color .22s ease, transform .22s ease !important;
+}
+.pv-nav-item:hover { transform: translateX(2px); }
+
+.lightbox {
+  transition: opacity .24s ease, visibility 0s linear .24s !important;
+}
+.lightbox.active {
+  transition: opacity .24s ease, visibility 0s linear !important;
+}
+
+.lightbox-inner {
+  transition: transform .3s cubic-bezier(.16,1,.3,1), width .3s ease, height .3s ease, max-width .3s ease !important;
+}
+
+.pv-media {
+  transition: border-color .2s ease, transform .2s ease !important;
+}
+.pv-media:hover { transform: translateY(-2px); border-color: var(--border-dark); }
+.pv-media-zoom { transition: opacity .2s ease !important; }
+
+/* Contenu du panneau (vue d'ensemble / détail d'une fonctionnalité) :
+   chaque appel de selectFeature() recrée ce wrapper, donc l'animation
+   se rejoue automatiquement à chaque changement de catégorie. */
+.pv-panel {
+  animation: pvFadeUp .38s cubic-bezier(.16,1,.3,1) both !important;
+}
+@keyframes pvFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pv-panel .pv-overview-card,
+.pv-panel .pv-step {
+  animation: pvFadeUp .34s cubic-bezier(.16,1,.3,1) both !important;
+}
+.pv-panel .pv-overview-card:nth-child(1),  .pv-panel .pv-step:nth-child(1)  { animation-delay: .02s !important; }
+.pv-panel .pv-overview-card:nth-child(2),  .pv-panel .pv-step:nth-child(2)  { animation-delay: .05s !important; }
+.pv-panel .pv-overview-card:nth-child(3),  .pv-panel .pv-step:nth-child(3)  { animation-delay: .08s !important; }
+.pv-panel .pv-overview-card:nth-child(4),  .pv-panel .pv-step:nth-child(4)  { animation-delay: .11s !important; }
+.pv-panel .pv-overview-card:nth-child(5),  .pv-panel .pv-step:nth-child(5)  { animation-delay: .14s !important; }
+.pv-panel .pv-overview-card:nth-child(6),  .pv-panel .pv-step:nth-child(6)  { animation-delay: .17s !important; }
+.pv-panel .pv-overview-card:nth-child(7),  .pv-panel .pv-step:nth-child(7)  { animation-delay: .20s !important; }
+.pv-panel .pv-overview-card:nth-child(8),  .pv-panel .pv-step:nth-child(8)  { animation-delay: .23s !important; }
+.pv-panel .pv-overview-card:nth-child(n+9), .pv-panel .pv-step:nth-child(n+9) { animation-delay: .25s !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-overlay, .pv-modal, .lightbox, .lightbox-inner, .pv-panel,
+  .pv-panel .pv-overview-card, .pv-panel .pv-step {
+    transition: none !important; animation: none !important;
   }
+}
+
+@media (max-width: 800px) {
+  .pv-modal { height: 94vh; border-radius: 10px; }
   .pv-body { flex-direction: column; }
   .pv-sidebar {
     flex: 0 0 auto; width: 100%; min-width: 0;
@@ -944,37 +830,11 @@ footer {
 :root.light-mode .perso-teaser-btn { border-color: rgba(91, 72, 230, 0.28); background: rgba(91, 72, 230, 0.06); }
 
 :root.light-mode .pv-overlay, :root.light-mode .lightbox { background: rgba(60, 50, 30, 0.35); }
-:root.light-mode .pv-modal {
-  border-color: rgba(106, 88, 212, 0.16);
-  background:
-    linear-gradient(#c9a24a, #c9a24a) top left / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top left / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top right / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top right / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom left / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom left / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom right / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom right / 2px 28px no-repeat,
-    linear-gradient(160deg, var(--surface), var(--surface-soft));
-  box-shadow: 0 30px 80px -24px rgba(106, 88, 212, 0.14);
-}
-:root.light-mode .lightbox-inner {
-  border-color: rgba(106, 88, 212, 0.16);
-  background:
-    linear-gradient(#c9a24a, #c9a24a) top left / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top left / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top right / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) top right / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom left / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom left / 2px 28px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom right / 28px 2px no-repeat,
-    linear-gradient(#c9a24a, #c9a24a) bottom right / 2px 28px no-repeat,
-    var(--surface);
-}
-:root.light-mode .pv-header, :root.light-mode .pv-tags { background: transparent; border-color: var(--border); }
+:root.light-mode .pv-modal { background: linear-gradient(160deg, var(--surface), var(--surface-soft)); border-color: var(--border); box-shadow: 0 40px 90px -24px rgba(43, 36, 22, 0.25); }
+:root.light-mode .pv-header, :root.light-mode .pv-tags { background: var(--surface); border-color: var(--border); }
 :root.light-mode .pv-sidebar { background: rgba(0, 0, 0, 0.03); border-color: var(--border); }
-:root.light-mode .pv-close, :root.light-mode .lightbox-close, :root.light-mode .lightbox-tool, :root.light-mode .pv-search-clear, :root.light-mode .pv-search-input { background: var(--surface-soft); border-color: var(--border); }
-:root.light-mode .pv-overview-card { background: rgba(242, 236, 221, 0.85); border-color: var(--border); }
+:root.light-mode .pv-close, :root.light-mode .lightbox-close { background: var(--surface-soft); border-color: var(--border); }
+:root.light-mode .pv-overview-card { background: var(--surface-soft); border-color: var(--border); }
 :root.light-mode .pv-tag { border-color: var(--border-dark); }
 :root.light-mode footer { border-color: var(--border); }
 
