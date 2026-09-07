@@ -514,6 +514,12 @@ const PROJECTS = {
    MOTEUR DE LA "VUE PROJET" (sidebar + contenu)
    Remplace l'ancien empilement modal → sous-modal → popup
    vidéo : tout se navigue au clic, dans le même panneau.
+   Le contenu de .pv-content est toujours réinjecté à
+   l'intérieur d'un wrapper .pv-panel : comme ce wrapper est
+   un nouvel élément DOM à chaque appel, l'animation CSS
+   "pvFadeUp" définie dans style.css se rejoue automatiquement
+   à chaque ouverture de modal et à chaque changement de
+   catégorie, sans code JS supplémentaire.
 ════════════════════════════════════════════════════════ */
 let _pvProjectId = null;
 
@@ -534,7 +540,6 @@ function openProject(id) {
 
   renderSidebar(p);
   selectFeature('overview');
-  pvSearchClear();
 
   document.getElementById('pvOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -550,132 +555,6 @@ function renderSidebar(p) {
   document.getElementById('pvSidebar').innerHTML = html;
 }
 
-/* ════════════════════════════════════════════════════════
-   RECHERCHE DANS LE PROJET OUVERT
-   Cherche dans les titres/descriptions des fonctionnalités ET dans le
-   texte de chaque étape (là où les screens/gifs sont décrits), pour
-   retrouver directement le bon écran plutôt que de cliquer au hasard.
-════════════════════════════════════════════════════════ */
-function _norm(s) {
-  return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
-
-function _pvStripHtml(html) {
-  var div = document.createElement('div');
-  div.innerHTML = html || '';
-  return div.textContent || div.innerText || '';
-}
-
-function _pvSnippet(text, q) {
-  var plain = _pvStripHtml(text);
-  var normPlain = _norm(plain);
-  var idx = normPlain.indexOf(q);
-  var start, end;
-  if (idx === -1) {
-    start = 0; end = Math.min(plain.length, 100);
-  } else {
-    start = Math.max(0, idx - 35);
-    end = Math.min(plain.length, idx + q.length + 45);
-  }
-  var excerpt = (start > 0 ? '…' : '') + plain.slice(start, end) + (end < plain.length ? '…' : '');
-  if (idx === -1) return _pvEscape(excerpt);
-  // ré-encadre la partie correspondante dans l'extrait affiché
-  var localIdx = idx - start + (start > 0 ? 1 : 0);
-  var before = _pvEscape(excerpt.slice(0, localIdx));
-  var match = _pvEscape(excerpt.slice(localIdx, localIdx + q.length));
-  var after = _pvEscape(excerpt.slice(localIdx + q.length));
-  return before + '<mark>' + match + '</mark>' + after;
-}
-
-function _pvEscape(s) {
-  return (s || '').replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
-}
-
-function pvSearch(query) {
-  var p = PROJECTS[_pvProjectId];
-  if (!p) return;
-  var dropdown = document.getElementById('pvSearchResults');
-  var clearBtn = document.getElementById('pvSearchClearBtn');
-  var navItems = document.querySelectorAll('.pv-nav-item');
-  var q = _norm(query.trim());
-
-  clearBtn.style.display = query ? '' : 'none';
-
-  if (!q) {
-    dropdown.classList.remove('open');
-    dropdown.innerHTML = '';
-    navItems.forEach(function (el) { el.style.display = ''; });
-    return;
-  }
-
-  var matchedFeatureIds = { overview: true };
-  var hits = [];
-
-  p.features.forEach(function (f) {
-    var titleMatch = _norm(f.title).indexOf(q) !== -1;
-    var descMatch = _norm(f.desc).indexOf(q) !== -1;
-    var stepHitCount = 0;
-
-    f.steps.forEach(function (s, i) {
-      if (_norm(_pvStripHtml(s.text)).indexOf(q) !== -1) {
-        matchedFeatureIds[f.id] = true;
-        stepHitCount++;
-        hits.push({
-          fid: f.id, icon: f.icon, title: f.title,
-          stepIndex: i, snippet: _pvSnippet(s.text, q)
-        });
-      }
-    });
-
-    if ((titleMatch || descMatch) && stepHitCount === 0) {
-      matchedFeatureIds[f.id] = true;
-      hits.unshift({
-        fid: f.id, icon: f.icon, title: f.title,
-        stepIndex: -1, snippet: _pvSnippet(f.desc || f.title, q)
-      });
-    }
-  });
-
-  navItems.forEach(function (el) {
-    var fid = el.getAttribute('data-fid');
-    el.style.display = matchedFeatureIds[fid] ? '' : 'none';
-  });
-
-  if (!hits.length) {
-    dropdown.innerHTML = '<div class="pv-search-empty">Aucun résultat pour « ' + _pvEscape(query) + ' »</div>';
-  } else {
-    dropdown.innerHTML = hits.slice(0, 25).map(function (h) {
-      return '<button class="pv-search-hit" onclick="pvJumpToHit(\'' + h.fid + '\',' + h.stepIndex + ')" type="button">' +
-        '<span class="pv-search-hit-icon">' + h.icon + '</span>' +
-        '<span class="pv-search-hit-body">' +
-        '<span class="pv-search-hit-title">' + h.title + '</span>' +
-        '<span class="pv-search-hit-snippet">' + h.snippet + '</span>' +
-        '</span></button>';
-    }).join('');
-  }
-  dropdown.classList.add('open');
-}
-
-function pvSearchClear() {
-  var input = document.getElementById('pvSearchInput');
-  if (input) input.value = '';
-  pvSearch('');
-}
-
-function pvJumpToHit(fid, stepIndex) {
-  selectFeature(fid);
-  var dropdown = document.getElementById('pvSearchResults');
-  if (dropdown) dropdown.classList.remove('open');
-  if (stepIndex >= 0) {
-    var stepEl = document.querySelector('#pvContent .pv-step[data-step-index="' + stepIndex + '"]');
-    if (stepEl) {
-      stepEl.scrollIntoView({ block: 'center' });
-      stepEl.classList.add('pv-step-highlight');
-      setTimeout(function () { stepEl.classList.remove('pv-step-highlight'); }, 1800);
-    }
-  }
-}
-
 function selectFeature(fid) {
   var p = PROJECTS[_pvProjectId];
   if (!p) return;
@@ -687,103 +566,43 @@ function selectFeature(fid) {
   var content = document.getElementById('pvContent');
 
   if (fid === 'overview') {
-    content.innerHTML = '<p class="pv-desc pv-desc-lead">' + p.description + '</p>' +
+    content.innerHTML = '<div class="pv-panel"><p class="pv-desc pv-desc-lead">' + p.description + '</p>' +
       '<div class="pv-overview-grid">' + p.features.map(function (f) {
         return '<button class="pv-overview-card" onclick="selectFeature(\'' + f.id + '\')">' +
           '<span class="pv-overview-icon">' + f.icon + '</span>' +
           '<span class="pv-overview-title">' + f.title + '</span></button>';
-      }).join('') + '</div>';
+      }).join('') + '</div></div>';
   } else {
     var f = p.features.filter(function (x) { return x.id === fid; })[0];
     if (!f) return;
-    var html = '<p class="pv-desc">' + f.desc + '</p><div class="pv-steps">';
+    var html = '<div class="pv-panel"><p class="pv-desc">' + f.desc + '</p><div class="pv-steps">';
     f.steps.forEach(function (s, i) {
-      html += '<div class="pv-step" data-step-index="' + i + '">' +
+      html += '<div class="pv-step">' +
         '<div class="pv-step-num">' + String(i + 1).padStart(2, '0') + '</div>' +
         '<div class="pv-step-body"><p>' + s.text + '</p>' +
         (s.media ? renderMedia(s.media) : '') +
         '</div></div>';
     });
-    html += '</div>';
+    html += '</div></div>';
     content.innerHTML = html;
   }
   content.scrollTop = 0;
-  _pvInitMedia();
 }
 
-/* -- Médias différés : ne charge/joue un screen ou un gif QUE quand il
-   entre dans la zone visible du panneau, et coupe la lecture des vidéos
-   quand elles en ressortent. Evite de faire tourner 5-6 gifs/vidéos en
-   même temps, qui est la cause du ralentissement dans les modals. -- */
 function renderMedia(src) {
+  var safe = _safeSrc(src);
   var ext = src.split('?')[0].split('.').pop().toLowerCase();
   var isVideo = (ext === 'mp4' || ext === 'webm');
-  return '<div class="pv-media" data-media-src="' + src.replace(/"/g, '&quot;') + '" data-media-type="' + (isVideo ? 'video' : 'image') + '" onclick="_pvMediaClick(this)">' +
-    '<div class="pv-media-skeleton"><span>&#x1F5BC;</span></div>' +
-    '<span class="pv-media-zoom">&#x1F50D; Agrandir</span></div>';
-}
-
-function _pvMediaClick(el) {
-  var src = el.getAttribute('data-media-src');
-  if (src) openLightbox(src);
-}
-
-var _pvMediaObserver = null;
-function _pvInitMedia() {
-  if (_pvMediaObserver) _pvMediaObserver.disconnect();
-  var root = document.getElementById('pvContent');
-  _pvMediaObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      var el = entry.target;
-      if (entry.isIntersecting) {
-        if (!el.dataset.loaded) { _pvLoadMedia(el); }
-        else {
-          var vid = el.querySelector('video');
-          if (vid) vid.play().catch(function () {});
-        }
-      } else {
-        var vid2 = el.querySelector('video');
-        if (vid2) vid2.pause();
-      }
-    });
-  }, { root: root, rootMargin: '150px 0px', threshold: 0.01 });
-
-  root.querySelectorAll('.pv-media[data-media-src]').forEach(function (el) {
-    _pvMediaObserver.observe(el);
-  });
-}
-
-function _pvLoadMedia(container) {
-  container.dataset.loaded = '1';
-  var src = container.getAttribute('data-media-src');
-  var type = container.getAttribute('data-media-type');
-  var safe = _safeSrc(src);
-  var skeleton = container.querySelector('.pv-media-skeleton');
-  var el;
-  if (type === 'video') {
-    el = document.createElement('video');
-    el.muted = true; el.loop = true; el.playsInline = true; el.preload = 'metadata';
-    el.src = safe;
-    el.addEventListener('loadeddata', function () { el.play().catch(function () {}); });
-  } else {
-    el = document.createElement('img');
-    el.loading = 'lazy';
-    el.alt = '';
-    el.src = safe;
-  }
-  el.addEventListener('error', function () {
-    container.innerHTML = '<div class="pv-media-error">&#x26A0; Fichier introuvable<br>' + src + '</div>';
-  });
-  container.insertBefore(el, skeleton);
-  if (skeleton) skeleton.remove();
+  var inner = isVideo
+    ? '<video src="' + safe + '" autoplay loop muted playsinline></video>'
+    : '<img src="' + safe + '" loading="lazy" alt="">';
+  return '<div class="pv-media" onclick="openLightbox(\'' + src.replace(/'/g, "\\'") + '\')">' +
+    inner + '<span class="pv-media-zoom">&#x1F50D; Agrandir</span></div>';
 }
 
 function closeProject() {
   document.getElementById('pvOverlay').classList.remove('active');
   document.body.style.overflow = '';
-  if (_pvMediaObserver) { _pvMediaObserver.disconnect(); }
-  document.querySelectorAll('#pvContent video').forEach(function (v) { v.pause(); });
-  pvSearchClear();
 }
 function closeProjectOverlay(e) { if (e.target === e.currentTarget) closeProject(); }
 
@@ -817,12 +636,19 @@ function openLightbox(src) {
 function closeLightbox(e) {
   if (e && e.target !== e.currentTarget && !e.target.closest('.lightbox-close')) return;
   document.getElementById('lightbox').classList.remove('active');
-  document.getElementById('lightboxMedia').innerHTML = '';
   var inner = document.getElementById('lightboxInner');
   if (inner) inner.classList.remove('big');
   var bigBtn = document.getElementById('lightboxBigBtn');
   if (bigBtn) bigBtn.classList.remove('active');
   _lbReset();
+  /* on retire le média après la transition de fermeture pour ne pas
+     couper l'animation de fondu du fond de la lightbox */
+  window.setTimeout(function () {
+    var lb = document.getElementById('lightbox');
+    if (lb && !lb.classList.contains('active')) {
+      document.getElementById('lightboxMedia').innerHTML = '';
+    }
+  }, 260);
 }
 
 /* -- Mode grand écran : agrandit la fenêtre pour zoomer sans perdre en netteté -- */
@@ -1048,32 +874,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ════════════════════════════════════════════════════════
-   MODE GRAND — zoome automatiquement TOUT le site (pas juste
-   une image) : reste actif sur toutes les pages/sections tant
-   qu'on ne le désactive pas, et se souvient du choix.
-════════════════════════════════════════════════════════ */
-function applyBigMode(on) {
-  document.documentElement.classList.toggle('big-mode', on);
-  document.body.classList.toggle('big-mode', on);
-  var btn = document.getElementById('bigModeBtn');
-  if (btn) btn.classList.toggle('toolbar-btn-active', on);
-  localStorage.setItem('portfolio-bigmode', on ? '1' : '0');
-}
-function toggleBigMode() {
-  var isOn = document.body.classList.contains('big-mode');
-  applyBigMode(!isOn);
-}
-document.addEventListener('DOMContentLoaded', function () {
-  applyBigMode(localStorage.getItem('portfolio-bigmode') === '1');
-});
-
-/* ════════════════════════════════════════════════════════
    TRADUCTIONS (FR / EN) — inchangé pour le reste du site
 ════════════════════════════════════════════════════════ */
 var TRANSLATIONS = {
   fr: {
     "nav.about":"A propos","nav.timeline":"Parcours","nav.skills":"Competences",
-    "nav.projects":"Projets","nav.ap":"Projet AP","nav.contact":"Contact","nav.bigmode":"Grand",
+    "nav.projects":"Projets","nav.ap":"Projet AP","nav.contact":"Contact",
     "hero.subtitle":"Etudiant","hero.cta1":"Voir mes projets",
     "hero.cta2":"&#x2B07; Telecharger CV","hero.scroll":"Defiler",
     "btn.open":"&#x2756; Ouvrir",
@@ -1115,7 +921,7 @@ var TRANSLATIONS = {
   },
   en: {
     "nav.about":"About","nav.timeline":"Journey","nav.skills":"Skills",
-    "nav.projects":"Projects","nav.ap":"AP Project","nav.contact":"Contact","nav.bigmode":"Large",
+    "nav.projects":"Projects","nav.ap":"AP Project","nav.contact":"Contact",
     "hero.subtitle":"Student","hero.cta1":"View my projects",
     "hero.cta2":"&#x2B07; Download CV","hero.scroll":"Scroll",
     "btn.open":"&#x2756; Open",
