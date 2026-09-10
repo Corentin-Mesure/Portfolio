@@ -440,18 +440,32 @@ section { padding: 96px 6%; }
 .project-title { margin-bottom: 10px; color: var(--navy); font-family: var(--font-display); font-size: 23px; font-weight: 700; letter-spacing: -.4px; }
 .project-desc { margin-bottom: 18px; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
-.project-tag { padding: 4px 9px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 10px; font-weight: 700; }
 
+/* CORRIGÉ : les badges de tags de projets étaient en pilule (border-radius:20px),
+   incohérent avec le reste du site qui utilise des coins coupés (clip-path).
+   Alignement sur le style de .skill-tag. */
+.project-tag {
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  color: var(--muted); font-size: 10px; font-weight: 700;
+}
+
+/* CORRIGÉ : bouton "Ouvrir" trop cyan/bleu par rapport à l'identité
+   violet + doré du site (le cyan n'est utilisé ailleurs qu'en petites
+   touches : puces, labels, soulignés). On reste dans la famille violette,
+   cohérente avec .hero-cta:first-child et les autres accents primaires. */
 .project-btn {
   display: inline-flex; align-items: center; width: auto; min-height: 40px; padding: 0 20px;
   border: none; border-radius: 0;
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white;
   font-family: 'Courier New', ui-monospace, SFMono-Regular, monospace;
   font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
   box-shadow: 0 10px 24px -10px rgba(109, 91, 255, 0.65);
 }
-.project-btn:hover { background: linear-gradient(135deg, #7d6cff, #4bdfff); }
+.project-btn:hover { background: linear-gradient(135deg, #7d6cff, var(--primary)); }
 
 .perso-teaser { display: flex; align-items: center; gap: 18px; }
 .perso-teaser-line { flex: 1; height: 1px; background: var(--border); }
@@ -465,13 +479,12 @@ section { padding: 96px 6%; }
 }
 .perso-teaser-btn:hover { border-color: var(--primary); color: var(--primary-2); }
 .perso-teaser-icon { color: var(--primary-2); }
-.perso-teaser-arrow { display: inline-block; color: var(--muted); font-size: 12px; transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+.perso-teaser-arrow { display: inline-block; color: var(--muted); font-size: 12px; }
 .perso-teaser-btn.open .perso-teaser-arrow { transform: rotate(180deg); }
 
 .perso-grid {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
   max-height: 0; opacity: 0; margin-top: 0; overflow: hidden;
-  transition: max-height .5s cubic-bezier(0.4, 0, 0.2, 1), opacity .4s ease, margin-top .5s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 .perso-grid.open { max-height: 700px; opacity: 1; margin-top: 32px; }
 .project-glyph { font-size: 52px; line-height: 1; opacity: 0.9; }
@@ -680,8 +693,14 @@ body.big-mode .pv-modal {
 }
 
 .pv-tags { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 24px; border-top: 1px solid var(--border); background: transparent; }
+
+/* CORRIGÉ : même correction que .project-tag — coins coupés au lieu
+   de pilule, cohérent avec le reste du site. */
 .pv-tag {
-  padding: 4px 9px; border: 1px solid var(--border); border-radius: 20px;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
   color: var(--muted); font-size: 10px; font-weight: 700;
 }
 
@@ -890,9 +909,20 @@ footer {
   filter: drop-shadow(0 0 30px rgba(106, 88, 212, 0.12));
 }
 :root.light-mode .hero-subtitle { color: #78694e; }
-:root.light-mode .hero-cta { border-color: rgba(53, 48, 31, 0.14); background: rgba(53, 48, 31, 0.045); color: var(--navy); }
-:root.light-mode .hero-cta:hover { background: rgba(53, 48, 31, 0.09); border-color: rgba(53, 48, 31, 0.22); }
+
+/* CORRIGÉ : le bouton "Télécharger CV" (2e .hero-cta) était trop transparent
+   sur fond crème et devenait quasi invisible. Opacité de bordure/fond relevée. */
+:root.light-mode .hero-cta {
+  border-color: rgba(53, 48, 31, 0.3);
+  background: rgba(53, 48, 31, 0.07);
+  color: var(--navy);
+}
+:root.light-mode .hero-cta:hover {
+  background: rgba(53, 48, 31, 0.14);
+  border-color: rgba(53, 48, 31, 0.45);
+}
 :root.light-mode .hero-cta:first-child { color: white; }
+
 :root.light-mode .section-number { border-color: rgba(91, 72, 230, 0.3); background: rgba(91, 72, 230, 0.08); color: var(--primary-2); }
 :root.light-mode .back-tag { color: #96762a; }
 :root.light-mode .back-skill-tag { border-color: rgba(91, 72, 230, 0.28); background: rgba(91, 72, 230, 0.08); color: var(--primary-dark); }
@@ -910,6 +940,20 @@ footer {
 :root.light-mode .project-tag { border-color: var(--border-dark); }
 :root.light-mode .perso-teaser-line { background: var(--border); }
 :root.light-mode .perso-teaser-btn { border-color: rgba(91, 72, 230, 0.28); background: rgba(91, 72, 230, 0.06); }
+
+/* AJOUTÉ : boutons "Me contacter" invisibles en mode clair (aucune
+   surcharge n'existait pour .contact-link en light-mode, ils gardaient
+   leur style pensé pour fond sombre : bordure/fond blancs quasi transparents). */
+:root.light-mode .contact-link {
+  border-color: rgba(53, 48, 31, 0.18);
+  background: rgba(53, 48, 31, 0.05);
+  color: var(--navy);
+}
+:root.light-mode .contact-link:hover {
+  border-color: var(--primary);
+  color: var(--primary-2);
+  background: rgba(106, 88, 212, 0.08);
+}
 
 :root.light-mode .pv-overlay, :root.light-mode .lightbox { background: rgba(60, 50, 30, 0.35); }
 :root.light-mode .pv-modal {
