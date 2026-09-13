@@ -71,22 +71,22 @@ a { color: inherit; }
   display: none !important;
 }
 
-/* .reveal démarre invisible/décalé ; JS ajoute .visible au scroll
-   (voir Script.js). Sans JS (ou reduced-motion), tout reste visible
-   par défaut grâce au <noscript> de secours plus bas. */
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
+/* .reveal / .timeline-item sont VISIBLES par défaut (sûr même si le JS
+   ne s'exécute pas). Script.js ajoute .pre-reveal uniquement quand il
+   a confirmé pouvoir observer le scroll, puis .visible au bon moment —
+   donc aucune dépendance risquée entre CSS et JS. */
+.reveal, .timeline-item {
+  opacity: 1;
+  transform: none;
   transition: opacity .6s cubic-bezier(.16,.8,.24,1), transform .6s cubic-bezier(.16,.8,.24,1);
 }
-.reveal.visible { opacity: 1; transform: none; }
+.reveal.pre-reveal { opacity: 0; transform: translateY(22px); }
+.timeline-item.pre-reveal { opacity: 0; transform: translateX(-18px); }
+.reveal.pre-reveal.visible, .timeline-item.pre-reveal.visible { opacity: 1; transform: none; }
 
 .timeline-item {
-  opacity: 0;
-  transform: translateX(-18px);
   transition: opacity .55s cubic-bezier(.16,.8,.24,1), transform .55s cubic-bezier(.16,.8,.24,1), border-color .2s ease, background .2s ease;
 }
-.timeline-item.visible { opacity: 1; transform: none; }
 
 .skill-tag, .skill-card.visible .skill-tag { opacity: 1 !important; transform: none !important; }
 
