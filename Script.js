@@ -1174,3 +1174,54 @@ function toggleLang() { applyLang(currentLang === 'fr' ? 'en' : 'fr'); }
 document.addEventListener('DOMContentLoaded', function () {
   applyLang(currentLang);
 });
+
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS AU SCROLL (.reveal / .timeline-item)
+   IntersectionObserver léger : ajoute .visible une seule fois
+   quand l'élément entre dans le viewport, puis se désabonne —
+   pas de recalcul permanent, pas de coût au scroll.
+════════════════════════════════════════════════════════ */
+(function () {
+  var targets = document.querySelectorAll('.reveal, .timeline-item');
+  if (!targets.length || !('IntersectionObserver' in window)) return; // pas de JS/support → contenu déjà visible par défaut (CSS)
+
+  var revealObserver = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  targets.forEach(function (el, i) {
+    // Léger décalage en cascade pour les groupes de cartes (skills,
+    // projects, timeline) : chaque carte apparaît juste après la
+    // précédente au lieu de toutes surgir en même temps.
+    el.style.transitionDelay = Math.min(i % 4, 3) * 70 + 'ms';
+    el.classList.add('pre-reveal'); // masque seulement une fois qu'on est sûr de pouvoir le révéler
+    revealObserver.observe(el);
+  });
+})();
+
+/* ════════════════════════════════════════════════════════
+   BARRE DE PROGRESSION DE LECTURE
+   Reflète la position de scroll dans la largeur de la barre,
+   sous la nav. Un seul rAF en vol à la fois.
+════════════════════════════════════════════════════════ */
+(function () {
+  var fill = document.getElementById('scrollProgressFill');
+  if (!fill) return;
+  var ticking = false;
+  function update() {
+    var h = document.documentElement;
+    var scrollable = h.scrollHeight - h.clientHeight;
+    var pct = scrollable > 0 ? (h.scrollTop / scrollable) * 100 : 0;
+    fill.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
+})();
